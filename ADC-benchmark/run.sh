@@ -17,26 +17,26 @@ case "$a" in
     ;;
   "1")
 		JAVA_OPTS=
-		JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
-		JAVA_OPTS="$JAVA_OPTS -Ddebug=false"
+		JAVA_OPTS="${JAVA_OPTS} -Ddisplay.digit=false"
+		JAVA_OPTS="${JAVA_OPTS} -Ddebug=false"
 		CP=./build/libs/ADC-benchmark-1.0-all.jar
 		#
 		echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
 		echo -e " For miso, mosi, clk & cs, use BCM pin numbers"
 		#
-		sudo java -cp $CP $JAVA_OPTS adcbenchmark.mcp3008.MainMCP3008Sample33 $*
+		sudo java -cp ${CP} ${JAVA_OPTS} adcbenchmark.mcp3008.MainMCP3008Sample33 $*
     ;;
   "2")
 		JAVA_OPTS=
 		CP=./build/libs/ADC-benchmark-1.0-all.jar
 		#
-		sudo java -cp $CP $JAVA_OPTS adcbenchmark.ads1015.MainADS1015Sample33 $*
+		sudo java -cp ${CP} ${JAVA_OPTS} adcbenchmark.ads1015.MainADS1015Sample33 $*
     ;;
    "3")
 		JAVA_OPTS=
 		CP=./build/libs/ADC-benchmark-1.0-all.jar
 		#
-		sudo java -cp $CP $JAVA_OPTS adcbenchmark.ads1115.MainADS1115Sample33 $*
+		sudo java -cp ${CP} ${JAVA_OPTS} adcbenchmark.ads1115.MainADS1115Sample33 $*
     ;;
   *)
     echo -e "What? Unknown command [$a]"

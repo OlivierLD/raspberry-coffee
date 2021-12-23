@@ -13,17 +13,17 @@ fi
 #
 echo Using properties file ${MUX_PROP_FILE}
 #
-JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
+JAVA_OPTIONS="${JAVA_OPTIONS}" # From parent script, possibly
 #
-echo -e "In $0, inherited JAVA_OPTIONS: $JAVA_OPTIONS"
+echo -e "In $0, inherited JAVA_OPTIONS: ${JAVA_OPTIONS}"
 #
 if [[ "$OS" == "Darwin" ]]
 then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
 if [[ "$OS" == "Linux" ]]
 then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
 # This variable is used to set the System variable process.on.start.
@@ -46,35 +46,35 @@ then
   echo -e "+---------------------------------------------------------------"
 fi
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dfile.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dws.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhtu21df.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dbme280.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dserial.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dtcp.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dfile.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dws.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhtu21df.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dbme280.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Drnd.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dzda.data.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Drest.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.data.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.sun.flower=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
 #
 if [[ "${PROCESS_ON_START}" != "" ]]
 then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
 fi
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
-JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.properties=$MUX_PROP_FILE"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dno.ais=false" # Accept AIS Strings
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dcalculate.solar.with.eot=true"
 #
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=AUTO" # 01-Jan-2019
+JAVA_OPTS="${JAVA_OPTS} -DdeltaT=AUTO" # 01-Jan-2019
 # For the small USB GPS
-JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.date.offset=7168"
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
@@ -100,12 +100,12 @@ REMOTE_DEBUG_FLAGS=
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry Pi
-# sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-# java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-# sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
-COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer"
-echo -e "Running $COMMAND"
+# sudo java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
+# java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
+# sudo java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} navrest.NavServer
+COMMAND="${SUDO}java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} navrest.NavServer"
+echo -e "Running ${COMMAND}"
 ${COMMAND}
 #

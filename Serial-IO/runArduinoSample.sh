@@ -12,16 +12,16 @@ CP=./build/libs/Serial-IO-1.0-all.jar
 #
 JAVA_OPTIONS=
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 #
 # For Mac
-JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"
 SERIAL_PRMS=
-# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1411"
-SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1421"
-# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyUSB0"
+# SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/cu.usbmodem1411"
+SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/cu.usbmodem1421"
+# SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/ttyUSB0"
 #
-SERIAL_PRMS="$SERIAL_PRMS -Dbaud.rate=115200"
+SERIAL_PRMS="${SERIAL_PRMS} -Dbaud.rate=115200"
 #
 echo Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable.
 sudo java ${JAVA_OPTIONS} ${SERIAL_PRMS} -cp ${CP} sample.ArduinoEchoClient

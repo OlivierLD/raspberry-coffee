@@ -15,10 +15,10 @@ fi
 # >>> Change directory below as needed. <<<
 # cd raspberry-coffee/NMEA-multiplexer
 a=
-if [[ "$YES" == "1" ]]
+if [[ "${YES}" == "1" ]]
 then
   a=y
-elif [[ "$YES" == "0" ]]
+elif [[ "${YES}" == "0" ]]
 then
   a=n
 else
@@ -125,7 +125,7 @@ then
 fi
 #
 echo -e "JAVA_OPTIONS in to.mux.sh: ${JAVA_OPTIONS}"
-# The script below uses $JAVA_OPTIONS (hence the .)
+# The script below uses ${JAVA_OPTIONS} (hence the .)
 # nohup ./mux.sh $PROP_FILE &
 . ./mux.sh ${PROP_FILE} &
 #

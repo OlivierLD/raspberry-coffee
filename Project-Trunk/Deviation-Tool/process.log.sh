@@ -27,8 +27,8 @@ then
 fi
 #
 JAVA_OPTIONS="-Ddefault.declination=$DECLINATION"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dlog.file.name=$FILE_NAME"
-JAVA_OPTIONS="$JAVA_OPTIONS -Doutput.file.name=$OUTPUT"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dlog.file.name=$FILE_NAME"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Doutput.file.name=$OUTPUT"
 #
 echo -e "Processing $FILE_NAME into $OUTPUT"
 java -cp ${CP} ${JAVA_OPTIONS} logfile.Processor

@@ -2,17 +2,17 @@
 CP=./build/libs/RasPiRadar-1.0-all.jar
 #
 JAVA_OPTIONS=
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=true"
 # For remote debugging:
-# JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
 # For remote JVM Monitoring
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=raspberrypi-boat"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=raspberrypi-boat"
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dradar.verbose=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dradar.verbose=true"
 #
 export LD_LIBRARY_PATH=../../HC-SR04/C
-JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=$LD_LIBRARY_PATH"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=$LD_LIBRARY_PATH"
 # For the C part
 NATIVEDEBUG=true
 #
@@ -27,4 +27,4 @@ PRMS="$PRMS --delay:20"
 # PRMS="$PRMS --just-one-loop" # For position calibration & tuning
 #
 echo -e "Running... 📡"
-sudo NATIVEDEBUG=$NATIVEDEBUG java $JAVA_OPTIONS -cp $CP raspiradar.jni.RasPiJNIRadar $PRMS
+sudo NATIVEDEBUG=$NATIVEDEBUG java ${JAVA_OPTIONS} -cp ${CP} raspiradar.jni.RasPiJNIRadar $PRMS

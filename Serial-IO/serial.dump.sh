@@ -24,20 +24,20 @@ DARWIN=$(uname -a | grep Darwin)
 if [[ "$DARWIN" != "" ]]
 then
 	echo Running on Mac
-  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
+  JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/Library/Java/Extensions"  # for Mac
 else
 	echo Assuming Linux/Raspberry Pi
-  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
+  JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/usr/lib/jni"              # RPi
   SUDO="sudo "
 fi
 #
 if [[ "$1" != "" ]]
 then
-  JAVA_OPTS="$JAVA_OPTS -Dfilters=$1"
+  JAVA_OPTS="${JAVA_OPTS} -Dfilters=$1"
 fi
 #
-COMMAND="${SUDO}java $JAVA_OPTS -cp $CP sample.SerialReaderSample"
-echo -e "Executing $COMMAND ..."
+COMMAND="${SUDO}java ${JAVA_OPTS} -cp ${CP} sample.SerialReaderSample"
+echo -e "Executing ${COMMAND} ..."
 echo -en "Hit [Return]..."
 read a
 ${COMMAND}

@@ -10,5 +10,5 @@ then
 fi
 OPT=-Dlang=$LANG
 echo -e "Big Chord Finder"
-java -cp $CP $OPT chordfinder.UkuleleChordFinder
+java -cp ${CP} $OPT chordfinder.UkuleleChordFinder
 

@@ -10,8 +10,8 @@ CP=./build/libs/RESTTideEngine-1.0-all.jar
 JAVA_OPTS=
 # JAVA_OPTS="${JAVA_OPTS} -Dhttp.verbose=true"
 # JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true" # See below - script prm management.
-# JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
-# JAVA_OPTS="$JAVA_OPTS -Ddata.verbose=true"
+# JAVA_OPTS="${JAVA_OPTS} -Dastro.verbose=true"
+# JAVA_OPTS="${JAVA_OPTS} -Ddata.verbose=true"
 export HTTP_PORT=8080
 JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=${HTTP_PORT}"
 #
@@ -26,7 +26,7 @@ OP_LIST=true
 # Process script args
 for ARG in "$@"
 do
-	echo -e "Managing prm $ARG"
+	echo -e "Managing prm ${ARG}"
   if [[ ${ARG} == "--flavor:"* ]]
 	then
 	  FLAVOR=${ARG#*:}

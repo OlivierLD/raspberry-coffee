@@ -15,7 +15,7 @@ if [[ $# -gt 0 ]]
 then
 	for prm in $*
 	do
-	  echo "Processing $prm ..."
+	  echo "Processing ${prm} ..."
 	  if [[ ${prm} == "--browser:"* ]]
 	  then
 	    LAUNCH_BROWSER=${prm#*:}
@@ -25,15 +25,15 @@ then
 	  elif [[ ${prm} == "--proxy:"* ]]
 	  then
 	    WITH_PROXY=${prm#*:}
-	    if [[ "$WITH_PROXY" == "Y" ]] || [[ "$WITH_PROXY" == "y" ]]
+	    if [[ "${WITH_PROXY}" == "Y" ]] || [[ "${WITH_PROXY}" == "y" ]]
 	    then
-	      NAV_SERVER_EXTRA_OPTIONS="$NAV_SERVER_EXTRA_OPTIONS --proxy"
+	      NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --proxy"
 	    fi
 	  elif [[ ${prm} == "--option:"* ]]
 	  then
 	    USER_OPTION=${prm#*:}
 	  else
-	    echo "Unsupported parameter $prm"
+	    echo "Unsupported parameter ${prm}"
 	  fi
 	done
 fi
@@ -54,7 +54,7 @@ GO=true
 cat banner.txt
 sleep 1
 #
-while [[ "$GO" == "true" ]]
+while [[ "${GO}" == "true" ]]
 do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
@@ -114,7 +114,7 @@ do
   	echo -en " ==> You choose: "
 	  read option
 	fi
-	case "$option" in
+	case "${option}" in
 	  "PG" | "pg")
 	    export HTTP_PROXY_PORT=9876
 	    java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=${HTTP_PROXY_PORT} utils.proxyguisample.ProxyGUI &
@@ -125,11 +125,11 @@ do
 	  "P" | "p")
 	    export HTTP_PROXY_PORT=9876
 			JAVA_OPTIONS=
-			JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-			JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose.dump=true"
-			JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.client.verbose=true"
+			JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=true"
+			JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose.dump=true"
+			JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.client.verbose=true"
 			#
-			# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.util.logging.config.file=logging.properties"
+			# JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.util.logging.config.file=logging.properties"
 			#
 			java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=${HTTP_PROXY_PORT} ${JAVA_OPTIONS} http.HTTPServer &
 	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: ${HTTP_PROXY_PORT}"
@@ -394,7 +394,7 @@ do
 	    GO=false
 	    ;;
 	  *)
-	    echo -e "What? Unknown option [$option]"
+	    echo -e "What? Unknown option [${option}]"
 	    echo -en "Hit [return]"
 	    read ret
 	    ;;

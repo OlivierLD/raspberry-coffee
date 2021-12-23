@@ -14,24 +14,24 @@ JAVA_OPTIONS=
 SERIAL_PRMS=
 #
 # for Raspberry Pi
-# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"
-# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyUSB0"
-# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyACM0"
-# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyS80" # << Yeah!
-# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyAMA0"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni"
+# SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/ttyUSB0"
+# SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/ttyACM0"
+# SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/ttyS80" # << Yeah!
+# SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/ttyAMA0"
 #
 # For Mac
-JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"
-SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1411"
-# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1421"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"
+SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/cu.usbmodem1411"
+# SERIAL_PRMS="${SERIAL_PRMS} -Dserial.port=/dev/cu.usbmodem1421"
 #
-SERIAL_PRMS="$SERIAL_PRMS -Dbaud.rate=115200"
-# SERIAL_PRMS="$SERIAL_PRMS -Dbaud.rate=9600"
+SERIAL_PRMS="${SERIAL_PRMS} -Dbaud.rate=115200"
+# SERIAL_PRMS="${SERIAL_PRMS} -Dbaud.rate=9600"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.verbose=false"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dlora.verbose=false"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dserial.verbose=false"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dlora.verbose=false"
 #
 echo Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable.
-# sudo java $JAVA_OPTIONS $SERIAL_PRMS -cp $CP arduino.ArduinoLoRaInteractiveClient
-java $JAVA_OPTIONS $SERIAL_PRMS -cp $CP arduino.ArduinoLoRaInteractiveClient
+# sudo java ${JAVA_OPTIONS} ${SERIAL_PRMS} -cp ${CP} arduino.ArduinoLoRaInteractiveClient
+java ${JAVA_OPTIONS} ${SERIAL_PRMS} -cp ${CP} arduino.ArduinoLoRaInteractiveClient
 #

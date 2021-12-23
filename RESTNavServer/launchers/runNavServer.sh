@@ -194,7 +194,7 @@ fi
 # JAVA_OPTS="${JAVA_OPTS} -Dyaml.tx.verbose=yes"
 # JAVA_OPTS="${JAVA_OPTS} -Dmux.data.verbose=false"
 #
-COMMAND="${SUDO}java -cp $CP ${JAVA_OPTS} navrest.NavServer"
+COMMAND="${SUDO}java -cp ${CP} ${JAVA_OPTS} navrest.NavServer"
 echo -e "Running ${COMMAND}"
 #
 ${COMMAND}

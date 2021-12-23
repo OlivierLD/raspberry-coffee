@@ -12,7 +12,7 @@ then
   echo -e "-----------------------"
   echo -en "You choose > "
   read choice
-  case "$choice" in
+  case "${choice}" in
   "1")
     sudo unlink /dev/ttyS80
     ;;
@@ -29,7 +29,7 @@ echo -e " Q - Quit"
 echo -e "------------------------------------"
 echo -en "You choose > "
 read choice
-case "$choice" in
+case "${choice}" in
 "1")
   sudo ln -s /dev/ttyACM0 /dev/ttyS80
   ls -lisa /dev/ttyS80

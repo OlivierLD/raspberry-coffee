@@ -9,8 +9,8 @@ fi
 echo -e "Using physical pin #$PIN"
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dservo.pin=$PIN"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dpwm.debug=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dtime.verbose=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dservo.pin=$PIN"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dpwm.debug=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dtime.verbose=true"
 #
-sudo java ${JAVA_OPTIONS} -cp $CP tests.RealPWMServo
+sudo java ${JAVA_OPTIONS} -cp ${CP} tests.RealPWMServo

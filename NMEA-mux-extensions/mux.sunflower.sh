@@ -23,38 +23,38 @@ echo Using properties file $MUX_PROP_FILE
 JAVA_OPTIONS=
 if [ "$MACHINE" = "Mac" ]
 then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=../Serial.IO/libs" # for Mac
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=../Serial.IO/libs" # for Mac
 else
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"      # for Raspberry Pi
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni"      # for Raspberry Pi
 fi
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dfile.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dws.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhtu21df.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dbme280.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dlsm303.data.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dserial.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dtcp.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dfile.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dws.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhtu21df.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dbme280.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Drnd.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dzda.data.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dlsm303.data.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.data.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.properties=$MUX_PROP_FILE"
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=.
-CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrienter lives in this one, must have been built.
-CP=$CP:./build/libs/NMEA-multiplexer-1.0-all.jar
-# CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar # Included in GPS.sun.servo-1.0-all.jar
+CP=${CP}:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrienter lives in this one, must have been built.
+CP=${CP}:./build/libs/NMEA-multiplexer-1.0-all.jar
+# CP=${CP}:../SunFlower/build/libs/SunFlower-1.0-all.jar # Included in GPS.sun.servo-1.0-all.jar
 #
 if [ "$MACHINE" = "Mac" ]
 then
-  CP=$CP:../Serial.IO/libs/RXTXcomm.jar # for Mac
+  CP=${CP}:../Serial.IO/libs/RXTXcomm.jar # for Mac
 else
-  CP=$CP:/usr/share/java/RXTXcomm.jar   # For Raspberry Pi
+  CP=${CP}:/usr/share/java/RXTXcomm.jar   # For Raspberry Pi
 fi
 #
 # For JFR
@@ -70,9 +70,9 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 if [ "$MACHINE" = "Mac" ]
 then
   # No need to use sudo on Mac
-  java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+  java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
 else
   # use sudo on Raspberry Pi
-  sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+  sudo java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
 fi
 #

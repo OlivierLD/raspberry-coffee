@@ -9,12 +9,12 @@ do
     while read line
     do
         # echo $line
-        if [[ "$line" == *"temp"* ]]
+        if [[ "${line}" == *"temp"* ]]
         then
             temp=${line#*=}
             temp=${temp::-2}
             # echo -e "Temp: ${temp}"
-        elif [[ "$line" == *"volt"* ]]
+        elif [[ "${line}" == *"volt"* ]]
         then
             volt=${line#*=}
             volt=${volt::-1}

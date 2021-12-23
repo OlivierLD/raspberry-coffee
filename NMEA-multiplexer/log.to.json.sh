@@ -12,8 +12,8 @@ fi
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 JAVA_OPTIONS=
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dminified=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dminified=false"
 java ${JAVA_OPTIONS} -cp ${CP} util.NMEAtoJSONPos "$1"
 #

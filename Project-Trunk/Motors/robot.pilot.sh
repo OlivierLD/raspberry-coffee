@@ -9,4 +9,4 @@ ADDR=`hostname -I`
 # ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
 echo then from your browser, reach http://$ADDR:9876/data/robot.pilot.html, or http://$ADDR:9876/data/mearm.pilot.html
 #
-sudo java $JAVA_OPTIONS -cp $CP robot.ws.ServoHat
+sudo java ${JAVA_OPTIONS} -cp ${CP} robot.ws.ServoHat

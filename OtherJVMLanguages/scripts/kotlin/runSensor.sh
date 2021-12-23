@@ -4,9 +4,9 @@
 #
 PI4J_HOME=/opt/pi4j
 CP=../../../I2C.SPI/build/classes/main/
-CP=$CP:../../src/kotlin/sensors.jar
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=${CP}:../../src/kotlin/sensors.jar
+CP=${CP}:${PI4J_HOME}/lib/pi4j-core.jar
 #
-# echo $CP
+# echo ${CP}
 #
-sudo java -cp $CP KotlinSensorsKt
+sudo java -cp ${CP} KotlinSensorsKt

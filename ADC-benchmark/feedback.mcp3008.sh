@@ -16,9 +16,9 @@ case "$a" in
     ;;
   "1")
 		JAVA_OPTS=
-		JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
-		JAVA_OPTS="$JAVA_OPTS -Ddebug=false"
-		JAVA_OPTS="$JAVA_OPTS -Dcalibration=true"
+		JAVA_OPTS="${JAVA_OPTS} -Ddisplay.digit=false"
+		JAVA_OPTS="${JAVA_OPTS} -Ddebug=false"
+		JAVA_OPTS="${JAVA_OPTS} -Dcalibration=true"
 		CP=./build/libs/ADC-benchmark-1.0-all.jar
 		#
 		echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
@@ -32,9 +32,9 @@ case "$a" in
     echo -en "ADC value for +90 degrees > "
     read adcPlus90
 		JAVA_OPTS=
-		JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
-		JAVA_OPTS="$JAVA_OPTS -Ddebug=false"
-		JAVA_OPTS="$JAVA_OPTS -Dcalibration=false"
+		JAVA_OPTS="${JAVA_OPTS} -Ddisplay.digit=false"
+		JAVA_OPTS="${JAVA_OPTS} -Ddebug=false"
+		JAVA_OPTS="${JAVA_OPTS} -Dcalibration=false"
 		CP=./build/libs/ADC-benchmark-1.0-all.jar
 		#
 		echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"

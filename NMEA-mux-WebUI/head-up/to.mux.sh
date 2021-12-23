@@ -78,19 +78,19 @@ done
 if [[ "$NO_DATE" == "true" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GGA.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GLL.date.time=true"
 fi
 #
 if [[ "$RMC_TIME_OK" == "false" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.time.ok=false"
 fi
 # No servo driver:
-JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"
-echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
-# The script below uses $JAVA_OPTIONS (hence the .)
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.sun.flower=false"
+echo -e "JAVA_OPTIONS in to.mux.sh: ${JAVA_OPTIONS}"
+# The script below uses ${JAVA_OPTIONS} (hence the .)
 # nohup ./mux.sh $PROP_FILE &
 . ./mux.sh ${PROP_FILE} &
 #

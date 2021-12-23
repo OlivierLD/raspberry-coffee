@@ -12,8 +12,8 @@ fi
 echo Revolution per minute set to ${RPM}
 #
 OPTS=
-OPTS="$OPTS -Drpm=$RPM"
-OPTS="$OPTS -Dsteps=200"
-OPTS="$OPTS -Dhat.debug=false"
+OPTS="${OPTS} -Drpm=$RPM"
+OPTS="${OPTS} -Dsteps=200"
+OPTS="${OPTS} -Dhat.debug=false"
 #
 sudo java -cp ${CP} ${OPTS} i2c.samples.motorHAT.TwoSteppersDemo

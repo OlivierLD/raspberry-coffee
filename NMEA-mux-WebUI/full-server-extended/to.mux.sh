@@ -15,10 +15,10 @@ fi
 # >>> Change directory below as needed. <<<
 # cd raspberry-coffee/NMEA-multiplexer
 a=
-if [[ "$YES" == "1" ]]
+if [[ "${YES}" == "1" ]]
 then
   a=y
-elif [[ "$YES" == "0" ]]
+elif [[ "${YES}" == "0" ]]
 then
   a=n
 else
@@ -58,38 +58,38 @@ JAVA_OPTIONS=
 #
 for ARG in "$@"
 do
-	echo -e "Managing prm $ARG"
-  if [[ "$ARG" == "-p" ]] || [[ "$ARG" == "--proxy" ]]
+	echo -e "Managing prm ${ARG}"
+  if [[ "${ARG}" == "-p" ]] || [[ "${ARG}" == "--proxy" ]]
   then
     USE_PROXY=true
-  elif [[ "$ARG" == "--no-date" ]]
+  elif [[ "${ARG}" == "--no-date" ]]
   then
     NO_DATE=true
-  elif [[ "$ARG" == "--no-rmc-time" ]]
+  elif [[ "${ARG}" == "--no-rmc-time" ]]
   then
     RMC_TIME_OK=false
   elif [[ ${ARG} == -m:* ]] || [[ ${ARG} == --mux:* ]] # !! No quotes !!
   then
     PROP_FILE=${ARG#*:}
-    echo -e "Detected properties file $PROP_FILE"
+    echo -e "Detected properties file ${PROP_FILE}"
   fi
 done
 #
-if [[ "$NO_DATE" == "true" ]]
+if [[ "${NO_DATE}" == "true" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GGA.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GLL.date.time=true"
 fi
 #
 if [[ "$RMC_TIME_OK" == "false" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.time.ok=false"
 fi
 #
-echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
-# The script below uses $JAVA_OPTIONS (hence the .)
+echo -e "JAVA_OPTIONS in to.mux.sh: ${JAVA_OPTIONS}"
+# The script below uses ${JAVA_OPTIONS} (hence the .)
 # nohup ./mux.sh $PROP_FILE &
 . ./mux.sh ${PROP_FILE} &
 #
@@ -98,4 +98,4 @@ MY_IP=$(hostname -I | awk '{ print $1 }')
 echo "Reach http://${MY_IP}:9999/zip/index.html"
 echo "  or  http://${MY_IP}:9999/zip/small-screens/small.console.02.html"
 date=`date`
-echo "System date is $date"
+echo "System date is ${date}"

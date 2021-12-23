@@ -29,21 +29,21 @@ SYSTEM_VERBOSE=true
 #
 CP=./build/libs/System-Languages-1.0-all.jar
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dmath.rest.verbose=$MATH_REST_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dsystem.verbose=$SYSTEM_VERBOSE"
+JAVA_OPTS="${JAVA_OPTS} -Dhttp.verbose=$HTTP_VERBOSE"
+JAVA_OPTS="${JAVA_OPTS} -Dmath.rest.verbose=$MATH_REST_VERBOSE"
+JAVA_OPTS="${JAVA_OPTS} -Dsystem.verbose=$SYSTEM_VERBOSE"
 #
 if [[ "$USE_PROXY" == "true" ]]
 then
   echo Using proxy
-  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80"
+  JAVA_OPTS="${JAVA_OPTS} -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80"
 fi
 if [[ "$HTTP_PORT" != "" ]]
 then
-  JAVA_OPTS="$JAVA_OPTS -Dhttp.port=$HTTP_PORT"
+  JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=$HTTP_PORT"
 fi
 #
-echo -e "Using properties:$JAVA_OPTS"
+echo -e "Using properties:${JAVA_OPTS}"
 echo -e "Try to run http://localhost:$HTTP_PORT/web/smoothing.rest.html from a browser"
 #
 java -cp ${CP} ${JAVA_OPTS} matrix.server.MathServer

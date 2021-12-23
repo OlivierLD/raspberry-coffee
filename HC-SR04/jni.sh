@@ -16,11 +16,11 @@ javah -jni -cp ./classes -d C rangesensor.JNI_HC_SR04
 echo \>\> Here you should implement the C part in WiringPi_HC_SR04.c
 cd C
 echo Compiling C code \(producing lib libOlivHCSR04.so\)
-g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux WiringPi_HC_SR04.c -lwiringPi -o libOlivHCSR04.so
+g++ -Wall -shared -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux WiringPi_HC_SR04.c -lwiringPi -o libOlivHCSR04.so
 cd ..
 echo \>\> Now running the class invoking the native lib:
 export LD_LIBRARY_PATH=./C
-# ls -l $LD_LIBRARY_PATH/*.so
+# ls -l ${LD_LIBRARY_PATH}/*.so
 export NATIVEDEBUG=true
-sudo java -Djava.library.path=$LD_LIBRARY_PATH -cp ./classes rangesensor.JNI_HC_SR04
+sudo java -Djava.library.path=${LD_LIBRARY_PATH} -cp ./classes rangesensor.JNI_HC_SR04
 echo \>\> Done.

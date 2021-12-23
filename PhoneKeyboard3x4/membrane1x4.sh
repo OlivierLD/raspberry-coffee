@@ -8,4 +8,4 @@ OPTIONS=-Dkeypad.verbose=true
 OPTIONS="${OPTIONS} -Dkeypad.cols=GPIO_1,GPIO_4,GPIO_21,GPIO_22"
 OPTIONS="${OPTIONS} -Dcommon.lead=GPIO_7"
 #
-sudo java -cp $CP $OPTIONS membrane.SampleMain
+sudo java -cp ${CP} $OPTIONS membrane.SampleMain

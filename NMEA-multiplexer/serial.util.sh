@@ -8,4 +8,4 @@ echo -e "Also try sudo $0"
 echo -e "-------------------"
 #
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar
-java -cp $CP util.SerialUtil
+java -cp ${CP} util.SerialUtil

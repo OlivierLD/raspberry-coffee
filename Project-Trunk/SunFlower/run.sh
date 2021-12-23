@@ -38,17 +38,17 @@ HEADING_SERVO_ID=14 #,0,10
 TILT_SERVO_ID=15    #,1
 #
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
-# JAVA_OPTS="$JAVA_OPTS -Dlatitude=22.0616180555556 -Dlongitude=-159.378951111111" # Kauai.
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
+JAVA_OPTS="${JAVA_OPTS} -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
+# JAVA_OPTS="${JAVA_OPTS} -Dlatitude=22.0616180555556 -Dlongitude=-159.378951111111" # Kauai.
+JAVA_OPTS="${JAVA_OPTS} -DdeltaT=68.9677" # 01-Jan-2018
 #
-JAVA_OPTS="$JAVA_OPTS -Dtest.servos=false"
+JAVA_OPTS="${JAVA_OPTS} -Dtest.servos=false"
 #
-JAVA_OPTS="$JAVA_OPTS -Dtilt.servo.sign=1"
-JAVA_OPTS="$JAVA_OPTS -Dheading.servo.sign=1"
+JAVA_OPTS="${JAVA_OPTS} -Dtilt.servo.sign=1"
+JAVA_OPTS="${JAVA_OPTS} -Dheading.servo.sign=1"
 #
-JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=40"
-JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
+JAVA_OPTS="${JAVA_OPTS} -Dtilt.limit=40"
+JAVA_OPTS="${JAVA_OPTS} -Dtilt.offset=0"
 #
 OPTION=-help
 WITH_HELP=false
@@ -85,91 +85,91 @@ case "$OPTION" in
     exit 0
     ;;
   "basic")
-    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=none"
-    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dadc.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dorient.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dastro.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dtilt.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dservo.super.verbose=none"
+    JAVA_OPTS="${JAVA_OPTS} -Dmanual.entry=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dansi.console=false"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
-    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dsmooth.moves=false"
+    JAVA_OPTS="${JAVA_OPTS} -Ddemo.mode=false"
     ;;
   "plus")
-    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=heading"
-    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dadc.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dorient.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dastro.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dtilt.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dservo.super.verbose=heading"
+    JAVA_OPTS="${JAVA_OPTS} -Dmanual.entry=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dansi.console=false"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=true"
-    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
-    JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dsmooth.moves=true"
+    JAVA_OPTS="${JAVA_OPTS} -Ddemo.mode=false"
+    JAVA_OPTS="${JAVA_OPTS} -Done.by.one=false"
     ;;
   "verbose")
-    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dadc.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dorient.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dastro.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dtilt.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dservo.super.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dmanual.entry=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dansi.console=false"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
-    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dsmooth.moves=false"
+    JAVA_OPTS="${JAVA_OPTS} -Ddemo.mode=false"
     ;;
   "demo")
-    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-    JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dadc.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dorient.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dastro.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dtilt.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dservo.super.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dmanual.entry=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dansi.console=true"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dlog.battery.data=false"   # Console output
-    JAVA_OPTS="$JAVA_OPTS -Dlog.photocell.data=false" # Console output
-    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
-    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dlog.battery.data=false"   # Console output
+    JAVA_OPTS="${JAVA_OPTS} -Dlog.photocell.data=false" # Console output
+    JAVA_OPTS="${JAVA_OPTS} -Dsmooth.moves=false"
+    JAVA_OPTS="${JAVA_OPTS} -Ddemo.mode=true"
     # The 2 following ones are required if demo.mode=true
-    JAVA_OPTS="$JAVA_OPTS -Dfrom.date=2017-06-28T05:53:00"
-    JAVA_OPTS="$JAVA_OPTS -Dto.date=2017-06-28T20:33:00"
+    JAVA_OPTS="${JAVA_OPTS} -Dfrom.date=2017-06-28T05:53:00"
+    JAVA_OPTS="${JAVA_OPTS} -Dto.date=2017-06-28T20:33:00"
     ;;
   "smooth")
-    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-    JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dadc.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dorient.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dastro.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dtilt.verbose=true"
+    JAVA_OPTS="${JAVA_OPTS} -Dservo.super.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dmanual.entry=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dansi.console=true"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=true"
-    JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
-    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dsmooth.moves=true"
+    JAVA_OPTS="${JAVA_OPTS} -Done.by.one=false"
+    JAVA_OPTS="${JAVA_OPTS} -Ddemo.mode=false"
     ;;
   "resthttp") # With smooth moves, non-interactive
-    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
-    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false" # tilt, heading, none, false, both, true.
-    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dadc.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Ddisplay.digit=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dorient.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dastro.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dtilt.verbose=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dservo.super.verbose=false" # tilt, heading, none, false, both, true.
+    JAVA_OPTS="${JAVA_OPTS} -Dmanual.entry=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dansi.console=false"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=true"
-    JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
-    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dsmooth.moves=true"
+    JAVA_OPTS="${JAVA_OPTS} -Done.by.one=false"
+    JAVA_OPTS="${JAVA_OPTS} -Ddemo.mode=false"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dhttp.port=9999"
-    JAVA_OPTS="$JAVA_OPTS -Dinteractive=false"
+    JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=9999"
+    JAVA_OPTS="${JAVA_OPTS} -Dinteractive=false"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dlog.battery.data=false"   # Console output
-    JAVA_OPTS="$JAVA_OPTS -Dlog.photocell.data=false" # Console output
+    JAVA_OPTS="${JAVA_OPTS} -Dlog.battery.data=false"   # Console output
+    JAVA_OPTS="${JAVA_OPTS} -Dlog.photocell.data=false" # Console output
     ;;
   *)
     echo "======================="
@@ -190,9 +190,9 @@ then
 	#
 	ADC_PRM="--with-adc:true --with-photocell:true --miso:$MISO --mosi:$MOSI --clk:$CLK --cs:$CS --battery-channel:$BAT_CHANNEL --photo-cell-channel:$PHOTO_CHANNEL"
 	# sudo is required when running on the RPi.
-  # nohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:false --with-photocell:false &
-  COMMAND="java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM"
-  echo -e "Executing $COMMAND"
+  # nohup sudo java -cp ${CP} ${JAVA_OPTS} orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:false --with-photocell:false &
+  COMMAND="java -cp ${CP} ${JAVA_OPTS} orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM"
+  echo -e "Executing ${COMMAND}"
   sudo ${COMMAND}
 else
   opts=$(echo ${JAVA_OPTS} | tr ";" "\n")

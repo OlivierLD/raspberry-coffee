@@ -33,10 +33,10 @@ echo -en "Which (non existent) folder should we create the distribution in ? > "
 read distdir
 if [[ -d "${distdir}" ]]
 then
-	echo -e "Folder $distdir exists. Please drop it or choose another name"
+	echo -e "Folder ${distdir} exists. Please drop it or choose another name"
 	exit 1
 fi
-echo -e "Creating folder $distdir"
+echo -e "Creating folder ${distdir}"
 mkdir ${distdir}
 mkdir ${distdir}/build
 mkdir ${distdir}/build/libs
@@ -75,11 +75,11 @@ rm -rf ${distdir}
 # 5 - Ready!
 #
 echo -e "+--------------------------------------------------------------------------------------------------+"
-echo -e " >> Archive $distdir.tar.gz ready for deployment."
+echo -e " >> Archive ${distdir}.tar.gz ready for deployment."
 echo -e "+--------------------------------------------------------------------------------------------------+"
 echo -e "| Send it to another machine, and un-archive it.                                                   |"
-echo -e "| To transfer, use  command like   \$ scp $distdir.tar.gz pi@192.168.42.8:~/                       "
-echo -e "| Use 'tar -xz[v]f $distdir.tar.gz' to un-archive.                                                 "
+echo -e "| To transfer, use  command like   \$ scp ${distdir}.tar.gz pi@192.168.42.8:~/                       "
+echo -e "| Use 'tar -xz[v]f ${distdir}.tar.gz' to un-archive.                                                 "
 echo -e "| External dependencies like librxtx-java may be needed if you intend to use a serial port,        |"
 echo -e "| in which case you may need to run a 'sudo apt-get install librxtx-java' .                        |"
 echo -e "| The script to launch will be 'mux.sh'                                                            |"

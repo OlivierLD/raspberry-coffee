@@ -56,20 +56,20 @@ JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 # Make sure ping.nmea.server=false
 # May require a link sudo ln -s /dev/ttyACM0 /dev/ttyS80
 #           and sudo apt-install librxtx-java
-JAVA_OPTS="$JAVA_OPTS -Ddate.from.gps=true"
-JAVA_OPTS="$JAVA_OPTS -Dgps.verbose=false"
-JAVA_OPTS="$JAVA_OPTS -Dgps.serial.baud.rate=4800"
+JAVA_OPTS="${JAVA_OPTS} -Ddate.from.gps=true"
+JAVA_OPTS="${JAVA_OPTS} -Dgps.verbose=false"
+JAVA_OPTS="${JAVA_OPTS} -Dgps.serial.baud.rate=4800"
 #
 # uname -s: Linux
 OS=$(uname -s)
 case "${OS}" in
   "Darwin")
-    JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
-    JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/tty.usbmodem141101"
+    JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/Library/Java/Extensions"  # for Mac
+    JAVA_OPTS="${JAVA_OPTS} -Dgps.serial.port=/dev/tty.usbmodem141101"
     ;;
   "Linux" | *)
-    JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
-    JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/ttyS80"
+    JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/usr/lib/jni"              # RPi
+    JAVA_OPTS="${JAVA_OPTS} -Dgps.serial.port=/dev/ttyS80"
     ;;
 esac
 #

@@ -7,7 +7,7 @@ then
   CP=./build/libs/Monitor.Battery-1.0-all.jar
   JAVA_OPTS="-Daio.user.name=$1 -Daio.key=$2"
   # If firewall, use REST
-  java $JAVA_OPTS -cp $CP sample.mqtt.sub.AIOSubscriber
+  java ${JAVA_OPTS} -cp ${CP} sample.mqtt.sub.AIOSubscriber
 else
   echo Please provide the expected 2 parameters.
 fi

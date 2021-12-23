@@ -7,5 +7,5 @@ CP=../build/libs/ADCs-Servos-JoySticks-1.0-all.jar
 JAVA_OPT="-Dverbose=true"
 JAVA_OPT="$JAVA_OPT -Djoystick.verbose=true"
 #
-sudo java -cp $CP $JAVA_OPT joystick.PanTiltJoyStick -ud:8 -lr:9 -adcLR:2 -adcUD:3
+sudo java -cp ${CP} $JAVA_OPT joystick.PanTiltJoyStick -ud:8 -lr:9 -adcLR:2 -adcUD:3
 

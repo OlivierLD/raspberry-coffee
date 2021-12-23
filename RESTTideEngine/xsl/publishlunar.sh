@@ -14,7 +14,7 @@ cd ${SCRIPT_DIR}
 #
 export HOME=..
 #
-export CP=$CP:../build/libs/RESTTideEngine-1.0-all.jar
+export CP=${CP}:../build/libs/RESTTideEngine-1.0-all.jar
 export CP=${CP}:${HOME}/libs/orai18n-collation.jar
 export CP=${CP}:${HOME}/libs/orai18n-mapping.jar
 export CP=${CP}:${HOME}/libs/fnd2.zip
@@ -33,7 +33,7 @@ else
   cp literals_en.xsl literals.xsl
 fi
 echo Publishing, be patient.
-java -Xms256m -Xmx1536m -classpath $CP oracle.apps.xdo.template.FOProcessor $PRM_OPTION -xml $2 -xsl $XSL_STYLESHEET
+java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor ${PRM_OPTION} -xml $2 -xsl $XSL_STYLESHEET
 -pdf $3
 echo Done calculating, $3 is ready.
 #

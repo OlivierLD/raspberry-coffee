@@ -5,29 +5,29 @@ DARWIN=$(uname -a | grep Darwin)
 CP=./build/libs/Bluetooth-1.0-all.jar
 #
 JAVA_OPTS=
-if [[ "$DARWIN" != "" ]]
+if [[ "${DARWIN}" != "" ]]
 then
 	echo Running on Mac
-  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
+  JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/Library/Java/Extensions"  # for Mac
 else
 	echo Assuming Linux/Raspberry Pi
-  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
+  JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/usr/lib/jni"              # RPi
   CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi
 #
-JAVA_OPTS="$JAVA_OPTS -Dbt.verbose=true"
-JAVA_OPTS="$JAVA_OPTS -Dserial.simulate=false"
-# JAVA_OPTS="$JAVA_OPTS -Dbt.serial.baud.rate=38400"
-JAVA_OPTS="$JAVA_OPTS -Dbt.serial.baud.rate=9600"
+JAVA_OPTS="${JAVA_OPTS} -Dbt.verbose=true"
+JAVA_OPTS="${JAVA_OPTS} -Dserial.simulate=false"
+# JAVA_OPTS="${JAVA_OPTS} -Dbt.serial.baud.rate=38400"
+JAVA_OPTS="${JAVA_OPTS} -Dbt.serial.baud.rate=9600"
 ############################
 # For Raspberry Pi
-# JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/ttyS0"
-# JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/rfcomm0"
+# JAVA_OPTS="${JAVA_OPTS} -Dserial.port=/dev/ttyS0"
+# JAVA_OPTS="${JAVA_OPTS} -Dserial.port=/dev/rfcomm0"
 ############################
 # For Mac
-# JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.Bluetooth-Incoming-Port"
-JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.HC-05-DevB"
+# JAVA_OPTS="${JAVA_OPTS} -Dserial.port=/dev/tty.Bluetooth-Incoming-Port"
+JAVA_OPTS="${JAVA_OPTS} -Dserial.port=/dev/tty.HC-05-DevB"
 ############################
-COMMAND="${SUDO}java -cp $CP $JAVA_OPTS basic.SimpleSerialCommunication"
+COMMAND="${SUDO}java -cp ${CP} ${JAVA_OPTS} basic.SimpleSerialCommunication"
 ${COMMAND}

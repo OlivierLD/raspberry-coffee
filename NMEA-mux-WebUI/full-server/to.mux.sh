@@ -15,10 +15,10 @@ fi
 # >>> Change directory below as needed. <<<
 # cd raspberry-coffee/NMEA-multiplexer
 a=
-if [[ "$YES" == "1" ]]
+if [[ "${YES}" == "1" ]]
 then
   a=y
-elif [[ "$YES" == "0" ]]
+elif [[ "${YES}" == "0" ]]
 then
   a=n
 else
@@ -37,7 +37,7 @@ fi
 # forward.01.filename=./data.nmea
 # forward.01.append=true
 #
-if [[ "$a" = "y" ]]
+if [[ "${a}" = "y" ]]
 then
   echo -e "Removing previous log file(s)"
   sudo rm -rf logged/*
@@ -72,17 +72,17 @@ JAVA_OPTIONS=
 #
 for ARG in "$@"
 do
-	echo -e "Managing prm $ARG"
-  if [[ "$ARG" == "-p" ]] || [[ "$ARG" == "--proxy" ]]
+	echo -e "Managing prm ${ARG}"
+  if [[ "${ARG}" == "-p" ]] || [[ "${ARG}" == "--proxy" ]]
   then
     USE_PROXY=true
-  elif [[ "$ARG" == "--no-date" ]]
+  elif [[ "${ARG}" == "--no-date" ]]
   then
     NO_DATE=true
-  elif [[ "$ARG" == "--no-rmc-time" ]]
+  elif [[ "${ARG}" == "--no-rmc-time" ]]
   then
     RMC_TIME_OK=false
-  elif [[ "$ARG" == "--no-background" ]]
+  elif [[ "${ARG}" == "--no-background" ]]
   then
     START_IN_BACKGROUND=false
   elif [[ ${ARG} == -m:* ]] || [[ ${ARG} == --mux:* ]] # !! No quotes !!
@@ -95,17 +95,17 @@ done
 if [[ "$NO_DATE" == "true" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GGA.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GLL.date.time=true"
 fi
 #
 if [[ "$RMC_TIME_OK" == "false" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.time.ok=false"
 fi
 #
-echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
+echo -e "JAVA_OPTIONS in to.mux.sh: ${JAVA_OPTIONS}"
 #
 echo On its way!
 MY_IP=$(hostname -I | awk '{ print $1 }')
@@ -116,7 +116,7 @@ echo "System date is $date"
 #
 if [[ "$START_IN_BACKGROUND" == "true" ]]
 then
-  # The script below uses $JAVA_OPTIONS
+  # The script below uses ${JAVA_OPTIONS}
   nohup ./mux.sh ${PROP_FILE} &
   # ./mux.sh $PROP_FILE &
 else

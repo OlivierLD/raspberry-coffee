@@ -14,5 +14,5 @@ LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -DK1=28 -DK2=29" # Inverted
-sudo java -cp $CP $BASE_URL $VERBOSE $JAVA_OPTS $LOGGING_FLAG nmea.tcp.ssd1306_128x64.TCPWatch
+JAVA_OPTS="${JAVA_OPTS} -DK1=28 -DK2=29" # Inverted
+sudo java -cp ${CP} $BASE_URL $VERBOSE ${JAVA_OPTS} $LOGGING_FLAG nmea.tcp.ssd1306_128x64.TCPWatch

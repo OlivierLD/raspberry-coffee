@@ -11,16 +11,16 @@ then
   MUX_PROP_FILE=$1
 fi
 #
-echo Using properties file $MUX_PROP_FILE
+echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS=
 if [ "$OS" == "Darwin" ]
 then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [ "$OS" == "Linux" ]
+if [ "${OS}" == "Linux" ]
 then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
 # This variable is used to set the System variable process.on.start.
@@ -43,42 +43,42 @@ then
   echo -e "+---------------------------------------------------------------"
 fi
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dfile.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dws.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhtu21df.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dbme280.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dserial.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dtcp.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dfile.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dws.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhtu21df.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dbme280.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Drnd.data.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dzda.data.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Drest.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.data.verbose=true"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.properties=$MUX_PROP_FILE"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dno.ais=false" # Accept AIS Strings
 
-JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dcalculate.solar.with.eot=true"
 # Useful for data replay:
-JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GGA.date.time=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GLL.date.time=true"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -DdeltaT=AUTO" # 01-Jan-2019
+JAVA_OPTIONS="${JAVA_OPTIONS} -DdeltaT=AUTO" # 01-Jan-2019
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=./build/libs/NMEA.mux.extensions-1.0-all.jar
 if [ "$OS" == "Darwin" ]
 then
-  CP=$CP:./libs/RXTXcomm.jar          # for Mac
+  CP=${CP}:./libs/RXTXcomm.jar          # for Mac
 fi
 if [ "$OS" == "Linux" ]
 then
-  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
 fi
 #
 # For JFR
@@ -91,8 +91,8 @@ REMOTE_DEBUG_FLAGS=
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry Pi
-# sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+# sudo java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
+java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
 #

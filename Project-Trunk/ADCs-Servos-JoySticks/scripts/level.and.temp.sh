@@ -12,9 +12,9 @@
 CP=../build/libs/ADCs-Servos-JoySticks-1.0-all.jar
 #
 JAVA_OPTIONS=
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dthreshold=50"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.uri=ws://192.168.1.77:9876/"
-# JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dthreshold=50"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dws.uri=ws://192.168.1.77:9876/"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
 echo Running...
-sudo java $JAVA_OPTIONS -cp $CP joystick.adc.levelreader.samples.LevelAndTemperature
+sudo java ${JAVA_OPTIONS} -cp ${CP} joystick.adc.levelreader.samples.LevelAndTemperature

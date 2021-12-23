@@ -16,11 +16,11 @@ else
 fi
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=false"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dmirror.screen=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Doled.height=64"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dled.color=white"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dssd1306.verbose=false"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dmirror.screen=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Doled.height=64"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dled.color=white"
 #
 # Separate the lines with a pipe |
 #

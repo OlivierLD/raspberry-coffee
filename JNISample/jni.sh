@@ -1,10 +1,10 @@
 #!/bin/bash
 # On Mac, for JAVA_HOME, use something like /Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home
-if [ "$JAVA_HOME" = "" ]
+if [ "${JAVA_HOME}" = "" ]
 then
   JAVA_HOME=/opt/jdk/jdk1.8.0_112
 fi
-PATH=$JAVA_HOME/bin:$PATH
+PATH=${JAVA_HOME}/bin:$PATH
 mkdir classes 2> /dev/null
 echo \>\> Compiling Java
 mkdir classes 2> /dev/null
@@ -20,18 +20,18 @@ if [ "$RPI" != "" ]
 then
   # For Raspberry Pi. -lwiringPi is not mandatory in this case...
   echo C compilation on the Raspberry Pi
-  g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
+  g++ -Wall -shared -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
 else
   DARWIN=`uname -a | grep Darwin`
   if [ "$DARWIN" != "" ]
   then
     # For Mac OS
     echo C Compilation on Mac OS
-    gcc -Wall -shared -fPIC -I$JAVA_HOME/include -I$JAVA_HOME/include/darwin HelloWorld.c -o libHelloWorld.jnilib
+    gcc -Wall -shared -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/darwin HelloWorld.c -o libHelloWorld.jnilib
   else
     # For Linux Debian
     echo C Compilation on Linux \(Not Raspberry Pi\)
-    g++ -Wall -shared -fPIC -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -o libHelloWorld.so
+    g++ -Wall -shared -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux HelloWorld.c -o libHelloWorld.so
   fi
 fi
 cd ..

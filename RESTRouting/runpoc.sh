@@ -2,9 +2,9 @@
 #
 CP=./build/libs/RESTRouting-1.0-all.jar
 #
-# java -cp $CP poc.GRIBBulk $*
+# java -cp ${CP} poc.GRIBBulk $*
 #
-# java -cp $CP poc.GRIBDump
+# java -cp ${CP} poc.GRIBDump
 #
 JAVA_OPT=
 JAVA_OPT="$JAVA_OPT -Dgrib.verbose=false"

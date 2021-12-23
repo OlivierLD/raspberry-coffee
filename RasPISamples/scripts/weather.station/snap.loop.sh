@@ -24,14 +24,14 @@ do
   echo see $IMG_NAME in the 'web' directory.
   #
   # Base64 encoding of the downloaded image
-  java -cp $CP weatherstation.ImageEncoder web/$IMG_NAME > web/encoded.txt
+  java -cp ${CP} weatherstation.ImageEncoder web/$IMG_NAME > web/encoded.txt
   #
   PROXY=
   # Proxy for REST
   # PROXY="-Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
   #
   # Upload encoded image to the IoT server
-  java -cp $CP $PROXY -Dkey=54c2767878ca793f2e3cae1c45d62aa7ae9f8056 weatherstation.POSTImage web/encoded.txt
+  java -cp ${CP} $PROXY -Dkey=54c2767878ca793f2e3cae1c45d62aa7ae9f8056 weatherstation.POSTImage web/encoded.txt
   #
   sleep 600 # 600s: 10 minutes
 done

@@ -15,10 +15,10 @@ fi
 # >>> Change directory below as needed. <<<
 # cd raspberry-coffee/NMEA-multiplexer
 a=
-if [[ "$YES" == "1" ]]
+if [[ "${YES}" == "1" ]]
 then
   a=y
-elif [[ "$YES" == "0" ]]
+elif [[ "${YES}" == "0" ]]
 then
   a=n
 else
@@ -85,18 +85,18 @@ done
 if [[ "$NO_DATE" == "true" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GGA.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GLL.date.time=true"
 fi
 #
 if [[ "$RMC_TIME_OK" == "false" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.time.ok=false"
 fi
 #
-echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
-# The script below uses $JAVA_OPTIONS (hence the .)
+echo -e "JAVA_OPTIONS in to.mux.sh: ${JAVA_OPTIONS}"
+# The script below uses ${JAVA_OPTIONS} (hence the .)
 # nohup ./mux.sh $PROP_FILE &
 . ./mux.sh ${PROP_FILE} &
 #

@@ -5,8 +5,8 @@ PI4J_HOME=/opt/pi4j
 #
 CP=$SCALA_HOME/lib/scala-library.jar
 # 
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-CP=$CP:../../../SevenSegDisplay/build/classes/main
-CP=$CP:../../build/classes/main
+CP=${CP}:${PI4J_HOME}/lib/pi4j-core.jar
+CP=${CP}:../../../SevenSegDisplay/build/classes/main
+CP=${CP}:../../build/classes/main
 # 
-sudo scala -classpath "$CP" sevenseg.Clock
+sudo scala -classpath "${CP}" sevenseg.Clock

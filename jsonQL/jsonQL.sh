@@ -15,5 +15,5 @@ done
 #
 CP=./build/libs/jsonQL-1.0-all.jar
 #
-java -cp $CP oliv.json.JsonQL  -q Query  # ${PRMS}
+java -cp ${CP} oliv.json.JsonQL  -q Query  # ${PRMS}
 

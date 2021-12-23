@@ -25,7 +25,7 @@ then
 fi
 #
 MY_IP=$(hostname -I | awk '{ print $1 }')
-if [[ "$MY_IP" == "" ]]
+if [[ "${MY_IP}" == "" ]]
 then
   MY_IP="192.168.50.10" # Change as needed
 fi

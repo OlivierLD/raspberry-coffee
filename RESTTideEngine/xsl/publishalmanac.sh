@@ -15,7 +15,7 @@ cd ${SCRIPT_DIR}
 #
 export HOME=..
 #
-export CP=$CP:../build/libs/RESTTideEngine-1.0-all.jar
+export CP=${CP}:../build/libs/RESTTideEngine-1.0-all.jar
 export CP=${CP}:${HOME}/libs/orai18n-collation.jar
 export CP=${CP}:${HOME}/libs/orai18n-mapping.jar
 export CP=${CP}:${HOME}/libs/fnd2.zip
@@ -48,6 +48,6 @@ echo Publishing, be patient.
 # Note on -Xmx:
 # A 1 year almanac with stars is about 11Mb big, and 1024 seems to be a bit too tight.
 #
-java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor $PRM_OPTION -xml $3 -xsl $XSL_STYLESHEET -pdf $4
+java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor ${PRM_OPTION} -xml $3 -xsl $XSL_STYLESHEET -pdf $4
 echo Done transforming, document $4 is ready.
 #
