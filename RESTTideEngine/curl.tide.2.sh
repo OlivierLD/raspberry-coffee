@@ -57,7 +57,7 @@ WH=$(curl --location --request POST "${REQUEST}" \
                      --data-raw "${PAYLOAD}" | jq '.heights | objects[] | .wh')
 #
 echo -e "-----------------------------------------"
-echo -en "Water Height on ${SHORT_DATE}: "
+echo -en "Water Height in ${TIDE_STATION} on ${SHORT_DATE}: "
 printf "%03.2f " ${WH}
 echo -e "(in ${UNIT})"
 echo -e "-----------------------------------------"
