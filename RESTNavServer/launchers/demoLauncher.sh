@@ -4,6 +4,8 @@
 # 
 # Parameters --no-rmc-time --no-date : see in runNavServer.sh
 #
+HTTP_PORT=9999
+#
 LAUNCH_BROWSER=N
 WITH_PROXY=N
 USER_OPTION=
@@ -19,6 +21,9 @@ then
 	  if [[ ${prm} == "--browser:"* ]]
 	  then
 	    LAUNCH_BROWSER=${prm#*:}
+	  elif [[ ${prm} == "--http-port:"* ]]
+	  then
+	    HTTP_PORT=${prm#*:}
 	  elif [[ ${prm} == "--nohup:"* ]]
 	  then
 	    WITH_NOHUP=${prm#*:}
@@ -54,11 +59,13 @@ GO=true
 cat banner.txt
 sleep 1
 #
+NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --http-port:${HTTP_PORT}"
+#
 while [[ "${GO}" == "true" ]]
 do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
-	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y"
+	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y --http-port:9999"
 	echo -e "    --option:X will not prompt the user for his choice, it will go directly for it."
 	echo -e "    --nohup:Y will launch some commands with nohup (see the script for details)"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -170,7 +177,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    fi
 	    GO=false
 	    ;;
@@ -182,7 +189,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    fi
 	    GO=false
 	    ;;
@@ -191,7 +198,7 @@ do
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
 	#   sleep 5 # Wait for the server to be operational
-	#   openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	#   openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    GO=false
 	    ;;
 	  "4")
@@ -202,7 +209,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5   # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
 	    fi
 	    GO=false
 	    ;;
@@ -214,8 +221,8 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    # openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
-		    openBrowser "http://localhost:9999/web/sunflower/sun.data.html"
+		    # openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/sunflower/sun.data.html"
 	    fi
 	    GO=false
 	    ;;
@@ -227,7 +234,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -239,8 +246,8 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    # openBrowser "http://localhost:9999/web/googlemaps.driving.html"
-		    openBrowser "http://localhost:9999/web/leaflet.driving.html"
+		    # openBrowser "http://localhost:${HTTP_PORT}/web/googlemaps.driving.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/leaflet.driving.html"
 	    fi
 	    GO=false
 	    ;;
@@ -254,7 +261,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -268,7 +275,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -282,7 +289,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -296,7 +303,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -310,7 +317,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -324,7 +331,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -336,7 +343,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
 	    fi
 	    GO=false
 	    ;;
@@ -348,7 +355,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    fi
 	    GO=false
 	    ;;
@@ -362,14 +369,14 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/nmea/admin.html"
+		    openBrowser "http://localhost:${HTTP_PORT}/web/nmea/admin.html"
 	    fi
 	    GO=false
 	    ;;
 	  "20")
-	    curl -X GET localhost:9999/mux/cache 
-		echo -e "\nHit [Return]"
-		read resp
+	    curl -X GET localhost:${HTTP_PORT}/mux/cache
+      echo -e "\nHit [Return]"
+      read resp
 	    ;;	
 	  "S" | "s")
 	    echo -e "Nav Server processes:"

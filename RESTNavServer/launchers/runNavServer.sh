@@ -21,6 +21,7 @@ RMC_TIME_OK=true
 SUN_FLOWER=false
 PROP_FILE=
 DELTA_T=
+HTTP_PORT=
 #
 for ARG in "$@"; do
   echo -e "Managing prm ${ARG}"
@@ -30,6 +31,8 @@ for ARG in "$@"; do
     USE_PROXY=true
   elif [[ "${ARG}" == "--no-date" ]]; then
     NO_DATE=true
+  elif [[ "${ARG}" == "--http-port:"* ]]; then
+    HTTP_PORT=${ARG#*:}
   elif [[ "${ARG}" == "--no-rmc-time" ]]; then
     RMC_TIME_OK=false
   elif [[ "${ARG}" == "-sf" ]] || [[ "${ARG}" == "--sun-flower" ]]; then
@@ -194,6 +197,10 @@ fi
 #
 # JAVA_OPTS="${JAVA_OPTS} -Dyaml.tx.verbose=yes"
 # JAVA_OPTS="${JAVA_OPTS} -Dmux.data.verbose=false"
+#
+if [[ "${HTTP_PORT}" != "" ]]; then
+  JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=${HTTP_PORT}"
+fi
 #
 COMMAND="${SUDO}java -cp ${CP} ${JAVA_OPTS} navrest.NavServer"
 echo -e "Running ${COMMAND}"
