@@ -154,6 +154,15 @@ do
   	  then
   	    NOHUP="nohup "
   	    echo -e ">> Will use nohup"
+  	  else
+  	    # Ask if nohup, just in this case
+  	    echo -en "Use nohup (y|n) ? > "
+  	    read REPLY
+        if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]
+        then
+          NOHUP="nohup "
+          echo -e ">> Will use nohup"
+        fi
   	  fi
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
