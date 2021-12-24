@@ -163,8 +163,10 @@ public class RESTImplementation {
 
 	private Response getOperationList(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-
 		List<Operation> opList = this.navRequestManager.getAllOperationList(); // Aggregates ops from all request managers
+		if (VERBOSE) {
+			this.navRequestManager.getLogger().log(Level.INFO, String.format("getOperationList required in %s => %d operation(s)", this.getClass().getName(), opList.size()));
+		}
 		String content = new Gson().toJson(opList);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
