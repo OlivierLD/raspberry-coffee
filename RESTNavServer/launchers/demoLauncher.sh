@@ -156,7 +156,7 @@ do
   	    echo -e ">> Will use nohup"
   	  else
   	    # Ask if nohup, just in this case
-  	    echo -en "Use nohup (y|n) ? > "
+  	    echo -en " ==> Use nohup (y|n) ? > "
   	    read REPLY
         if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]
         then
