@@ -55,14 +55,18 @@ if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "1 - Downloading faxes."
   echo -e "======================"
 fi
+QUIET=
+if [[ "${VERBOSE}" != "true" ]]; then
+  QUIET="--quiet"
+fi
 # North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
-wget https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
+wget ${QUIET} https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
 # North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif
-wget https://tgftp.nws.noaa.gov/fax/PYAA11.gif --output-document NE-Atl.gif
+wget ${QUIET} https://tgftp.nws.noaa.gov/fax/PYAA11.gif --output-document NE-Atl.gif
 # North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif
-wget https://tgftp.nws.noaa.gov/fax/PPAA10.gif --output-document N-Atl-500mb.gif
+wget ${QUIET} https://tgftp.nws.noaa.gov/fax/PPAA10.gif --output-document N-Atl-500mb.gif
 # North Atlantic Sea State
-wget https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
+wget ${QUIET} https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
 #
 # 2.Start small http server
 #
