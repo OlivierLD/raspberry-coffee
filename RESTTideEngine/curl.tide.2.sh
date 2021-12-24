@@ -52,12 +52,12 @@ fi
 #                       --header "Content-Type: ${CONTENT_TYPE_HEADER}" \
 #                       --data-raw "${PAYLOAD}"
 
-WH=$(curl --location --request POST "${REQUEST}" \
+WH=$(curl --location --silent --request POST "${REQUEST}" \
                      --header "Content-Type: ${CONTENT_TYPE_HEADER}" \
                      --data-raw "${PAYLOAD}" | jq '.heights | objects[] | .wh')
 #
 echo -e "-----------------------------------------"
 echo -en "Water Height in ${TIDE_STATION} on ${SHORT_DATE}: "
 printf "%03.2f " ${WH}
-echo -e "(in ${UNIT})"
+echo -e "(unit is ${UNIT})"
 echo -e "-----------------------------------------"
