@@ -1531,31 +1531,170 @@
                                width="700"
                                height="500"></world-map>
                 </div>
-                <div class="black-frame centered">
-                    <input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
-                    <input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid
-                    <input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun
-                    <input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
-                    <input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
-                    <input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
-                    <input type="checkbox"
+                <div class="black-frame centered" style="max-height: 100px; overflow-y: scroll;">
+
+                    <div style="display: grid; grid-template-columns: 120px 30px 120px 30px 120px 30px 120px 30px 120px 30px 120px 30px; padding: 0px;">
+                        <span style="text-align: right; margin-top: 12px;">Transparent</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setTransparency('world-map-01', this);"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Grid</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Sun</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setSun('world-map-01', this);" checked/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Moon</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Sunlight</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setSunlight('world-map-01', this);"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Moonlight</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <!-- -->
+
+                        <span style="text-align: right; margin-top: 12px;">Wandering bodies</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox"
+                                       onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Stars</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Tropics</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setTropics('world-map-01', this);"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Anti Sun &amp; Moon</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setAntiSunMoon('world-map-01', this);"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">GeoStationary Satellites</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" id="geo-sat-01"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">ISS</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" id="iss-01" title="Requires Internet connection"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <!-- -->
+
+                        <span style="text-align: right; margin-top: 12px;">GPS Satellites in view</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" id="gps-sat-01"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                        <span style="text-align: right; margin-top: 12px;">Moon to Sun</span>
+                        <span style="position: relative; margin-top: 0px;">
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" id="moon-sun-path-01"/>
+                                <span class="switch-left">On</span>
+                                <span class="switch-right">Off</span>
+                            </label>
+                        </span>
+
+                    </div>
+
+                    <!--input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent -->
+                    <!--input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid -->
+                    <!--input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun -->
+                    <!-- input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon -->
+                    <!--input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight -->
+                    <!--input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight -->
+                    <!--input type="checkbox"
                            onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering
-                    bodies
-                    <input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
-                    <input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
-                    <br/>
-                    <input type="checkbox" onchange="setAntiSunMoon('world-map-01', this);"/>Anti Sun &amp; Moon
-                    <input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
-                    <input type="checkbox" id="iss-01" title="Requires Internet connection"/>ISS
-                    <input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
-                    <input type="checkbox" id="moon-sun-path-01"/>Moon to Sun
-                    <br/>
+                    bodies -->
+                    <!--input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars -->
+                    <!-- input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics -->
+                    <!--br/-->
+                    <!--input type="checkbox" onchange="setAntiSunMoon('world-map-01', this);"/>Anti Sun &amp; Moon -->
+                    <!--input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites -->
+                    <!--input type="checkbox" id="iss-01" title="Requires Internet connection"/>ISS -->
+                    <!--input type="checkbox" id="gps-sat-01"/>GPS Satellites in view -->
+                    <!--input type="checkbox" id="moon-sun-path-01"/>Moon to Sun -->
+                    <!--br/-->
+
+                <!--/div-->
+                <div>
                     <input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);"
                            checked>Globe
                     <input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
                     <input type="radio" name="proj-01" value="ANAXIMANDRE"
                            onchange="setProjection('world-map-01', this);">Square
                 </div>
+            </div>
             </div>
 
             <div style="display: grid; grid-template-columns: auto auto; padding: 0px;">

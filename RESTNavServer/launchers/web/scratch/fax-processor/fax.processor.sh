@@ -1,8 +1,15 @@
 #!/bin/bash
 #
-# Download weather faxes locally
-# Start HTTP Server
-# Open Web Page (fax re-working is done in there)
+# Display several weather faxes on the same canvas.
+# Faxes are:
+# Re-scaled, rotated
+# Re-colored - based on their types (surface, 500mb, sea-state, ...0
+# Made transparent, so they can be stacked, without hiding the lower ones.
+# ====================================
+# Steps:
+# - Download weather faxes locally
+# - Start HTTP Server
+# - Open Web Page (fax re-working is done in there)
 #
 # Usage:
 # ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--help]
