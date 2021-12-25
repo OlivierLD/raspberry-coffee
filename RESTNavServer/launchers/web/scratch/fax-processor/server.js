@@ -14,7 +14,7 @@
  */
 "use strict";
 
-process.title = 'TinyNodeServer';
+process.title = 'TinyNodeFaxServer';
 
 // HTTP port
 let port = 8080;

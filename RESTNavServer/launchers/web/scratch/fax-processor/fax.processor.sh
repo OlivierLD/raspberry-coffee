@@ -12,7 +12,7 @@
 # - Open Web Page (fax re-working is done in there)
 #
 # Usage:
-# ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--help]
+# ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--help]
 # defaults:
 # - flavor: python
 # - port: 8080
@@ -40,8 +40,8 @@ for ARG in "$@"; do
     KILL_SERVER=${ARG#*:}
   elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]; then
     echo -e "Usage is:"
-    echo -e " ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--help]"
-    echo -e "    --flavor: The flavor of the HTTP server to start. Default python."
+    echo -e " ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--help]"
+    echo -e "    --flavor: The flavor of the HTTP server to start. Default python. 'none' does not start a server. It may reuse an already started one."
     echo -e "    --port: HTTP port to use. Default 8080."
     echo -e "    --kill-server: Kill the server once the page is displayed. Default false."
     echo -e "    --verbose, or -v. Default false."
@@ -82,50 +82,54 @@ if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "2 - Starting ${SERVER_FLAVOR} HTTP server."
   echo -e "======================"
 fi
-if [[ "${SERVER_FLAVOR}" == "python" ]]; then
-  #
-  # See https://rawsec.ml/en/python-3-simplehttpserver/
-  #
-  echo -e "Starting python server"
-  PYTHON_3=$(which python3)
-  if [[ "${PYTHON_3}" == "" ]]; then
-    echo -e "python3 must be installed on your system... Exiting."
-    exit 1
+if [[ "${SERVER_FLAVOR}" != "none" ]]; then
+  if [[ "${SERVER_FLAVOR}" == "python" ]]; then
+    #
+    # See https://rawsec.ml/en/python-3-simplehttpserver/
+    #
+    echo -e "Starting python server"
+    PYTHON_3=$(which python3)
+    if [[ "${PYTHON_3}" == "" ]]; then
+      echo -e "python3 must be installed on your system... Exiting."
+      exit 1
+    fi
+    python3 -m http.server ${HTTP_PORT} &
+    SERVER_PROCESS_ID=$(echo $!)
+    echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+  elif [[ "${SERVER_FLAVOR}" == "node" ]]; then
+    echo -e "Starting node server"
+    NODE_JS=$(which node)
+    if [[ "${NODE_JS}" == "" ]]; then
+      echo -e "node must be installed on your system... Exiting."
+      exit 1
+    fi
+    node server.js --verbose:${VERBOSE} --port:${HTTP_PORT} &
+    SERVER_PROCESS_ID=$(echo $!)
+    echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+  elif [[ "${SERVER_FLAVOR}" == "java" ]]; then
+    echo -e "Starting java server"
+    # CP=$(find ~/repos/raspberry-coffee -name http-tiny-server-1.0-all.jar)
+    JAR_FILE=../../../../../http-tiny-server/build/libs/http-tiny-server-1.0-all.jar
+    if [[ ! -f ${JAR_FILE} ]]; then
+      echo -e "${JAR_FILE} not found where expected. Exiting"
+      exit 1
+    fi
+    CP=${JAR_FILE}
+    JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
+    JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${HTTP_PORT}"
+    JAVA_OPTIONS="${JAVA_OPTIONS} -Dstatic.docs=/"
+    # JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.super.verbose=true"
+    echo -e "Will run: java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &"
+    java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &
+    SERVER_PROCESS_ID=$(echo $!)
+    echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+  else
+    echo -e "-----------------------------------------------------------------"
+    echo -e "Unsupported server flavor [${SERVER_FLAVOR}]. Only 'python' (default), 'node', and 'java' are supported."
+    echo -e "-----------------------------------------------------------------"
   fi
-  python3 -m http.server ${HTTP_PORT} &
-  SERVER_PROCESS_ID=$(echo $!)
-  echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
-elif [[ "${SERVER_FLAVOR}" == "node" ]]; then
-  echo -e "Starting node server"
-  NODE_JS=$(which node)
-  if [[ "${NODE_JS}" == "" ]]; then
-    echo -e "node must be installed on your system... Exiting."
-    exit 1
-  fi
-  node server.js --verbose:${VERBOSE} --port:${HTTP_PORT} &
-  SERVER_PROCESS_ID=$(echo $!)
-  echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
-elif [[ "${SERVER_FLAVOR}" == "java" ]]; then
-  echo -e "Starting java server"
-  # CP=$(find ~/repos/raspberry-coffee -name http-tiny-server-1.0-all.jar)
-  JAR_FILE=../../../../../http-tiny-server/build/libs/http-tiny-server-1.0-all.jar
-  if [[ ! -f ${JAR_FILE} ]]; then
-    echo -e "${JAR_FILE} not found where expected. Exiting"
-    exit 1
-  fi
-  CP=${JAR_FILE}
-  JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
-  JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${HTTP_PORT}"
-  JAVA_OPTIONS="${JAVA_OPTIONS} -Dstatic.docs=/"
-  # JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.super.verbose=true"
-  echo -e "Will run: java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &"
-  java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &
-  SERVER_PROCESS_ID=$(echo $!)
-  echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
 else
-  echo -e "-----------------------------------------------------------------"
-  echo -e "Unsupported server flavor [${SERVER_FLAVOR}]. Only 'python' (default), 'node', and 'java' are supported."
-  echo -e "-----------------------------------------------------------------"
+  echo "No server started"
 fi
 #
 # 3.Open the page
