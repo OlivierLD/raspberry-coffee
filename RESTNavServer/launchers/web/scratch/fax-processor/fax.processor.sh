@@ -168,8 +168,8 @@ else
   SERVER_NAME="localhost"
   if [[ "${IP_ADDR}" != "" ]]; then
     SERVER_NAME=${IP_ADDR}
-  echo -e "NO browser, as per user's choice."
-  echo -e "Reach the page at http://${SERVER_NAME}:${HTTP_PORT}/process.faxes.html"
+  echo -e "\tNO browser, as per user's choice."
+  echo -e "\tReach the page at http://${SERVER_NAME}:${HTTP_PORT}/process.faxes.html"
 fi
 #
 if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]; then
