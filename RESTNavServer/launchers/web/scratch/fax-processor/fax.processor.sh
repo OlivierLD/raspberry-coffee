@@ -28,22 +28,26 @@ VERBOSE=false
 SERVER_FLAVOR=python
 HTTP_PORT=8080
 KILL_SERVER=false
+WITH_BROWSER=true
 SERVER_PROCESS_ID=
 #
 for ARG in "$@"; do
   echo -e "Managing prm $ARG"
   if [[ ${ARG} == "--flavor:"* ]]; then
     SERVER_FLAVOR=${ARG#*:}
+  elif [[ ${ARG} == "--browser:"* ]]; then
+    WITH_BROWSER=${ARG#*:}
   elif [[ ${ARG} == "--port:"* ]]; then
     HTTP_PORT=${ARG#*:}
   elif [[ ${ARG} == "--kill-server:"* ]]; then
     KILL_SERVER=${ARG#*:}
   elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]; then
     echo -e "Usage is:"
-    echo -e " ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--help]"
+    echo -e " ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--browser:true] [--help]"
     echo -e "    --flavor: The flavor of the HTTP server to start. Default python. 'none' does not start a server. It may reuse an already started one."
     echo -e "    --port: HTTP port to use. Default 8080."
     echo -e "    --kill-server: Kill the server once the page is displayed. Default false."
+    echo -e "    --browser: Default true."
     echo -e "    --verbose, or -v. Default false."
     echo -e "    --help. Guess what!"
     exit 0
@@ -143,20 +147,24 @@ if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "======================"
 fi
 OS=$(uname -a | awk '{ print $1 }')
-if [[ "$OS" == "Darwin" ]]; then
-  open http://localhost:${HTTP_PORT}/process.faxes.html &
-else
-  SENSIBLE=$(which sensible-browser)
-  if [[ "${SENSIBLE}" != "" ]]; then
-    sensible-browser http://localhost:${HTTP_PORT}/process.faxes.html &
+if [[ "${WITH_BROWSER}" == "true" ]]; then
+  if [[ "$OS" == "Darwin" ]]; then
+    open http://localhost:${HTTP_PORT}/process.faxes.html &
   else
-    XDG=$(which xdg-open)
-    if [[ "${XDG}" != "" ]]; then
-      xdg-open http://localhost:${HTTP_PORT}/process.faxes.html &
+    SENSIBLE=$(which sensible-browser)
+    if [[ "${SENSIBLE}" != "" ]]; then
+      sensible-browser http://localhost:${HTTP_PORT}/process.faxes.html &
     else
-      echo -e "Enable to open the web page... Sorry."
+      XDG=$(which xdg-open)
+      if [[ "${XDG}" != "" ]]; then
+        xdg-open http://localhost:${HTTP_PORT}/process.faxes.html &
+      else
+        echo -e "Enable to open the web page... Sorry."
+      fi
     fi
   fi
+else
+  echo -e "NO browser, as per user's choice."
 fi
 #
 if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]; then
