@@ -165,6 +165,8 @@ else
   if [[ "${SERVER_PROCESS_ID}" != "" ]]; then
     echo -e "Leaving server [${SERVER_PROCESS_ID}] alive"
   else
-    echo -e "... No server started."
+    if [[ "${SERVER_FLAVOR}" != "none" ]]; then
+      echo -e "... No server started."
+    fi
   fi
 fi
