@@ -75,6 +75,10 @@ import java.util.zip.ZipInputStream;
  * </p>
  */
 public class HTTPServer {
+
+	private final static String DEFAULT_STATIC_DOCS_PATH = "/web/";
+	private final static String DEFAULT_STATIC_ZIP_DOCS_PATH = "/zip/";
+
 	private static boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private static boolean verboseDump = "true".equals(System.getProperty("http.verbose.dump", "false"));
 	private int port = -1;
@@ -896,13 +900,13 @@ public class HTTPServer {
 		// Warning; A static.docs like "/" would prevent the REST Request management...
 		String propDoc = properties.getProperty("static.docs");
 		if (propDoc == null) {
-			propDoc = System.getProperty("static.docs", "/web/");
+			propDoc = System.getProperty("static.docs", DEFAULT_STATIC_DOCS_PATH);
 		}
 		this.staticDocumentsLocation = Arrays.asList(propDoc.split(","));
 
 		String zipPropDoc = properties.getProperty("static.zip.docs");
 		if (zipPropDoc == null) {
-			zipPropDoc = System.getProperty("static.zip.docs", "/zip/");
+			zipPropDoc = System.getProperty("static.zip.docs", DEFAULT_STATIC_ZIP_DOCS_PATH);
 		}
 		this.staticZippedDocumentsLocation = Arrays.asList(zipPropDoc.split(","));
 		this.autoBind = "true".equals(properties.getProperty("autobind"));
@@ -1227,9 +1231,12 @@ public class HTTPServer {
 
 	private static Thread waiter = null;
 
-	private static boolean withRest = true;
+	private static boolean withRest = "true".equals(System.getProperty("with.rest", "true"));
+
 	/**
 	 * For dev tests, example, default proxy.
+	 * Can also be used as a simple server (HTTP, REST), with caution.
+	 * See -Dwith.rest, -Dautobind as well.
  	 */
 	public static void main(String... args) throws Exception {
 
@@ -1245,9 +1252,10 @@ public class HTTPServer {
 			}
 		}
 		Properties props = new Properties();
-		props.setProperty("autobind", "true"); // AutoBind test
+		String autobind = System.getProperty("autobind", "true");
+		props.setProperty("autobind", autobind); // AutoBind test
 
-		System.out.println("For the test, autobind is set to true.");
+		System.out.printf("AutoBind: autobind is set to %s.\n", autobind);
 
 		HTTPServer httpServer = new HTTPServer(port, props);
 //		httpServer.setProxyFunction(HTTPServer::defaultProxy);
@@ -1291,7 +1299,11 @@ public class HTTPServer {
 
 		httpServer.startServer();
 		System.out.println(String.format("Started on port %d", httpServer.getPort()));
-		System.out.println(String.format("Static pages (in a zip or not)%s", (withRest ? ", plus REST service GET /oplist are available" : "")));
+		String staticDocs = httpServer.staticDocumentsLocation.stream().collect(Collectors.joining(", "));
+		String staticZipDocs = httpServer.staticZippedDocumentsLocation.stream().collect(Collectors.joining(", "));
+		System.out.println(String.format("Static pages (in a zip or not) at %s and %s%s",
+				staticDocs, staticZipDocs,
+				(withRest ? ", plus REST service GET /oplist are available" : "")));
 
 		if (true) {
 			waiter = new Thread("HTTPWaiter") {

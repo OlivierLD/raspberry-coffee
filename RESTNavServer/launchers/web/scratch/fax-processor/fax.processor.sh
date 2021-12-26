@@ -115,6 +115,9 @@ if [[ "${SERVER_FLAVOR}" != "none" ]]; then
       exit 1
     fi
     CP=${JAR_FILE}
+    JAVA_OPTIONS="${JAVA_OPTIONS} -Dautobind=false"
+    JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.rest=false"
+    JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${HTTP_PORT}"
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dstatic.docs=/"
