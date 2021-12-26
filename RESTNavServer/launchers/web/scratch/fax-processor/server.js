@@ -46,25 +46,29 @@ if (typeof String.prototype.endsWith !== 'function') {
 	};
 }
 
+const VERBOSE_PRM = "--verbose:";
+const PORT_PRM = "--port:";
+const WORKING_DIR_PRM = "--wdir:";
+
 if (process.argv.length > 2) {
 	for (let argc=2; argc<process.argv.length; argc++) {
-		if (process.argv[argc].startsWith("--verbose:")) {
-			let value = process.argv[argc].substring("--verbose:".length);
+		if (process.argv[argc].startsWith(VERBOSE_PRM)) {
+			let value = process.argv[argc].substring(VERBOSE_PRM.length);
 			if (value !== 'true' && value !== 'false') {
 				console.log("Invalid verbose value [%s]. Only 'true' and 'false' are supported.", value);
 				process.exit(1);
 			}
 			verbose = (value === 'true');
-		} else if (process.argv[argc].startsWith("--port:")) {
-			let value = process.argv[argc].substring("--port:".length);
+		} else if (process.argv[argc].startsWith(PORT_PRM)) {
+			let value = process.argv[argc].substring(PORT_PRM.length);
 			try {
 				port = parseInt(value);
 			} catch (err) {
 				console.log("Invalid integer for port value %s.", value);
 				process.exit(1);
 			}
-		} else if (process.argv[argc].startsWith("--wdir:")) {
-			let value = process.argv[argc].substring("--wdir:".length);
+		} else if (process.argv[argc].startsWith(WORKING_DIR_PRM)) {
+			let value = process.argv[argc].substring(WORKING_DIR_PRM.length);
 			try {
 				process.chdir(value);
 				workDir = process.cwd();
