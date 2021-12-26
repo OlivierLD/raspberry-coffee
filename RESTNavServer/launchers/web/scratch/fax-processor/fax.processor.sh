@@ -164,7 +164,12 @@ if [[ "${WITH_BROWSER}" == "true" ]]; then
     fi
   fi
 else
+  IP_ADDR=$(hostname -I | awk '{ print $1 }')
+  SERVER_NAME="localhost"
+  if [[ "${IP_ADDR}" != "" ]]; then
+    SERVER_NAME=${IP_ADDR}
   echo -e "NO browser, as per user's choice."
+  echo -e "Reach the page at http://${SERVER_NAME}:${HTTP_PORT}/process.faxes.html"
 fi
 #
 if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]; then
