@@ -141,15 +141,15 @@ if [[ "${VERBOSE}" == "true" ]]; then
 fi
 OS=$(uname -a | awk '{ print $1 }')
 if [[ "$OS" == "Darwin" ]]; then
-  open http://localhost:${HTTP_PORT}/process.faxes.html
+  open http://localhost:${HTTP_PORT}/process.faxes.html &
 else
   SENSIBLE=$(which sensible-browser)
   if [[ "${SENSIBLE}" != "" ]]; then
-    sensible-browser http://localhost:${HTTP_PORT}/process.faxes.html
+    sensible-browser http://localhost:${HTTP_PORT}/process.faxes.html &
   else
     XDG=$(which xdg-open)
     if [[ "${XDG}" != "" ]]; then
-      xdg-open http://localhost:${HTTP_PORT}/process.faxes.html
+      xdg-open http://localhost:${HTTP_PORT}/process.faxes.html &
     else
       echo -e "Enable to open the web page... Sorry."
     fi
