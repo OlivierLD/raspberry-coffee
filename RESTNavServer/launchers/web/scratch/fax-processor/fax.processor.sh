@@ -12,12 +12,13 @@
 # - Open Web Page (fax re-working is done in there)
 #
 # Usage:
-# ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--help]
+# ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--browser:true] [--help]
 # defaults:
 # - flavor: python
 # - port: 8080
 # - verbose: false
 # - kill-server: false
+# - browser: true
 #
 ##################################################################
 #
