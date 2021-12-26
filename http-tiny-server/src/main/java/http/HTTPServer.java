@@ -102,8 +102,14 @@ public class HTTPServer {
 
 	public static class Request {
 		public final static List<String> VERBS = Arrays.asList(
-				"GET", "POST", "DELETE", "PUT",
-				"PATCH", "OPTIONS", "HEAD", "VIEW"
+				"GET",
+				"POST",
+				"DELETE",
+				"PUT",
+				"PATCH",
+				"OPTIONS",
+				"HEAD",
+				"VIEW"
 		);
 
 		private String verb;
