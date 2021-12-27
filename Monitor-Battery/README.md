@@ -381,7 +381,7 @@ The widget reacts every time you hit return.
 > > insert your data in the DB. The data to pass to the "REST Service" would be passed as a query string parameter.
 > > This is kind of breaking the REST specification and recommendations, but at least, that would work.
 >
-> And more and more, you can get yourself a free Cloud account (Oracle, Google, ...) that will fulfill most of this kind of needs. 
+> And more and more, you can get yourself a free Cloud account (Oracle, Google, ... see [here](https://free-for.dev/#/?id=major-cloud-providers)) that will fulfill most of this kind of needs. 
 
 #### Bridging the gap between MQTT and WebSocket
 - MQTT is supported by most of - if not all - the IoT servers you can reach,
@@ -405,7 +405,7 @@ You need to modify the MQTT Node to enter your own credentials.
   - In the Security tab, enter your Adafruit-IO username and password.
 - Topic: `olivierld/feeds/battery-pi` Make sure your user-name precedes the feed name.
 
-Node-RED is a great product. It has **a lot** of possibilities, that go way
+Node-RED is indeed a _great product_. It has **a lot** of possibilities, that go way
 beyond what me just mention here.  
 You could for example get the data, and log them into a SQLite DB; a node is ready for you to use it.
 
