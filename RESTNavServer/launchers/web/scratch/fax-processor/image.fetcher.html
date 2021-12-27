@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Fetcher, Act 1</title>
+    <script type="text/javascript" src="image.fetcher.js"></script>
+    <style type="text/css">
+html {
+  height: 100%;
+}
+
+body {
+  background-color: white;
+  color: darkgray;
+  font-family: Arial, Helvetica, sans-serif;
+	/*background-image: linear-gradient(to bottom right, lightgray, white);*/
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+    </style>
+</head>
+<body>
+    <h1>Duh</h1>
+
+    <img id="image"/>
+
+    <!--img src="https://tgftp.nws.noaa.gov/fax/PYAA12.gif" title="Direct"/-->
+
+</body>
+<script type="text/javascript">
+
+/*
+ * Example
+ *
+ * See https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome
+ */
+
+window.onload = () => {
+    fetchImage('NW-Atl.gif');
+    /*
+    fetchImage('https://tgftp.nws.noaa.gov/fax/PYAA12.gif', [
+      {"name": "Access-Control-Allow-Origin", "value": "*"},
+      {"name": "Access-Control-Allow-Methods", "value": "*"},
+      {"name": "Access-Control-Allow-Headers", "value": "*"},
+      {"name": "Access-Control-Max-Age", "value": "3600"}
+    ]);
+    */
+}
+
+</script>
+</html>

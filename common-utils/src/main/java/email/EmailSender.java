@@ -1,6 +1,11 @@
 package email;
+/**
+ * Many accounts need an "App Password"...
+ * See <https://www.codeproject.com/Articles/5266074/Send-Email-with-Java-and-Yahoo-Mail>
+ *     <https://support.google.com/accounts/answer/185833?p=InvalidSecondFactor&visit_id=637762242149664166-1125601348&rd=1>
+ */
 
-//import com.sun.mail.smtp.SMTPTransport;
+import com.sun.mail.smtp.SMTPTransport;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -163,9 +168,9 @@ public class EmailSender {
 						});
 		session.setDebug(verbose);
 		Transport tr = session.getTransport("smtp");
-//		if (!(tr instanceof SMTPTransport)) {
-//			System.out.println("This is NOT an SMTPTransport:[" + tr.getClass().getName() + "]");
-//		}
+		if (!(tr instanceof SMTPTransport)) {
+			System.out.println("This is NOT an SMTPTransport:[" + tr.getClass().getName() + "]");
+		}
 		Message msg = new MimeMessage(session);
   	msg.setFrom(new InternetAddress(EmailSender.username));
 //	msg.setFrom(new InternetAddress("not-me@neverthere.com")); // Did not find the way to hide the from address...
@@ -218,7 +223,7 @@ public class EmailSender {
 		props.put("mail.smtp.user", EmailSender.username);
 		props.put("mail.smtp.password", EmailSender.password);
 
-  	props.put("mail.smtp.auth", EmailSender.smtpauth);
+		props.put("mail.smtp.auth", EmailSender.smtpauth);
 
 		props.put("mail.smtp.starttls.enable", "true"); //  See http://www.oracle.com/technetwork/java/faq-135477.html#yahoomail
 //  props.put("mail.smtp.starttls.required", "true");

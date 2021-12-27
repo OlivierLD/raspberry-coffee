@@ -1,5 +1,6 @@
 package battery.email;
 
+import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
 import analogdigitalconverter.mcp.MCPReader;
 import email.EmailSender;
@@ -7,6 +8,7 @@ import email.EmailSender;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ADCReader {
 	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
@@ -116,6 +118,8 @@ public class ADCReader {
 
 		ADCReader adcReader = new ADCReader();
 
+//		AtomicBoolean simulateADC = new AtomicBoolean(false);
+
 		Thread batteryThread = new Thread(() -> {
 				try {
 					if (verbose) {
@@ -126,6 +130,8 @@ public class ADCReader {
 					if (verbose) {
 						System.out.println("Creating BatteryMonitor: done");
 					}
+//				} catch (ADCObserver.NotOnARaspberryException noPiEx) {
+//					simulateADC.set(true);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -172,7 +178,7 @@ public class ADCReader {
 				synchronized (senderThread) {
 					senderThread.notify();
 				}
-				if (adcReader.getBatteryMonitor() != null) {
+				if (/*!simulateADC.get() &&*/ adcReader.getBatteryMonitor() != null) {
 					adcReader.getBatteryMonitor().stop();
 				}
 				System.out.println("Bye now");

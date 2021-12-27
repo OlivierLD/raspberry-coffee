@@ -29,7 +29,8 @@ dependencies {
     compile 'com.pi4j:pi4j-core:1.2'
     compile 'com.google.code.gson:gson:2.8.5'
 //    compile 'javax.mail:mail:1.4.4' // Important! Later versions might not work (2015...)
-    compile 'javax.mail:mail:1.5.0-b01'
+//    compile 'javax.mail:mail:1.5.0-b01'  // Previous one
+    compile 'com.sun.mail:javax.mail:1.6.2'
 //    compile 'javax.mail:javax.mail-api:1.6.0'
     testCompile 'junit:junit:4.13'
 

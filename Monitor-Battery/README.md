@@ -48,7 +48,7 @@ After cloning the git repo, to run everything this document is about, all you ne
 ```bash
  ../gradlew clean shadowJar
 ```
-This requires Java 8.
+This requires at least Java 8.
 If no error or wacky message shows up, you're good.
 
 ### By email
@@ -61,10 +61,11 @@ It can go both ways though. The Raspberry Pi can send emails, and receive some (
 As long as the _received_ email complies with a given format, it can be parsed and then managed accordingly.
 
 #### Example
- You need clone the file named `email.properties.sample` into `email.properties`, and modify it with the details of the email account(s)
- you want to use.
+You need clone the file named `email.properties.sample` into `email.properties`, and modify it with the details of the email account(s) you want to use.  
+> _Note:_ Since the first version of this soft has been written, many email accounts now require
+> an "App Password" to allow Java to reach your account. Keep that in mind when filling out the `email.properties`.
 
-All you need to add to the diagram above is a network connection.
+All you need to add to the diagram above is a network connection, to reach your email account.
 
  Then use for example
 ```bash
@@ -374,6 +375,14 @@ You would see the widget above reacting as the tension is read from the Raspberr
 ```
 The widget reacts every time you hit return.
 
+> _Note_: Depending on the server you want to access, maybe the one you want to reach if not fully REST equipped.
+> > But it is not difficult to work around this. All web server support at least the `GET` verb, and if your server is
+> > php-enabled, with access a DB access, like MySQL or SQLite, you can - for example - write a php document that will 
+> > insert your data in the DB. The data to pass to the "REST Service" would be passed as a query string parameter.
+> > This is kind of breaking the REST specification and recommendations, but at least, that would work.
+>
+> And more and more, you can get yourself a free Cloud account (Oracle, Google, ...) that will fulfill most of this kind of needs. 
+
 #### Bridging the gap between MQTT and WebSocket
 - MQTT is supported by most of - if not all - the IoT servers you can reach,
  but it is _not_ directly supported by the browsers.
@@ -396,6 +405,10 @@ You need to modify the MQTT Node to enter your own credentials.
   - In the Security tab, enter your Adafruit-IO username and password.
 - Topic: `olivierld/feeds/battery-pi` Make sure your user-name precedes the feed name.
 
+Node-RED is a great product. It has **a lot** of possibilities, that go way
+beyond what me just mention here.  
+You could for example get the data, and log them into a SQLite DB; A node is ready for you to use it.
+
 
 ### Next?
 
@@ -404,7 +417,7 @@ More details will be available soon here. LoRa is free.
 You have to come up with your own protocol though.
 
 #### Satellite?
-Ok, it you are far from everything (at sea, at war, in a remote place after a cyclone or an earth-quake), this may be a possibility to consider. But that is expensive.
+Ok, it you are far from everything (at sea, at war, in a remote place after a cyclone or an earth-quake, or in a dystopic movie), this may be a possibility to consider. But that is expensive.
 In 2017, it is about $1 per minute.
 
 ---

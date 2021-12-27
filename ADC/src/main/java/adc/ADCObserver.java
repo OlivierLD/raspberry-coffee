@@ -86,6 +86,8 @@ public class ADCObserver {
 			gpio = GpioFactory.getInstance();
 		} catch (UnsatisfiedLinkError ule) {
 			throw new NotOnARaspberryException(ule);
+		} catch (Throwable throwable) {
+			throw new RuntimeException(throwable);
 		}
 		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
 		clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
