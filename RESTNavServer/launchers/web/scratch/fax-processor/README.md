@@ -21,12 +21,28 @@ with regular CSS (through ES6).
 ## Current status
 Start the script `./fax.processor.sh`, and see for yourself.  
 > Type `./fax.processor.sh --help` for help.
+```
+$ ./fax.processor.sh --help
+For help, type ./fax.processor.sh --help
+----------------------------------
+Managing prm --help
+Usage is:
+ ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--browser:true] [--help]
+    --flavor: The flavor of the HTTP server to start. Default python. 'none' does not start a server. It may reuse an already started one.
+    --port: HTTP port to use. Default 8080.
+    --kill-server: Kill the server once the page is displayed. Default false.
+    --browser: Default true.
+    --verbose, or -v. Default false.
+    --help. Guess what!
+```
 
 The script would:
 - Download the expected faxes on the local file system
 - Start a small HTTP Server
 - Open `process.faxes.html` in your default browser, showing the faxes, recolored, rescaled, rotated.
 
-The code to change the colors, orientation, and size of the faxes is in `jaxes.js`. 
+The code to change the colors, orientation, and size of the faxes is in `faxes.js`. 
+
+![4 Faxes](./4.faxes.png)
 
 ---

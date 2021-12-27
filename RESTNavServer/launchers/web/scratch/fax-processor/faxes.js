@@ -56,6 +56,14 @@ doOnLoad = () => {
   const fax500mb = document.getElementById('500mb');
   const faxWaves = document.getElementById('waves');
 
+
+  // res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Methods', '*');
+  // res.header('Access-Control-Allow-Headers', '*');
+  // res.header('Access-Control-Max-Age', '3600');
+  // leftFax.setAttribute('crossOrigin', '*'); // Need Access-Control-Allow-Origin
+  // leftFax.src = "https://tgftp.nws.noaa.gov/fax/PYAA12.gif"
+
   messWithCanvas(leftFax, 'left-img-canvas', TO_RED);
   const leftReworkedFax = document.getElementById('left-img-canvas');
   leftReworkedFax.style.width = '600px';
