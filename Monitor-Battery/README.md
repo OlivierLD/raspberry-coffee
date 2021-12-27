@@ -407,7 +407,7 @@ You need to modify the MQTT Node to enter your own credentials.
 
 Node-RED is a great product. It has **a lot** of possibilities, that go way
 beyond what me just mention here.  
-You could for example get the data, and log them into a SQLite DB; A node is ready for you to use it.
+You could for example get the data, and log them into a SQLite DB; a node is ready for you to use it.
 
 
 ### Next?
