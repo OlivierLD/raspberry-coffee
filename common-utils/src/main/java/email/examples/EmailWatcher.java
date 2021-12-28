@@ -27,6 +27,7 @@ public class EmailWatcher {
 
 		public final static String TEXT_PLAIN = "text/plain";
 		public final static String TEXT_XML = "text/xml";
+		public final static String TEXT_HTML = "text/html";
 		public final static String APPLICATION_JSON = "application/json";
 	}
 
@@ -34,11 +35,11 @@ public class EmailWatcher {
 	static final List<EmailProcessor> processors = Arrays.asList(
 		new EmailProcessor("exit", null),
 		new EmailProcessor("execute", EmailWatcher::cmdProcessor),
-		new EmailProcessor("execute-script", EmailWatcher::scriptProcessor)
+		new EmailProcessor("execute-script", EmailWatcher::scriptProcessor) // Requires script to execute, as attachment
 	);
 
 	/**
-	 * This is an example of an email interaction.
+	 * Here is an example of an email interaction.
 	 *
 	 * A user is sending an email:
 	 * <pre>
@@ -49,7 +50,7 @@ public class EmailWatcher {
 	 *     ifconfig
 	 *     uname -a
 	 * </pre>
-	 * Then the commands are executed, output (stdout & stderr) and status code are rturned
+	 * Then the commands are executed, output (stdout & stderr) and status code are returned
 	 * After that, an email is returned to the requester, containing the result.
 	 *
 	 * Note the <code>processors</code> class member, defining the operation to be performed on received emails.
@@ -125,12 +126,13 @@ public class EmailWatcher {
 					if (true || verbose) {
 						System.out.println("Received:\n" + mess.getContent().getContent());
 						if (mess.getContent().getAttachments() != null && mess.getContent().getAttachments().size() > 0) {
-							System.out.println("With attachments:");
+							System.out.println("-- With attachments: --");
 							mess.getContent().getAttachments()
 									.stream()
 									.forEach(att -> {
 										System.out.println(String.format("File %s, type %s", att.getFullPath(), att.getMimeType()));
 									});
+							System.out.println("-----------------------");
 						}
 					}
 					String operation = mess.getSubject();

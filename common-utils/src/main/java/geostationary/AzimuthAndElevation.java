@@ -41,7 +41,7 @@ public class AzimuthAndElevation {
 		return earthStationAzimuth;
 	}
 
-	private final static double R1 = 1D + 35786D / 6378.16;
+	private final static double R1 = 1D + 35_786D / 6_378.16;
 
 	private static double elevation(double satLong, double earthStationLat, double earthStationLong) {
 		double deltaG = Math.toRadians(earthStationLong - satLong);
@@ -78,7 +78,7 @@ public class AzimuthAndElevation {
 
 	public static void main(String... args) {
 		// 2010 48th Ave, SF
-		double lat = 37.7489;
+		double lat =   37.7489;
 		double lng = -122.5070;
 
 		Satellite toUse = null;
