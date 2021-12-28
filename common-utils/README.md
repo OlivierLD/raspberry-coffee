@@ -10,15 +10,16 @@ Build it:
 
 ## Email, remote command line:
 Copy the `email.properties.sample` into `email.properties`, modify it to fit your account(s). 
-> _Note:_ Since the first version of this soft has been written, many email accounts now require
+> ####_Note:_ 
+> Since the first version of this soft has been written, many email accounts now require
 > an "App Password" to allow Java to reach your account. Keep that in mind when filling out the `email.properties`.  
-> An "App Password" for GMail would look like `pqzlXXXXdrpflksz`.  
+> For example, an "App Password" for GMail would be auto-generated (from your account settings), and look like `pqzlXXXXdrpflksz`.  
 
 Then run:
 ```
  $ java -cp ./build/libs/common-utils-1.0-all.jar email.examples.EmailWatcher -send:google -receive:google
 ```
-See [Controlling invisible machines with emails, from Java](http://hocus-blogus.blogspot.com/2018/04/driving-and-monitoring-from-emails.html) for more details.
+See [Controlling invisible machines with emails, from Java](http://hocus-blogus.blogspot.com/2018/04/controlling-invisible-machines-with.html) for more details.
 
 ## Pins
 ```

@@ -51,6 +51,7 @@ public class EmailSender {
 
 		public final static String TEXT_PLAIN = "text/plain";
 		public final static String TEXT_XML = "text/xml";
+		public final static String TEXT_HTML = "text/html";
 		public final static String APPLICATION_JSON = "application/json";
 	}
 
