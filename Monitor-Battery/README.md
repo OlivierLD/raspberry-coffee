@@ -63,7 +63,8 @@ As long as the _received_ email complies with a given format, it can be parsed a
 #### Example
 You need clone the file named `email.properties.sample` into `email.properties`, and modify it with the details of the email account(s) you want to use.  
 > _Note:_ Since the first version of this soft has been written, many email accounts now require
-> an "App Password" to allow Java to reach your account. Keep that in mind when filling out the `email.properties`.
+> an "App Password" to allow Java to reach your account. Keep that in mind when filling out the `email.properties`.  
+> An "App Password" for GMail would look like `pqzlXXXXdrpflksz`.
 
 All you need to add to the diagram above is a network connection, to reach your email account.
 

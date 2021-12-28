@@ -9,7 +9,12 @@ Build it:
 ```
 
 ## Email, remote command line:
-Copy the `email.properties.sample` into `email.properties`, modify it to fit your account(s), then run:
+Copy the `email.properties.sample` into `email.properties`, modify it to fit your account(s). 
+> _Note:_ Since the first version of this soft has been written, many email accounts now require
+> an "App Password" to allow Java to reach your account. Keep that in mind when filling out the `email.properties`.  
+> An "App Password" for GMail would look like `pqzlXXXXdrpflksz`.  
+
+Then run:
 ```
  $ java -cp ./build/libs/common-utils-1.0-all.jar email.examples.EmailWatcher -send:google -receive:google
 ```
@@ -49,8 +54,8 @@ See [Controlling invisible machines with emails, from Java](http://hocus-blogus.
 You can also `label` the header's pins, for user's convenience:
 
 In the case of an `MCP3008` for example, if you use the `print` method with labels like that:
-```java
-	print("23:CLK", "21:Dout", "19:Din", "24:CS");
+```
+ print("23:CLK", "21:Dout", "19:Din", "24:CS");
 ```
 you would get an output like that:
 ```
