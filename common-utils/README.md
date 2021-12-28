@@ -12,8 +12,8 @@ Build it:
 Copy the `email.properties.sample` into `email.properties`, modify it to fit your account(s). 
 > ####_Note:_ 
 > Since the first version of this soft has been written, many email accounts now require
-> an "App Password" to allow Java to reach your account. Keep that in mind when filling out the `email.properties`.  
-> For example, an "App Password" for GMail would be auto-generated (from your account settings), and look like `pqzlXXXXdrpflksz`.  
+> an "_App Password_" to allow Java to reach your account. Keep that in mind when filling out the `email.properties`.  
+> For example, an "_App Password_" for GMail would be auto-generated (from your account settings), and look like `pqzlXXXXdrpflksz`.  
 
 Then run:
 ```
