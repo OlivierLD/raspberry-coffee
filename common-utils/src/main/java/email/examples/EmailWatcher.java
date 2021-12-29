@@ -50,7 +50,7 @@ public class EmailWatcher {
 	 *     ifconfig
 	 *     uname -a
 	 * </pre>
-	 * > Note: Command with pipes ('|') might not be supported here...
+	 * > Note: Command with pipes ('|') might not be supported here... Use the `execute-script' for that.
 	 *
 	 * Then the commands are executed, output (stdout & stderr) and status code are returned
 	 * After that, an email is returned to the requester, containing the result.
@@ -306,10 +306,20 @@ public class EmailWatcher {
 					.map(addr -> ((InternetAddress) addr).getAddress())
 					.collect(Collectors.joining(","))
 					.split(","); // Not nice, I know. A suitable toArray would help.
+			// Text Plain
+//			messContext.sender.send(dest,
+//					"Script execution",
+//					String.format("Scripts execution returned: \n%s", output),
+//					HttpHeaders.TEXT_PLAIN);
+			// HTML Message
+			String messageContent = String.format("<div>Scripts execution returned:</div>" +
+							"<div style='background: black; color: white; text-shadow: 0px 1px 10px #000;'><pre>%s</pre></div>" +
+							"<div>You're done with this batch.</div>",
+					output);
 			messContext.sender.send(dest,
-					"Command execution",
-					String.format("Scripts execution returned: \n%s", output.toString()),
-					HttpHeaders.TEXT_PLAIN);
+					"Script execution",
+					messageContent,
+					HttpHeaders.TEXT_HTML);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
