@@ -217,10 +217,10 @@ public class EmailWatcher {
 			for (String cmd : cmds) {
 				if (!cmd.trim().isEmpty()) {
 //					String[] fullCommand = new String[] { "/bin/bash", "-c", "'" + cmd.trim() + "'" };
-//					if (true || verbose) {
+//					if (verbose) {
 //						System.out.printf(">> Executing %s\n", Arrays.asList(fullCommand).stream().collect(Collectors.joining(" ")));
 //					}
-					Process p = Runtime.getRuntime().exec(cmd);
+					Process p = Runtime.getRuntime().exec(cmd.trim());
 //					Process p = Runtime.getRuntime().exec(fullCommand);
 					BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
 					BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
@@ -246,13 +246,13 @@ public class EmailWatcher {
 			// Plain Text
 //			messContext.sender.send(dest,
 //					"Command execution",
-//					String.format("cmd [%s] returned: \n%s", script, output.toString()),
+//					String.format("cmd [%s] returned: \n%s", script, output),
 //					HttpHeaders.TEXT_PLAIN);
             // HTML Message
 			String messageContent = String.format("<div>cmd <pre>%s</pre> returned:</div>" +
 					"<div style='background: black; color: white; text-shadow: 0px 1px 10px #000;'><pre>%s</pre></div>" +
 					"<div>You're done with this batch.</div>",
-					script, output.toString());
+					script, output);
 			messContext.sender.send(dest,
 					"Command execution",
 					messageContent,
