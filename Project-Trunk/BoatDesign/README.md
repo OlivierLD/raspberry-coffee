@@ -34,7 +34,9 @@ Then do the hydrostatic calculations.
 - Data to `WebGL`
   - With `ThreeJS` ?
 - The same algorithms in OpenSCAD (Bezier & Co)
-  - Data to `STL` (rendered by many), `gcode`, etc. Done ✅. 
+  - Data to `STL` (rendered by many), `gcode`, etc. Done ✅.
+    - See <https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Bezier>
+      - Fill the script `SmallBoat.550.prms.scad` with the data you get when using the `scad` radio-button for the Bezier control points.
     - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
 
