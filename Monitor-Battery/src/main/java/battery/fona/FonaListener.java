@@ -69,7 +69,7 @@ public class FonaListener implements FONAClient {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		});
+		}, "Battery Thread");
 		batteryThread.start();
 
 		fona = new FONAManager(fonaListener);
@@ -106,7 +106,7 @@ public class FonaListener implements FONAClient {
 			final Thread me = Thread.currentThread();
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-				System.out.println();
+				System.out.println(); // For the Ctrl-C
 				synchronized (me) {
 					me.notify();
 				}
