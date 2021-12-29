@@ -129,9 +129,7 @@ public class EmailWatcher {
 							System.out.println("-- With attachments: --");
 							mess.getContent().getAttachments()
 									.stream()
-									.forEach(att -> {
-										System.out.println(String.format("File %s, type %s", att.getFullPath(), att.getMimeType()));
-									});
+									.forEach(att -> System.out.println(String.format("File %s, type %s", att.getFullPath(), att.getMimeType())) );
 							System.out.println("-----------------------");
 						}
 					}
@@ -216,7 +214,9 @@ public class EmailWatcher {
 			StringBuffer output = new StringBuffer();
 			for (String cmd : cmds) {
 				if (!cmd.trim().isEmpty()) {
+//					String[] fullCommand = new String[] { "/bin/bash", "-c", cmd };
 					Process p = Runtime.getRuntime().exec(cmd);
+//					Process p = Runtime.getRuntime().exec(fullCommand);
 					BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
 					BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
 					String line;
@@ -238,10 +238,20 @@ public class EmailWatcher {
 					.map(addr -> ((InternetAddress) addr).getAddress())
 					.collect(Collectors.joining(","))
 					.split(","); // Not nice, I know. A suitable toArray would help.
+			// Plain Text
+//			messContext.sender.send(dest,
+//					"Command execution",
+//					String.format("cmd [%s] returned: \n%s", script, output.toString()),
+//					HttpHeaders.TEXT_PLAIN);
+            // HTML Message
+			String messageContent = String.format("<div>cmd <pre>%s</pre> returned:</div>" +
+					"<div style='background: black; color: white; text-shadow: 0px 1px 10px #000;'><pre>%s</pre></div>" +
+					"<div>You're done with this batch.</div>",
+					script, output.toString());
 			messContext.sender.send(dest,
 					"Command execution",
-					String.format("cmd [%s] returned: \n%s", script, output.toString()),
-					HttpHeaders.TEXT_PLAIN);
+					messageContent,
+					HttpHeaders.TEXT_HTML);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
