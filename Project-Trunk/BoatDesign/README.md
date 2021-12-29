@@ -34,7 +34,7 @@ Then do the hydrostatic calculations.
 - Data to `WebGL`
   - With `ThreeJS` ?
 - The same algorithms in OpenSCAD (Bezier & Co)
-  - Data to `STL` (rendered by many), `gcode`, etc 
+  - Data to `STL` (rendered by many), `gcode`, etc. Done ✅. 
     - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
 
@@ -42,5 +42,8 @@ Then do the hydrostatic calculations.
 - The main of the Swing app is in `boatdesign.ThreeViews`.
 - Shape calculation done in `BoatBox3D`, look for "`// Actual shape calculation takes place here.`"
 
+### Some small boats
+- <https://sailboatdata.com/sailboat/corsaire>
+- ...
 
 ---

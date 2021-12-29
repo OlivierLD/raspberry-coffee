@@ -1,29 +1,46 @@
 {
-  "description": "Points created by default when starting the program",
-  "comments": [
-    "First point of rail is first point of bow",
-    "Last point of keel is first point of keel",
-    "Length id 550 (for rail, and keel)"
-  ],
-  "dimensions": {
-    "default-lht": 5.50,
-    "box-x": [ 0.0, 6.00 ],
-    "box-y": [ -2.00, 2.00 ],
-    "box-z": [ -0.60, 1.25 ]
+  "comments" : [ "First point of rail is first point of bow", "Last point of keel is first point of keel", "Length id 550 (for rail, and keel)", "Displ ~ 0.560 m3" ],
+  "description" : "Points created by default when starting the program",
+  "default-points" : {
+    "keel" : [ {
+      "x" : 5.0,
+      "y" : 0.0,
+      "z" : -2.0
+    }, {
+      "x" : 349.35185185185185,
+      "y" : 0.0,
+      "z" : -38.611111111111114
+    }, {
+      "x" : 550.0,
+      "y" : 0.0,
+      "z" : 10.0
+    } ],
+    "rail" : [ {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 75.0
+    }, {
+      "x" : 0.0,
+      "y" : 21.428571,
+      "z" : 75.0
+    }, {
+      "x" : 69.642857,
+      "y" : 86.785714,
+      "z" : 47.5
+    }, {
+      "x" : 305.357143,
+      "y" : 156.428571,
+      "z" : 45.357143
+    }, {
+      "x" : 550.0,
+      "y" : 65.0,
+      "z" : 56.0
+    } ]
   },
-  "default-points": {
-    "rail": [
-      { "x": 0.000000, "y": 0.000000, "z": 75.000000 },
-      { "x": 0.000000, "y": 21.428571, "z": 75.0 },
-      { "x": 69.642857, "y": 86.785714, "z": 47.500000},
-      { "x": 305.357143, "y": 156.428571, "z": 45.357143},
-      { "x": 550.000000, "y": 65.0, "z": 56.000000}
-    ],
-    "keel": [
-      { "x": 5.000000, "y": 0.000000, "z": -2.000000},
-      { "x": 300.0, "y": 0.000000, "z": -45.0},
-      { "x": 550.000000, "y": 0.000000, "z": 10.000000}
-    ]
+  "dimensions" : {
+    "box-z" : [ -0.6, 1.25 ],
+    "default-lht" : 5.5,
+    "box-y" : [ -2.0, 2.0 ],
+    "box-x" : [ 0.0, 6.0 ]
   }
 }
-

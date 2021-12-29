@@ -35,7 +35,7 @@ public class EmailWatcher {
 	static final List<EmailProcessor> processors = Arrays.asList(
 		new EmailProcessor("exit", null),
 		new EmailProcessor("execute", EmailWatcher::cmdProcessor),
-		new EmailProcessor("execute-script", EmailWatcher::scriptProcessor) // Requires script to execute, as attachment
+		new EmailProcessor("execute-script", EmailWatcher::scriptProcessor) // Requires the script to execute, as attachment
 	);
 
 	/**
