@@ -50,6 +50,8 @@ public class EmailWatcher {
 	 *     ifconfig
 	 *     uname -a
 	 * </pre>
+	 * > Note: Command with pipes ('|') might not be supported here...
+	 *
 	 * Then the commands are executed, output (stdout & stderr) and status code are returned
 	 * After that, an email is returned to the requester, containing the result.
 	 *
@@ -214,7 +216,10 @@ public class EmailWatcher {
 			StringBuffer output = new StringBuffer();
 			for (String cmd : cmds) {
 				if (!cmd.trim().isEmpty()) {
-//					String[] fullCommand = new String[] { "/bin/bash", "-c", cmd };
+//					String[] fullCommand = new String[] { "/bin/bash", "-c", "'" + cmd.trim() + "'" };
+//					if (true || verbose) {
+//						System.out.printf(">> Executing %s\n", Arrays.asList(fullCommand).stream().collect(Collectors.joining(" ")));
+//					}
 					Process p = Runtime.getRuntime().exec(cmd);
 //					Process p = Runtime.getRuntime().exec(fullCommand);
 					BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
