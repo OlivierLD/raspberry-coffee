@@ -412,7 +412,7 @@ public class RESTImplementation {
 			});
 		}
 
-		if (transformations.size() > 0) {
+		if (transformations.size() >= 0) { // >= 0 : date on the image
 			if (verbose) {
 				transformations.keySet().forEach(rank -> {
 					System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
@@ -480,7 +480,7 @@ public class RESTImplementation {
 						}
 						fileName = SnapshotServer.txSnapshotName;
 						urlFullPath = SnapshotServer.txSnapshotName;
-						Imgcodecs.imwrite(fileName, finalMat);
+						Imgcodecs.imwrite(fileName, finalMat);       // Override
 					} else {
 						// Empty!
 						if (verbose) {
