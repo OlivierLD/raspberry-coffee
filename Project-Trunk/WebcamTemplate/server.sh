@@ -22,7 +22,7 @@ then
   PROPS="${PROPS} -Dsnap.height=360"
 fi
 #
-OPENCV_VERSION=4.5.2
+OPENCV_VERSION=4.5.0
 # OPENCV_HOME=/usr/local/share/java/opencv4
 OPENCV_HOME=/home/pi/opencv-${OPENCV_VERSION}/build/lib
 #
