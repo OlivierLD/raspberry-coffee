@@ -1,4 +1,4 @@
-## HTTP Client Samples
+## HTTP Client - and Server - Samples
 This module refers to its sibling `http-client-paradigm`.
 
 We will show here how to use several sensors and screens, managed from Python,
@@ -24,7 +24,7 @@ On the Raspberry Pi, install the required python packages:
 ```
 $ sudo pip3 install adafruit-circuitpython-lis3mdl
 ```
-Then, on the Raspberry Pi with the `LIS3MDL` connected to it: 
+Then, on the Raspberry Pi with the `LIS3MDL` connected to it, start the server: 
 ```
 $ cd src/main/python/lis3mdl/server
 $ python3 lis3mdl_server.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]

@@ -98,4 +98,11 @@ $ python3 tcp_client_skeleton.py --machine-name:$(hostname -I) [ --port:7002 --v
 ```
 - Also works from Java (lucky me), see `utils.samples.tcp.clients.TCPEchoClient` in `common-utils`.
 
+# TODO
+### HTTP/REST Server with Flask
+See 
+- [Python Web Server with Flask](https://projects.raspberrypi.org/en/projects/python-web-server-with-flask/)
+- [Flask-RESTful](https://flask-restful.readthedocs.io/en/latest/#:~:text=Flask%2DRESTful%C2%B6,be%20easy%20to%20pick%20up)
+
+
 ---

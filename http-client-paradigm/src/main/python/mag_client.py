@@ -4,6 +4,9 @@
 #
 # Good requests 101-tutorial at https://realpython.com/api-integration-in-python/
 #
+# This is a REST Client.
+# To start the server, look for "lis3mdl_server.py"
+#
 import sys
 import requests
 import json

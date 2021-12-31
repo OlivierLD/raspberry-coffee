@@ -7,6 +7,8 @@
 # Provides REST access to the cache, try GET http://localhost:8080/sample/cache
 # Implement your own features in the do_stuff method and the resources in the ServiceHandler class...
 #
+# The main is at the bottom.
+#
 import json
 import sys
 import threading
