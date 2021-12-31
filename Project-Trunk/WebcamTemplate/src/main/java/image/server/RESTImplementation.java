@@ -7,11 +7,7 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import image.snap.SnapSnapSnap;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
+import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
@@ -428,6 +424,15 @@ public class RESTImplementation {
 					}
 					if (image.width() > 0 && image.height() > 0) {
 						Mat finalMat = image;
+
+						// Date/Time on the image?
+						Point position = new Point(10, 30);
+						Scalar color = new Scalar(0, 255, 0);
+						int font = Imgproc.FONT_HERSHEY_SIMPLEX;
+						int scale = 1;
+						int thickness = 3;
+						// Adding text to the image
+						Imgproc.putText(finalMat, "AKEU:COUCOU", position, font, scale, color, thickness);
 
 						for (int rank : transformations.keySet()) {
 //							System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
