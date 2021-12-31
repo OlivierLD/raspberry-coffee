@@ -24,7 +24,7 @@ import java.util.*;
 public class RESTImplementation {
 
 	private final boolean verbose = "true".equals(System.getProperty("image.rest.verbose"));
-	private final static Format SDF = new SimpleDateFormat("hh:mm:ss");
+	private final static Format SDF = new SimpleDateFormat("HH:mm:ss");
 
 	private final SnapRequestManager snapRequestManager;
 	private final static String SNAP_RESOURCE_PREFIX = "/snap";
