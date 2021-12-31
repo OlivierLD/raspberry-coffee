@@ -11,6 +11,8 @@ import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -22,6 +24,7 @@ import java.util.*;
 public class RESTImplementation {
 
 	private final boolean verbose = "true".equals(System.getProperty("image.rest.verbose"));
+	private final static Format SDF = new SimpleDateFormat("hh:mm:ss");
 
 	private final SnapRequestManager snapRequestManager;
 	private final static String SNAP_RESOURCE_PREFIX = "/snap";
@@ -419,20 +422,21 @@ public class RESTImplementation {
 			if ("true".equals(System.getProperty("with.opencv", "true"))) {
 				try {
 					Mat image = Imgcodecs.imread(SnapshotServer.snap.getLastSnapshotName());
+
+					// TODO An option for Date/Time on the image?
+					Point position = new Point(10, 30);
+					Scalar color = new Scalar(0, 255, 0);
+					int font = Imgproc.FONT_HERSHEY_SIMPLEX;
+					int scale = 1;
+					int thickness = 3;
+					// Adding text (hh:mm:ss) to the image
+					Imgproc.putText(image, SDF.format(new Date()), position, font, scale, color, thickness);
+
 					if (verbose) {
 						System.out.println(String.format("Original image: w %d, h %d, %d channel(s)", image.width(), image.height(), image.channels()));
 					}
 					if (image.width() > 0 && image.height() > 0) {
 						Mat finalMat = image;
-
-						// Date/Time on the image?
-						Point position = new Point(10, 30);
-						Scalar color = new Scalar(0, 255, 0);
-						int font = Imgproc.FONT_HERSHEY_SIMPLEX;
-						int scale = 1;
-						int thickness = 3;
-						// Adding text to the image
-						Imgproc.putText(finalMat, "AKEU:COUCOU", position, font, scale, color, thickness);
 
 						for (int rank : transformations.keySet()) {
 //							System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));

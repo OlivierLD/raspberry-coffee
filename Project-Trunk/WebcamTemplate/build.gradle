@@ -16,7 +16,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-def opencvVersion = "4.5.2"
+def opencvVersion = "4.5.0"
 
 dependencies {
     compile project(':common-utils')
