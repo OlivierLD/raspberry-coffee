@@ -13,7 +13,7 @@ PROPS="${PROPS} -Dadditional.arguments.2=/dev/video0"     # For fswebcam
 # PROPS="${PROPS} -Dadditional.arguments.2=/dev/video1"
 PROPS="${PROPS} -Dtime.based.snap.name=true"
 #
-START_SNAP_IMMEDIATELY=false
+START_SNAP_IMMEDIATELY=true
 if [[ "${START_SNAP_IMMEDIATELY}" == "true" ]]
 then
   PROPS="${PROPS} -Dstart.snap.thread=true"
