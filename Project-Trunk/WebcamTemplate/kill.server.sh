@@ -19,7 +19,7 @@ else
   fi
 fi
 #
-ps -ef | grep SnapshotServer | grep -v grep | awk '{ print $2 }' > km
+ps -ef | grep WebcamTemplate | grep -v grep | awk '{ print $2 }' > km
 NB_L=`cat km | wc -l`
 if [[ ${NB_L} == 0 ]]
 then
