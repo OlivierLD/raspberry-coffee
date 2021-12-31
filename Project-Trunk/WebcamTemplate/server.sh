@@ -4,7 +4,7 @@ PROPS=
 # PROPS="${PROPS} -Dsnap.verbose=true"
 # PROPS="${PROPS} -Dimage.rest.verbose=true"
 PROPS="${PROPS} -Dhttp.port=1234"
-# PROPS="${PROPS} -Dwith.opencv=true"
+PROPS="${PROPS} -Dwith.opencv=true"
 # PROPS="${PROPS} -Dhttp.verbose=true"
 # PROPS="${PROPS} -Dhttp.verbose.dump=true"
 PROPS="${PROPS} -Dsnapshot.command=FSWEBCAM"   # WebCam, on Raspberry Pi

@@ -412,6 +412,9 @@ public class RESTImplementation {
 			});
 		}
 
+		if (verbose) {
+			System.out.println(String.format("Will apply %d transformations.", transformations.size()));
+		}
 		if (transformations.size() >= 0) { // >= 0 : date on the image
 			if (verbose) {
 				transformations.keySet().forEach(rank -> {
@@ -430,7 +433,11 @@ public class RESTImplementation {
 					int scale = 1;
 					int thickness = 3;
 					// Adding text (hh:mm:ss) to the image
-					Imgproc.putText(image, SDF.format(new Date()), position, font, scale, color, thickness);
+					String date = SDF.format(new Date());
+					if (verbose) {
+						System.out.println(String.format("Printing date %s on image", date));
+					}
+					Imgproc.putText(image, date, position, font, scale, color, thickness);
 
 					if (verbose) {
 						System.out.println(String.format("Original image: w %d, h %d, %d channel(s)", image.width(), image.height(), image.channels()));
