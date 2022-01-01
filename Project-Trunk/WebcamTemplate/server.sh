@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 PROPS=
 # PROPS="${PROPS} -Dstatic.docs=/web/"
-# PROPS="${PROPS} -Dsnap.verbose=true"
-# PROPS="${PROPS} -Dimage.rest.verbose=true"
+PROPS="${PROPS} -Dsnap.verbose=true"
+PROPS="${PROPS} -Dimage.rest.verbose=true"
+#
 PROPS="${PROPS} -Dhttp.port=1234"
 PROPS="${PROPS} -Dwith.opencv=true"
 PROPS="${PROPS} -Duse.full.date=true"

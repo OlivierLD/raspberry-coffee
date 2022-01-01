@@ -370,6 +370,9 @@ public class SnapSnapSnap extends Thread {
 							SnapshotServer.stripSeparators(this.parent.getHTTPServer().getStaticDocumentsLocation().get(0)),
 							DURATION_FMT.format(new Date())));
 				}
+				if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+					System.out.printf(">> Snapping %s.\n", this.config.getSnapName());
+				}
 				SnapSnapSnap.snap(this.config.getSnapName(), this.config.rot, this.config.width, this.config.height);
 			} catch (Exception ex) {
 				if ("true".equals(System.getProperty("snap.verbose", "false"))) {
