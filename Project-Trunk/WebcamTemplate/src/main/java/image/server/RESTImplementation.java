@@ -24,7 +24,10 @@ import java.util.*;
 public class RESTImplementation {
 
 	private final boolean verbose = "true".equals(System.getProperty("image.rest.verbose"));
+	private final boolean useFullDate = "true".equals(System.getProperty("use.full.date"));
+
 	private final static Format SDF = new SimpleDateFormat("HH:mm:ss");
+	private final static Format FULL_SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
 
 	private final SnapRequestManager snapRequestManager;
 	private final static String SNAP_RESOURCE_PREFIX = "/snap";
@@ -433,7 +436,7 @@ public class RESTImplementation {
 					int scale = 1;
 					int thickness = 3;
 					// Adding text (hh:mm:ss) to the image
-					String date = SDF.format(new Date());
+					String date = useFullDate ? FULL_SDF.format(new Date()) : SDF.format(new Date());
 					if (verbose) {
 						System.out.println(String.format("Printing date %s on image", date));
 					}
