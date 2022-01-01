@@ -321,6 +321,7 @@ public class SnapSnapSnap extends Thread {
 		super(threadName);
 		this.parent = parent;
 		this.timeBasedSnapshotName = timeBasedImageName;
+		this.config.setTimeBasedSnapName(this.timeBasedSnapshotName);
 		String snapshotCommand = System.getProperty("snapshot.command", "RASPISTILL");
 		Optional<SnapshotOptions> snapOpt = Arrays.asList(SnapshotOptions.values())
 				.stream()
