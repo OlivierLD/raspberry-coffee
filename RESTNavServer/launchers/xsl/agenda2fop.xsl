@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Used to publish a blank agenda, from the tide data
+  For page format, see https://w3schools.sinsixx.com/xslfo/xslfo_pages.asp.htm
  +-->
 <!DOCTYPE xsl:stylesheet [
     <!ENTITY copy    "&#169;">
@@ -76,21 +77,23 @@
     <!ENTITY yacute  "&#253;">
     <!ENTITY apos    "&#39;">
     <!ENTITY deg     "&#176;">
-    ]>
+]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 version="2.0">
   <xsl:template match="/">
     <fo:root>
       <fo:layout-master-set>
-        <fo:simple-page-master master-name="portrait-page" page-width="8.5in"
-                     page-height="11in">
+        <fo:simple-page-master master-name="portrait-page"
+                               page-width="8.5in"
+                               page-height="11in">
           <!-- Portrait, Letter -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
         </fo:simple-page-master>
-        <fo:simple-page-master master-name="landscape-page" page-height="8.5in"
-                     page-width="11in">
+        <fo:simple-page-master master-name="landscape-page"
+                               page-height="8.5in"
+                               page-width="11in">
           <!-- Portrait -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
