@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 PROPS=
 # PROPS="${PROPS} -Dstatic.docs=/web/"
-PROPS="${PROPS} -Dsnap.verbose=true"
-PROPS="${PROPS} -Dimage.rest.verbose=true"
+# PROPS="${PROPS} -Dsnap.verbose=true"
+# PROPS="${PROPS} -Dimage.rest.verbose=true"
 #
 PROPS="${PROPS} -Dhttp.port=1234"
 PROPS="${PROPS} -Dwith.opencv=true"
@@ -13,7 +13,7 @@ PROPS="${PROPS} -Dsnapshot.command=FSWEBCAM"   # WebCam, on Raspberry Pi
 PROPS="${PROPS} -Dadditional.arguments.1=--device"        # For fswebcam
 PROPS="${PROPS} -Dadditional.arguments.2=/dev/video0"     # For fswebcam
 # PROPS="${PROPS} -Dadditional.arguments.2=/dev/video1"
-PROPS="${PROPS} -Dtime.based.snap.name=true"
+PROPS="${PROPS} -Dtime.based.snap.name=false"
 #
 START_SNAP_IMMEDIATELY=true
 if [[ "${START_SNAP_IMMEDIATELY}" == "true" ]]
