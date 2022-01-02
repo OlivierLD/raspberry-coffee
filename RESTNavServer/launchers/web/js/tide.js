@@ -182,6 +182,11 @@ let getPublishedAgendaDoc = (station, options) => {
     return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);
 };
 
+let getPublishedSunAgendaDoc = (options) => {
+    let url = "/tide/publish-sun";
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);
+};
+
 let getPublishedMoonCal = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station) + "/moon-cal";
     return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);
@@ -385,6 +390,33 @@ let publishTable = (station, options, callback) => {
 
 let publishAgenda = (station, options, callback) => {
     let getData = getPublishedAgendaDoc(station, options);
+    getData.then((value) => {
+        if (callback === undefined) {
+            try {
+                // Do something smart
+                document.getElementById("result").innerHTML = ("<pre>" + value + "</pre>");
+            } catch (err) {
+                errManager(err + '\nFor\n' + value);
+            }
+        } else {
+            callback(value);
+        }
+    }, (error, errMess) => {
+        let message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
+            } else {
+                message = errMess;
+            }
+        }
+        errManager(`Failed publish station data...${(error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+            ? message : ' - ')}`);
+    });
+};
+
+let publishSunAgenda = (options, callback) => {
+    let getData = getPublishedSunAgendaDoc(options);
     getData.then((value) => {
         if (callback === undefined) {
             try {

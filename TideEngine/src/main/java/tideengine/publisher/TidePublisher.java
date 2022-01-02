@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Optional;
+import java.util.TimeZone;
 
 public class TidePublisher {
 
@@ -183,6 +184,8 @@ public class TidePublisher {
 
 		try {
 			// With those attributes, we re-use the same XSL Stylesheet as for the tide.
+			System.out.println("PublishFromPos, position:" + position);
+
 			out.println("<position print-time-zone='" + timeZoneId +
 					"' station='" + (stationName != null ? stationName : "User-Defined") +
 					"' station-lat='" + GeomUtil.decToSex(position.getL(), GeomUtil.SWING, GeomUtil.NS, GeomUtil.TRAILING_SIGN).replace("'", "&apos;") +

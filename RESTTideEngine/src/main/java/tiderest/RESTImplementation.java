@@ -108,7 +108,7 @@ public class RESTImplementation {
 					"Generates moon calendar document (pdf), for one year"),
 			new Operation(
 					"POST",
-					TIDE_PREFIX + "/publish/sun",
+					TIDE_PREFIX + "/publish-sun",
 					this::publishSunDocument,
 					"Generates Sun table - rise, set, transit (or agenda, if query parameter 'agenda' is set to 'y') document (pdf)." +
 							"Expects a json payload like Like {\"startMonth\":1,\"startYear\":2022,\"nb\":1,\"quantity\":\"YEAR\",\"position\":{\"latitude\":47.34,\"longitude\":-3.12},\"timeZone\":\"Europe/Paris\"}"),
@@ -766,18 +766,45 @@ public class RESTImplementation {
 									.errorMessage(errMess));
 					return response;
 				}
+
+				if (!errMess.trim().isEmpty()) {
+
+					System.out.println(payload);
+
+					// Gson gson = new Gson();
+					String toJson = gson.toJson(options);
+					// Like {"startMonth":1,"startYear":2022,"nb":1,"quantity":"YEAR","position":{"latitude":47.34,"longitude":-3.12},"timeZone":"Europe/Paris","stationName":"Whatever"}
+					System.out.println(toJson);
+
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("TIDE-0202")
+									.errorMessage(errMess));
+					return response;
+				}
+
 				try {
-//				String unescaped = URLDecoder.decode(stationFullName, "UTF-8");
-					String generatedFileName = TidePublisher.publishFromPos(
-							options.position,
-							options.stationName,
-							options.timeZone,
-							options.startMonth,
-							options.startYear,
-							options.nb,
-							(options.quantity.equals(Quantity.MONTH) ? Calendar.MONTH : Calendar.YEAR),
-							script);
-					response.setPayload(generatedFileName.getBytes());
+					if (false) { // This is just for tests.
+						String toJson = gson.toJson(options);
+						// Like {"startMonth":1,"startYear":2022,"nb":1,"quantity":"YEAR","position":{"latitude":47.34,"longitude":-3.12},"timeZone":"Europe/Paris","stationName":"Whatever"}
+						System.out.println(toJson);
+						System.out.println("-- Payload --");
+						System.out.println(payload);
+
+						response.setPayload(payload.getBytes());
+					} else {
+						String generatedFileName = TidePublisher.publishFromPos(
+								options.position,
+								options.stationName,
+								options.timeZone,
+								options.startMonth,
+								options.startYear,
+								options.nb,
+								(options.quantity.equals(Quantity.MONTH) ? Calendar.MONTH : Calendar.YEAR),
+								script);
+						response.setPayload(generatedFileName.getBytes());
+					}
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,

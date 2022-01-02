@@ -1,17 +1,26 @@
 package tests;
 
+import org.junit.Test;
 import tideengine.BackEndTideComputer;
 import tideengine.TideStation;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
+
+import static org.junit.Assert.fail;
 
 public class Basic01 {
 
     private static BackEndTideComputer backEndTideComputer;
 
-    public static void main(String... args) {
+    /**
+     * Basic functional test
+     */
+    @Test
+    public void basic() {
 
         backEndTideComputer = new BackEndTideComputer();
 
@@ -32,7 +41,15 @@ public class Basic01 {
             backEndTideComputer.disconnect();
         } catch (Exception ex) {
             ex.printStackTrace();
+            fail();
         }
+    }
 
+    @Test
+    public void listTimeZones() {
+        String[] availableIDs = TimeZone.getAvailableIDs();
+        System.out.printf("We have %d time zones.", availableIDs.length);
+        Arrays.asList(availableIDs).stream()
+                .forEach(tz -> System.out.printf("<option value=\"%s\">%s</option>\n", tz, tz));
     }
 }

@@ -539,6 +539,10 @@ public class TideForOneMonth {
 						"' sun-set-Z='" + DF3.format(setZ) +
 						"' moon-rise='" + TF.format(moonRise.getTime()) +
 						"' moon-set='" + TF.format(moonSet.getTime()) + "'>");
+
+				// For the moon phase...
+				out.println("  <plot/>");
+
 				out.println("</date>");
 			}
 
