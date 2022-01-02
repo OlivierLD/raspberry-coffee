@@ -1,5 +1,6 @@
 package tideengine.publisher;
 
+import calc.GeoPoint;
 import calc.GeomUtil;
 import tideengine.BackEndTideComputer;
 import tideengine.TideStation;
@@ -140,6 +141,92 @@ public class TidePublisher {
 				ts = optTs.get();
 				return publish(ts, ts.getTimeZone(), startMonth, startYear, nb, quantity, null, null, script);
 			}
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
+
+	// A publish from pos. Returns SunRise, SunSet, SunTransit
+	public static String publishFromPos(
+			GeoPoint position,
+			String stationName,
+			String timeZoneId,
+			int sm,
+			int sy,
+			int nb,
+			int q,
+			String scriptToRun)
+			throws Exception {
+
+		System.out.println("Starting month:" + sm + ", year:" + sy);
+		System.out.println("For " + nb + " " + (q == Calendar.MONTH ? "month(s)" : "year(s)"));
+
+		GregorianCalendar start = new GregorianCalendar(sy, sm, 1);
+		GregorianCalendar end = (GregorianCalendar) start.clone();
+		end.add(q, nb);
+		boolean loop = true;
+		PrintStream out = System.out;
+		String radical = "";
+		String prefix = (scriptToRun == null ? TIDE_TABLE : scriptToRun);
+		try {
+			File tempFile = File.createTempFile(prefix + ".data.", ".xml");
+			out = new PrintStream(new FileOutputStream(tempFile));
+			radical = tempFile.getAbsolutePath();
+			radical = radical.substring(0, radical.lastIndexOf(".xml"));
+			System.out.println("Writing data in " + tempFile.getAbsolutePath());
+		} catch (Exception ex) {
+			System.err.println("Error creating temp file");
+			ex.printStackTrace();
+			throw ex;
+		}
+
+		try {
+			// With those attributes, we re-use the same XSL Stylesheet as for the tide.
+			out.println("<position print-time-zone='" + timeZoneId +
+					"' station='" + (stationName != null ? stationName : "User-Defined") +
+					"' station-lat='" + GeomUtil.decToSex(position.getL(), GeomUtil.SWING, GeomUtil.NS, GeomUtil.TRAILING_SIGN).replace("'", "&apos;") +
+					"' station-lng='" + GeomUtil.decToSex(position.getG(), GeomUtil.SWING, GeomUtil.EW, GeomUtil.TRAILING_SIGN).replace("'", "&apos;") + "'>");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		while (loop) {
+			if (start.equals(end)) {
+				loop = false;
+			} else {
+				out.println("  <period month='" + (start.get(Calendar.MONTH) + 1) + "' year='" + start.get(Calendar.YEAR) + "'>");
+				try {
+					System.out.println("Calculating sun data for " + start.getTime().toString());
+					TideForOneMonth.sunForOneMonth(out,
+							timeZoneId,
+							start.get(Calendar.YEAR),
+							start.get(Calendar.MONTH) + 1, // Base: 1
+							position,
+							TideForOneMonth.XML_FLAVOR);
+					start.add(Calendar.MONTH, 1);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				out.println("  </period>");
+			}
+		}
+		out.println("</position>");
+		out.close();
+		System.out.println("Generation completed.");
+		// Ready for transformation
+		try {
+			String cmd = "." + File.separator + "xsl" + File.separator + (scriptToRun == null ? TIDE_TABLE : scriptToRun) + " " + radical;
+			System.out.println("Command:" + cmd);
+			Process p = Runtime.getRuntime().exec(cmd);
+			int exitStatus = p.waitFor();
+			System.out.println("Script completed, status " + exitStatus);
+			System.out.println(String.format("See %s.pdf", radical));
+			cmd = String.format("mv %s.pdf web", radical);
+			p = Runtime.getRuntime().exec(cmd);
+			exitStatus = p.waitFor();
+			System.out.printf("Command [%s] completed, status %s\n", cmd, exitStatus);
+
+			return "." + radical.substring(radical.lastIndexOf(File.separator)) + ".pdf";
 		} catch (Exception ex) {
 			throw ex;
 		}

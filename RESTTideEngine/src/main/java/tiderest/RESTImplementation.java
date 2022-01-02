@@ -108,6 +108,12 @@ public class RESTImplementation {
 					"Generates moon calendar document (pdf), for one year"),
 			new Operation(
 					"POST",
+					TIDE_PREFIX + "/publish/sun",
+					this::publishSunDocument,
+					"Generates Sun table - rise, set, transit (or agenda, if query parameter 'agenda' is set to 'y') document (pdf)." +
+							"Expects a json payload like Like {\"startMonth\":1,\"startYear\":2022,\"nb\":1,\"quantity\":\"YEAR\",\"position\":{\"latitude\":47.34,\"longitude\":-3.12},\"timeZone\":\"Europe/Paris\"}"),
+			new Operation(
+					"POST",
 					TIDE_PREFIX + "/tide-stations/{station-name}/wh/details",
 					this::getWaterHeightPlus,
 					"Creates a Water Height request for the {station}, with harmonic curves. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."));
@@ -722,6 +728,76 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private Response publishSunDocument(@Nonnull Request request) {
+		return publishSunDocument(request, TidePublisher.AGENDA_TABLE); // TODO Tweak the stylesheet...
+	}
+	private Response publishSunDocument(@Nonnull Request request, String script) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		List<String> prmValues = request.getPathParameters(); // RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				String errMess = "";
+				PublishingOptions options;
+				try {
+					options = gson.fromJson(stringReader, PublishingOptions.class);
+					if (options.startMonth > 11 || options.startMonth < 0) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [0..11].");
+					}
+					if (options.nb < 1) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid number, must be at least 1 ");
+					}
+					if (options.quantity == null) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR or MONTH.");
+					}
+					if (options.position == null) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Position not found in payload.");
+					}
+					if (options.timeZone == null) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "TimeZone not found in payload.");
+					}
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("TIDE-0102")
+									.errorMessage(errMess));
+					return response;
+				}
+				try {
+//				String unescaped = URLDecoder.decode(stationFullName, "UTF-8");
+					String generatedFileName = TidePublisher.publishFromPos(
+							options.position,
+							options.stationName,
+							options.timeZone,
+							options.startMonth,
+							options.startYear,
+							options.nb,
+							(options.quantity.equals(Quantity.MONTH) ? Calendar.MONTH : Calendar.YEAR),
+							script);
+					response.setPayload(generatedFileName.getBytes());
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("TIDE-0103")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("TIDE-0101")
+							.errorMessage("Required payload not found."));
+			return response;
+		}
+		return response;
+	}
+
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *
@@ -775,15 +851,46 @@ public class RESTImplementation {
 		unit unit; // If not the station unit
 	}
 
-	private enum Quantity {
+	public enum Quantity {
 	  MONTH, YEAR
 	};
 
-	private static class PublishingOptions {
+	public static class PublishingOptions {
 		int startMonth;
 		int startYear;
 		int nb;
 		Quantity quantity;
+		GeoPoint position;
+		String timeZone;
+		String stationName;
+
+		public void setStartMonth(int startMonth) {
+			this.startMonth = startMonth;
+		}
+
+		public void setStartYear(int startYear) {
+			this.startYear = startYear;
+		}
+
+		public void setNb(int nb) {
+			this.nb = nb;
+		}
+
+		public void setQuantity(Quantity quantity) {
+			this.quantity = quantity;
+		}
+
+		public void setPosition(GeoPoint position) {
+			this.position = position;
+		}
+
+		public void setTimeZone(String timeZone) {
+			this.timeZone = timeZone;
+		}
+
+		public void setStationName(String stationName) {
+			this.stationName = stationName;
+		}
 	}
 
 	private static class NameValuePair<T> {

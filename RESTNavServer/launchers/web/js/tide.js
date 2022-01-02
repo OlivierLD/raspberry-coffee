@@ -173,6 +173,10 @@ let getPublishedDoc = (station, options) => {
     return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);
 };
 
+/**
+ * station: tide station name (full)
+ * options: { startYear: 2022, startMonth: [0..11], nb: 1..x, quantity: MONTH|YEAR   }
+ */
 let getPublishedAgendaDoc = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station) + "?agenda=y";
     return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);

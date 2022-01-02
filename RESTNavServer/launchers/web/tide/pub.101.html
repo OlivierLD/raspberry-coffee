@@ -59,7 +59,7 @@
 			$("#publish-agenda").prop('disabled', stationList.length === 0);
 		};
 
-		var dataManager = function(value) { // Callback when tide data are ready
+		var dataManager = function(value) { // Callback when tide data are ready (pdf)
 			console.log('Received the file name %s', value);
 			$("#doc-url").html("<a href='" + "." + value + "' target='pdf'>here</a>!");
 		};
@@ -90,7 +90,7 @@
 	</script>
 </head>
 <body style="background-color: rgba(255, 255, 255, 0.2); background-image: none;">
-  <h2>Publishing Tide Table</h2>
+  <h2>Publishing Tide or Sun Table</h2>
   <hr/>
   Tide Table. Choose your station (filter first), and hit [Publish] (or [Agenda]).
   <hr/>
@@ -99,7 +99,7 @@
   <input type="text"
 		 size="30"
 		 placeholder="Filter" id="filter">&nbsp;
-  <button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
+  <button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button> <!-- Find tide station -->
   <select id="station-list" style="width: 300px;"></select>,
   Starting
   <select id="month">
@@ -125,11 +125,16 @@
 
   <hr/>
 
+  <!-- Below, the dataManager is a callback to display the pdf link -->
   <button id="publish" disabled
-		  onclick="getStarted(); publishTable($('#station-list').val(), { startYear: parseInt($('#year').val()), startMonth: parseInt($('#month').val()), nb: parseInt($('#nb').val()), quantity: $('#quantity').val() }, dataManager);">Publish</button>
+		  onclick="getStarted();
+		           publishTable($('#station-list').val(), { startYear: parseInt($('#year').val()), startMonth: parseInt($('#month').val()), nb: parseInt($('#nb').val()), quantity: $('#quantity').val() },
+		           dataManager);">Publish</button>
 
   <button id="publish-agenda" disabled
-		  onclick="getStarted(); publishAgenda($('#station-list').val(), { startYear: parseInt($('#year').val()), startMonth: parseInt($('#month').val()), nb: parseInt($('#nb').val()), quantity: $('#quantity').val() }, dataManager);">Agenda</button>
+		  onclick="getStarted();
+		           publishAgenda($('#station-list').val(), { startYear: parseInt($('#year').val()), startMonth: parseInt($('#month').val()), nb: parseInt($('#nb').val()), quantity: $('#quantity').val() },
+		           dataManager);">Agenda</button>
   <hr/>
   Your document is <span id="doc-url">...</span>
   <hr/>
