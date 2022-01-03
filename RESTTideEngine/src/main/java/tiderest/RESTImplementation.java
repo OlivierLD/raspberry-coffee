@@ -111,7 +111,7 @@ public class RESTImplementation {
 					TIDE_PREFIX + "/publish-sun",
 					this::publishSunDocument,
 					"Generates Sun table - rise, set, transit (or agenda, if query parameter 'agenda' is set to 'y') document (pdf)." +
-							"Not stricly tide related... " +
+							"Not strictly tide related... " +
 							"Expects a json payload like Like {\"startMonth\":1,\"startYear\":2022,\"nb\":1,\"quantity\":\"YEAR\",\"position\":{\"latitude\":47.34,\"longitude\":-3.12},\"timeZone\":\"Europe/Paris\"}"),
 			new Operation(
 					"POST",
