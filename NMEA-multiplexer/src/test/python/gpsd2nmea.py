@@ -1,5 +1,7 @@
 #!/usr/bin/python
 #
+# From https://github.com/itemir/rpi_boat_utils/tree/master/gpsd2nmea
+#
 # Copyright (c) 2017 Ilker Temir
 #
 # MIT License
