@@ -32,6 +32,10 @@ public class AISClientV2 {
 			}
 			String serverName = "ais.exploratorium.edu";
 			int serverPort = 80;
+			if (true) { // Override, from Brittany.
+				serverName = "sinagot.net";
+				serverPort = 2947;
+			}
 
 			nmeaClient = new TCPClient() {
 				@Override

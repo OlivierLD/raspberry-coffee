@@ -1,33 +1,30 @@
 package util.tests;
 
 
+import nmea.ais.AISParser;
+import scala.tools.nsc.Global;
 import utils.DumpUtil;
 
 import java.io.*;
-
-import java.net.BindException;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.Socket;
-
-import java.net.SocketException;
-
+import java.net.*;
+import java.util.Arrays;
 import java.util.Date;
 
-public class TCPClient {
+public class GPSDClient {
 	private int tcpPort = 80;
 	private String hostName = "localhost";
+	private AISParser aisParser = new AISParser();
 
 	private boolean goRead = true;
 
-	public TCPClient() {
+	public GPSDClient() {
 	}
 
-	public TCPClient(int tcp) {
+	public GPSDClient(int tcp) {
 		tcpPort = tcp;
 	}
 
-	public TCPClient(String host, int tcp) {
+	public GPSDClient(String host, int tcp) {
 		hostName = host;
 		tcpPort = tcp;
 	}
@@ -36,6 +33,9 @@ public class TCPClient {
 
 	private boolean canRead() {
 		return this.goRead;
+	}
+	private void stopReading() {
+		this.goRead = false;
 	}
 
 	public void read() {
@@ -81,9 +81,34 @@ public class TCPClient {
 					}
 					if (buffer[bytesRead -1] == '\n') {
 						String message = baos.toString().trim();
-						DumpUtil.displayDualDump(message);
 						// Manage message here
+//						DumpUtil.displayDualDump(message);
+						if (verbose) {
+							System.out.println("---- GPSD Mess ----");
+							System.out.println(message);
+							System.out.println("-------------------");
+						}
+						String[] split = message.split("\n");
+						Arrays.asList(split).stream()
+								.forEach(mess -> {
+									if (mess.startsWith("!")) {
+										try {
+											AISParser.AISRecord aisRecord = aisParser.parseAIS(mess);
+											System.out.println(String.format("Parsed: %s", aisRecord.toString()));
+										} catch (AISParser.AISException aisEx) {
+											System.err.println(aisEx.toString());
+										} catch (Exception ex) {
+											System.err.println(" Oops >> " + ex.toString());
+										}
+									} else if (mess.startsWith("$")) {
+										System.out.println(">> NMEA Stuff ? >> " + mess);
+									} else {
+										if (verbose) {
+											System.out.println(">> GPSD Mess >> " + mess);
+										}
+									}
 
+								});
 					}
 				}
 			}
@@ -157,24 +182,26 @@ public class TCPClient {
 	public void setTimeout(long timeout) { /* Not used for TCP */ }
 
 	public static void main(String... args) {
-		System.setProperty("verbose", "true");
-		String host = "localhost";
+
+//		System.setProperty("verbose", "true");
+		String host = "sinagot.net"; // "localhost";
 		int port = 2947;
 		try {
 			boolean keepTrying = true;
 			while (keepTrying) {
-				TCPClient tcpClient = new TCPClient(host, port);
+				final GPSDClient tcpClient = new GPSDClient(host, port);
 				System.out.println(new Date().toString() + ": New " + tcpClient.getClass().getName() + " created.");
 
+				Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+					if (tcpClient != null) {
+						System.out.println("\n>> Stop reading");
+						tcpClient.stopReading();
+					}
+				}, "Hook"));
+
 				try {
-					tcpClient.read(null);
-
-					tcpClient.read("Yo!");
-
-					tcpClient.read("?WATCH={...};");
-
-					tcpClient.read("exit");
-
+					// Initiate. Request
+					tcpClient.read("?WATCH={\"enable\":true,\"json\":false,\"nmea\":true,\"raw\":0,\"scaled\":false,\"timing\":false,\"split24\":false,\"pps\":false}");
 				} catch (Exception ex) {
 					System.err.println("TCP Reader:" + ex.getMessage());
 					ex.printStackTrace();

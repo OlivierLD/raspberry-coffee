@@ -1,0 +1,18 @@
+#
+# MUX definition.
+#
+name: "With AIS data, for tests"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+channels:
+  # AIS Data
+  - type: tcp
+    server: sinagot.net
+    port: 2947
+    verbose: true
+
+forwarders:
+  - type: console
+

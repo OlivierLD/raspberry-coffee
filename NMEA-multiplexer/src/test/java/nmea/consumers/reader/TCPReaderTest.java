@@ -24,11 +24,16 @@ public class TCPReaderTest {
 
 		-Dtcp.host="ais.exploratorium.edu"
 		-Dtcp.port=80
+
+		-Dtcp.host="sinagot.net"
+		-Dtcp.port=2947
 		 */
 
         String host = // "192.168.42.10";
                 System.getProperty("tcp.host", "ais.exploratorium.edu");
         int port = Integer.parseInt(System.getProperty("tcp.port", "80")); // 7001; // 2947
+
+        // TODO Also try sinagot.net:2947, as GPSd
 
         System.out.println(String.format("TCP Client for %s:%d", host, port));
 

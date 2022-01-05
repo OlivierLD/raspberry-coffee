@@ -25,6 +25,7 @@ public class AISClient {
 			Map<Integer, AISParser.AISRecord> map = new HashMap<>();
 
 			String aisUrl = "http://ais.exploratorium.edu:80";
+//			String aisUrl = "http://sinagot.net:2947";
 			// "http://207.7.148.216:9009"
 			URL aisSFBayURL = new URL(aisUrl);
 			InputStream aisIS = aisSFBayURL.openStream();

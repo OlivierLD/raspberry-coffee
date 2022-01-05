@@ -44,9 +44,9 @@ then
   PORT=${PORT#*http.port=}
   echo -e "+-------- N O T E   o n   F O R W A R D E R S ------------------"
   echo -e "| You will need to start the forwarders yourself,"
-  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux/mux-process/on to start"
-  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux/mux-process/off to stop"
-  echo -e "| Or use http://$MACHINE_NAME:$PORT/web/runner.html from a "
+  echo -e "| invoke PUT http://${MACHINE_NAME}:${PORT}/mux/mux-process/on to start"
+  echo -e "| invoke PUT http://${MACHINE_NAME}:${PORT}/mux/mux-process/off to stop"
+  echo -e "| Or use http://${MACHINE_NAME}:${PORT}/web/runner.html from a "
   echo -e "| browser (laptop, cell, tablet...)"
   echo -e "+---------------------------------------------------------------"
 fi
@@ -69,9 +69,9 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Drest.feeder.verbose=true"
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dparse.ais=true"
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.props.verbose=true"
 #
-JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=${PROCESS_ON_START}"
 #
-JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.properties=$MUX_PROP_FILE"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.properties=${MUX_PROP_FILE}"
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dno.ais=false" # Accept AIS Strings
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dcalculate.solar.with.eot=true"
 #

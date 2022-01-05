@@ -17,6 +17,10 @@ channels:
     server: ais.exploratorium.edu
     port: 80
     verbose: false
+  - type: tcp
+    server: sinagot.net
+    port: 2947
+    verbose: true
 
 forwarders:
   - type: rest
