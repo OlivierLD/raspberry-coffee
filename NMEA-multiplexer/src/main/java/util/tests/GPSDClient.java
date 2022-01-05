@@ -2,11 +2,18 @@ package util.tests;
 
 
 import nmea.ais.AISParser;
-import scala.tools.nsc.Global;
 import utils.DumpUtil;
 
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.BindException;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketException;
 import java.util.Arrays;
 import java.util.Date;
 
