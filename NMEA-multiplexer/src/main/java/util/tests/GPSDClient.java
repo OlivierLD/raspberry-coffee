@@ -20,7 +20,7 @@ import java.util.Date;
 public class GPSDClient {
 	private int tcpPort = 80;
 	private String hostName = "localhost";
-	private AISParser aisParser = new AISParser();
+	private final AISParser aisParser = new AISParser();
 
 	private boolean goRead = true;
 
