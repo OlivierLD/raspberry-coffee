@@ -13,10 +13,14 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
 public class GPSDClient {
+
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
 	private int tcpPort = 80;
 	private String hostName = "localhost";
 	private final AISParser aisParser = new AISParser();
@@ -118,7 +122,7 @@ public class GPSDClient {
 					}
 				}
 			}
-			System.out.println("Stop Reading TCP port.");
+			System.out.printf("\tStop Reading TCP port, at %s\n", SDF.format(new Date()));
 			theInput.close();
 			// Signal waiter
 			if (waiter != null) {
@@ -126,7 +130,7 @@ public class GPSDClient {
 					waiter.notify();
 				}
 			}
-			System.out.println("Tchao!");
+			System.out.printf("\tTchao! at %s\n", SDF.format(new Date()));
 		} catch (BindException be) {
 			System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpPort);
 			be.printStackTrace();
@@ -211,12 +215,12 @@ public class GPSDClient {
 
 				Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 					if (tcpClient != null) {
-						System.out.println("\n>> Stop reading");
+						System.out.printf("\n\t>> Stop reading requested, at %s\n.", SDF.format(new Date()));
 						tcpClient.stopReading();
 						synchronized (waiter) {
 							try {
 								waiter.wait();
-								System.out.println("Bye-bye.");
+								System.out.printf("\tBye-bye. At %s\n", SDF.format(new Date()));
 							} catch (Exception ex) {
 								ex.printStackTrace();
 							}
