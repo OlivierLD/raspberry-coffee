@@ -95,7 +95,8 @@ public class GPSDClient {
 							System.out.println("-------------------");
 						}
 						String[] split = message.split("\n");
-						Arrays.asList(split).stream()
+						Arrays.asList(split)
+								.stream()
 								.forEach(mess -> {
 									if (mess.startsWith("!")) {
 										try {
@@ -113,13 +114,19 @@ public class GPSDClient {
 											System.out.println(">> GPSD Mess >> " + mess);
 										}
 									}
-
 								});
 					}
 				}
 			}
 			System.out.println("Stop Reading TCP port.");
 			theInput.close();
+			// Signal waiter
+			if (waiter != null) {
+				synchronized (waiter) {
+					waiter.notify();
+				}
+			}
+			System.out.println("Tchao!");
 		} catch (BindException be) {
 			System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpPort);
 			be.printStackTrace();
@@ -187,7 +194,11 @@ public class GPSDClient {
 
 	public void setTimeout(long timeout) { /* Not used for TCP */ }
 
+	private static Thread waiter = null;
+
 	public static void main(String... args) {
+
+		waiter = Thread.currentThread();
 
 //		System.setProperty("verbose", "true");
 		String host = "sinagot.net"; // "localhost";
@@ -202,6 +213,14 @@ public class GPSDClient {
 					if (tcpClient != null) {
 						System.out.println("\n>> Stop reading");
 						tcpClient.stopReading();
+						synchronized (waiter) {
+							try {
+								waiter.wait();
+								System.out.println("Bye-bye.");
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
 					}
 				}, "Hook"));
 
@@ -218,6 +237,7 @@ public class GPSDClient {
 					try {
 						Thread.sleep(howMuch);
 					} catch (InterruptedException ignored) {
+						// Bam!
 					}
 				}
 				keepTrying = false;

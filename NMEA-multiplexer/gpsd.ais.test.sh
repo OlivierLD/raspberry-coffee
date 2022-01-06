@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Requires a
+# ../gradlew clean build shadowJar
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 CP="${CP}:build/classes/java/test/"
 JAVA_OPTS=
