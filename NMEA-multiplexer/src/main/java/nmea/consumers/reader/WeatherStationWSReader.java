@@ -34,9 +34,9 @@ public class WeatherStationWSReader extends NMEAReader {
 	public WeatherStationWSReader(List<NMEAListener> al, Properties props) {
 		this(al, props.getProperty("ws.uri"));
 		verbose = "true".equals(props.getProperty("ws.verbose"));
-		if (verbose) {
-			WebSocketImpl.DEBUG = true;
-		}
+//		if (verbose) {
+//			WebSocketImpl.DEBUG = true; // Previous version
+//		}
 	}
 	public WeatherStationWSReader(List<NMEAListener> al, String wsUri) {
 		this(null, al, wsUri);

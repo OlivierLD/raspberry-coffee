@@ -28,7 +28,7 @@ public class WebSocketWriter implements Forwarder {
 
 				@Override
 				public void onMessage(String string) {
-//        System.out.println("WS On Message");
+//                System.out.println("WS On Message");
 				}
 
 				@Override

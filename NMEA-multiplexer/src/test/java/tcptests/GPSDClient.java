@@ -19,7 +19,7 @@ import java.util.Date;
 
 public class GPSDClient {
 
-	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS");
 
 	private int tcpPort = 80;
 	private String hostName = "localhost";

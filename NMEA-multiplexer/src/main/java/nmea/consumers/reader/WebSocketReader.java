@@ -33,7 +33,7 @@ public class WebSocketReader extends NMEAReader {
 
 				@Override
 				public void onMessage(String mess) {
-//        System.out.println("WS On Message");
+//                  System.out.println("WS On Message");
 					String s = mess + NMEAParser.NMEA_SENTENCE_SEPARATOR;
 					NMEAEvent n = new NMEAEvent(this, s);
 					instance.fireDataRead(n);
