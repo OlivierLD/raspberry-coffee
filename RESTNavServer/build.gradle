@@ -24,12 +24,13 @@ dependencies {
   compile 'com.google.code.gson:gson:2.8.0'
   // FindBugs should be included in RESTTideEngine -> TideEngine...
   implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
-  compile project (':RESTNauticalAlmanac')
-  compile project (':RESTTideEngine')
-  compile project (':RESTImageProcessor')
-  compile project (':RESTRouting')
-  compile project (':NMEA-multiplexer')
-  compile project (':NMEA-mux-extensions')
+  implementation project (':common-utils')
+  implementation project (':RESTNauticalAlmanac')
+  implementation project (':RESTTideEngine')
+  implementation project (':RESTImageProcessor')
+  implementation project (':RESTRouting')
+  implementation project (':NMEA-multiplexer')
+  implementation project (':NMEA-mux-extensions')
 }
 
 shadowJar {
