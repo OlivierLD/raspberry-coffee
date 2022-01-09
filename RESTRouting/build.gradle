@@ -19,6 +19,8 @@ repositories {
 
 dependencies {
   implementation 'com.google.code.gson:gson:2.8.0'
+  implementation project(':AstroComputer')  // a git submodule
+  implementation project(':common-utils')
   implementation project(':http-tiny-server')
   implementation project(':NMEA-multiplexer')
   implementation project(':Project-Trunk:PolarSmoother')
