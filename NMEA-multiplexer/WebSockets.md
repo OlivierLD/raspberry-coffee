@@ -1,4 +1,6 @@
-# A Note about WebSockets
+![WSLogo](./docimages/websocket-seeklogo.com.svg)
+
+# A Note about WebSockets 
 
 WebSocket is a protocol very similar to TCP, in that sense that it is connected (as opposed to HTTP,
 which also uses TCP, but connects, executes, and disconnects, at each request), and remains connected
