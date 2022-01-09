@@ -12,8 +12,8 @@ version = '1.0'
 // targetCompatibility = 1.8
 
 repositories {
-  mavenCentral()
   mavenLocal()
+  mavenCentral()
   maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
   maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }

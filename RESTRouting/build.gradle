@@ -8,22 +8,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//    resources {
-//      srcDir 'src/resources'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -34,9 +18,10 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.code.gson:gson:2.8.0'
-  compile project(':NMEA-multiplexer')
-  compile project(':Project-Trunk:PolarSmoother')
+  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation project(':http-tiny-server')
+  implementation project(':NMEA-multiplexer')
+  implementation project(':Project-Trunk:PolarSmoother')
 }
 
 shadowJar {
