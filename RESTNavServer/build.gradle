@@ -31,6 +31,7 @@ dependencies {
   implementation project (':RESTRouting')
   implementation project (':NMEA-multiplexer')
   implementation project (':NMEA-mux-extensions')
+  implementation project (':Project-Trunk:SunFlower-v2')
 }
 
 shadowJar {
