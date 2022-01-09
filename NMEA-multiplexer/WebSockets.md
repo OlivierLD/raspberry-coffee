@@ -91,7 +91,7 @@ _**From three different terminals:**_
 > - The role of the WebSocket consumer is _only_ to listen to the WebSocket server it is connected to (with its WebSocket URI `wsuri`)
 > - The role of the WebSocket forwarder is _only_ to enqueue NMEA Sentences to the WebSocket server it is connected to (with its WebSocket URI `wsuri`)
 > 
-All the components (WebSocket server, the two multiplexers) can run on the same machine, 
+All the components (the WebSocket server, the two multiplexers) can run on the same machine, 
 or on any number of machines, as long as they can see each other on the network. 
 
 ---
