@@ -186,10 +186,14 @@ wsServer.on('request', (request) => {
         if (message.type === 'utf8') {
             // accept only text
       //    console.log((new Date()) + ' Received Message: ' + message.utf8Data);
-      //    console.log("Rebroadcasting: " + message.utf8Data);
+      //    console.log("Rebroadcasting: " + message.utf8Data + " to " + clients.length + " client(s).");
             for (let i=0; i < clients.length; i++) {
                 clients[i].sendUTF(message.utf8Data); // Just re-broadcast.
             }
+        } else {
+          if (verbose) {
+            console.log(`Unsupported message type ${message.type}`);
+          }
         }
     });
 

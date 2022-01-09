@@ -3,15 +3,12 @@
 # For the WS Server, use NodeJS and the script wsnmea.js
 # See the doc WebSockets.md for more details.
 #
-name: "NMEA, log replay, push to WS server"
+name: "NMEA, WS server to Console"
 context:
   with.http.server: false
 channels:
-  - type: file
-    filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip
-    zip: true
-    path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
-    verbose: false
-forwarders:
   - type: ws
     wsuri: ws://localhost:9876/
+    verbose: false
+forwarders:
+  - type: console

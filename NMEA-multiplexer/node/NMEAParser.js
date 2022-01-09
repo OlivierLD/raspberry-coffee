@@ -350,10 +350,26 @@ var parseHDG = function (str) {
      *        Magnetic Sensor heading in degrees
      */
     var data = getChunks(str).data;
+    var hdg = parseFloat(data[1]);
+    var dev = parseFloat(data[2]);
+    var dec = parseFloat(data[4]);
+    if (isNaN(hdg)) {
+      hdg = null;
+    }
+    if (isNaN(dev)) {
+        dev = null;
+    } else {
+        dev *= (data[3] === 'W' ? -1 : 1);
+    }
+    if (isNaN(dec)) {
+        dec = null;
+    } else {
+        dec *= (data[5] === 'W' ? -1 : 1);
+    }
     return {
-        hdg: parseFloat(data[1]),
-        dev: ((data[3] === 'W' ? -1 : 1) * parseFloat(data[2])),
-        dec: ((data[5] === 'W' ? -1 : 1) * parseFloat(data[4]))
+        hdg: hdg,
+        dev: dev,
+        dec: dec
     };
 };
 
@@ -916,7 +932,9 @@ var autoparse = function (str) {
     var id = getChunks(str).valid.id;
     var parser = matcher[id].parser;
     if (parser !== undefined) {
-        return parser(str);
+        var autoParsed = parser(str);
+        autoParsed.type = id;
+        return autoParsed; // parser(str);
     } else {
         throw {err: "No parser found for sentence [" + str + "]"}
     }
@@ -937,7 +955,14 @@ var tests = function () {
     console.log("Pos: " + decToSex(parsed.pos.lat, 'NS') + " " + decToSex(parsed.pos.lon, 'NS'));
     var date = new Date(parsed.epoch);
     console.log(date);
+
+    console.log('--- AutoParse ---');
+    var auto = autoparse("$IIHDG,217,,,10,E*17");
+    console.log(auto);
 };
+
+
+// tests();
 
 // Made public.
 exports.validate = validate;

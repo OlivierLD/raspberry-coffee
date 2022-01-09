@@ -17,6 +17,7 @@ public class WebSocketReader extends NMEAReader {
 	private WebSocketClient wsClient = null;
 	private WebSocketReader instance = this;
 	private String wsUri;
+	private boolean verbose = false;
 
 	public WebSocketReader(List<NMEAListener> al, String wsUri) {
 		this(null, al, wsUri);
@@ -24,6 +25,9 @@ public class WebSocketReader extends NMEAReader {
 	public WebSocketReader(String threadName, List<NMEAListener> al, String wsUri) {
 		super(threadName, al);
 		this.wsUri = wsUri;
+
+		this.verbose = "true".equals(System.getProperty("ws.data.verbose", "false"));
+
 		try {
 			this.wsClient = new WebSocketClient(new URI(wsUri)) {
 				@Override
@@ -33,9 +37,11 @@ public class WebSocketReader extends NMEAReader {
 
 				@Override
 				public void onMessage(String mess) {
-//                  System.out.println("WS On Message");
+					if (verbose) {
+                      System.out.printf("WebSocketReader onMessage: [%s]\n", mess);
+					}
 					String s = mess + NMEAParser.NMEA_SENTENCE_SEPARATOR;
-					NMEAEvent n = new NMEAEvent(this, s);
+					NMEAEvent n = new NMEAEvent(this, s); // Will do nothing if the String is not a valid NMEA string.
 					instance.fireDataRead(n);
 				}
 

@@ -28,8 +28,9 @@ public class WebSocketClient extends NMEAClient {
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if (verbose)
+		if (verbose) {
 			System.out.println("Received from WebSocket :" + e.getContent());
+		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}
@@ -77,6 +78,7 @@ public class WebSocketClient extends NMEAClient {
 		return new WSBean(this);
 	}
 
+	// This is for tests
 	public static void main(String... args) {
 		String serverUri = "ws://localhost:9876/";
 
