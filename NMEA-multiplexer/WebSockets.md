@@ -68,14 +68,14 @@ This includes:
 
 _**From three different terminals:**_
 
-1. Start the WebSocket Server (also acts as a Web Server), on `NodeJS`:
-    ```
+1. Start the WebSocket Server on port `9876` (also acts as a Web Server), on `NodeJS`:
+   ```
     node wsnmea.js [-verbose] [-port:9876]
-    ```
+   ```
 2. Start the first multiplexer, that reads a log file, and feed a WebSocket server with the retrieved NMEA Sentences:
-    ```
+   ```
     ./mux.sh log.to.ws.yaml
-    ```
+   ```
    The `yaml` file looks like this:
    ```yaml
    name: "NMEA, log replay, push to WS server"
@@ -90,13 +90,13 @@ _**From three different terminals:**_
    forwarders:
    - type: ws
      wsuri: ws://localhost:9876/
-     ``` 
+   ``` 
 3. Start a second multiplexer, to receive the NMEA Sentences emitted by the WebSocket server above, and spit them out to the console:
-    ```
+   ```
     ./mux.sh ws.2.console.yaml 
-    ```
+   ```
    Its `yaml` file looks like that:
-    ```yaml
+   ```yaml
    name: "NMEA, WS server to Console"
    context:
    with.http.server: false
@@ -106,8 +106,9 @@ _**From three different terminals:**_
      verbose: false
    forwarders:
    - type: console
-    ```  
+   ```
 
+The `yaml` content is described in the [`manual`](./manual.md).
 
 ![Push Pull](./docimages/push.pull.png)
 
@@ -115,16 +116,17 @@ _**From three different terminals:**_
 > - We use `NodeJS` to implement the WebSocket server, because it is light and easy to put to work.
 >   Many other WebSocket servers exist, in many different languages.
 > - The logic of the WebSocket server - implemented in ES6 in `wsnmea.js` - is quite essential here.
-> - This is designed to:
->  - receive NMEA Sentences
->  - rebroadcast those NMEA Sentences to _all_ the connected WebSocket Clients.
-> - The role of the WebSocket consumer is _only_ to listen to the WebSocket server it is connected to (with its WebSocket URI `wsuri`)
-> - The role of the WebSocket forwarder is _only_ to enqueue NMEA Sentences to the WebSocket server it is connected to (with its WebSocket URI `wsuri`)
+> - This is explicitly designed to:
+>   - receive NMEA Sentences
+>   - rebroadcast those NMEA Sentences to _all_ the connected WebSocket Clients.
+>   - it _only_ manages character data, nothing binary (not required here)
+> - The role of the WebSocket **consumer** is _only_ to listen to the WebSocket server it is connected to (with its WebSocket URI `wsuri`)
+> - The role of the WebSocket **forwarder** is _only_ to enqueue NMEA Sentences to the WebSocket server it is connected to (with its WebSocket URI `wsuri`)
 > 
 All the components (the WebSocket server, the two multiplexers) can run on the same machine, 
-or on any number of machines, as long as they can see each other on the network. 
+or on separate machines, as long as they can see each other on the network. 
 
-A web page displying the data pushed out by the WebSocket server can be reached at <http://ws-machine:9876/data/web/wsconsole.html>, where
+A web page displaying the data pushed out by the WebSocket server can be reached at <http://ws-machine:9876/data/web/wsconsole.html>, where
 `ws-machine` is the name of the machine the WebSocket server runs on, and `9876` is the port it uses.
 
 ---
