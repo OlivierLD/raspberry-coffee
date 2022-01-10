@@ -70,16 +70,44 @@ _**From three different terminals:**_
 
 1. Start the WebSocket Server (also acts as a Web Server), on `NodeJS`:
     ```
-    node wsnmea.js [-verbose]
+    node wsnmea.js [-verbose] [-port:9876]
     ```
 2. Start the first multiplexer, that reads a log file, and feed a WebSocket server with the retrieved NMEA Sentences:
     ```
     ./mux.sh log.to.ws.yaml
     ```
+   The `yaml` file looks like this:
+   ```yaml
+   name: "NMEA, log replay, push to WS server"
+   context:
+   with.http.server: false
+   channels:
+   - type: file
+     filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip
+     zip: true
+     path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
+     verbose: false
+   forwarders:
+   - type: ws
+     wsuri: ws://localhost:9876/
+     ``` 
 3. Start a second multiplexer, to receive the NMEA Sentences emitted by the WebSocket server above, and spit them out to the console:
     ```
     ./mux.sh ws.2.console.yaml 
     ```
+   Its `yaml` file looks like that:
+    ```yaml
+   name: "NMEA, WS server to Console"
+   context:
+   with.http.server: false
+   channels:
+   - type: ws
+     wsuri: ws://localhost:9876/
+     verbose: false
+   forwarders:
+   - type: console
+    ```  
+
 
 ![Push Pull](./docimages/push.pull.png)
 
@@ -95,5 +123,8 @@ _**From three different terminals:**_
 > 
 All the components (the WebSocket server, the two multiplexers) can run on the same machine, 
 or on any number of machines, as long as they can see each other on the network. 
+
+A web page displying the data pushed out by the WebSocket server can be reached at <http://ws-machine:9876/data/web/wsconsole.html>, where
+`ws-machine` is the name of the machine the WebSocket server runs on, and `9876` is the port it uses.
 
 ---
