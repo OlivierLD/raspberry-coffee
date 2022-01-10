@@ -57,8 +57,8 @@ And those data should be received from the web page at <http://localhost:9876/da
 Notice in [`log.to.ws.yaml`](./log.to.ws.yaml) that the HTTP Server is not enabled.
 The `NMEA-multiplexer` just behaves as a pipeline.
 
-#### Push-Pull sample
-Here is an quick example showing how to _write_ NMEA Sentences using the WebSocket protocol, and
+#### Full Push-Pull sample
+Here is a quick example showing how to _write_ NMEA Sentences using the WebSocket protocol, and
 how to _read_ NMEA Sentences, using the WebSocket protocol.
 
 This includes:
@@ -80,16 +80,16 @@ _**From three different terminals:**_
    ```yaml
    name: "NMEA, log replay, push to WS server"
    context:
-   with.http.server: false
+     with.http.server: false
    channels:
-   - type: file
-     filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip
-     zip: true
-     path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
-     verbose: false
+     - type: file
+       filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip
+       zip: true
+       path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
+       verbose: false
    forwarders:
-   - type: ws
-     wsuri: ws://localhost:9876/
+     - type: ws
+       wsuri: ws://localhost:9876/
    ``` 
 3. Start a second multiplexer, to receive the NMEA Sentences emitted by the WebSocket server above, and spit them out to the console:
    ```
@@ -99,13 +99,13 @@ _**From three different terminals:**_
    ```yaml
    name: "NMEA, WS server to Console"
    context:
-   with.http.server: false
+     with.http.server: false
    channels:
-   - type: ws
-     wsuri: ws://localhost:9876/
-     verbose: false
+     - type: ws
+       wsuri: ws://localhost:9876/
+       verbose: false
    forwarders:
-   - type: console
+     - type: console
    ```
 
 The `yaml` content is described in the [`manual`](./manual.md).
@@ -113,7 +113,7 @@ The `yaml` content is described in the [`manual`](./manual.md).
 ![Push Pull](./docimages/push.pull.png)
 
 > _Important notes_:  
-> - We use `NodeJS` to implement the WebSocket server, because it is light and easy to put to work.
+> - We use `NodeJS` to implement the WebSocket server, because it is light and easy to put to work. Install the requirements as explained [above](#try-it-for-yourself).  
 >   Many other WebSocket servers exist, in many different languages.
 > - The logic of the WebSocket server - implemented in ES6 in `wsnmea.js` - is quite essential here.
 > - This is explicitly designed to:

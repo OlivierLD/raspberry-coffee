@@ -1,7 +1,7 @@
 #
 # This is an example for WebSockets.
 # For the WS Server, use NodeJS and the script wsnmea.js
-# See the doc WebSockets.md for more details.
+# See the doc WebSockets.md for more details, section ./WebSockets.md#full-push-pull-sample.
 #
 name: "NMEA, WS server to Console"
 context:
