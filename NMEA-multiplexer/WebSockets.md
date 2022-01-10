@@ -66,15 +66,15 @@ This includes:
 2. one multiplexer to enqueue NMEA sentences in the WebSocket server above
 3. another multiplexer that receives the NMEA sentences enqueued previsouly
 
-_**From three different terminals:**_
+_**From three different terminals (or in batch mode):**_
 
 1. Start the WebSocket Server on port `9876` (also acts as a Web Server), on `NodeJS`:
    ```
-    node wsnmea.js [-verbose] [-port:9876]
+   $ node wsnmea.js [-verbose] [-port:9876]
    ```
 2. Start the first multiplexer, that reads a log file, and feed a WebSocket server with the retrieved NMEA Sentences:
    ```
-    ./mux.sh log.to.ws.yaml
+   $ ./mux.sh log.to.ws.yaml
    ```
    The `yaml` file looks like this:
    ```yaml
@@ -93,7 +93,7 @@ _**From three different terminals:**_
    ``` 
 3. Start a second multiplexer, to receive the NMEA Sentences emitted by the WebSocket server above, and spit them out to the console:
    ```
-    ./mux.sh ws.2.console.yaml 
+   $ ./mux.sh ws.2.console.yaml 
    ```
    Its `yaml` file looks like that:
    ```yaml
