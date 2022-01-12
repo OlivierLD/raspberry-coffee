@@ -8,7 +8,7 @@ from typing import List
 import math
 import datetime
 
-debug = False
+debug:bool = False
 
 Matrix = List[List[float]]
 
@@ -165,7 +165,7 @@ def print_system(matrix: Matrix, constants: List[float]) -> None:
 #
 #
 # Main part below (actual execution), using the above.
-def main(args=None):
+def main(args=None) -> None:
     matrix = [
         [12, 13, 14],
         [1.345, -654, 0.001],
@@ -203,5 +203,6 @@ def main(args=None):
 
 
 if __name__ == "__main__":
-    print("Let's go!")
+    print("-- Let's go! --")
     main()
+    print("---- Done -----")

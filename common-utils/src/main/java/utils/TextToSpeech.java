@@ -23,7 +23,7 @@ public class TextToSpeech {
         }
     }
 
-// MOVED TO TESTS
+// MOVED TO TEST
 //    public static void main(String... args) {
 //        System.out.println("OS is [" + System.getProperty("os.name") + "]");
 //    //	speak("You got a message from 415-745-5209. Do you wan to read it?");
