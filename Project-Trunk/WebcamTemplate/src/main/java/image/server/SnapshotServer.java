@@ -131,11 +131,9 @@ public class SnapshotServer {
 	}
 
 	protected void takeOneSnap() {
-
 	}
 
 	protected void startStopMotion() {
-
 	}
 
 	protected SnapSnapSnap.SnapStatus getSnapThreadStatus() throws Exception {

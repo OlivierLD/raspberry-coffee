@@ -1,18 +1,18 @@
 /*
- * @author Olivier LeDiouris
+ * @author Olivier Le Diouris
  * Uses ES6 Promises for Ajax.
  */
 
 const DEBUG = false;
 
-const DEFAULT_TIMEOUT = 60000; // 1 minute
+const DEFAULT_TIMEOUT = 60000; // 1 minute, in milliseconds
 
 /* Uses ES6 Promises */
 function getPromise(
-		url,                          // full api path
+		url,                          // full resource path
 		timeout,                      // After that, fail.
 		verb,                         // GET, PUT, DELETE, POST, etc
-		headers,                      // Request Headers, or null. Array of { 'name': 'header-name', 'value: 'Value' }
+		headers,                      // Request Headers, or null. Array of { 'name': 'header-name', 'value': 'Value' }
 		happyCode,                    // if met, resolve, otherwise fail.
 		data = null,                  // json payload, when needed (PUT, POST...)
 		show = false) {               // Show the traffic true|[false]
@@ -81,8 +81,8 @@ function getLastSnapshot(prms) {
 	return getPromise(`/snap/last-snapshot${qs.length > 0 ? `?${qs}` : ""}`,
 		DEFAULT_TIMEOUT,
 		'GET',
-		[{name: "Accept", value: "application/json"},
-			{name: "Pragma", value: "no-cache"}],
+		[ {name: "Accept", value: "application/json"},
+		  {name: "Pragma", value: "no-cache"} ],
 		200,
 		null,
 		false);
