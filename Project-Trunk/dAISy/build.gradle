@@ -12,20 +12,6 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -34,5 +20,9 @@ repositories {
 }
 
 dependencies {
-  compile project(':NMEA-multiplexer')
+  //  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation 'org.rxtx:rxtx:2.1.7'
+  implementation project(':common-utils')
+  implementation project(":Serial-IO")
+  implementation project(':NMEA-multiplexer')
 }

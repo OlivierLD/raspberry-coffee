@@ -33,9 +33,9 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/jfugue/jfugue
- // compile 'jfugue:jfugue:4.0.3'
-    compile 'org.clojars.jmeeks:jfugue:4.0.3'
- // compile 'org:jfugue:5.0.5'
+ // implementation 'jfugue:jfugue:4.0.3'
+    implementation 'org.clojars.jmeeks:jfugue:4.0.3'
+ // implementation 'org:jfugue:5.0.5'
 }
 
 task copyResources(type: Copy) {

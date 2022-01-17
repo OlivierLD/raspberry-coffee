@@ -20,8 +20,11 @@ repositories {
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
-//    compile project(':NMEA-multiplexer')
-    compile project(':NMEA-mux-extensions')
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation project(':common-utils')
+    implementation project(':http-tiny-server')
+    implementation project(':NMEA-multiplexer')
+    implementation project(':NMEA-mux-extensions')
 }
 
 shadowJar {

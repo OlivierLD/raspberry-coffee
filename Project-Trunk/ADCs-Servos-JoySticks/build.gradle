@@ -13,20 +13,6 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -34,9 +20,10 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.code.gson:gson:2.8.0'
-  compile project(':common-utils')
-  compile project(':HanoiTower')
-  compile project(':ADC')
-  compile project(':I2C-SPI')
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation project(':common-utils')
+  implementation project(':HanoiTower')
+  implementation project(':ADC')
+  implementation project(':I2C-SPI')
 }

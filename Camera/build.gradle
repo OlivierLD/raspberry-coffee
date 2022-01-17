@@ -30,11 +30,11 @@ repositories {
 }
 
 dependencies {
-//compile 'com.sun.media:jai_codec:1.1.3'
-  compile 'javax:jai_codec:1.1.3'
-  compile 'javax:jai_core:1.1.3'
-  compile project (':common-utils')
-  compile project (':common-image-utils')
+//implementation 'com.sun.media:jai_codec:1.1.3'
+  implementation 'javax:jai_codec:1.1.3'
+  implementation 'javax:jai_core:1.1.3'
+  implementation project (':common-utils')
+  implementation project (':common-image-utils')
 }
 
 task runSample(type: JavaExec, dependsOn: build, description: "Test run.") {

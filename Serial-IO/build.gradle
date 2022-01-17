@@ -16,9 +16,9 @@ repositories {
 }
 
 dependencies {
-//  compile 'comm:rxtx:1.0'
-    compile 'org.rxtx:rxtx:2.1.7'
-    compile project(':common-utils')
+//  implementation 'comm:rxtx:1.0'
+    implementation 'org.rxtx:rxtx:2.1.7'
+    implementation project(':common-utils')
 }
 
 shadowJar {

@@ -28,26 +28,26 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'org.codehaus.groovy:groovy-all:2.4.6'
-    compile 'org.codehaus.groovy:http-builder:0.4.0'
-    compile 'javax.ws.rs:javax.ws.rs-api:2.0'
-//    compile 'org.glassfish.jersey.core:jersey-client:2.10'
-    compile 'org.scala-lang:scala-library:2.13.3'
-    compile "org.scala-lang:scala-compiler:2.13.3"
-    compile 'com.typesafe.akka:akka-actor_2.11:2.3.11'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'org.codehaus.groovy:groovy-all:2.4.6'
+    implementation 'org.codehaus.groovy:http-builder:0.4.0'
+    implementation 'javax.ws.rs:javax.ws.rs-api:2.0'
+//    implementation 'org.glassfish.jersey.core:jersey-client:2.10'
+    implementation 'org.scala-lang:scala-library:2.13.3'
+    implementation "org.scala-lang:scala-compiler:2.13.3"
+    implementation 'com.typesafe.akka:akka-actor_2.11:2.3.11'
 //    compile.sh 'org.clojure:clojure:1.5.1'
 
-    compile 'org.graalvm.js:js:21.1.0'
-    compile 'org.graalvm.js:js-scriptengine:21.1.0'
+    implementation 'org.graalvm.js:js:21.1.0'
+    implementation 'org.graalvm.js:js-scriptengine:21.1.0'
 
-    compile 'org.glassfish.jersey.core:jersey-client:2.25.1'
-    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
+    implementation 'org.glassfish.jersey.core:jersey-client:2.25.1'
+    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
 
 
-    compile project(':I2C-SPI')
-    compile project(':MindWave')
-    compile project(':SevenSegDisplay')
+    implementation project(':I2C-SPI')
+    implementation project(':MindWave')
+    implementation project(':SevenSegDisplay')
 }
 
 //sourceSets {

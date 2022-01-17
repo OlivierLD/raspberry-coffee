@@ -9,19 +9,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDir 'src'
-//        }
-//    }
-//    test {
-//        java {
-//            srcDir 'tests'
-//        }
-//    }
-//}
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -29,9 +16,10 @@ repositories {
 }
 
 dependencies {
-    compile 'org.rxtx:rxtx:2.1.7'
-    compile project(':common-utils')
-    compile project(':Serial-IO')
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation 'org.rxtx:rxtx:2.1.7'
+    implementation project(':common-utils')
+    implementation project(':Serial-IO')
 }
 
 shadowJar {

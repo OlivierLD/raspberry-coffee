@@ -14,8 +14,9 @@ repositories {
 }
 
 dependencies {
-//  compile 'com.pi4j:pi4j-core:1.1'
-//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
-//  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'
-  compile project(':common-utils')
+//  implementation 'com.pi4j:pi4j-core:1.1'
+//implementation 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
+//  implementation 'com.pi4j:pi4j-core:1.3-SNAPSHOT'
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':common-utils')
 }

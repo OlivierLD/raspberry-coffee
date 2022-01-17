@@ -9,19 +9,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -31,12 +18,13 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.code.gson:gson:2.8.0'
-  compile 'org.fusesource.jansi:jansi:1.11'
-  compile project(':common-utils')
-  compile project(':RESTNauticalAlmanac')   // For the astronomical calculus
-  compile project(':I2C-SPI')               // For the Servo Board (PCA9685)
-  compile project(':ADC')                   // For the MCP3008
+  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation 'org.fusesource.jansi:jansi:1.11'
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':common-utils')
+  implementation project(':RESTNauticalAlmanac')   // For the astronomical calculus
+  implementation project(':I2C-SPI')               // For the Servo Board (PCA9685)
+  implementation project(':ADC')                   // For the MCP3008
 }
 
 shadowJar {

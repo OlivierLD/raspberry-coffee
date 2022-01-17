@@ -30,9 +30,9 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.code.gson:gson:2.8.0'
-  compile project(':http-tiny-server')
-  compile project(':I2C-SPI') // For the Servo Board (PCA9685)
+  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation project(':http-tiny-server')
+  implementation project(':I2C-SPI') // For the Servo Board (PCA9685)
 }
 
 shadowJar {

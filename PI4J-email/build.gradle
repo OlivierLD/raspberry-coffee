@@ -8,19 +8,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -28,9 +15,10 @@ repositories {
 }
 
 dependencies {
-  compile 'org.json:json:20141113'
-  compile project(':common-utils')
-  compile project(':ADC')
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation 'org.json:json:20141113'
+  implementation project(':common-utils')
+  implementation project(':ADC')
 }
 
 shadowJar {

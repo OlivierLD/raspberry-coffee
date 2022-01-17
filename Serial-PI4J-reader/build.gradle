@@ -10,19 +10,6 @@ compileJava.options.encoding = 'ISO-8859-1'
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDir 'src'
-//        }
-//    }
-//    test {
-//        java {
-//            srcDir 'tests'
-//        }
-//    }
-//}
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -30,7 +17,8 @@ repositories {
 }
 
 dependencies {
-    compile project(':common-utils')
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation project(':common-utils')
 }
 
 shadowJar {

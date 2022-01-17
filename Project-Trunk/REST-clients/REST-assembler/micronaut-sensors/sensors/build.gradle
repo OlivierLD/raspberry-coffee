@@ -39,8 +39,8 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
     // mavenLocal
-    compile 'oliv.raspi.coffee:ADC:1.0'
-    compile 'oliv.raspi.coffee:REST-assembler:1.0'
+    implementation 'oliv.raspi.coffee:ADC:1.0'
+    implementation 'oliv.raspi.coffee:REST-assembler:1.0'
 }
 
 test.classpath += configurations.developmentOnly

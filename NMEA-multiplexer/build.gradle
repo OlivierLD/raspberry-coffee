@@ -24,6 +24,7 @@ compileJava {
 }
 
 dependencies {
+    implementation 'com.pi4j:pi4j-core:1.2'
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation 'org.scala-lang:scala-library:2.13.3'
     implementation "org.scala-lang:scala-compiler:2.13.3"

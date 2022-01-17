@@ -32,14 +32,14 @@ repositories {
 }
 
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  compile 'org.codehaus.groovy:groovy-all:2.4.6'
-  compile 'org.codehaus.groovy:http-builder:0.4.0'
-  compile 'org.scala-lang:scala-library:2.13.3'
-  compile "org.scala-lang:scala-compiler:2.13.3"
-  compile 'com.typesafe.akka:akka-actor_2.11:2.3.11'
-  compile 'org.json:json:20141113'
-  compile project(':http-tiny-server')
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  implementation 'org.codehaus.groovy:groovy-all:2.4.6'
+  implementation 'org.codehaus.groovy:http-builder:0.4.0'
+  implementation 'org.scala-lang:scala-library:2.13.3'
+  implementation "org.scala-lang:scala-compiler:2.13.3"
+  implementation 'com.typesafe.akka:akka-actor_2.11:2.3.11'
+  implementation 'org.json:json:20141113'
+  implementation project(':http-tiny-server')
 }
 
 shadowJar {

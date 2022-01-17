@@ -33,6 +33,6 @@ repositories {
 }
 
 dependencies {
-  compile project(':http-tiny-server')
-  compile project(':I2C-SPI')
+  implementation project(':http-tiny-server')
+  implementation project(':I2C-SPI')
 }

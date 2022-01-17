@@ -33,13 +33,13 @@ repositories {
 dep
 endencies {
 
-    compile 'oliv.raspi.coffee:I2C.SPI:1.0'
+    implementation 'oliv.raspi.coffee:I2C.SPI:1.0'
 
-    compile group: 'io.helidon.microprofile.bundles', name: 'helidon-microprofile-1.2', version:'0.11.0'
-    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-binding', version:'2.26'
-    compile group: 'javax.interceptor', name: 'javax.interceptor-api', version: '1.2.2'
+    implementation group: 'io.helidon.microprofile.bundles', name: 'helidon-microprofile-1.2', version:'0.11.0'
+    implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-binding', version:'2.26'
+    implementation group: 'javax.interceptor', name: 'javax.interceptor-api', version: '1.2.2'
     runtime group: 'org.jboss', name: 'jandex', version:'2.0.4.Final'
     runtime group: 'javax.activation', name: 'javax.activation-api', version:'1.2.0'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version:'5.0.1'
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version:'5.0.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version:'5.0.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version:'5.0.1'
 }

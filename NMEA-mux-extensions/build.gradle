@@ -24,6 +24,7 @@ compileJava.options.compilerArgs += ["-Xlint:none"]
 //}
 
 dependencies {
+    implementation project(':Serial-IO')
     implementation project(':LoRa')
     implementation project(':NMEA-multiplexer')
     implementation project(':Project-Trunk:SunFlower') // For the Servo Board (PCA9685) and the LSM303

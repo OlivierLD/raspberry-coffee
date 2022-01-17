@@ -18,13 +18,14 @@ repositories {
 }
 
 dependencies {
+  implementation 'com.pi4j:pi4j-core:1.2'
   implementation 'org.jetbrains:annotations:19.0.0'
-  compile 'org.json:json:20141113'
-  compile 'org.java-websocket:Java-WebSocket:1.3.7'
-  compile project(':common-utils')
-  compile project(':RMI-sample')
-  compile project(':http-tiny-server')
-  compile project(':AstroComputer')
+  implementation 'org.json:json:20141113'
+  implementation 'org.java-websocket:Java-WebSocket:1.3.7'
+  implementation project(':common-utils')
+  implementation project(':RMI-sample')
+  implementation project(':http-tiny-server')
+  implementation project(':AstroComputer')
 }
 
 // Warning: Must be run as root

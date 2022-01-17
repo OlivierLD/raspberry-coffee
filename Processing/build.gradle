@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-//  compile fileTree(dir: '/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4', include: ['*.jar'])
-  testCompile group: 'junit', name: 'junit', version: '4.13'
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+//  implementation fileTree(dir: '/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4', include: ['*.jar'])
+  testImplementation group: 'junit', name: 'junit', version: '4.13'
 }

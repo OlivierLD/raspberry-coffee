@@ -17,7 +17,8 @@ public class Basic01 {
     private static BackEndTideComputer backEndTideComputer;
 
     /**
-     * Basic functional test
+     * Basic functional test.
+     * fails if there is an exception.
      */
     @Test
     public void basic() {

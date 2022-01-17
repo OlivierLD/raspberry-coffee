@@ -9,19 +9,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -29,8 +16,9 @@ repositories {
 }
 
 dependencies {
-  compile project(':common-utils')
-  testCompile group: 'junit', name: 'junit', version: '4.13'
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':common-utils')
+  testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
 
 shadowJar {

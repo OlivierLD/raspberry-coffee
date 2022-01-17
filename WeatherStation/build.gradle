@@ -16,7 +16,8 @@ repositories {
 }
 
 dependencies {
-  compile project(':I2C-SPI')
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':I2C-SPI')
 }
 
 shadowJar {

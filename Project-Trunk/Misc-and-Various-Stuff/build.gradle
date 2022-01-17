@@ -21,9 +21,10 @@ repositories {
 }
 
 dependencies {
-  compile project(':http-tiny-server')
-  compile project(':I2C-SPI')
-  compile project(':Arduino-RaspberryPI')
-  compile project(':PhoneKeyboard3x4')
-  compile project(':SevenSegDisplay')
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':http-tiny-server')
+  implementation project(':I2C-SPI')
+  implementation project(':Arduino-RaspberryPI')
+  implementation project(':PhoneKeyboard3x4')
+  implementation project(':SevenSegDisplay')
 }

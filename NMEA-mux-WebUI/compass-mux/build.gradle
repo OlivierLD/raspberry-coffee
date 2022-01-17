@@ -21,8 +21,8 @@ repositories {
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
-//    compile project(':NMEA-multiplexer')
-    compile project(':NMEA-mux-extensions')
+//    implementation project(':NMEA-multiplexer')
+    implementation project(':NMEA-mux-extensions')
 }
 
 shadowJar {

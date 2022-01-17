@@ -21,9 +21,9 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/org.json/json
-    compile group: 'org.json', name: 'json', version: '20190722'
-//    compile 'com.google.code.gson:gson:2.8.0'
-//    compile project(':common-utils')
+    implementation group: 'org.json', name: 'json', version: '20190722'
+//    implementation 'com.google.code.gson:gson:2.8.0'
+//    implementation project(':common-utils')
 }
 
 mainClassName = "oliv.json.JsonQL"

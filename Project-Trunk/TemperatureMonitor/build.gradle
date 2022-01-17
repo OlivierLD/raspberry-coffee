@@ -17,8 +17,8 @@ repositories {
 }
 
 dependencies {
-  compile project(':common-utils')
-  compile project(':Algebra')
+  implementation project(':common-utils')
+  implementation project(':Algebra')
 }
 
 shadowJar {

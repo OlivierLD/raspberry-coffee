@@ -62,8 +62,8 @@ dependencies {
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
 
     // mavenLocal - Make sure you've installed them.
-    compile 'oliv.raspi.coffee:ADC:1.0'
-    compile 'oliv.raspi.coffee:REST-assembler:1.0'
+    implementation 'oliv.raspi.coffee:ADC:1.0'
+    implementation 'oliv.raspi.coffee:REST-assembler:1.0'
 }
 
 test.classpath += configurations.developmentOnly

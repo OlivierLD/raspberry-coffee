@@ -37,9 +37,9 @@ repositories {
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
-    compile project(':NMEA-mux-extensions')
-    compile project(':RESTNavServer')
-//    compile project(':NMEA-multiplexer') // RESTNavServer contains NMEA-multiplexer
+    implementation project(':NMEA-mux-extensions')
+    implementation project(':RESTNavServer')
+//    implementation project(':NMEA-multiplexer') // RESTNavServer contains NMEA-multiplexer
 }
 
 shadowJar {

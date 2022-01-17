@@ -33,11 +33,11 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.code.gson:gson:2.8.0'
-//  compile 'javax:jai_codec:1.1.3'
-//  compile 'javax:jai_core:1.1.3'
-  compile project(':http-tiny-server')
-  compile project (':common-image-utils')
+  implementation 'com.google.code.gson:gson:2.8.0'
+//  implementation 'javax:jai_codec:1.1.3'
+//  implementation 'javax:jai_core:1.1.3'
+  implementation project(':http-tiny-server')
+  implementation project (':common-image-utils')
 }
 
 shadowJar {

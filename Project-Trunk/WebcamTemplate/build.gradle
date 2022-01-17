@@ -16,11 +16,11 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-def opencvVersion = "4.5.0"
+def opencvVersion = "4.5.4"
 
 dependencies {
-    compile project(':common-utils')
-    compile project(':http-tiny-server')
+    implementation project(':common-utils')
+    implementation project(':http-tiny-server')
 
     // The one below depends on where you have installed OpenCV
     if (System.getProperty("os.name").indexOf("Mac") > -1) {
@@ -33,7 +33,7 @@ dependencies {
         implementation fileTree(dir: "/home/pi/opencv-${opencvVersion}/build/bin", include: ['*.jar']) // RPi
     }
 
-    testCompile group: 'junit', name: 'junit', version: '4.13'
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
 
 tasks.withType(JavaExec) {

@@ -32,9 +32,9 @@ mainClassName = "httpserver.HttpRequestServer"
 
 dependencies {
 
-    testCompile group: 'junit', name: 'junit', version: '4.13'
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
 
-    compile 'oliv.raspi.coffee:http-tiny-server:1.0'
-    compile 'oliv.raspi.coffee:ADC:1.0'
+    implementation 'oliv.raspi.coffee:http-tiny-server:1.0'
+    implementation 'oliv.raspi.coffee:ADC:1.0'
 }
 

@@ -68,9 +68,9 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
   implementation 'org.codehaus.groovy:groovy-all:2.4.6'
   implementation 'org.codehaus.groovy:http-builder:0.4.0'
-//  compile "com.netflix.nebula:nebula-clojure-plugin:4.3.1"
-//  compile 'org.clojure:clojure:1.5.1'
+//  implementation "com.netflix.nebula:nebula-clojure-plugin:4.3.1"
+//  implementation 'org.clojure:clojure:1.5.1'
   implementation 'org.scala-lang:scala-library:2.13.3'
   implementation project(':http-tiny-server')
-  testCompile group: 'junit', name: 'junit', version: '4.13'
+  testImplementation group: 'junit', name: 'junit', version: '4.13'
 }

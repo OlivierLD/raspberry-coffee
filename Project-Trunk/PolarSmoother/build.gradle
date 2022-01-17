@@ -35,7 +35,7 @@ repositories {
 }
 
 dependencies {
-  compile 'oracle:xmlparser:2.0'
+  implementation 'oracle:xmlparser:2.0'
 }
 
 shadowJar {
