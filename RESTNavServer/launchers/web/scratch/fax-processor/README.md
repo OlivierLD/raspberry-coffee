@@ -1,8 +1,17 @@
 # Several faxes, reworked on Client side.
+Features:
+- For a given zone, download the faxes from the internet
+- Start a Web Server (Python, NodeJS, or Java)
+- Rework the faxes (color, orientation, offsets) _on the client side_, in ES6
+- Display the generated page
+
+Issues:
+- This is done locally from a Shell Script because of some Cross Origin Resource Sharing (CORS) issues when running on a remote server...
+
 ## A Pure HTML5-CSS3-ES6 Tentative approach
 We want to
 - Read weather faxes from the internet
-- Rescale, rotate, them, change the black color to something else, make the white transparent
+- Rescale, rotate them, change the black color to something else, make the white transparent
 - Display them, side-by-side, on top of each other, or anything like that
 
 ### Color change issues
