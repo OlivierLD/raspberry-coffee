@@ -54,4 +54,11 @@ The code to change the colors, orientation, and size of the faxes is in `faxes.j
 
 ![4 Faxes](./4.faxes.png)
 
+> _Note_: If you've not used the `--kill-server` option, you may kill the web server that was started by using
+> - kill.py.sh
+> - kill.node.sh
+> - kill.java.sh
+> 
+> depending on the flavor you used.
+
 ---

@@ -56,7 +56,6 @@ doOnLoad = () => {
   const fax500mb = document.getElementById('500mb');
   const faxWaves = document.getElementById('waves');
 
-
   // res.header('Access-Control-Allow-Origin', '*');
   // res.header('Access-Control-Allow-Methods', '*');
   // res.header('Access-Control-Allow-Headers', '*');
