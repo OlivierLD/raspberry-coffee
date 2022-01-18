@@ -20,10 +20,11 @@ else
 fi
 #
 ps -ef | grep 'python.*http.server' | grep -v grep | awk '{ print $2 }' > km
-NB_L=`cat km | wc -l`
-if [[ ${NB_L} == 0 ]]
-then
-  echo No Python fax server process found.
+NB_L=$(cat km | wc -l)
+if [[ ${NB_L} -eq 0 ]]; then
+  echo -e "No Python fax server process found."
+else
+  echo -e "Will kill ${NB_L} processes."
 fi
 for pid in `cat km`
 do
