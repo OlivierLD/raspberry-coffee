@@ -20,7 +20,7 @@ else
 fi
 #
 ps -ef | grep TinyNodeFaxServer | grep -v grep | awk '{ print $2 }' > km
-NB_L=`cat km | wc -l`
+NB_L=$(cat km | wc -l)
 if [[ ${NB_L} -eq 0 ]]
 then
   echo No Node fax server process found.
