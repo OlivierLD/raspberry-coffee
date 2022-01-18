@@ -1,4 +1,4 @@
-# Several faxes, reworked on Client side.
+# Several faxes, reworked _on the Client side_.
 Features:
 - For a given zone, download the faxes from the internet
 - Start a Web Server (Python, NodeJS, or Java)

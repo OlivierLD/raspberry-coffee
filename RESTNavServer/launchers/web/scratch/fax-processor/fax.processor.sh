@@ -45,12 +45,12 @@ for ARG in "$@"; do
   elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]; then
     echo -e "Usage is:"
     echo -e " ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--browser:true] [--help]"
-    echo -e "    --flavor: The flavor of the HTTP server to start. Default python. 'none' does not start a server. It may reuse an already started one."
-    echo -e "    --port: HTTP port to use. Default 8080."
-    echo -e "    --kill-server: Kill the server once the page is displayed. Default false."
-    echo -e "    --browser: Default true."
-    echo -e "    --verbose, or -v. Default false."
-    echo -e "    --help. Guess what!"
+    echo -e "    --flavor:none|python|node|java - The flavor of the HTTP server to start. Default python. 'none' does not start a server. It may reuse an already started one."
+    echo -e "    --port:XXXX - HTTP port to use. Default 8080."
+    echo -e "    --kill-server:true|false - Kill the server once the page is displayed. Default false."
+    echo -e "    --browser:true|false - Default true."
+    echo -e "    --verbose, or -v - Default 'no verbose'."
+    echo -e "    --help, or -h - Guess what! Exit after displaying help."
     exit 0
   elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]; then
     VERBOSE=true
