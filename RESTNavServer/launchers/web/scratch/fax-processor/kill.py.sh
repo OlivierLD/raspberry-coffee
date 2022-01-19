@@ -24,8 +24,7 @@ if [[ ${NB_L} -eq 0 ]]; then
 else
   echo -e "Will kill ${NB_L} processes."
 fi
-for pid in $(cat km)
-do
+for pid in $(cat km); do
   echo Killing process ${pid}
   ${SUDO} kill -15 ${pid}
 done
