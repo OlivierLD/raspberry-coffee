@@ -1,6 +1,8 @@
 /*
  * @author Olivier Le Diouris
  * Uses ES6 Promises for Ajax.
+ * 
+ * For tests in image.fetcher.html
  */
 
 const DEBUG = false;

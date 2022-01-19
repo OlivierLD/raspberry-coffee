@@ -74,7 +74,7 @@ fi
 #
 # Proxy?
 PROXY_CMD=
-# PROXY_CMD="-e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80"
+PROXY_CMD="-e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80"
 # North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
 wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
 # North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif
