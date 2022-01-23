@@ -207,14 +207,24 @@ public class TideUtilities {
 //  long nbSecSinceJan1st = (d.getTime().getTime() - jan1st.getTime().getTime() ) / 1000L;
 //  System.out.println(" ----- NbSec for " + d.getTime().toString() + " = " + nbSecSinceJan1st);
 		double timeOffset = nbSecSinceJan1st * 0.00027777777777777778D;
+		if ("true".equals(System.getProperty("tide.verbose"))) {
+			System.out.println("Used TimeOffset in hours:" + timeOffset + ", base height:" + stationBaseHeight);
+		}
 		value = stationBaseHeight;
 		for (int i = 0; i < constSpeed.size(); i++) {
 			assert (ts.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName()));
 			if (!ts.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName())) {
 				System.out.println("..... Mismatch!!!");
 			}
-
 			value += (ts.getHarmonics().get(i).getAmplitude() * Math.cos(constSpeed.get(i).getValue() * timeOffset - ts.getHarmonics().get(i).getEpoch()));
+			if ("true".equals(System.getProperty("tide.verbose"))) {
+				System.out.printf("Coeff %s - Amplitude: %f, Speed Value: %f, Epoch: %f => Value: %f\n",
+						constSpeed.get(i).getName(),
+						ts.getHarmonics().get(i).getAmplitude(),
+						constSpeed.get(i).getValue(),
+						ts.getHarmonics().get(i).getEpoch(),
+						value);
+			}
 //    if (b &&
 //        d.get(Calendar.MINUTE) == 0 &&
 //        d.get(Calendar.HOUR_OF_DAY) == 0 &&

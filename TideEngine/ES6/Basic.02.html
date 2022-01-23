@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+    Basic test.
+    Requires a Web Server to avoid CORS errors.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic01</title>
+    <style type="text/css">
+        * {
+            font-family:'Courier New', Courier, monospace;
+        }
+    </style>
+    <script type="module">
+    import * as tideEngine from './tideEngine.js';
+    
+    // Adding features to the Date object.
+    import * as dateFmt from './date.proto.js';
+    
+    const THE_YEAR = new Date().getYear() + 1900;
+    const VERBOSE = false;
+    
+    let tideStations = tideEngine.default.getStations(); // ["stations"];
+    let mess = `We have ${Object.keys(tideStations).length} stations.`;
+    console.log(mess);
+    document.getElementById('nb-stats').innerHTML = mess;    
+    
+    function doYourJob() {
+        console.log('Doing my job.');
+       // let stationName = "Port-Navalo, France"; // "Port-Navalo" works too.
+       // let stationName = "Port Townsend";
+       let stationName = document.getElementById("station-name").value;
+
+       let location = encodeURIComponent(stationName);
+    
+       console.log(`First tests, for ${stationName}`);
+    
+       console.log(`Location: ${location}`);
+       let station = tideEngine.default.findTideStation(location, THE_YEAR);
+       if (station !== null) {
+          console.log(`${location} was found: ${decodeURIComponent(station.fullName)}`);
+          console.log(`Base height: ${station.baseHeight} ${station.unit}`);
+          let now = new Date().toLocaleString('en-US', { timeZone: station.timeZone });
+          let zonedNow = new Date(now);
+    
+          console.log(`Calculation for ${dateFmt.formatDate(zonedNow, 'd-M-Y H:i:s')} (${station.timeZone})`);
+          let siteCoeff = tideEngine.default.buildSiteConstSpeed();
+          if (VERBOSE) {
+             console.log(`SiteCoeff: ${ Object.keys(siteCoeff).length } coefficients.`);
+          }
+    
+          let utcJan1st = Date.UTC(THE_YEAR, 0, 1); // , 0, 0, 0, 0, 0));
+    
+          // TODO Make sure that works... PST vs PDT, etc.
+          let timeOffset = station.timeOffset;
+          let hourOffset = parseInt(timeOffset.substring(0, timeOffset.indexOf(":")));
+          let minOffset = parseInt(timeOffset.substring(timeOffset.indexOf(":") + 1));
+          let decOffset = hourOffset + (minOffset / 60);
+    
+          let jan1st = new Date(utcJan1st - (decOffset * 3600000));
+          zonedNow = new Date(Date.now()); // - (decOffset * 3600000));
+    
+          // let jan1st = new Date(utcJan1st.toLocaleString('en-US', { timeZone: station.timeZone }));
+          // let jan1st = utcJan1st;
+          console.log(`Jan 1st, raw : ${jan1st} => ${jan1st.getTime()}`);
+          console.log(`Jan 1st in ${station.timeZone} : ${dateFmt.formatDate(jan1st, 'd-M-Y H:i:s')} => ${jan1st.getTime()}`);
+    
+          // let jan1st = utcJan1st;
+          // Java says:  1641024000000
+    
+          console.log(`For ${station.timeZone}, Jan1st = ${jan1st.getTime()}, now = ${zonedNow.getTime()}`)
+          let wh = tideEngine.default.getWaterHeight(zonedNow, jan1st, station, siteCoeff);
+          let result = `WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`;
+          console.log(result);
+          // console.log("Here.");
+          document.getElementById("result").innerText = result;
+       } else {
+          console.log(`${location} NOT found.`);
+       }
+    }
+    // Expose it!!
+    window.doYourJob = doYourJob;
+
+    console.log("Done");
+    
+    </script>
+</head>
+<body>
+    <h1>ES6 TideEngine - Basic test - 2.</h1>
+    <div id="nb-stats"></div>
+    <hr/>
+    <i>Check the console for errors...</i>
+    <hr/>
+    <div>
+        <!--  Enter your station name -->
+        Enter the station name (at least a part of it): 
+        <input type="text" id="station-name" placeholder="Station Name">
+        <button onclick="doYourJob();">Click!</button>
+    </div>
+    <div id="result"></div>
+    <hr/>
+</body>
+<script>
+window.onload = () => {
+    console.log("Ready.");
+};
+</script>
+</html>

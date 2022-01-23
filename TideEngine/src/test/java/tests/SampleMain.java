@@ -40,7 +40,9 @@ public class SampleMain {
 				Calendar now = GregorianCalendar.getInstance();
 				String location = null;
 				if (true) {
-					location = URLEncoder.encode("Port Townsend", "UTF-8").replace("+", "%20");
+//					System.setProperty("tide.verbose", "true");
+//					location = URLEncoder.encode("Port Townsend", "UTF-8").replace("+", "%20");
+					location = URLEncoder.encode("Port-Navalo", "UTF-8").replace("+", "%20");
 					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));

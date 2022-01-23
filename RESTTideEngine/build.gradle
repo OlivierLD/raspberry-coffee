@@ -19,10 +19,12 @@ repositories {
 }
 
 dependencies {
-  //implementation 'com.google.code.gson:gson:2.8.0'
+  implementation 'com.google.code.gson:gson:2.8.0'
   //implementation 'org.fusesource.jansi:jansi:1.11'
   //implementation 'oracle:xmlparser:2.0'
+  implementation project (':http-tiny-server')
   implementation project (':TideEngine')
+  implementation project (':AstroComputer')
   implementation project (':RESTNauticalAlmanac')
   implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
   //implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'

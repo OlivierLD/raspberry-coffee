@@ -36,9 +36,11 @@ dependencies {
     implementation 'oracle:xmlparser:2.0'
     implementation 'org.yaml:snakeyaml:1.21'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
-    implementation project(':AstroComputer')
+    implementation group: 'org.json', name: 'json', version: '20190722'
     implementation project(':http-tiny-server')
+    implementation project(':common-utils')
     implementation project(':I2C-SPI')
+    implementation project(':AstroComputer')
 //    implementation project(':SunFlower')
 //    implementation project(':GPS.sun.servo')
     implementation project(':LoRa')    // Needed for a publisher

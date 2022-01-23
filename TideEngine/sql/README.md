@@ -7,4 +7,6 @@ It will unzip the `sql.zip` archive, and use the scripts it contains to
 create the DB tables and populate them.  
 The sqlite database to use after that will be `tides.db`.
 
+> Note: If the `sql.zip` is not here, look into `RESTTideEngine`.
+
 ---
