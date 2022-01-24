@@ -203,4 +203,4 @@ Date.prototype.format = function (dateFormat) {
 export function formatDate(date, fmt) {
     // console.log(`date is a ${typeof(date)}`);
     return date.format(fmt);
-};
+}
