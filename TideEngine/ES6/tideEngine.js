@@ -20,6 +20,7 @@ if (VERBOSE) {
 }
 
 let tideStations = stations.default["stations"];
+
 if (VERBOSE) {
     console.log(`We have ${Object.keys(tideStations).length} stations.`);
 }
@@ -113,7 +114,6 @@ let tideComputer = {
         }
         return ts;
     },
-
     getWaterHeight: (date, jan1st, station, constSpeed) => {
         let value = 0;
         let baseHeight = station.baseHeight;
