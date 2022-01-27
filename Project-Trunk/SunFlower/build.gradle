@@ -22,6 +22,8 @@ dependencies {
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'com.pi4j:pi4j-core:1.2'
   implementation project(':common-utils')
+  implementation project(':http-tiny-server')
+  implementation project(':AstroComputer')
   implementation project(':RESTNauticalAlmanac')   // For the astronomical calculus
   implementation project(':I2C-SPI')               // For the Servo Board (PCA9685)
   implementation project(':ADC')                   // For the MCP3008

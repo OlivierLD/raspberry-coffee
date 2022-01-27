@@ -24,6 +24,14 @@ compileJava.options.compilerArgs += ["-Xlint:none"]
 //}
 
 dependencies {
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation 'org.rxtx:rxtx:2.1.7'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation group: 'org.json', name: 'json', version: '20190722'
+    implementation project(':common-utils')
+    implementation project(':http-tiny-server')
+    implementation project(':AstroComputer')
+    implementation project(':I2C-SPI')
     implementation project(':Serial-IO')
     implementation project(':LoRa')
     implementation project(':NMEA-multiplexer')
