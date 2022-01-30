@@ -10,19 +10,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -34,6 +21,7 @@ dependencies {
 //implementation 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
 //  implementation 'com.pi4j:pi4j-core:1.3-SNAPSHOT'
   implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':common-utils')
   implementation project(':ADC')
   implementation project(':I2C-SPI')
 }

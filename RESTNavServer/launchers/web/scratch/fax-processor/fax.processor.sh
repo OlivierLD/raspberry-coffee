@@ -12,13 +12,14 @@
 # - Open Web Page (fax re-working is done in there)
 #
 # Usage:
-# ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--browser:true] [--help]
+# ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--browser:true] [--help] [--spot:atl|pac]
 # defaults:
 # - flavor: python
 # - port: 8080
 # - verbose: false
 # - kill-server: false
 # - browser: true
+# - spot: atl
 #
 ##################################################################
 #
@@ -31,6 +32,7 @@ HTTP_PORT=8080
 KILL_SERVER=false
 WITH_BROWSER=true
 SERVER_PROCESS_ID=
+SPOT_OPTION=atl
 #
 for ARG in "$@"; do
   echo -e "Managing prm $ARG"
@@ -38,19 +40,23 @@ for ARG in "$@"; do
     SERVER_FLAVOR=${ARG#*:}
   elif [[ ${ARG} == "--browser:"* ]]; then
     WITH_BROWSER=${ARG#*:}
+  elif [[ ${ARG} == "--spot:"* ]]; then
+    SPOT_OPTION=${ARG#*:}
   elif [[ ${ARG} == "--port:"* ]]; then
     HTTP_PORT=${ARG#*:}
   elif [[ ${ARG} == "--kill-server:"* ]]; then
     KILL_SERVER=${ARG#*:}
   elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]; then
     echo -e "Usage is:"
-    echo -e " ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--browser:true] [--help]"
+    echo -e " ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--browser:true] [--help] [--spot:atl|pac]"
     echo -e "    --flavor:none|python|node|java - The flavor of the HTTP server to start. Default python. 'none' does not start a server. It may reuse an already started one."
     echo -e "    --port:XXXX - HTTP port to use. Default 8080."
     echo -e "    --kill-server:true|false - Kill the server once the page is displayed. Default false."
     echo -e "    --browser:true|false - Default true."
+    echo -e "    --spot:atl|pac - Default atl."
     echo -e "    --verbose, or -v - Default 'no verbose'."
     echo -e "    --help, or -h - Guess what! Exit after displaying help."
+    echo -e "Bye now."
     exit 0
   elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]; then
     VERBOSE=true
@@ -76,14 +82,31 @@ fi
 PROXY_CMD=
 # An example:
 # PROXY_CMD="-e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80"
-# North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
-wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
-# North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif
-wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA11.gif --output-document NE-Atl.gif
-# North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif
-wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PPAA10.gif --output-document N-Atl-500mb.gif
-# North Atlantic Sea State
-wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
+if [[ "${SPOT_OPTION}" == "atl" ]]; then
+  # North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
+  # North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA11.gif --output-document NE-Atl.gif
+  # North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PPAA10.gif --output-document N-Atl-500mb.gif
+  # North Atlantic Sea State: https://tgftp.nws.noaa.gov/fax/PJAA99.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
+elif [[ "${SPOT_OPTION}" == "pac" ]]; then
+  # North-East Pacific: https://tgftp.nws.noaa.gov/fax/PYBA90.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYBA90.gif --output-document NE-Pac.gif
+  # North-West Pacific: https://tgftp.nws.noaa.gov/fax/PYBA91.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYBA91.gif --output-document NW-Pac.gif
+  # North Pacific 500mb: https://tgftp.nws.noaa.gov/fax/PPBA10.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PPBA10.gif --output-document N-Pac-500mb.gif
+  # North Pacific Set State: https://tgftp.nws.noaa.gov/fax/PJBA99.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PJBA99.gif --output-document N-Pac-waves.gif
+  # Central Pacific Streamlines: https://tgftp.nws.noaa.gov/fax/PWFA11.gif
+  wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PWFA11.gif --output-document C-Pac-streamlines.gif
+  echo -e "Soon"
+else
+  echo -e "Unknown spot [${SPOT_OPTION}]"
+  exit 0
+fi
 #
 # 2.Start small http server
 #
@@ -152,18 +175,26 @@ if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "3 - Opening Web Page."
   echo -e "======================"
 fi
+#
+WEB_PAGE=process.alt.faxes.html
+if [[ "${SPOT_OPTION}" == "atl" ]]; then
+  WEB_PAGE=process.alt.faxes.html
+elif [[ "${SPOT_OPTION}" == "pac" ]]; then
+  WEB_PAGE=process.pac.faxes.html
+fi
+#
 OS=$(uname -a | awk '{ print $1 }')
 if [[ "${WITH_BROWSER}" == "true" ]]; then
   if [[ "$OS" == "Darwin" ]]; then
-    open http://localhost:${HTTP_PORT}/process.faxes.html &
+    open http://localhost:${HTTP_PORT}/${WEB_PAGE} &
   else
     SENSIBLE=$(which sensible-browser)
     if [[ "${SENSIBLE}" != "" ]]; then
-      sensible-browser http://localhost:${HTTP_PORT}/process.faxes.html &
+      sensible-browser http://localhost:${HTTP_PORT}/${WEB_PAGE} &
     else
       XDG=$(which xdg-open)
       if [[ "${XDG}" != "" ]]; then
-        xdg-open http://localhost:${HTTP_PORT}/process.faxes.html &
+        xdg-open http://localhost:${HTTP_PORT}/${WEB_PAGE} &
       else
         echo -e "Enable to open the web page... Sorry."
       fi
@@ -176,7 +207,7 @@ else
     SERVER_NAME=${IP_ADDR}
   fi
   echo -e "\tNO browser, as per user's choice."
-  echo -e "\tReach the page at http://${SERVER_NAME}:${HTTP_PORT}/process.faxes.html"
+  echo -e "\tReach the page at http://${SERVER_NAME}:${HTTP_PORT}/${WEB_PAGE}"
 fi
 #
 if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]; then
