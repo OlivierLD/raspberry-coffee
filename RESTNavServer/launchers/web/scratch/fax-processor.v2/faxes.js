@@ -7,14 +7,14 @@ const TO_PURPLE = 4;
  * We assume that the original fax comes in black and white.
  * Only black and white.
  */
-messWithCanvas = (img, canvasName, changeBlackTo) => {
+transformFax = (imgCanvasName, canvasName, changeBlackTo) => {
+  const img = document.getElementById(imgCanvasName);
   const canvas = document.getElementById(canvasName);
   let ctx = canvas.getContext("2d");
 
   if (img.width === 0 || img.height === 0) {
     // Something's not right...
     throw `image on ${canvasName} has some 0-dimension: w: ${img.width}, h: ${img.height}`;
-    // return;
   }
 
   canvas.width = img.width;
@@ -269,9 +269,7 @@ doOnLoad = (option) => {
 
   faxStructure.forEach(fax => {
     try {
-      messWithCanvas(document.getElementById(fax.fromTo.from),
-                    fax.fromTo.to,
-                    fax.fromTo.colorChange);
+      transformFax(fax.fromTo.from, fax.fromTo.to, fax.fromTo.colorChange);
       const reworkedFax = document.getElementById(fax.fromTo.to);
       reworkedFax.style.width = fax.tx.width;
       reworkedFax.style.height = fax.tx.height;
