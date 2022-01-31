@@ -65,7 +65,13 @@
       <img id="500mb" src="N-Pac-500mb.gif"></img>
       <img id="waves" src="N-Pac-waves.gif"></img>
       <img id="sl" src="C-Pac-streamlines.gif"></img>
-
+      <!-- 
+      <img id="left"></img>
+      <img id="right"></img>
+      <img id="500mb"></img>
+      <img id="waves"></img>
+      <img id="sl"></img>
+      -->
   </div>
   <!--
     This one holds the TRANSFORMED images
@@ -102,7 +108,24 @@
 <script type="text/javascript" src="./faxes.js"></script>
 
 <script type="text/javascript">
-    // window.onload = doOnLoad(2);
+    forceImageReloadAt = (id, url) => {
+      let orig_01 = url; // document.getElementById(id).src;
+      let new_01 = orig_01 + '?' + Math.random();
+      document.getElementById(id).src = new_01;
+
+    };
+    // window.onload = doOnLoad(1);
+    window.onload = () => {
+      // window.setTimeout(() => {
+      //   forceImageReloadAt('left', 'NW-Pac.gif');
+      //   forceImageReloadAt('right', 'NE-Pac.gif');
+      //   forceImageReloadAt('500mb', 'N-Pac-500mb.gif');
+      //   forceImageReloadAt('waves', 'N-Pac-waves.gif');
+      //   forceImageReloadAt('sl', 'C-Pac-streamlines.gif');
+      //   window.setTimeout(doOnLoad(PACIFIC), 500);
+      // }, 500);
+    };
+    // window.onload = doOnLoad(PACIFIC);
     (() => {
       doOnLoad(PACIFIC);
     })();

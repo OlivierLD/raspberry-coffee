@@ -82,6 +82,8 @@ fi
 PROXY_CMD=
 # An example:
 # PROXY_CMD="-e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80"
+#
+# Values below are the same as in faxes.js, in the json bject named faxTransformer
 if [[ "${SPOT_OPTION}" == "atl" ]]; then
   # North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
@@ -112,7 +114,7 @@ elif [[ "${SPOT_OPTION}" == "pac" ]]; then
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PWFA11.gif --output-document C-Pac-streamlines.gif
   echo -e "Central Pacific Streamlines OK"
 else
-  echo -e "Unknown spot [${SPOT_OPTION}]"
+  echo -e "Unknown spot [${SPOT_OPTION}], aborting."
   exit 0
 fi
 #

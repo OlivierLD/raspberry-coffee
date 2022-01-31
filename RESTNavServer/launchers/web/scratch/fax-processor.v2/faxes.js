@@ -4,6 +4,10 @@ const TO_GREEN = 3;
 const TO_PURPLE = 4;
 
 /**
+ * This procedure changes the color of a fax.
+ * The black is changed to the given color.
+ * TRh white is turned transparent.
+ * 
  * We assume that the original fax comes in black and white.
  * Only black and white.
  */
@@ -46,7 +50,7 @@ transformFax = (imgCanvasName, canvasName, changeBlackTo) => {
         g = 79;
         b = 47;
       } else if (changeBlackTo === TO_PURPLE) {
-        // FF00FF
+        // FF00FF, aka 255, 0 , 255
         r = 255;
         // g = 0;
         b = 255;
@@ -251,7 +255,8 @@ doOnLoad = (option) => {
   // leftFax.setAttribute('crossOrigin', '*'); // Need Access-Control-Allow-Origin
   // leftFax.src = "https://tgftp.nws.noaa.gov/fax/PYAA12.gif"
 
-  let spotOption = 'atlantic-n-00'; // Default
+  const DEFAULT_SPOT = 'atlantic-n-00';
+  let spotOption = DEFAULT_SPOT;
 
   switch (option) {
     case ATLANTIC:
@@ -261,7 +266,7 @@ doOnLoad = (option) => {
       spotOption = 'pacific-n-00';
       break;
     default:
-      console.log(`Unknown Option ${option}, defaulting to [atlantic-n-00]`);
+      console.log(`Unknown Option ${option}, defaulting to [${DEFAULT_SPOT}]`);
       break;
   }
 
