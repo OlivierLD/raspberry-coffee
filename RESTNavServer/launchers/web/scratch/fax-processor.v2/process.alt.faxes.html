@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+ | This is a test, WiP.
+ | Faxes from the Internet, rotated, re-colored and re-scaled, on the client side.
+ | 
+ | copyright OlivSoft, c'est MOI qui l'ai fait.
+ +-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Atlantic Faxes</title>
+    <link rel="icon" type="image/ico" href="./hammerhead.02.ico">
+    <link rel="stylesheet" href="./white.css" type="text/css"/>
+    <style type="text/css">
+      .fax-container {
+        display: none;
+      }
+    </style>
+    <script type="text/javascript">
+        showSurface = (cb) => {
+          let left = document.getElementById("left-img-canvas");
+          let right = document.getElementById("right-img-canvas");
+          right.style.display = cb.checked ? 'inline' : 'none';
+          left.style.display = cb.checked ? 'inline' : 'none';
+        };
+        showSurfaceWest = (cb) => {
+          let left = document.getElementById("left-img-canvas");
+          left.style.display = cb.checked ? 'inline' : 'none';
+        };
+        showSurfaceEast = (cb) => {
+          let right = document.getElementById("right-img-canvas");
+          right.style.display = cb.checked ? 'inline' : 'none';
+        };
+        show500mb = (cb) => {
+          let fax500mb = document.getElementById("north-img-canvas");
+          fax500mb.style.display = cb.checked ? 'inline' : 'none';
+        };
+        showWaves = (cb) => {
+          let faxWaves = document.getElementById("waves-img-canvas");
+          faxWaves.style.display = cb.checked ? 'inline' : 'none';
+        };
+    </script>
+</head>
+<body>
+  <h2>Atlantic faxes from the Internet, reworked on the client side</h2>
+  
+<!-- North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif -->
+<!-- North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif -->
+<!-- North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif -->
+<!-- North Atlantic Sea State: https://tgftp.nws.noaa.gov/fax/PJAA99.gif -->
+
+  <!-- TODO Values for the faxes position/dimension (CSS width, margins, etc) ? -->
+  <!-- 
+    This div is NOT displayed.
+    It holds the images to be transformed.
+  -->
+  <div id="placeholder" class="fax-container" style="min-height: 600px; min-width: 1024px; padding-top: 40px;">
+      <img id="left" src="NW-Atl.gif"></img>
+      <img id="right" src="NE-Atl.gif"></img>
+      <img id="500mb" src="N-Atl-500mb.gif"></img>
+      <img id="waves" src="N-Atl-waves.gif"></img>
+
+      <!--
+      <img id="left" src="https://tgftp.nws.noaa.gov/fax/PYAA12.gif"></img>
+      <img id="right" src="https://tgftp.nws.noaa.gov/fax/PYAA11.gif"></img>
+      <img id="500mb" src="https://tgftp.nws.noaa.gov/fax/PPAA10.gif"></img>
+      <img id="waves" src="https://tgftp.nws.noaa.gov/fax/PJAA99.gif"></img>
+      -->
+  </div>
+  <!--
+    This one holds the TRANSFORMED images
+  -->
+  <div> <!-- style="position: absolute; top: 50px; left: 90px; min-height: 600px; min-width: 1024px; padding-top: 40px;"> -->
+      <canvas id="left-img-canvas" style="position: absolute; top: 50px; left: 50px;"></canvas>
+      <canvas id="right-img-canvas" style="position: absolute; top: 50px; left: 50px;"></canvas>
+      <canvas id="north-img-canvas" style="position: absolute; top: 50px; left: 50px;"></canvas>
+      <canvas id="waves-img-canvas" style="position: absolute; top: 50px; left: 50px;"></canvas>
+  </div>
+  <div style="padding-top: 0px;">
+      <!--input type="checkbox" id="show-surface" onchange="showSurface(this);" checked> Show Surface Faxes<br/-->
+      <input type="checkbox" id="show-surface-west" onchange="showSurfaceWest(this);" checked> Show West Surface Faxes
+      <input type="checkbox" id="show-surface-east" onchange="showSurfaceEast(this);" checked> Show East Surface Faxes<br/>
+      <input type="checkbox" id="show-500mb" onchange="show500mb(this);" checked> Show 500mb Fax<br/>
+      <input type="checkbox" id="show-waves" onchange="showWaves(this);" checked> Show Sea State<br/>
+      <!-- hr/ -->
+      <h4>Original faxes</h4>
+      <ul style="margin-left: -20px; font-size: 11px;">
+          <li><a href="https://tgftp.nws.noaa.gov/fax/PYAA12.gif" target="fax">Atlantic North-West Surface</a></li>
+          <li><a href="https://tgftp.nws.noaa.gov/fax/PYAA11.gif" target="fax">Atlantic North-East Surface</a></li>
+          <li><a href="https://tgftp.nws.noaa.gov/fax/PPAA10.gif" target="fax">North Atlantic 500mb</a></li>
+          <li><a href="https://tgftp.nws.noaa.gov/fax/PJAA99.gif" target="fax">North Atlantic Sea State</a></li>
+      </ul>
+  </div>
+  <div style="position: relative; top: 470px;">
+      <hr/>
+      <i>&copy; 2021, Oliv did it</i>
+  </div>
+</body>
+<script type="text/javascript" src="./faxes.js"></script>
+
+<script type="text/javascript">
+    window.onload = doOnLoad(1);
+</script>
+</html>
