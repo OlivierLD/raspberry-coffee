@@ -41,16 +41,20 @@ Usage is:
     --port: HTTP port to use. Default 8080.
     --kill-server: Kill the server once the page is displayed. Default false.
     --browser: Default true.
+    --spot:atl|pac - Default atl.
     --verbose, or -v. Default false.
-    --help. Guess what!
+    --help. Guess what! Exit after displaying help.
 ```
 
 The script would:
 - Download the expected faxes on the local file system
 - Start a small HTTP Server
-- Open `process.faxes.html` in your default browser, showing the faxes, recolored, rescaled, rotated.
+- Open the corresponding web page (`process.atl.faxes.html` or `process.pac.faxes.html`, depending on your `--spot` option) in your default browser, showing the faxes, recolored, rescaled, rotated.
 
 The code to change the colors, orientation, and size of the faxes is in `faxes.js`. 
+
+> _Note_: If you experience some rendering issues, try a force-reload (Shift+Ctrl+R or its equivalent) from your browser.  
+> Seems to work fine on Firefox, OK on Chrome or Safari, I've seen some issues on Brave, could not explain them yet.
 
 ![4 Faxes](./4.faxes.png)
 
