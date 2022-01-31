@@ -85,24 +85,32 @@ PROXY_CMD=
 if [[ "${SPOT_OPTION}" == "atl" ]]; then
   # North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
+  echo -e "North-West Atlantic OK"
   # North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA11.gif --output-document NE-Atl.gif
+  echo -e "North-East Atlantic OK"
   # North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PPAA10.gif --output-document N-Atl-500mb.gif
+  echo -e "North Atlantic 500mb OK"
   # North Atlantic Sea State: https://tgftp.nws.noaa.gov/fax/PJAA99.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
+  echo -e "North Atlantic Sea State OK"
 elif [[ "${SPOT_OPTION}" == "pac" ]]; then
   # North-East Pacific: https://tgftp.nws.noaa.gov/fax/PYBA90.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYBA90.gif --output-document NE-Pac.gif
+  echo -e "North-West Pacific OK"
   # North-West Pacific: https://tgftp.nws.noaa.gov/fax/PYBA91.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYBA91.gif --output-document NW-Pac.gif
+  echo -e "North-East Pacific OK"
   # North Pacific 500mb: https://tgftp.nws.noaa.gov/fax/PPBA10.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PPBA10.gif --output-document N-Pac-500mb.gif
+  echo -e "North Pacific 500mb OK"
   # North Pacific Set State: https://tgftp.nws.noaa.gov/fax/PJBA99.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PJBA99.gif --output-document N-Pac-waves.gif
+  echo -e "North Pacific Sea State OK"
   # Central Pacific Streamlines: https://tgftp.nws.noaa.gov/fax/PWFA11.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PWFA11.gif --output-document C-Pac-streamlines.gif
-  echo -e "Soon"
+  echo -e "Central Pacific Streamlines OK"
 else
   echo -e "Unknown spot [${SPOT_OPTION}]"
   exit 0
