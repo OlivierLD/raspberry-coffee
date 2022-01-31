@@ -11,6 +11,12 @@ messWithCanvas = (img, canvasName, changeBlackTo) => {
   const canvas = document.getElementById(canvasName);
   let ctx = canvas.getContext("2d");
 
+  if (img.width === 0 || img.height === 0) {
+    // Something's not right...
+    console.error(`image on ${canvasName} has some 0-dimension...`);
+    return;
+  }
+
   canvas.width = img.width;
   canvas.height = img.height;
 
