@@ -186,9 +186,9 @@ if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "======================"
 fi
 #
-WEB_PAGE=process.alt.faxes.html
+WEB_PAGE=process.atl.faxes.html
 if [[ "${SPOT_OPTION}" == "atl" ]]; then
-  WEB_PAGE=process.alt.faxes.html
+  WEB_PAGE=process.atl.faxes.html
 elif [[ "${SPOT_OPTION}" == "pac" ]]; then
   WEB_PAGE=process.pac.faxes.html
 fi
