@@ -13,8 +13,8 @@ messWithCanvas = (img, canvasName, changeBlackTo) => {
 
   if (img.width === 0 || img.height === 0) {
     // Something's not right...
-    console.error(`image on ${canvasName} has some 0-dimension...`);
-    return;
+    throw `image on ${canvasName} has some 0-dimension: w: ${img.width}, h: ${img.height}`;
+    // return;
   }
 
   canvas.width = img.width;
@@ -268,15 +268,19 @@ doOnLoad = (option) => {
   let faxStructure = faxTransformer[spotOption];
 
   faxStructure.forEach(fax => {
-    messWithCanvas(document.getElementById(fax.fromTo.from),
-                   fax.fromTo.to,
-                   fax.fromTo.colorChange);
-    const reworkedFax = document.getElementById(fax.fromTo.to);
-    reworkedFax.style.width = fax.tx.width;
-    reworkedFax.style.height = fax.tx.height;
-    reworkedFax.style.transform = fax.tx.transform;
-    reworkedFax.style.top = fax.tx.top;
-    reworkedFax.style.left = fax.tx.left;
+    try {
+      messWithCanvas(document.getElementById(fax.fromTo.from),
+                    fax.fromTo.to,
+                    fax.fromTo.colorChange);
+      const reworkedFax = document.getElementById(fax.fromTo.to);
+      reworkedFax.style.width = fax.tx.width;
+      reworkedFax.style.height = fax.tx.height;
+      reworkedFax.style.transform = fax.tx.transform;
+      reworkedFax.style.top = fax.tx.top;
+      reworkedFax.style.left = fax.tx.left;
+    } catch (err) {
+      console.log(err);
+    }
   });
 
 };
