@@ -27,3 +27,16 @@
 ### Routing
 - In progress. Best route OK
 - Get all isochronals, TODO
+
+### Document the way to use `screen`
+See <https://linuxize.com/post/how-to-use-linux-screen/>
+```
+$ sudo apt update
+$ sudo apt install screen
+```
+
+```
+$ screen -S sleepy -dm sleep 60
+$ screen -S sleepy -X quit
+$ screen -S navserver -dm bash -c 'sleep 5; exec sh'
+```

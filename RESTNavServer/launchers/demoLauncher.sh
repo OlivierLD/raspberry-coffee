@@ -172,6 +172,9 @@ do
         fi
   	  fi
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
+	    # TODO a 'screen' option
+	    # screen -S navserver -dm "sleep 5; ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS}"
+	    # echo -e "A screen session 'navserver' started"
 	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
 	    then

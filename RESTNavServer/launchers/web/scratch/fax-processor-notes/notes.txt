@@ -1,0 +1,7 @@
+Interesting sat pictures:
+=========================
+- From https://www.ocean-pro.com/htmfiles/satellite-weather.htm
+  - North East Pacific: http://tropic.ssec.wisc.edu/real-time/eastpac/images/xxirg9bbm.jpg
+  - North West Atlantic: http://tropic.ssec.wisc.edu/real-time/atlantic/images/xxirg8bbm.jpg
+  - North East Atlantic: http://tropic.ssec.wisc.edu/real-time/europe/images/xxirm7bbm.jpg
+

@@ -18,7 +18,9 @@ Wiring between the Raspberry Pi and the Relay.
 
 ![Relay wiring](./setup.png)
 
-How to hook up the power and appliance to the relay.
+How to hook up the power and appliance to the relay.  
+The yellow socket will be plugged in the wall.  
+Your appliance will be plugged on the white socket.
 
 > Note:
 > - On a one-relay board, I use the 3V3 power supply from the Raspberry Pi.

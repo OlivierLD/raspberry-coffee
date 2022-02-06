@@ -1,3 +1,8 @@
+/**
+ * Fax and pictures definitions and transformations
+ */
+
+const NO_COLOR_CHANGE = 0;
 const TO_RED = 1;
 const TO_BLUE = 2;
 const TO_GREEN = 3;
@@ -54,8 +59,10 @@ transformFax = (imgCanvasName, canvasName, changeBlackTo) => {
         r = 255;
         // g = 0;
         b = 255;
+      } else {
+        // No (or unknown) transformation.
       }
-    } else if (r === 255 && b === 255 && g === 255) { // white
+    } else if (changeBlackTo !== NO_COLOR_CHANGE && (r === 255 && b === 255 && g === 255)) { // white
       a = 0;    // Make white transparent
     }
     currentPixels.data[idx] = r;
@@ -95,9 +102,43 @@ const PACIFIC = 2;
 const faxTransformer = {
   "atlantic-n-00" : [
     { 
+      "name": "NW Atlantic SatPic",
+      "url": "http://tropic.ssec.wisc.edu/real-time/atlantic/images/xxirg8bbm.jpg",
+      "downloadTo": "NW-Atl-SP.jpg",
+      "fromTo": {
+        "from": "left-sp",
+        "to": "left-sp-img-canvas",
+        "colorChange": NO_COLOR_CHANGE
+      }, 
+      "tx": {
+        "width": "805px",
+        "height": "591px",
+        "transform": "rotate(0deg)",
+        "left": "107px",
+        "top": "316px"
+      }
+    },
+    { 
+      "name": "NE Atlantic SatPic",
+      "url": "http://tropic.ssec.wisc.edu/real-time/europe/images/xxirm7bbm.jpg",
+      "downloadTo": "NE-Atl-SP.jpg",
+      "fromTo": {
+        "from": "right-sp",
+        "to": "right-sp-img-canvas",
+        "colorChange": NO_COLOR_CHANGE
+      }, 
+      "tx": {
+        "width": "800px",
+        "height": "711px",
+        "transform": "rotate(0deg)",
+        "left": "609px",
+        "top": "283px"
+      }
+    },
+    { 
       "name": "NW Atlantic Surface",
       "url": "https://tgftp.nws.noaa.gov/fax/PYAA12.gif",
-      "downloadTo": "NW-Pac.gif",
+      "downloadTo": "NW-Atl.gif",
       "fromTo": {
         "from": "left",
         "to": "left-img-canvas",
@@ -113,7 +154,7 @@ const faxTransformer = {
     }, { 
       "name": "NE Atlantic Surface",
       "url": "https://tgftp.nws.noaa.gov/fax/PYAA11.gif",
-      "downloadTo": "NE-Pac.gif",
+      "downloadTo": "NE-Atl.gif",
       "fromTo": {
         "from": "right",
         "to": "right-img-canvas",

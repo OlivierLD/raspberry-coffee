@@ -85,6 +85,12 @@ PROXY_CMD=
 #
 # Values below are the same as in faxes.js, in the json bject named faxTransformer
 if [[ "${SPOT_OPTION}" == "atl" ]]; then
+  # North-West Atlantic Sat Pic: http://tropic.ssec.wisc.edu/real-time/atlantic/images/xxirg8bbm.jpg
+  wget ${QUIET} ${PROXY_CMD} http://tropic.ssec.wisc.edu/real-time/atlantic/images/xxirg8bbm.jpg --output-document NW-Atl-SP.jpg
+  echo -e "North-West Atlantic Sat Pic OK"
+  # North-East Atlantic Sat Pic: http://tropic.ssec.wisc.edu/real-time/europe/images/xxirm7bbm.jpg
+  wget ${QUIET} ${PROXY_CMD} http://tropic.ssec.wisc.edu/real-time/europe/images/xxirm7bbm.jpg --output-document NE-Atl-SP.jpg
+  echo -e "North-East Atlantic Sat Pic OK"
   # North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
   wget ${QUIET} ${PROXY_CMD} https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
   echo -e "North-West Atlantic OK"
