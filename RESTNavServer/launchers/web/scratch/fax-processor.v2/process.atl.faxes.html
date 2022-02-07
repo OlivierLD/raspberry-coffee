@@ -71,16 +71,10 @@
       <img id="right" src="NE-Atl.gif"></img>
       <img id="500mb" src="N-Atl-500mb.gif"></img>
       <img id="waves" src="N-Atl-waves.gif"></img>
-
-      <!--
-      <img id="left" src="https://tgftp.nws.noaa.gov/fax/PYAA12.gif"></img>
-      <img id="right" src="https://tgftp.nws.noaa.gov/fax/PYAA11.gif"></img>
-      <img id="500mb" src="https://tgftp.nws.noaa.gov/fax/PPAA10.gif"></img>
-      <img id="waves" src="https://tgftp.nws.noaa.gov/fax/PJAA99.gif"></img>
-      -->
   </div>
   <!--
-    This one holds the TRANSFORMED images
+    This one holds the TRANSFORMED images.
+    Style will be set by the function doOnLoad, based on the values of the faxTransformer object.
   -->
   <div> <!-- style="position: absolute; top: 50px; left: 90px; min-height: 600px; min-width: 1024px; padding-top: 40px;"> -->
       <canvas id="left-sp-img-canvas" style="position: absolute; top: 50px; left: 50px;"></canvas>
@@ -92,14 +86,22 @@
   </div>
   <div style="padding-top: 0px;">
 
-      <input type="checkbox" id="show-satpic-west" onchange="showSatPicWest(this);" checked> Show West Sat. Pic.
-      <input type="checkbox" id="show-satpic-east" onchange="showSatPicEast(this);" checked> Show East Sat. Pic.<br/>
-
-      <input type="checkbox" id="show-surface-west" onchange="showSurfaceWest(this);" checked> Show West Surface Faxes
-      <input type="checkbox" id="show-surface-east" onchange="showSurfaceEast(this);" checked> Show East Surface Faxes<br/>
-
-      <input type="checkbox" id="show-500mb" onchange="show500mb(this);" checked> Show 500mb Fax<br/>
-      <input type="checkbox" id="show-waves" onchange="showWaves(this);" checked> Show Sea State<br/>
+    <table>
+      <tr>
+        <td><input type="checkbox" id="show-satpic-west" onchange="showSatPicWest(this);" checked> Show West Sat. Pic.</td>
+        <td><input type="checkbox" id="show-satpic-east" onchange="showSatPicEast(this);" checked> Show East Sat. Pic.</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" id="show-surface-west" onchange="showSurfaceWest(this);" checked> Show West Surface Faxes</td>
+        <td><input type="checkbox" id="show-surface-east" onchange="showSurfaceEast(this);" checked> Show East Surface Faxes</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" id="show-500mb" onchange="show500mb(this);" checked> Show 500mb Fax</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" id="show-waves" onchange="showWaves(this);" checked> Show Sea State</td>
+      </tr>
+    </table>  
       <!-- hr/ -->
       <h4 style="font-style: italic;">Original documents</h4>
       <ul style="margin-left: -20px; font-size: 11px;">
