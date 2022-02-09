@@ -22,9 +22,13 @@ var DEFAULT_TIMEOUT = 120000;
  *  Demo features
  */
 
-var position = {
-	lat:   37.7489,
-	lng: -122.5070
+//var position = { // SF
+//	lat:   37.7489,
+//	lng: -122.5070
+//};
+var position = { // Vannes
+	lat: 47.661667,
+	lng: -2.758167
 };
 
 const MINUTE = 60000; // in ms.

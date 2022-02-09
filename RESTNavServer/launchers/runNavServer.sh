@@ -144,11 +144,11 @@ if [[ "${RMC_TIME_OK}" == "false" ]]; then
   # To use when re-playing GPS data. Those dates will not go in the cache.
   JAVA_OPTS="${JAVA_OPTS} -Drmc.time.ok=false"
 fi
-JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=47.705 -Ddefault.mux.longitude=-3.105" # Locoal.
+# JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=47.705 -Ddefault.mux.longitude=-3.105" # Locoal.
+JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=47.661667 -Ddefault.mux.longitude=-2.758167" # Vannes.
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=48.48518833333333 -Ddefault.mux.longitude=-123.07788833333333" # False Bay, San Juan Island
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=48.60448 -Ddefault.mux.longitude=-122.819285" # Olga, Orcas Island
-#
 #
 # Polar file (coeffs)
 #
