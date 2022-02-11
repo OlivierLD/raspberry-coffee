@@ -23,7 +23,8 @@ python3 -m http.server [port-number] &
 ```
 Default port number is `8000`.
 
-Then reach <http://localhost:8000/Basic.02.html>, try to look for `Port-Navalo`
+Then reach <http://localhost:8000/Basic.02.html>, try to look for `Port-Navalo`  
+(Compare to `test/.../SimplestMain`)
 
 To see some basic steps:
 - <http://localhost:8000/Basic.01.html>

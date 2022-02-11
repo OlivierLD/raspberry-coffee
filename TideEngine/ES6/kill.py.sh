@@ -29,4 +29,3 @@ for pid in $(cat km); do
   ${SUDO} kill -15 ${pid}
 done
 rm km
-
