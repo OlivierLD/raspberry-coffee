@@ -19,7 +19,10 @@
     import * as dateFmt from './date.proto.js';
     
     const THE_YEAR = new Date().getYear() + 1900;
-    const VERBOSE = false;
+    const VERBOSE = true;
+
+    let before = 0.0;
+    let after = 0.0;
     
     let tideStations = tideEngine.default.getStations(); // ["stations"];
     let mess = `We have ${Object.keys(tideStations).length} stations.`;
@@ -70,11 +73,21 @@
           // Java says:  1641024000000
     
           console.log(`For ${station.timeZone}, Jan1st = ${jan1st.getTime()}, now = ${zonedNow.getTime()}`)
+
+          if (VERBOSE) {
+              before = new Date().getTime();
+          }
           let wh = tideEngine.default.getWaterHeight(zonedNow, jan1st, station, siteCoeff);
+          if (VERBOSE) {
+              after = new Date().getTime();
+          }
           let result = `WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`;
           console.log(result);
           // console.log("Here.");
           document.getElementById("result").innerText = result;
+          if (VERBOSE) {
+              console.log(`Calculation took ${after} - ${before} = ${after - before} ms...`);
+          }
        } else {
           console.log(`${location} NOT found.`);
        }
