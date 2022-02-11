@@ -228,7 +228,7 @@ fi
 #
 if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]; then
   echo -e "Will kill the server"
-  sleep 10 &&
+  sleep 20 &&
     echo -e "Killing server process ${SERVER_PROCESS_ID}..." &&
     kill -9 ${SERVER_PROCESS_ID}
 else
