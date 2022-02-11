@@ -19,7 +19,8 @@ var errManager = function(mess) {
 var DEFAULT_TIMEOUT = 120000;
 
 /*
- *  Demo features
+ * Demo features
+ * TODO Get it from another channel, like a GPS...
  */
 
 //var position = { // SF
