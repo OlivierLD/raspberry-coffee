@@ -35,7 +35,7 @@
     while (selectList.length > 0) {
         selectList.remove(0);
     }
-    Object.keys(tideStations).forEach(station => {
+    Object.keys(tideStations).sort().forEach(station => {
         let el = document.createElement("option");
         el.textContent = decodeURIComponent(station.replaceAll('%EF%BF%BD', 'é'));
         el.value = station;
