@@ -108,12 +108,12 @@
                 if (goingUp) { // Rising
                     if (prevWH >= wh) { // Changing trend
                         // console.log(`High Tide at ${zonedNow}, wh: ${wh.toFixed(3)}`);
-                        tideTable.push({ type: "HW", at: zonedNow, wh: wh, unit: station.unit });
+                        tideTable.push({ type: "HW", at: new Date(zonedNow.getTime() - ONE_MINUTE), wh: wh, unit: station.unit });
                     }
                 } else { // Going down
                     if (prevWH < wh) { // Changing trend
                         // console.log(`Low Tide at ${zonedNow}, wh: ${wh.toFixed(3)}`);
-                        tideTable.push({ type: "LW", at: zonedNow, wh: wh, unit: station.unit });
+                        tideTable.push({ type: "LW", at: new Date(zonedNow.getTime() - ONE_MINUTE), wh: wh, unit: station.unit });
                     }
                 }
             }
