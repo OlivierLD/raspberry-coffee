@@ -46,8 +46,8 @@ public class SimplestMain {
         Calendar now = GregorianCalendar.getInstance();
         String location;
 //        final String STATION_PATTERN = "Port Townsend";
-//      final String STATION_PATTERN = "Port-Navalo";
-        final String STATION_PATTERN = "ICELAND";
+      final String STATION_PATTERN = "Port-Navalo";
+//        final String STATION_PATTERN = "ICELAND";
 
         System.setProperty("tide.verbose", "false");
 		location = URLEncoder.encode(STATION_PATTERN, "UTF-8").replace("+", "%20");

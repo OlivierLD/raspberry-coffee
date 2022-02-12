@@ -71,9 +71,16 @@ public class ParallelTideComputer {
         name = jsonStation.getFullName();
         System.out.printf("JSON: %s => %s\n", name, URLDecoder.decode(name, ENCODING));
 
-        if (false) { // Set to true to regenerate the JSON from the XML (weird characters).
+        if (true) { // Set to true to regenerate the JSON from the XML (weird characters).
             ObjectMapper mapper = new ObjectMapper();
             FileOutputStream fos = new FileOutputStream(new File("stations.json"));
+            // Warning! Transform!
+            xmlStationsObject.getStations().keySet().forEach(k -> {
+                xmlStationsObject.getStations().get(k).getHarmonics().forEach(h -> {
+                    h.setEpoch(h.getEpoch() / TideUtilities.COEFF_FOR_EPOCH);
+                });
+            });
+
             mapper.writeValue(fos, xmlStationsObject);
             fos.flush();
             fos.close();

@@ -36,4 +36,4 @@ To see some basic steps:
 More to come about NodeJS and Java...
 
 ---
-TODO: Special characters in the station names. (Icelandic, etc)
+TODO: Special characters in the station names. (Icelandic, et)
