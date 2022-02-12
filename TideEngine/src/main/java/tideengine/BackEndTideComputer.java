@@ -9,8 +9,11 @@ import java.text.NumberFormat;
 import java.util.*;
 
 /**
- * Access method agnostic front end.
+ * Method agnostic front end access.
  * Calls the right methods, depending on the chosen option (XML, SQL, JSON, etc)
+ *
+ * >> There is no abstract method here, to keep control on what's done.
+ * It all depends on the Option.
  */
 public class BackEndTideComputer {
 

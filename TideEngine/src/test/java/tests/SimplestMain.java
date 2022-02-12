@@ -10,7 +10,10 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * This is just a test, not a unit-test.
@@ -21,7 +24,7 @@ public class SimplestMain {
 
     public static void main(String... args) throws Exception {
         System.out.println(args.length + " Argument(s)...");
-        boolean xmlTest = false;
+        boolean xmlTest = true;
 
         System.setProperty("tide.verbose", "true");
 
@@ -46,24 +49,33 @@ public class SimplestMain {
         Calendar now = GregorianCalendar.getInstance();
         String location;
 //        final String STATION_PATTERN = "Port Townsend";
-      final String STATION_PATTERN = "Port-Navalo";
+//        final String STATION_PATTERN = "Port-Navalo";
 //        final String STATION_PATTERN = "ICELAND";
+        final String STATION_PATTERN = "Patreksfj";
 
         System.setProperty("tide.verbose", "false");
-		location = URLEncoder.encode(STATION_PATTERN, "UTF-8").replace("+", "%20");
+        location = URLEncoder.encode(STATION_PATTERN, "UTF-8").replace("+", "%20");
         ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
         if (ts != null) {
             now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
             if (ts != null) {
+                String stationFullName = URLDecoder.decode(ts.getFullName(), "UTF-8");
                 if (false) {
                     double[] mm = TideUtilities.getMinMaxWH(ts, constSpeed, now);
-                    System.out.println("At " + location + " in " + now.get(Calendar.YEAR) + ", min : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MIN_POS]) + " " + ts.getUnit() + ", max : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MAX_POS]) + " " + ts.getDisplayUnit());
+                    System.out.println("At " + stationFullName +
+                            " in " + now.get(Calendar.YEAR) +
+                            ", min : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MIN_POS]) +
+                            " " + ts.getUnit() +
+                            ", max : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MAX_POS]) +
+                            " " + ts.getDisplayUnit());
                 }
                 before = System.currentTimeMillis();
                 double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
                 after = System.currentTimeMillis();
                 System.out.println("-----------------------------");
-                System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + STATION_PATTERN + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
+                System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") +
+                        " in [" + stationFullName + "] at " + now.getTime().toString() +
+                        " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
                 System.out.println("-----------------------------");
                 System.out.printf("Done is %s ms.\n", NumberFormat.getInstance().format(after - before));
             }
