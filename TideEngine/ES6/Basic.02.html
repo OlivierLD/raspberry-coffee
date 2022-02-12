@@ -12,6 +12,7 @@
             font-family:'Courier New', Courier, monospace;
         }
     </style>
+    <link rel="icon" type="image/ico" href="./palm.02.ico">
     <script type="module">
     import * as tideEngine from './tideEngine.js';
     
@@ -28,21 +29,42 @@
     let mess = `We have ${Object.keys(tideStations).length} stations.`;
     console.log(mess);
     document.getElementById('nb-stats').innerHTML = mess;    
-    
-    function doYourJob() {
-        console.log('Doing my job.');
+
+    // Populate a drop-down list
+    let selectList = document.getElementById('station-list');
+    while (selectList.length > 0) {
+        selectList.remove(0);
+    }
+    Object.keys(tideStations).forEach(station => {
+        let el = document.createElement("option");
+        el.textContent = decodeURIComponent(station.replaceAll('%EF%BF%BD', 'é'));
+        el.value = station;
+        selectList.appendChild(el);
+    });
+
+    const FREE_FIELD = 1;
+    const FROM_LIST = 2;
+    function doYourJob(option) {
+       console.log('Doing my job.');
        // let stationName = "Port-Navalo, France"; // "Port-Navalo" works too.
        // let stationName = "Port Townsend";
-       let stationName = document.getElementById("station-name").value;
 
-       let location = encodeURIComponent(stationName);
+       let stationName;
+       let location;
+       if (option === FREE_FIELD) {
+         stationName = document.getElementById("station-name").value; // Free field
+         location = encodeURIComponent(stationName);
+       } else if (option === FROM_LIST) {
+         stationName = document.getElementById("station-list").value; // From the list
+         location = stationName;
+       }
     
        console.log(`First tests, for ${stationName}`);
     
        console.log(`Location: ${location}`);
        let station = tideEngine.default.findTideStation(location, THE_YEAR);
        if (station !== null) {
-          console.log(`${location} was found: ${decodeURIComponent(station.fullName)}`);
+          console.log(`${location.replaceAll('%EF%BF%BD', 'é')} was found: ${decodeURIComponent(station.fullName.replaceAll('%EF%BF%BD', 'é'))}`);
           console.log(`Base height: ${station.baseHeight} ${station.unit}`);
           let now = new Date().toLocaleString('en-US', { timeZone: station.timeZone });
           let zonedNow = new Date(now);
@@ -81,7 +103,7 @@
           if (VERBOSE) {
               after = new Date().getTime();
           }
-          let result = `WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`;
+          let result = `WH in ${decodeURIComponent(station.fullName.replaceAll('%EF%BF%BD', 'é'))} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`;
           console.log(result);
           // console.log("Here.");
           document.getElementById("result").innerText = result;
@@ -124,7 +146,7 @@
           }
           console.log("Calculation completed.");
           let table = document.getElementById('tide-table');
-          let tableContent = `<pre><b>${decodeURIComponent(station.fullName)}</b>\n`;
+          let tableContent = `<pre><b>${decodeURIComponent(station.fullName.replaceAll('%EF%BF%BD', 'é'))}</b>\n`;
           tideTable.forEach(line => {
               // tableContent += `<b>${line.type}</b> ${line.at}  ${line.wh.toFixed(2)} ${line.unit}\n`;
               tableContent += `<b>${line.type}</b> ${dateFmt.formatDate(line.at, 'd-M-Y H:i Z')}  ${line.wh.toFixed(2)} ${line.unit}\n`;
@@ -132,8 +154,10 @@
           });
           tableContent += "</pre>";
           table.innerHTML = tableContent;
+          document.getElementById('messages').innerText = "";
        } else {
           console.log(`${location} NOT found.`);
+          document.getElementById('messages').innerText = `${location} NOT found.`;
        }
     }
     // Expose it!!
@@ -145,19 +169,25 @@
 </head>
 <body>
     <h1>ES6 TideEngine - Basic test - 2.</h1>
-    <div id="nb-stats"></div>
+    <small style="margin: 10px;">All in JavaScript, all computing done on the client side.</small>
+    <div id="nb-stats" style="margin: 10px;"></div>
     <hr/>
     <i>Check the console for errors...</i>
     <hr/>
-    <div>
+    <div style="display: grid; grid-template-areas: '1-one 1-two 1-three' '2-one 2-two 2-three';">
         <!--  Enter your station name -->
-        Enter the station name (at least a part of it): 
-        <input type="text" id="station-name" placeholder="Station Name">
-        <button onclick="doYourJob();">Click!</button>
+        <span style="grid-area: 1-one;">Enter the station name (at least a part of it, case-insensitive):</span> 
+        <input style="grid-area: 1-two;" type="text" id="station-name" placeholder="Station Name">
+        <button style="grid-area: 1-three;" onclick="doYourJob(1);" title="Click to compute">Click!</button>
+        <!-- Choose in the list -->
+        <span style="grid-area: 2-one;"><i><b>Or</b></i> choose your station in the list:</span>
+        <select style="grid-area: 2-two;" id="station-list"></select>
+        <button style="grid-area: 2-three;" onclick="doYourJob(2);" title="Click to compute">Click!</button>
     </div>
-    <div id="result"></div>
+    <div id="result" style="margin-top: 10px;"></div>
     <div id="tide-table"></div>
     <hr/>
+    <div id="messages"></div>
 </body>
 <script>
 window.onload = () => {

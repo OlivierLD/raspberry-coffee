@@ -85,7 +85,7 @@ let tideComputer = {
         if (ts === null) {
             // Try partial match
             for (let i = 0; i < keyLen; i++) {
-                if (keys[i].includes(stationName)) {
+                if (keys[i].toLowerCase().includes(stationName.toLowerCase())) {
                     ts = tideStations[keys[i]];
                     if (ts !== null) {
                         break;
