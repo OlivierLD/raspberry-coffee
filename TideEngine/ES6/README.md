@@ -15,13 +15,14 @@ Unzip the file `json/json.zip` in the directory it is in. You should end up with
 This heavily uses the `module` feature of HTML5/ES6. This requires
 all this to run on top of a Web Server, HTML pages cannot be used as static resources.
 
-NodeJS, Python, Java can be used...
+For the HTTP server, NodeJS, Python, Java can be used...
 
 For Python, use
 ```
 python3 -m http.server [port-number] &
 ```
-Default port number is `8000`.
+Default port number is `8000`.  
+_Note_: Use `kill.py.sh` to stop the Python server.  
 
 Then reach <http://localhost:8000/Basic.02.html>, try to look for `Port-Navalo`  
 (Compare to `test/.../SimplestMain`)
