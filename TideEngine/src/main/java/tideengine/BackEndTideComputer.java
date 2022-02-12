@@ -6,11 +6,7 @@ import tideengine.contracts.BackendDataComputer;
 import javax.annotation.Nonnull;
 import java.net.URLDecoder;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Access method agnostic front end.
@@ -192,7 +188,7 @@ public class BackEndTideComputer {
 			System.out.println(String.format("%s not found, trying partial match.", stationName));
 			Set<String> keys = stations.getStations().keySet();
 			for (String s : keys) {
-				if (s.contains(stationName)) {
+				if (s.toLowerCase(Locale.ROOT).contains(stationName.toLowerCase(Locale.ROOT))) {
 					station = stations.getStations().get(s);
 					if (station != null) {
 						break;

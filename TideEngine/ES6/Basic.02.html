@@ -20,13 +20,19 @@
     import * as dateFmt from './date.proto.js';
     
     const THE_YEAR = new Date().getYear() + 1900;
-    const VERBOSE = true;
+    const VERBOSE = false;
 
     let before = 0.0;
     let after = 0.0;
-    
+
+    if (VERBOSE) {
+        before = new Date().getTime();
+    }
     let tideStations = tideEngine.default.getStations(); // ["stations"];
-    let mess = `We have ${Object.keys(tideStations).length} stations.`;
+    if (VERBOSE) {
+        after = new Date().getTime();
+    }
+    let mess = `We have ${Object.keys(tideStations).length} stations. ${ VERBOSE ? `retrieved in ${after - before} ms.)` : '' }`;
     console.log(mess);
     document.getElementById('nb-stats').innerHTML = mess;    
 
@@ -37,7 +43,7 @@
     }
     Object.keys(tideStations).sort().forEach(station => {
         let el = document.createElement("option");
-        el.textContent = decodeURIComponent(station.replaceAll('%EF%BF%BD', 'é'));
+        el.textContent = decodeURIComponent(station); 
         el.value = station;
         selectList.appendChild(el);
     });
@@ -64,7 +70,7 @@
        console.log(`Location: ${location}`);
        let station = tideEngine.default.findTideStation(location, THE_YEAR);
        if (station !== null) {
-          console.log(`${location.replaceAll('%EF%BF%BD', 'é')} was found: ${decodeURIComponent(station.fullName.replaceAll('%EF%BF%BD', 'é'))}`);
+          console.log(`${location} was found: ${decodeURIComponent(station.fullName)}`);
           console.log(`Base height: ${station.baseHeight} ${station.unit}`);
           let now = new Date().toLocaleString('en-US', { timeZone: station.timeZone });
           let zonedNow = new Date(now);
@@ -103,7 +109,7 @@
           if (VERBOSE) {
               after = new Date().getTime();
           }
-          let result = `WH in ${decodeURIComponent(station.fullName.replaceAll('%EF%BF%BD', 'é'))} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`;
+          let result = `WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`;
           console.log(result);
           // console.log("Here.");
           document.getElementById("result").innerText = result;
@@ -146,7 +152,7 @@
           }
           console.log("Calculation completed.");
           let table = document.getElementById('tide-table');
-          let tableContent = `<pre><b>${decodeURIComponent(station.fullName.replaceAll('%EF%BF%BD', 'é'))}</b>\n`;
+          let tableContent = `<pre><b>${decodeURIComponent(station.fullName)}</b>\n`;
           tideTable.forEach(line => {
               // tableContent += `<b>${line.type}</b> ${line.at}  ${line.wh.toFixed(2)} ${line.unit}\n`;
               tableContent += `<b>${line.type}</b> ${dateFmt.formatDate(line.at, 'd-M-Y H:i Z')}  ${line.wh.toFixed(2)} ${line.unit}\n`;
