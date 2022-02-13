@@ -116,7 +116,7 @@
           // console.log("Here.");
           let contentOne = '<pre>';
           let stationPos = tideEngine.decToSex(station.latitude, 'NS')  + '/' +
-                           tideEngine.decToSex(station.longitude, 'EW')
+                           tideEngine.decToSex(station.longitude, 'EW');
           contentOne += `Station <b>${decodeURIComponent(station.fullName)}</b>, ${stationPos}\n`;  
           contentOne += `Base Height ${station.baseHeight} ${station.unit}\n`;
           contentOne += `${result}\n`;

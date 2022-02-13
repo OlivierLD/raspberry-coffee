@@ -1,0 +1,690 @@
+/* Widget specific */
+.pluviometer-day {
+	--with-shadow: true;
+	--shadow-color: LightGrey;
+	--scale-color: black;
+	--bg-color: rgba(0, 0, 0, 0);
+	--major-tick-color: LightGrey;
+	--minor-tick-color: DarkGrey;
+	--value-outline-color: black;
+	--value-color: DarkGrey;
+	--tube-outline-color: pink;
+	--rain-outline-color: DarkGrey;
+	--font: 'Arial'
+}
+
+.pluviometer-night {
+	--with-shadow: false;
+	--scale-color: pink;
+	--bg-color: transparent;
+	--major-tick-color: LightGrey;
+	--minor-tick-color: DarkGrey;
+	--value-outline-color: red;
+	--value-color: red;
+	--tube-outline-color: lightgrey;
+	--rain-outline-color: DarkGrey;
+	--font: 'Arial'
+}
+
+.pluviometer-cyan {
+	--with-shadow: false;
+	--scale-color: cyan;
+	--bg-color: transparent;
+	--major-tick-color: cyan;
+	--minor-tick-color: cyan;
+	--value-outline-color: cyan;
+	--value-color: cyan;
+	--tube-outline-color: cyan;
+	--rain-outline-color: cyan;
+	--inside-tube-from: transparent;
+	--inside-tube-to: transparent;
+	--font: 'Arial'
+}
+
+.pluviometer-orange {
+	--with-shadow: false;
+	--scale-color: orange;
+	--bg-color: transparent;
+	--major-tick-color: orange;
+	--minor-tick-color: orange;
+	--value-outline-color: orange;
+	--value-color: orange;
+	--tube-outline-color: orange;
+	--rain-outline-color: orange;
+	--inside-tube-from: transparent;
+	--inside-tube-to: transparent;
+	--font: 'Arial'
+}
+
+.thermometer-day {
+  --bg-color: rgba(0, 0, 0, 0);
+  --digit-color: DarkGrey;
+  --with-gradient: true;
+  --display-background-gradient-from: black;
+  --display-background-gradient-to: LightGrey;
+  --with-display-shadow: true;
+  --shadow-color: rgba(0, 0, 0, 0.75);
+  --major-tick-color: DarkGrey;
+  --minor-tick-color: DarkGrey;
+  --value-color: LightRed;
+  --value-outline-color: black;
+  --value-nb-decimal: 2;
+  --font: 'Arial'; /* 'Source Code Pro' */
+}
+
+.thermometer-night {
+  --bg-color: rgba(0, 0, 0, 0);
+  --digit-color: red;
+  --with-gradient: true;
+  --display-background-gradient-from: black;
+  --display-background-gradient-to: LightGrey;
+  --with-display-shadow: true;
+  --shadow-color: rgba(0, 0, 0, 0.75);
+  --major-tick-color: DarkGrey;
+  --minor-tick-color: DarkGrey;
+  --value-color: LightRed;
+  --value-outline-color: transparent;
+  --value-nb-decimal: 2;
+  --font: 'Arial'; /* 'Source Code Pro' */
+}
+
+.thermometer-cyan {
+	--bg-color: transparent;
+	--digit-color: cyan;
+	--with-gradient: false;
+	--display-background-gradient-to: rgba(255, 255, 255, 0.25);
+	--with-display-shadow: false;
+	--major-tick-color: LightGrey;
+	--minor-tick-color: LightGrey;
+	--value-color: cyan;
+	--value-outline-color: transparent;
+	--value-nb-decimal: 2;
+	--font: 'Arial'; /* 'Source Code Pro' */
+}
+
+.thermometer-orange {
+	--bg-color: transparent;
+	--digit-color: orange;
+	--with-gradient: false;
+	--display-background-gradient-to: rgba(255, 255, 255, 0.25);
+	--with-display-shadow: false;
+	--major-tick-color: LightGrey;
+	--minor-tick-color: LightGrey;
+	--value-color: orange;
+	--value-outline-color: transparent;
+	--value-nb-decimal: 2;
+	--font: 'Arial'; /* 'Source Code Pro' */
+}
+
+.jumbo-01 {
+	--bg-color: white;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--grid-color: rgba(255, 255, 255, 0.7);
+	--display-color: cyan;
+	--value-nb-decimal: 2;
+	--label-font: 'Courier New';
+	--value-font: 'Courier New'; /*Arial;*/
+}
+
+.jumbo-02 {
+	--bg-color: black;
+	--display-background-gradient-from: white;
+	--display-background-gradient-to: gray;
+	--grid-color: rgba(0, 0, 0, 0.7);
+	--display-color: navy;
+	--value-nb-decimal: 2;
+	--label-font: 'Courier New';
+	--value-font: 'Helvetica Neue';
+}
+
+@font-face {
+	font-family: DigiFont;
+	src: url(./fonts/ds-digi.ttf) format("truetype");
+}
+
+jumbo-display .digital-font-orange {
+	--display-color: orange;
+	--label-font: DigiFont;
+	--value-font: DigiFont;
+}
+
+jumbo-display .digital-font-green {
+	--display-color: lightgreen;
+	--label-font: DigiFont;
+	--value-font: DigiFont;
+}
+
+.analogdisplay-day {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: black;
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white; /* used if --withGradient: false */
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(255, 255, 255, 0.5);
+	--with-display-shadow: true;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: DarkGrey;
+	--major-tick-color: black;
+	--minor-tick-color: black;
+	--value-color: grey;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: red;
+	--hand-outline-color: black;
+	--with-hand-shadow: true;
+	--knob-color: DarkGrey;
+	--knob-outline-color: black;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+.analogdisplay-night {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: cyan;
+	--with-gradient: true;
+	--display-background-gradient-from: DarkGrey; /* used if --withGradient: true */
+	--display-background-gradient-to: black;
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: red;
+	--with-display-shadow: true;
+	--shadow-color: black;
+	--outline-color: DarkGrey;
+	--major-tick-color: red;
+	--minor-tick-color: red;
+	--value-color: red;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(255, 0, 0, 0.4);
+	--hand-outline-color: red;
+	--with-hand-shadow: true;
+	--knob-color: #8ed6ff;
+	--knob-outline-color: blue;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+/* Monochrome, cyan */
+.analogdisplay-monochrome-cyan {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: cyan;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(0, 255, 255, 0.5);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: cyan;
+	--major-tick-color: cyan;
+	--minor-tick-color: cyan;
+	--value-color: cyan;
+	--value-outline-color: cyan;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0.0);
+	--hand-outline-color: cyan;
+	--with-hand-shadow: false;
+	--knob-color: cyan;
+	--knob-outline-color: cyan;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+.analogdisplay-monochrome-black {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: black;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(0, 0, 0, 0.5);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: black;
+	--major-tick-color: black;
+	--minor-tick-color: black;
+	--value-color: black;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0.0);
+	--hand-outline-color: black;
+	--with-hand-shadow: false;
+	--knob-color: black;
+	--knob-outline-color: black;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+.analogdisplay-monochrome-white {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: white;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: white;
+	--major-tick-color: white;
+	--minor-tick-color: white;
+	--value-color: white;
+	--value-outline-color: white;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0.0);
+	--hand-outline-color: white;
+	--with-hand-shadow: false;
+	--knob-color: white;
+	--knob-outline-color: white;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+.analogdisplay-monochrome-orange {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: orange;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(255, 165, 0, 0.5); /* orange */
+	--label-fill-color: rgba(255, 255, 255, 0);
+	--with-display-shadow: false;
+	--shadow-color: black;
+	--outline-color: orange;
+	--major-tick-color: orange;
+	--minor-tick-color: orange;
+	--value-color: orange;
+	--value-outline-color: orange;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0);
+	--hand-outline-color: orange;
+	--with-hand-shadow: false;
+	--knob-color: orange;
+	--knob-outline-color: orange;
+	--outlined-port-starboard: true;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+.analogdisplay-monochrome-yellow {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: yellow;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(255, 255, 0, 0.5); /* yellow */
+	--label-fill-color: rgba(255, 255, 255, 0);
+	--with-display-shadow: false;
+	--shadow-color: black;
+	--outline-color: yellow;
+	--major-tick-color: yellow;
+	--minor-tick-color: yellow;
+	--value-color: yellow;
+	--value-outline-color: yellow;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0);
+	--hand-outline-color: yellow;
+	--with-hand-shadow: false;
+	--knob-color: yellow;
+	--knob-outline-color: yellow;
+	--outlined-port-starboard: true;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+/* Day, flat gray */
+.analogdisplay-flat-gray {
+	--bg-color: rgba(255, 255, 255, 0.0);
+	--digit-color: grey;
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white; /* used if --withGradient: false */
+	--display-line-color: rgba(0, 0, 0, 0.5);
+	--label-fill-color: rgba(255, 255, 255, 0.5);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: DarkGrey;
+	--major-tick-color: grey;
+	--minor-tick-color: grey;
+	--value-color: grey;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: red;
+	--hand-outline-color: grey;
+	--with-hand-shadow: true;
+	--knob-color: DarkGrey;
+	--knob-outline-color: black;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+.analogdisplay-flat-black {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: white;
+	--with-gradient: false;
+	--display-background-gradient-to: black; /* used if --withGradient: false */
+	--display-line-color: white;
+	--label-fill-color: transparent;
+	--with-display-shadow: false;
+	--outline-color: white;
+	--major-tick-color: white;
+	--minor-tick-color: white;
+	--value-color: transparent;
+	--value-outline-color: white;
+	--value-nb-decimal: 1;
+	--hand-color: red;
+	--hand-outline-color: red;
+	--with-hand-shadow: false;
+	--knob-color: black;
+	--knob-outline-color: black;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+direction-display .analogdisplay-day
+									.analogdisplay-night
+									.analogdisplay-monochrome-cyan
+									.analogdisplay-monochrome-black
+									.analogdisplay-monochrome-yellow
+									.analogdisplay-monochrome-orange
+									.analogdisplay-flat-gray {
+	--value-nb-decimal: 0;
+}
+
+analog-display .analog-for-prmsl {
+	/* Default is 1 */
+	--value-font-size-factor: 0.75
+}
+
+scroll-digit-display .scroll-digit-01 {
+	--bg-color: transparent;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--display-color: white;
+	--frame-color: silver;
+	--value-font: Arial;
+}
+
+compass-rose .day {
+  --bg-color: white;
+  --digit-color: #404040;
+  --with-gradient: true;
+	--display-background-gradient-from: gray;
+	--display-background-gradient-to: white;
+	--tick-color: darkGray;
+	--index-color: red;
+	--font: Arial;
+}
+
+compass-rose .night {
+	--bg-color: black;
+	--digit-color: red;
+	--with-gradient: true;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--tick-color: lightGray;
+	--index-color: white;
+	--font: Arial;
+}
+
+compass-rose .orange {
+	--bg-color: black;
+	--digit-color: orange;
+	--with-gradient: false;
+	--display-background-gradient-to: black;
+	--tick-color: orange;
+	--index-color: orange;
+	--font: Arial;
+}
+
+compass-rose .cyan {
+	--bg-color: black;
+	--digit-color: cyan;
+	--with-gradient: false;
+	--display-background-gradient-to: black;
+	--tick-color: cyan;
+	--index-color: cyan;
+	--font: Arial;
+}
+
+compass-rose .gray-flat {
+	--bg-color: black;
+	--digit-color: grey;
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white;
+	--tick-color: darkGray;
+	--index-color: grey;
+	--font: Arial;
+}
+
+compass-display .green {
+	--bg-color: transparent;
+	--digit-color: lime;
+	--with-gradient: false;
+	--display-background-gradient-to: transparent;
+	--tick-color: lime;
+	--cross-hair-color: red;
+	--display-line-color: lime;
+	--label-fill-color: green;
+	--with-display-shadow: false;
+	--outline-color: lime;
+	--major-tick-color: lime;
+	--minor-tick-color: lime;
+	--value-color: green;
+	--value-outline-color: lime;
+	--value-nb-decimal: 0;
+	--knob-color: red;
+	--knob-outline-color: cyan;
+}
+
+.worldmap-display {
+	--canvas-background: rgba(0, 0, 100, 1.0);
+	--default-plot-point-color: red;
+	--travel-color: gray;
+	--arrow-body-color: rgba(255, 255, 255, 0.5);
+	--globe-background: black;
+	--globe-gradient-from: navy;
+	--globe-gradient-to: blue;
+	--grid-color: rgba(0, 255, 255, 0.3);
+	--tropic-color: LightGray;
+	--chart-color: cyan;
+	--chart-line-width: 1;
+	--user-pos-color: red;
+	--sun-color: rgb(255, 255, 0);
+	--sun-arrow-color: rgba(255, 255, 0, 0.5);
+	--moon-color: rgb(255, 255, 255);
+	--moon-arrowcolor: rgba(255, 255, 255, 0.5);
+	--aries-color: LightGray;
+	--venus-color: orange;
+	--mars-color: red;
+	--jupiter-color: LightPink;
+	--saturn-color: LightYellow;
+	--stars-color: white;
+	--night-color: rgba(192, 192, 192, 0.3);
+	--display-position-color: white;
+}
+
+.worldmap-display-02 {
+	--canvas-background: red;
+	--default-plot-point-color: red;
+	--travel-color: gray;
+	--arrow-body-color: rgba(255, 255, 255, 0.5);
+	--globe-background: black;
+	--globe-gradient-from: lightGrey;
+	--globe-gradient-to: white;
+	--grid-color: rgba(244, 246, 246, 1);
+	--tropic-color: LightGrey;
+	--chart-color: grey;
+	--chart-line-width: 1;
+	--user-pos-color: black;
+	--sun-color: rgb(255, 255, 0);
+	--sun-arrow-color: rgba(255, 255, 0, 0.5);
+	--moon-color: rgb(255, 255, 255);
+	--moon-arrowcolor: rgba(255, 255, 255, 0.5);
+	--aries-color: LightGray;
+	--venus-color: orange;
+	--mars-color: red;
+	--jupiter-color: LightPink;
+	--saturn-color: LightYellow;
+	--stars-color: white;
+	--night-color: rgba(192, 192, 192, 0.3);
+	--display-position-color: white;
+}
+
+.led-panel-01 {
+	--bg-color-from: gray;
+	--bg-color-to: black;
+	--fg-color-from: red;
+	--fg-color-to: orange;
+}
+
+.marquee-01 {
+	--bg-color-from: gray;
+	--bg-color-to: black;
+	--fg-color-from: red;
+	--fg-color-to: orange;
+}
+
+.marquee-02 {
+	--bg-color-from: gray;
+	--bg-color-to: white;
+	--fg-color-from: green;
+	--fg-color-to: yellow;
+}
+
+.dir-16-day {
+	--bg-color: rgba(0, 0, 0, 0);
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: black;
+	--value-color: lightgreen;
+	--font: Arial;
+}
+
+.calendar-01 {
+	--bg-color: white;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white;
+	--day-color: red;
+	--month-year-color: black;
+	--value-font: Arial;
+}
+
+.split-flap-night {
+	--bg-color: transparent;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--display-color: white;
+	--frame-color: silver;
+	--value-font: Arial;
+}
+
+.split-flap-day {
+	--bg-color: transparent;
+	--display-background-gradient-from: white;
+	--display-background-gradient-to: lightgray;
+	--display-color: black;
+	--frame-color: silver;
+	--value-font: Verdana;
+}
+
+.sun-path-01 {
+	--bg-color: black;
+	--with-gradient: true;
+	--display-background-gradient-from: blue;
+	--display-background-gradient-to: black;
+	--sun-color: yellow;
+	--grid-color: rgba(0, 205, 205, 0.75);
+	--base-color: rgba(0, 205, 205, 0.5);
+	--font: Arial;
+	--card-point-color: white;
+	--altitude-value-color: cyan;
+}
+
+.sun-path-02 {
+	--bg-color: black;
+	--with-gradient: true;
+	--display-background-gradient-from: darkred;
+	--display-background-gradient-to: silver;
+	--sun-color: gold;
+	--grid-color: rgba(0, 0, 0, .5);
+	--base-color: rgba(0, 0, 255, .25);
+	--font: Helvetica;
+	--card-point-color: cyan;
+	--altitude-value-color: white;
+}
+
+.sat-plot-01 {
+	--border-color: darkGrey;
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: DarkGrey;
+	--with-display-shadow: true;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--line-color: grey;
+	--font: Arial;
+}
+
+.sat-plot-02 {
+	--border-color: silver;
+	--with-gradient: true;
+	--display-background-gradient-from: DarkGrey;
+	--display-background-gradient-to: black;
+	--with-display-shadow: true;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--line-color: lightGreen;
+	--font: Arial;
+}
+
+.sat-plot-03 {
+	--border-color: white;
+	--with-gradient: false;
+	--display-background-gradient-from: DarkGrey;
+	--display-background-gradient-to: DarkGrey;
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--line-color: lightGreen;
+	--font: Arial;
+}
+
+.boat-overview-01 {
+	--grid-color: gray;
+	--display-background-gradient-from: darkgray;
+	--display-background-gradient-to: gray;
+	--tw-arrow-color: darkred;
+	--bsp-arrow-color: red;
+	--cmg-arrow-color: cyan;
+	--aw-arrow-color: black;
+	--gps-ws-arrow-color: darkorange;
+	--vmg-arrow-color: green;
+	--current-arrow-color: green;
+	--boat-fill-color: silver;
+	--boat-outline-color: lightblue;
+	--nmea-display-color: navy;
+	--calculated-color: blue;
+	--vmg-display-color: green;
+	--variation-display-color: black;
+	--variation-arrow-color: black;
+}
+
+.boat-overview-02 {
+	--grid-color: limegreen;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: darkgray;
+	--tw-arrow-color: darkred;
+	--bsp-arrow-color: red;
+	--cmg-arrow-color: cyan;
+	--aw-arrow-color: white;
+	--gps-ws-arrow-color: darkorange;
+	--vmg-arrow-color: lightyellow;
+	--current-arrow-color: yellow;
+	--boat-fill-color: rgba(128, 128, 128, 0.5);
+	--boat-outline-color: lightblue;
+	--nmea-display-color: cyan;
+	--calculated-color: yellow;
+	--vmg-display-color: lightyellow;
+	--variation-display-color: lightpink;
+	--variation-arrow-color: lightpink;
+}

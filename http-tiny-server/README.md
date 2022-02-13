@@ -1,8 +1,7 @@
-## HTTP Server 
+## A Small HTTP Server, all in Java 
 #### (WiP, never finished...)
-> A Java alternative to `python -m SimpleHTTPServer`. Can also serve REST requests.
-> Can serve static documents _from an archive_, to save space.
-
+> A Java alternative to `python -m SimpleHTTPServer` (or `python3 -m http.server`). Can also serve REST requests.
+> Can serve static documents _<u>from an archive</u>_, to save space.
 
 Can be used
 - to serve

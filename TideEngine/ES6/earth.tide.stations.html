@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+ ! With Web Components.
+ +-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WebComponents, Tide Stations</title>
+    <link rel="icon" type="image/png" href="./wave.02.jpeg">
+    <link rel="stylesheet" href="webcomponents/css/web-components.css">
+
+    <!-- Web Components -->
+    <script type="module" src="./webcomponents/WorldMap.js"></script>
+
+    <script type="module">
+import * as tideEngine from './tideEngine.js';
+
+// Adding features to the Date object.
+import * as dateFmt from './date.proto.js';
+
+const THE_YEAR = new Date().getYear() + 1900;
+const VERBOSE = false;
+
+let before = 0.0;
+let after = 0.0;
+
+let tideStations = tideEngine.default.getStations(); // ["stations"];
+let mess = `We have ${Object.keys(tideStations).length} stations. ${ VERBOSE ? `retrieved in ${after - before} ms.)` : '' }`;
+console.log(mess);
+
+// Spit out station list, sorted
+let listContent = "<pre>";
+Object.keys(tideStations).sort().forEach(station => {
+    listContent += `${decodeURIComponent(station)}, ${tideEngine.decToSex(tideStations[station].latitude, 'NS')  + '/' +
+                        tideEngine.decToSex(tideStations[station].longitude, 'EW')} \n`; 
+});
+listContent += "</pre>";
+// document.getElementById('station-list').innerHTML = listContent;
+
+let worldMap = document.getElementById('world-map-01');
+
+function plotStation(context, worldMap, userPos, color, name, stationPos, withName) {
+    let station;
+    if (worldMap.projection.type === 'GLOBE') {
+        station = worldMap.getPanelPoint(stationPos.lat, stationPos.lng);
+    } else {
+        station = worldMap.posToCanvas(stationPos.lat, stationPos.lng);
+    }
+    let thisPointIsBehind = worldMap.isBehind(Math.toRadians(stationPos.lat), Math.toRadians(stationPos.lng - worldMap.globeViewLngOffset));
+    if (!thisPointIsBehind || worldMap.transparentGlobe) {
+        if (worldMap.projection.type === 'GLOBE') {
+            // Draw Station Position
+            worldMap.plot(context, station, color);
+            context.fillStyle = color;
+            if (withName) {
+                context.fillText(name, Math.round(station.x) + 3, Math.round(station.y) - 3);
+            }
+        } else {
+            // Draw stationPos - Just plot.
+            worldMap.plot(context, station, color);
+            context.fillStyle = color;
+            if (withName) {
+                context.fillText(name, Math.round(station.x) + 3, Math.round(station.y) - 3);
+            }
+        }
+    }
+}
+
+worldMap.setDoAfter((worldMap, context) => {
+
+    // Plot tide stations
+    let userPos;
+    if (worldMap.projection.type === 'GLOBE') {
+        userPos = worldMap.getPanelPoint(worldMap.userPosition.latitude, worldMap.userPosition.longitude);
+    } else {
+        userPos = worldMap.posToCanvas(worldMap.userPosition.latitude, worldMap.userPosition.longitude);
+    }
+    Object.keys(tideStations).sort().forEach(station => {
+        plotStation(context, 
+                    worldMap, 
+                    userPos, 
+                    'yellow', 
+                    decodeURIComponent(tideStations[station].fullName), 
+                    {lat: tideStations[station].latitude, lng: tideStations[station].longitude},
+                    false);
+    });
+    // Display tilt
+    context.fillStyle = 'white';
+    let fontBackup = context.font;
+    context.font = "bold 12px Verdana";
+    context.fillText(`Tilt: ${tilt.toFixed(0)}\u00b0`, 10, 54);
+    context.font = fontBackup;
+});
+
+
+let longitude = 0;
+let latitude = 0; 
+let tilt = -23.43698; // Tropic Lat
+
+let keepRotating = true;
+
+let rotateClockWise = () => {
+    worldMap.setUserPosition({ latitude: latitude, longitude: longitude });
+    worldMap.repaint();
+    longitude += 0.5;
+    console.log(`Rotating clockwise, G now ${longitude}`);
+    if (longitude > 180) {
+        longitude = -179.5;
+    }
+    if (keepRotating) {
+        // console.log(`Lng now ${lng}`)
+        window.setTimeout(() => { rotateClockWise(); }, 100);
+    }
+};
+let rotateCounterClockWise = () => {
+    worldMap.setUserPosition({ latitude: latitude, longitude: longitude });
+    worldMap.repaint();
+    longitude -= 0.5;
+    console.log(`Rotating counter-clockwise, G now ${longitude}`);
+    if (longitude < -180) {
+        longitude = 179.5;
+    }
+    if (keepRotating) {
+        // console.log(`Lng now ${lng}`)
+        window.setTimeout(() => { rotateCounterClockWise(); }, 100);
+    }
+};
+
+let startRotating = () => {
+    keepRotating = true;
+};
+let stopRotating = () => {
+    keepRotating = false;
+};
+
+let increaseLat = () => {
+    latitude += 1;
+    if (latitude > 90) {
+        latitude = 90;
+    }
+    worldMap.setUserPosition({ latitude: latitude, longitude: longitude });
+    worldMap.repaint();
+};
+let decreaseLat = () => {
+    latitude -= 1;
+    if (latitude < -90) {
+        latitude = -90;
+    }
+    worldMap.setUserPosition({ latitude: latitude, longitude: longitude });
+    worldMap.repaint();
+};
+
+let leanLeft = () => {
+    tilt += 1;
+    worldMap.globeViewRightLeftRotation = parseInt(tilt.toFixed(0)); // Default is tropicLat
+    worldMap.repaint();
+};
+let leanRight = () => {
+    tilt -= 1;
+    worldMap.globeViewRightLeftRotation = parseInt(tilt.toFixed(0)); // Default is tropicLat
+    worldMap.repaint();
+};
+
+// Original settings
+worldMap.setUserPosition({ latitude: latitude, longitude: longitude });
+worldMap.repaint();
+
+// Expose outside the module
+window.rotateClockWise = rotateClockWise;
+window.rotateCounterClockWise = rotateCounterClockWise;
+window.startRotating = startRotating;
+window.stopRotating = stopRotating;
+window.increaseLat = increaseLat;
+window.decreaseLat = decreaseLat;
+window.leanLeft = leanLeft;
+window.leanRight = leanRight;
+
+console.log("Done");
+
+    </script>
+    
+    <script type="text/javascript">
+
+function setProjection(id, radio) {
+	document.getElementById(id).projection = radio.value;
+	document.getElementById(id).repaint();
+}
+
+if (Math.toRadians === undefined) {
+	Math.toRadians = function(deg) {
+		return deg * (Math.PI / 180);
+	};
+}
+
+if (Math.toDegrees === undefined) {
+	Math.toDegrees = function(rad) {
+		return rad * (180 / Math.PI);
+	};
+}
+
+function startGoingRight() {
+    startRotating(); 
+    rotateCounterClockWise();
+    document.getElementById("right").disabled = true;
+    document.getElementById("right").classList.toggle('disabled-button');
+    document.getElementById("left").disabled = true;
+    document.getElementById("left").classList.toggle('disabled-button');
+    document.getElementById("stop").disabled = false;
+    document.getElementById("stop").classList.toggle('disabled-button');
+}
+function startGoingLeft() {
+    startRotating(); 
+    rotateClockWise();
+    document.getElementById("right").disabled = true;
+    document.getElementById("right").classList.toggle('disabled-button');
+    document.getElementById("left").disabled = true;
+    document.getElementById("left").classList.toggle('disabled-button');
+    document.getElementById("stop").disabled = false;
+    document.getElementById("stop").classList.toggle('disabled-button');
+}
+function stopAll() {
+    stopRotating();
+    document.getElementById("right").disabled = false;
+    document.getElementById("left").disabled = false;
+    document.getElementById("stop").disabled = true;
+
+    document.getElementById("right").classList.toggle('disabled-button');
+    document.getElementById("left").classList.toggle('disabled-button');
+    document.getElementById("stop").classList.toggle('disabled-button');
+
+}
+    </script>
+
+    <style>
+        :root {
+            --padding: 50px;
+            --perspective: 100em;
+            --rotateX: -15deg;
+            --scaleY: 1.0;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            background-color: black;
+        }
+
+        body {
+            background-color: black;
+            color: gray;
+            font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+            /* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+            background: radial-gradient(at top, DarkGrey -8%, black 55%);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        button {
+            min-width: 150px;
+			padding: 4px 20px;
+			/* give the background a gradient */
+			background:#ffae00; /* fallback for browsers that don't support gradients */
+			/* background: -webkit-linear-gradient(top, #ffae00, #d67600);
+			background: -moz-linear-gradient(top, #ffae00, #d67600);
+			background: -o-linear-gradient(top, #ffae00, #d67600); */
+			background: linear-gradient(top, #ffae00, #d67600);
+			border:2px outset #dad9d8;
+			/* style the text */
+			font-family:Lato, Verdana, Andika, Arial, sans-serif; /* Andkia is available at http://www.google.com/webfonts/specimen/Andika */
+			font-size:1.1em;
+			letter-spacing:0.05em;
+			text-transform:uppercase;
+			color:#fff;
+			text-shadow: 0px 1px 10px #000;
+			/* add to small curve to the corners of the button */
+			-webkit-border-radius: 15px;
+			-moz-border-radius: 15px;
+			border-radius: 15px;
+			/* give the button a drop shadow */
+			-webkit-box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+			-moz-box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+			box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+            margin: 5px;
+		}
+
+        .disabled-button {
+            background-color: rgba(0, 0, 0, .55);
+        }
+
+		.black-frame {
+			padding: 3px;
+			margin: 1px;
+			border-radius: 5px;
+			border: 1px solid silver;
+		}
+
+		.centered {
+			text-align: center;
+		}
+
+        .the-border {
+            border: 1px solid silver;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<table width="100%">
+    <tr>
+        <td><h2 style="text-shadow: 1px 1px 2px black, 0 0 25px white, 0 0 5px silver;">Web Components, Tide Stations</h2></td>
+    </tr>
+</table>
+
+<hr style="margin: 5px;"/>
+
+<!--
+  Good grid resource at:
+  https://css-tricks.com/snippets/css/complete-guide-grid/
+  https://www.w3schools.com/css/css_grid.asp
+ -->
+
+<!-- World Map -->
+<div id="one" style="display: block;">
+    <div id="widgets-1"
+         style="text-align: center; display: grid; /*align-items: center;*/ grid-template-columns: auto auto; grid-template-areas: 'top-left right' 'bottom bottom' 'down down';">
+
+        <div style="text-align: right; grid-area: top-left;">
+            <!--
+                WORLD MAP
+            +-->
+            <div id="world-map"> <!-- style="grid-area: top-left;"> -->
+                <div class="black-frame">
+                    <world-map id="world-map-01"
+                               class="worldmap-display"
+                               title="World Map"
+                               width="1000"
+                               height="600"></world-map>
+                </div>
+                <div class="black-frame centered" style="max-height: 100px; overflow-y: scroll;" title="Chart controls">
+                    <div>
+                        <input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);"
+                               checked>Globe
+                        <input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
+                        <input type="radio" name="proj-01" value="ANAXIMANDRE"
+                               onchange="setProjection('world-map-01', this);">Square
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="the-border" style="grid-area: right; justify-content: center;">
+            <div style="margin-top: 100%;">
+                <button onclick="increaseLat();" style="font-size: 36px;">&uarr;</button>
+                <br/>
+                <button onclick="decreaseLat();" style="font-size: 36px;">&darr;</button>
+            </div>
+        </div>
+
+        <div class="the-border" style="grid-area: bottom;">
+            <button id="right" onclick="startGoingRight();" style="font-size: 36px;">&larr;</button>
+            <button id="stop" onclick="stopAll();" class="disabled-button">Stop</button>
+            <button id="left" onclick="startGoingLeft();" style="font-size: 36px;">&rarr;</button>
+        </div>
+
+        <div class="the-border" style="grid-area: down;">
+            <button id="leanleft" onclick="leanLeft();" style="font-size: 36px;">&#x21BA;</button>
+            <button id="leanright" onclick="leanRight();" style="font-size: 36px;">&#x21BB;</button>
+        </div>
+    </div>
+</div>    
+
+<hr style="margin: 5px;"/>
+
+</body>
+<script>
+    window.onload = () => {
+        console.log("Ready.");
+        // setTimeout(rotate(10, 0, 360), 1000);
+    };
+</script>
+</html>

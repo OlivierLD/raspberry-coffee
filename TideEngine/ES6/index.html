@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+    Basic ES6 TideEngine tests.
+    Requires a Web Server to avoid CORS errors.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ES6 Tide Engine</title>
+    <style type="text/css">
+        * {
+            font-family:'Courier New', Courier, monospace;
+        }
+
+        .title-icon {
+            height: 38px; 
+            width: auto; 
+            vertical-align: middle;
+            padding-left: 20px;
+        }
+    </style>
+    <link rel="icon" type="image/ico" href="./wave.02.jpeg">
+</head>
+<body>
+    <h1>ES6 TideEngine - Basic tests<img src="./wave.02.jpeg" class="title-icon"></h1>
+    <ul>
+        <li><a href="./scratch.html">Level 0</a></li>
+        <li><a href="./Basic.01.html">Basic test 01, stations list.</a></li>
+        <li><a href="./Basic.02.html">Basic test 02, current water height, and others.</a></li>
+        <li><a href="./Basic.03.html">Basic test 03, stations list, more fancy.</a></li>
+        <li><a href="./earth.tide.stations.html">Earth Tide Stations (WebComponents)</a></li>
+    </ul>
+    <hr/>
+    <div id="messages"></div>
+    <small style="font-style: italic;">ES6 Tide Engine</small>
+</body>
+<script>
+window.onload = () => {
+    console.log("Ready.");
+};
+</script>
+</html>
