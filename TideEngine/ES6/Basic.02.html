@@ -6,13 +6,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Basic01</title>
+    <title>Basic02</title>
     <style type="text/css">
         * {
             font-family:'Courier New', Courier, monospace;
         }
     </style>
-    <link rel="icon" type="image/ico" href="./palm.02.ico">
+    <link rel="icon" type="image/ico" href="./wave.02.jpeg">
     <script type="module">
     import * as tideEngine from './tideEngine.js';
     
@@ -72,6 +72,8 @@
        if (station !== null) {
           console.log(`${location} was found: ${decodeURIComponent(station.fullName)}`);
           console.log(`Base height: ${station.baseHeight} ${station.unit}`);
+          console.log(`Pos: ${station.latitude} ${station.longitude}`);
+
           let now = new Date().toLocaleString('en-US', { timeZone: station.timeZone });
           let zonedNow = new Date(now);
     
@@ -109,10 +111,17 @@
           if (VERBOSE) {
               after = new Date().getTime();
           }
-          let result = `WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`;
+          let result = `<span style="color: blue; font-weight: bold;">WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}</span>`;
           console.log(result);
           // console.log("Here.");
-          document.getElementById("result").innerText = result;
+          let contentOne = '<pre>';
+          let stationPos = tideEngine.decToSex(station.latitude, 'NS')  + '/' +
+                           tideEngine.decToSex(station.longitude, 'EW')
+          contentOne += `Station <b>${decodeURIComponent(station.fullName)}</b>, ${stationPos}\n`;  
+          contentOne += `Base Height ${station.baseHeight} ${station.unit}\n`;
+          contentOne += `${result}\n`;
+          contentOne += '</pre>';
+          document.getElementById("result").innerHTML = contentOne;
           if (VERBOSE) {
               console.log(`Calculation took ${after} - ${before} = ${after - before} ms...`);
           }
@@ -168,7 +177,7 @@
           document.getElementById('messages').innerText = `${location} NOT found.`;
        }
     }
-    // Expose it!!
+    // Expose it to the page (we are in a module)!!
     window.doYourJob = doYourJob;
 
     console.log("Done");
@@ -176,7 +185,7 @@
     </script>
 </head>
 <body>
-    <h1>ES6 TideEngine - Basic test - 2.</h1>
+    <h1>ES6 TideEngine - Basic test - 2. <img src="./wave.02.jpeg" style="height: 38px; width: auto; vertical-align: middle;"></h1>
     <small style="margin: 10px;">All in JavaScript, all computing done on the client side.</small>
     <div id="nb-stats" style="margin: 10px;"></div>
     <hr/>
