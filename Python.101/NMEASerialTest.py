@@ -9,7 +9,7 @@
 # - https://pythonhosted.org/pyserial/pyserial.html
 # - https://pyserial.readthedocs.io/en/latest/pyserial.html
 #
-# Read Serial port 101.
+# Read Serial port, parse NMEA Data.
 #
 import serial
 from typing import Dict  # , List, Set, Tuple, Optional
@@ -158,13 +158,13 @@ print("Let's go. Hit Ctrl+C to stop")
 keep_looping = True
 while keep_looping:
     rcv = read_nmea_sentence(port)
-    print("\tReceived:" + repr(rcv))  # repr: displays also non printable characters between quotes.
+    print("\tReceived:" + repr(rcv))  # repr: displays also non-printable characters between quotes.
     try:
         nmea_obj = parse_nmea_sentence(rcv)
     except KeyboardInterrupt:
         keep_looping = False
         print("Exiting at user's request")
     except Exception as ex:
-        print("Ooops! {}".format(ex))
+        print("Oops! {}".format(ex))
 
 print("\nBye!")

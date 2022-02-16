@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WebComponents, Tide Stations</title>
     <link rel="icon" type="image/png" href="./wave.02.jpeg">
-    <link rel="stylesheet" href="webcomponents/css/web-components.css">
+    <link rel="stylesheet" href="./webcomponents/css/web-components.css">
 
     <!-- Web Components -->
     <script type="module" src="./webcomponents/WorldMap.js"></script>
@@ -68,7 +68,6 @@ function plotStation(context, worldMap, userPos, color, name, stationPos, withNa
 }
 
 worldMap.setDoAfter((worldMap, context) => {
-
     // Plot tide stations
     let userPos;
     if (worldMap.projection.type === 'GLOBE') {
@@ -176,10 +175,9 @@ window.decreaseLat = decreaseLat;
 window.leanLeft = leanLeft;
 window.leanRight = leanRight;
 
-console.log("Done");
+console.log("Done with inner Module");
 
     </script>
-    
     <script type="text/javascript">
 
 function setProjection(id, radio) {
@@ -192,7 +190,6 @@ if (Math.toRadians === undefined) {
 		return deg * (Math.PI / 180);
 	};
 }
-
 if (Math.toDegrees === undefined) {
 	Math.toDegrees = function(rad) {
 		return rad * (180 / Math.PI);
@@ -330,11 +327,11 @@ function stopAll() {
             <!--
                 WORLD MAP
             +-->
-            <div id="world-map"> <!-- style="grid-area: top-left;"> -->
+            <div id="world-map">
                 <div class="black-frame">
                     <world-map id="world-map-01"
                                class="worldmap-display"
-                               title="World Map"
+                               title="World Map, tide stations"
                                width="1000"
                                height="600"></world-map>
                 </div>
@@ -376,8 +373,7 @@ function stopAll() {
 </body>
 <script>
     window.onload = () => {
-        console.log("Ready.");
-        // setTimeout(rotate(10, 0, 360), 1000);
+        console.log("Ready."); // Akeu Coucou.
     };
 </script>
 </html>
