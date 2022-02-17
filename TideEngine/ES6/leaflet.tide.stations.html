@@ -29,7 +29,7 @@
             integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
             crossorigin=""></script>
 
-            <script type="module">
+    <script type="module">
 import * as tideEngine from './tideEngine.js';
 
 // Adding features to the Date object.
@@ -120,19 +120,13 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
     attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
     tileSize: 512,
-    maxZoom: 18,
+    maxZoom: 28,
     zoomOffset: -1,
     id: 'mapbox/streets-v11'
 }).addTo(map);
 
-/*
-let latlngs = [];
-
-let polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
-// zoom the map to the polyline
-map.fitBounds(polyline.getBounds());
-*/
-map.setView([0, 0], 3);
+// map.setView([0, 0], 3);
+map.setView([47.5, -3.0], 8);
 
 map.addEventListener('mousemove', (event) => {
     // let lat = Math.round(event.latlng.lat * 100000) / 100000;
@@ -147,14 +141,6 @@ map.addEventListener('mousemove', (event) => {
     }
     document.getElementById('curr-pos').innerHTML = `${decToSex(lat, "NS")}<br/>${decToSex(lng, "EW")}`;
 });
-
-// let circle = null;
-// let marker = null;
-
-// L.marker([0, 0])
-//     .addTo(map)
-//     .bindPopup(`<b>Dummy Marker</b><br />`)
-//     .bindTooltip("Dummy Tag for Tide Station to come."); // .openPopup();
 
 window.onload = () => {
     // document.getElementById('point-card').innerText = `${latlngs.length} points.`;
