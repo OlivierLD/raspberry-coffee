@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<!--
+ | Requires the leafletjs resources to be in a "leaflet" directory under "web".
+ | Available from http://leafletjs.com/
+ | Tutorials and examples at https://leafletjs.com/examples.html
+ | Note: No native way to change orientation
+ +-->
+<head>
+
+    <title>Tide Stations - Leaflet. WiP.</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" /-->
+    <!-- link rel="icon" type="image/ico" href="icons/hammerhead.02.ico" -->
+    <link rel="icon" type="image/ico" href="icons/jellyfish.ico">
+
+    <!--
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <script src="leaflet/leaflet.js"></script>
+    -->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+
+</head>
+<body style='font-family: "Source Code Pro", "Courier New", Helvetica, Geneva; font-weight: bold;'>
+
+OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leaflet">leafletjs.com</a>
+
+<!--div id="mapid" style="width: 600px; height: 400px;"></div-->
+<div style="margin: 5px;">
+    <span id="curr-point" style="margin: 10px;"></span><span id="point-card" style="margin: 10px;"></span>
+    <button id="start-path" onclick="pathIdx = 0; drive();">Follow Path</button>
+    <button id="cancel-path" onclick="cancelDrive();" disabled>Cancel</button>
+    <button id="stop-path" onclick="stopDriving();" disabled>Pause</button>
+    <button id="resume-path" onclick="resumeDriving();" disabled>Resume</button>
+</div>
+<!--
+ | Try
+ | - map.panTo(new L.LatLng(40.737, -73.923));
+ | - map.setView(new L.LatLng(40.737, -73.923), 8);
+ | - map.flyTo(new L.LatLng(40.737, -73.923));
+ +-->
+
+<table>
+    <tr>
+        <td valign="top">
+            <!--div id="mapid" style="width: 1200px; height: 800px;"></div-->
+            <div id="mapid" style="width: 1200px; height: 600px;"></div>
+        </td>
+        <td valign="top" style="text-align: right;">
+            <div id="curr-pos"></div>
+        </td>
+    </tr>
+</table>
+<div>
+    This is the track of a Kayak Trip in Tomales Bay.
+    <br/>
+    The API is clear and very easy to use.
+    <br/>
+    Go for it!
+</div>
+
+<script>
+
+    function decToSex(val, ns_ew) {
+        let absVal = Math.abs(val);
+        let intValue = Math.floor(absVal);
+        let dec = absVal - intValue;
+        let i = intValue;
+        dec *= 60;
+        let min = dec.toFixed(4);
+        while (min.length < 7) {
+            min = '0' + min;
+        }
+        let s = i + "°" + min + "'";
+
+        if (val < 0) {
+            s += (ns_ew === 'NS' ? 'S' : 'W');
+        } else {
+            s += (ns_ew === 'NS' ? 'N' : 'E');
+        }
+        return s;
+    }
+
+    let map = L.map('mapid'); // .setView([51.505, -0.09], 13);
+
+    // L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    //     maxZoom: 28,
+    //     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+    //     '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    //     'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    //     id: 'mapbox.streets'
+    // }).addTo(map);
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        tileSize: 512,
+        maxZoom: 18,
+        zoomOffset: -1,
+        id: 'mapbox/streets-v11'
+    }).addTo(map);
+
+    /*
+    let latlngs = [];
+
+    let polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+    // zoom the map to the polyline
+    map.fitBounds(polyline.getBounds());
+    */
+    map.setView([0, 0], 3);
+
+    let pathIdx = 0;
+    let keepDriving = true;
+    let cancelDriving = true;
+
+    map.addEventListener('mousemove', (event) => {
+        // let lat = Math.round(event.latlng.lat * 100000) / 100000;
+        // let lng = Math.round(event.latlng.lng * 100000) / 100000;
+        if (cancelDriving) {
+            let lat = event.latlng.lat;
+            let lng = event.latlng.lng;
+            while (lng > 180) {
+                lng -= 360;
+            }
+            while (lng < -180) {
+                lng += 360;
+            }
+            document.getElementById('curr-pos').innerHTML = `${decToSex(lat, "NS")}<br/>${decToSex(lng, "EW")}`;
+        }
+    });
+
+    let circle = null;
+    let marker = null;
+
+    L.marker([0, 0])
+        .addTo(map)
+        .bindPopup(`<b>Dummy Marker</b><br />`)
+        .bindTooltip("Dummy Tag for Tide Station to come."); // .openPopup();
+
+    // used on button click
+    function drive() {
+
+        cancelDriving = false;
+
+        document.getElementById('start-path').disabled = true;
+        document.getElementById('cancel-path').disabled = false;
+        document.getElementById('stop-path').disabled = false;
+        document.getElementById('resume-path').disabled = true;
+        // Recurse it that one.
+        function moveTo(j) {
+            if (j < latlngs.length && !cancelDriving) {
+                let pos = latlngs[j];
+                if (keepDriving) {
+                    window.setTimeout(() => {
+                        document.getElementById('curr-pos').innerHTML = `${decToSex(pos[0], "NS")}<br/>${decToSex(pos[1], "EW")}`;
+                        document.getElementById('curr-point').innerText = `${j} /`;
+                        // map.setZoom(20);
+                        map.panTo(new L.LatLng(pos[0], pos[1]));
+
+                        if (circle !== null) {
+                            map.removeLayer(circle);
+                        }
+                        if (marker !== null) {
+                            map.removeLayer(marker);
+                        }
+                        circle = L.circle([pos[0], pos[1]], 50, {
+                            color: 'green',
+                            fillColor: '#30f',
+                            fillOpacity: 0.25
+                        });
+                        marker = L.marker([pos[0], pos[1]]);
+                        circle.addTo(map);
+                        marker.addTo(map)
+
+                        pathIdx += 1; // 5;
+                        moveTo(pathIdx);
+                    }, 50);
+                }
+            } else {
+                document.getElementById('start-path').disabled = false;
+                document.getElementById('cancel-path').disabled = true;
+                document.getElementById('stop-path').disabled = true;
+                document.getElementById('resume-path').disabled = true;
+                document.getElementById('curr-point').innerText = "";
+                document.getElementById('curr-pos').innerHTML = "";
+                if (circle !== null) {
+                    map.removeLayer(circle);
+                }
+                if (marker !== null) {
+                    map.removeLayer(marker);
+                }
+                pathIdx = 0;
+            }
+        }
+        moveTo(pathIdx);
+    }
+
+    function cancelDrive() {
+        cancelDriving = true;
+        pathIdx = 0;
+    }
+
+    function stopDriving() {
+        keepDriving = !keepDriving;
+        document.getElementById('stop-path').disabled = true;
+        document.getElementById('resume-path').disabled = false;
+    }
+
+    function resumeDriving() {
+        keepDriving = !keepDriving;
+        drive();
+        document.getElementById('stop-path').disabled = false;
+        document.getElementById('resume-path').disabled = true;
+    }
+
+    window.onload = () => {
+        document.getElementById('point-card').innerText = `${latlngs.length} points.`;
+    };
+
+</script>
+
+</body>
+</html>
