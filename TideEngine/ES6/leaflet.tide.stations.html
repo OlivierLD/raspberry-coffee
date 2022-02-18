@@ -83,11 +83,13 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
             <!--div id="mapid" style="width: 1200px; height: 800px;"></div-->
             <div id="mapid" style="width: 1200px; height: 600px;"></div>
         </td>
-        <td valign="top" style="text-align: right;">
-            <div id="curr-pos"></div>
+        <td valign="top">
+            <div id="curr-pos" style="min-height: 40px; text-align: right;"></div>
+            <small>Choose your station, hit the button</small>
             <div id="station-list-div" style="margin-top: 10px;">
                 <select id="station-list" style="max-width: 200px;"></select>
-                <button onclick="go();" title="Click to go">Go!</button>            
+                <button onclick="go(PAN);" title="Click to pan">Pan</button>            
+                <button onclick="go(FLY);" title="Click to fly">Fly</button>            
             </div>
         </td>
     </tr>
@@ -95,7 +97,10 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
 
 <script>
 
-function go() {
+const FLY = 1;
+const PAN = 2;
+// On button click
+function go(mode) {
     let stationName = document.getElementById("station-list").value; // From the list
     let station = tideEngine.default.findTideStation(stationName, THE_YEAR);
     if (station !== null) {
@@ -108,7 +113,14 @@ function go() {
         | - map.setView(new L.LatLng(40.737, -73.923), 8);
         | - map.flyTo(new L.LatLng(40.737, -73.923));
         */
-        map.panTo(new L.LatLng(station.latitude, station.longitude));
+        if (mode === FLY) {
+            map.flyTo(new L.LatLng(station.latitude, station.longitude));
+        } else {
+            map.panTo(new L.LatLng(station.latitude, station.longitude));
+        }
+
+    } else {
+        connsole.log(`Oops. Station ${stationName} not found.`);
     }
 }
 
@@ -132,7 +144,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(map);
 
 // map.setView([0, 0], 3);
-map.setView([47.5, -3.0], 8);
+map.setView([47.5, -3.0], 6);
 
 map.addEventListener('mousemove', (event) => {
     // let lat = Math.round(event.latlng.lat * 100000) / 100000;
