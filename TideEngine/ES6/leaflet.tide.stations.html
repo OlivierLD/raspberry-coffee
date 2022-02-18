@@ -52,26 +52,31 @@ Object.keys(tideStations).sort().forEach(station => {
                         tideEngine.decToSex(tideStations[station].longitude, 'EW')} \n`; 
 });
 listContent += "</pre>";
-// document.getElementById('station-list').innerHTML = listContent;
+
+// Populate a drop-down list
+let selectList = document.getElementById('station-list');
+while (selectList.length > 0) {
+    selectList.remove(0);
+}
+Object.keys(tideStations).sort().forEach(station => {
+    let el = document.createElement("option");
+    el.textContent = decodeURIComponent(station); 
+    el.value = station;
+    selectList.appendChild(el);
+});
 
 // Expose outside the module, functions, variables, etc.
 window.tideStations = tideStations;
+window.tideEngine = tideEngine;
+window.THE_YEAR = THE_YEAR;
 
 console.log("Done with inner Module");
 
     </script>
 </head>
 <body style='font-family: "Source Code Pro", "Courier New", Helvetica, Geneva; font-weight: bold;'>
-
+<h2>Tide Stations</h2>    
 OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leaflet">leafletjs.com</a>
-
-<!--
- | Try
- | - map.panTo(new L.LatLng(40.737, -73.923));
- | - map.setView(new L.LatLng(40.737, -73.923), 8);
- | - map.flyTo(new L.LatLng(40.737, -73.923));
- +-->
-
 <table>
     <tr>
         <td valign="top">
@@ -80,30 +85,31 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
         </td>
         <td valign="top" style="text-align: right;">
             <div id="curr-pos"></div>
+            <div id="station-list-div" style="margin-top: 10px;">
+                <select id="station-list" style="max-width: 200px;"></select>
+                <button onclick="go();" title="Click to go">Go!</button>            
+            </div>
         </td>
     </tr>
 </table>
 
 <script>
 
-function decToSex(val, ns_ew) {
-    let absVal = Math.abs(val);
-    let intValue = Math.floor(absVal);
-    let dec = absVal - intValue;
-    let i = intValue;
-    dec *= 60;
-    let min = dec.toFixed(4);
-    while (min.length < 7) {
-        min = '0' + min;
+function go() {
+    let stationName = document.getElementById("station-list").value; // From the list
+    let station = tideEngine.default.findTideStation(stationName, THE_YEAR);
+    if (station !== null) {
+        console.log(`${stationName} was found: ${decodeURIComponent(station.fullName)}`);
+        console.log(`Base height: ${station.baseHeight} ${station.unit}`);
+        console.log(`Pos: ${station.latitude} ${station.longitude}`);
+        /*
+        | Try
+        | - map.panTo(new L.LatLng(40.737, -73.923));
+        | - map.setView(new L.LatLng(40.737, -73.923), 8);
+        | - map.flyTo(new L.LatLng(40.737, -73.923));
+        */
+        map.panTo(new L.LatLng(station.latitude, station.longitude));
     }
-    let s = i + "°" + min + "'";
-
-    if (val < 0) {
-        s += (ns_ew === 'NS' ? 'S' : 'W');
-    } else {
-        s += (ns_ew === 'NS' ? 'N' : 'E');
-    }
-    return s;
 }
 
 let map = L.map('mapid'); // .setView([51.505, -0.09], 13);
@@ -139,7 +145,7 @@ map.addEventListener('mousemove', (event) => {
     while (lng < -180) {
         lng += 360;
     }
-    document.getElementById('curr-pos').innerHTML = `${decToSex(lat, "NS")}<br/>${decToSex(lng, "EW")}`;
+    document.getElementById('curr-pos').innerHTML = `${tideEngine.decToSex(lat, "NS")}<br/>${tideEngine.decToSex(lng, "EW")}`;
 });
 
 window.onload = () => {
