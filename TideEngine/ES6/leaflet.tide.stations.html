@@ -17,6 +17,37 @@
     <!-- link rel="icon" type="image/ico" href="icons/hammerhead.02.ico" -->
     <link rel="icon" type="image/png" href="./wave.02.jpeg">
 
+    <style type="text/css">
+.dialog-header {
+    width: 103%;
+    margin-left: -16px;
+    margin-top: -16px;
+    padding: 10px;
+    font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    background-color: silver;
+}
+
+.dialog-header-close {
+    margin-left: 10px;
+    float: right;
+}
+.dialog-header-close:hover {
+  color: cyan;
+  cursor: pointer;
+}
+
+dialog {
+    border-radius: 5px;
+    border: 2px solid navy;
+}        
+dialog#generated-curve-dialog {
+    z-index: 500;
+    min-width: 400px;
+    min-height: 300px;
+}
+    </style>
     <!--
     <link rel="stylesheet" href="leaflet/leaflet.css" />
     <script src="leaflet/leaflet.js"></script>
@@ -75,6 +106,18 @@ console.log("Done with inner Module");
     </script>
 </head>
 <body style='font-family: "Source Code Pro", "Courier New", Helvetica, Geneva; font-weight: bold;'>
+
+<dialog id="generated-curve-dialog">
+    <div class="dialog-header">
+        <span>Status</span>
+        <span class="dialog-header-close" onclick="closeGeneratedDialog();">&times</span>
+    </div>
+    <div style="text-align: left; max-height: 300px; overflow-y: scroll;">
+        <pre><span id="generated-graph">Soon!</span></pre> <!-- This contains the curve -->
+    </div>
+</dialog>    
+    
+
 <h2>Tide Stations</h2>    
 OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leaflet">leafletjs.com</a>
 <table>
@@ -85,7 +128,7 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
         </td>
         <td valign="top">
             <div id="curr-pos" style="min-height: 40px; text-align: right;"></div>
-            <small>Choose your station, hit the button</small>
+            <small>Choose your station, hit a button</small>
             <div id="station-list-div" style="margin-top: 10px;">
                 <select id="station-list" style="max-width: 200px;"></select>
                 <button onclick="go(PAN);" title="Click to pan">Pan</button>            
@@ -96,6 +139,16 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
 </table>
 
 <script>
+
+// Show/Hide generated graphics dialog
+function showGeneratedDialog() {
+    let codeDialog = document.getElementById("generated-curve-dialog");
+    codeDialog.show();
+}
+function closeGeneratedDialog() {
+    let codeDialog = document.getElementById("generated-curve-dialog");
+    codeDialog.close();    
+}
 
 const FLY = 1;
 const PAN = 2;
@@ -115,7 +168,7 @@ function go(mode) {
         */
         if (mode === FLY) {
             map.flyTo(new L.LatLng(station.latitude, station.longitude));
-        } else {
+        } else {  // PAN
             map.panTo(new L.LatLng(station.latitude, station.longitude));
         }
 
@@ -161,12 +214,21 @@ map.addEventListener('mousemove', (event) => {
 });
 
 window.onload = () => {
-    // document.getElementById('point-card').innerText = `${latlngs.length} points.`;
     console.log("Data loaded!");
     Object.keys(tideStations).sort().forEach(station => {
-        L.marker([tideStations[station].latitude, tideStations[station].longitude])
+        let stationObj = tideStations[station];
+        let popupContent = `<b>${decodeURIComponent(station)}</b><br/>`;
+        if (stationObj.tideStation) {
+            popupContent += `Base Height: ${stationObj.baseHeight.toFixed(2)} ${stationObj.unit}<br/>`;
+            popupContent += "Tide Station<br/>";
+        } else {
+            popupContent += "Current Station<br/>";
+        }
+        popupContent += '<a href="#" onclick="showGeneratedDialog();">Current Status</a>';
+
+        L.marker([stationObj.latitude, stationObj.longitude])
             .addTo(map)
-            .bindPopup(`<b>${decodeURIComponent(station)}</b><br/>Base Height: ${tideStations[station].baseHeight.toFixed(2)} ${tideStations[station].unit}<br/><a href="#" onclick="alert('Soon.');">Current Status</a>`)
+            .bindPopup(popupContent)
             .bindTooltip(`${decodeURIComponent(station)}`);                                
     });
     console.log("Markers loaded!");
