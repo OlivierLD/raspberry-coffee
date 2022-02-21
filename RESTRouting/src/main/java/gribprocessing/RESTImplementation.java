@@ -158,7 +158,7 @@ public class RESTImplementation {
 							String gribFileName = "grib.grb";
 							System.out.println(String.format(" >> Will pull new GRIB %s into %s", gribFileName, dir));
 							String generatedGRIBRequest = GRIBUtils.generateGRIBRequest(gribRequest.request);
-							System.out.println(String.format("Generated GRIB Request:", generatedGRIBRequest));
+							System.out.println(String.format("Generated GRIB Request: %s", generatedGRIBRequest));
 							GRIBUtils.getGRIB(generatedGRIBRequest, dir, gribFileName, verbose);
 							gribURL = new File(dir, gribFileName).toURI().toURL();
 						} catch (Exception ex) {
