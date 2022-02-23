@@ -163,7 +163,11 @@ function getCurveData(station) {
     let now = new Date().toLocaleString('en-US', { timeZone: station.timeZone });
     let zonedNow = new Date(now);
 
-    console.log(`Calculation for ${dateFmt.formatDate(zonedNow, 'd-M-Y H:i:s')} (${station.timeZone})`);
+    console.log(`Calculation started for ${dateFmt.formatDate(zonedNow, 'd-M-Y H:i')} (${station.timeZone})`);
+    // buildSiteConstSpeed, fixedForYear ?
+    // let siteCoeff = station.harmonicFixedForYear === undefined ?
+    //                     tideEngine.default.buildSiteConstSpeed() :
+    //                     station.harmonics; // station.harmonicFixedForYear === THE_YEAR
     let siteCoeff = tideEngine.default.buildSiteConstSpeed();
     let utcJan1st = Date.UTC(THE_YEAR, 0, 1); // , 0, 0, 0, 0, 0));
 
@@ -187,6 +191,7 @@ function getCurveData(station) {
     console.log(`For ${station.timeZone}, Jan1st = ${jan1st.getTime()}, now = ${zonedNow.getTime()}`);
 
     let wh = tideEngine.default.getWaterHeight(zonedNow, jan1st, station, siteCoeff);
+    let whNow = wh;
     // console.log("Here.");
 
     // Extra: Calculate WH for the whole day, each minute. And tide table.
@@ -194,7 +199,7 @@ function getCurveData(station) {
     zonedNow.setMinutes(0);
     zonedNow.setSeconds(0);
     zonedNow.setMilliseconds(0);
-    console.log(`Starting calculation at ${zonedNow}`);
+    console.log(`Starting tide curve calculation at ${zonedNow}`);
     const ONE_MINUTE = 1000 * 60;
     let tideData = [];
     let tideTable = [];
@@ -203,7 +208,9 @@ function getCurveData(station) {
 
     for (let i=0; i<=(60 * 24); i++) {
         wh = tideEngine.default.getWaterHeight(zonedNow, jan1st, station, siteCoeff);
-        // console.log(`WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`);
+        if (i < 5) {
+            console.log(`WH in ${decodeURIComponent(station.fullName)} on ${zonedNow}: ${wh.toFixed(3)} ${station.unit}`);
+        }
         tideData.push({at: zonedNow, wh: wh, unit: station.unit});
         if (goingUp !== null) {
             if (goingUp) { // Rising
@@ -228,7 +235,7 @@ function getCurveData(station) {
     console.log("Calculation completed.");
     return {
         now: now,
-        wh: wh,
+        wh: whNow,
         tideTable: tideTable,
         tideData: tideData
     };
@@ -242,7 +249,7 @@ function showGeneratedDialog(station) {
     if (tideStation !== null && tideStation.tideStation) { // Then calculate curve
         console.log(`Calculating tide curve for [${decodeURIComponent(station)}]`);
         let data = getCurveData(tideStation);
-        console.log("Done");
+        console.log("CurveData Done");
         // Example: 
         // console.log(`${data.tideTable[0].type}: at ${dateFmt.formatDate(data.tideTable[0].at, 'd-m-y H:m')}, ${data.tideTable[0].wh} ${data.tideTable[0].unit}`)
         data.tideTable.forEach(line => {
@@ -273,6 +280,8 @@ function showGeneratedDialog(station) {
             x.push(X);
             y.push(Y);
         });
+        minY -= 0.2; // Slack below
+        maxY += 0.2; // Slack above
         let currentDate = ((new Date(data.now).getTime() / 1000) - origin) / 3600; // in hours
         // console.log(`Now:${currentDate}`);
         let graphData = {
@@ -312,7 +321,7 @@ function showGeneratedDialog(station) {
 			]
 		};
         graph.data = graphData;
-        graph.label = `WH at ${data.now}, ${data.wh.toFixed(2)} ${tideStation.displayUnit}`;
+        graph.label = `WH at ${dateFmt.formatDate(new Date(data.now), 'd-M-y H:i')}, ${data.wh.toFixed(2)} ${tideStation.displayUnit}`;
         graph.repaint();
         document.getElementById("station-name").innerText = decodeURIComponent(station);
     }

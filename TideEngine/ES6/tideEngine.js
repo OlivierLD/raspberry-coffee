@@ -58,6 +58,7 @@ let tideComputer = {
     },
     // TODO The reload!! Duplicate the maps. See harmonicFixedForYear.
     buildSiteConstSpeed: () => {
+
         let coeffMap = constituents.default["constSpeedMap"];
         let coeffKeys = Object.keys(coeffMap);
 
@@ -94,22 +95,28 @@ let tideComputer = {
             }
         }
         if (ts !== null) { // Fix coeffs
+            // console.log(`Year requested: ${year}, harmonicFixedForYear: ${ts.harmonicFixedForYear}`);
             let harmonics = ts.harmonics;
-            harmonics.forEach(harm => {
-                if (harm.name !== "x") {
-                    let amplitudeFix = getAmplitudeFix(constituents.default["constSpeedMap"],
-                                                       year,
-                                                       harm.name);
-                    let epochFix = getEpochFix(constituents.default["constSpeedMap"],
-                                               year,
-                                               harm.name);
-                    let originalAmplitude = harm.amplitude;
-                    let originalEpoch = harm.epoch * COEFF_FOR_EPOCH;
+            // TODO Check condition below...
+            if (ts.harmonicFixedForYear === undefined || ts.harmonicFixedForYear !== year) {
+                    harmonics.forEach(harm => {
+                    if (harm.name !== "x") {
+                        let amplitudeFix = getAmplitudeFix(constituents.default["constSpeedMap"],
+                                                        year,
+                                                        harm.name);
+                        let epochFix = getEpochFix(constituents.default["constSpeedMap"],
+                                                year,
+                                                harm.name);
+                        let originalAmplitude = harm.amplitude;
+                        let originalEpoch = harm.epoch * COEFF_FOR_EPOCH;
 
-                    harm.amplitude = originalAmplitude * amplitudeFix;
-                    harm.epoch = originalEpoch - epochFix;
-                }
-            });
+                        harm.amplitude = originalAmplitude * amplitudeFix;
+                        harm.epoch = originalEpoch - epochFix;
+                    }
+                });
+            } else {
+                console.log(`Harmonics fixed for year ${ts.harmonicFixedForYear}`);
+            }
             ts.harmonicFixedForYear = year;
         }
         return ts;
