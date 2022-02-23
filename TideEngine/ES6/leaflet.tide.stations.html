@@ -117,13 +117,15 @@ console.log("Done with inner Module");
     </div>
     <div style="text-align: left; max-height: 300px; overflow-y: scroll;">
         <span id="generated-graph">
-            <div>Tide Graph</div>
+            <div id="station-name">Tide Graph</div>
             <graph-display id="tide-graph-01"
                            tabindex="-1"
                            class=""
                            width="450"
                            height="200"
                            padding="5"
+                           hgrid="0:1"
+                           vgrid="0:3"
                            value="null"
                            label="Tide Curve"
                            title="Tide Curve"></graph-display>
@@ -254,8 +256,15 @@ function showGeneratedDialog(station) {
         let maxX = NaN;
         let minY = NaN;
         let maxY = NaN;
+        let origin = NaN;
         data.tideData.forEach(td => {
-            let X = td.at.getTime();
+            let X = td.at.getTime() / 1000; // hours in sesonds.
+            if (isNaN(origin)) {
+                origin = X;
+            }
+            X -= origin; // 86400: 24 h
+            X /= 3600; // In hours
+            // console.log(`X:${X}`);
             let Y = td.wh;
             minX = isNaN(minX) ? X : Math.min(minX, X);
             maxX = isNaN(maxX) ? X : Math.max(maxX, X);
@@ -264,7 +273,8 @@ function showGeneratedDialog(station) {
             x.push(X);
             y.push(Y);
         });
-
+        let currentDate = ((new Date(data.now).getTime() / 1000) - origin) / 3600; // in hours
+        // console.log(`Now:${currentDate}`);
         let graphData = {
 			withGrid: true,
 			withXLabels: false,
@@ -296,14 +306,15 @@ function showGeneratedDialog(station) {
                     lineColor: 'white',
                     fillColor: null,
                     thickness: 2,
-                    x: [ new Date(data.now).getTime(), new Date(data.now).getTime() ],
+                    x: [ currentDate, currentDate ],
                     values: [ minY, maxY ]
                 }
 			]
 		};
         graph.data = graphData;
+        graph.label = `WH at ${data.now}, ${data.wh.toFixed(2)} ${tideStation.displayUnit}`;
         graph.repaint();
-
+        document.getElementById("station-name").innerText = decodeURIComponent(station);
     }
     graphDialog.show();
 }
@@ -374,7 +385,9 @@ map.addEventListener('mousemove', (event) => {
     while (lng < -180) {
         lng += 360;
     }
-    document.getElementById('curr-pos').innerHTML = `${tideEngine.decToSex(lat, "NS")}<br/>${tideEngine.decToSex(lng, "EW")}`;
+    if (tideEngine) {
+        document.getElementById('curr-pos').innerHTML = `${tideEngine.decToSex(lat, "NS")}<br/>${tideEngine.decToSex(lng, "EW")}`;
+    }
 });
 
 window.onload = () => {
