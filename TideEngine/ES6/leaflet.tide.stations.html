@@ -112,7 +112,7 @@ console.log("Done with inner Module");
 
 <dialog id="generated-curve-dialog">
     <div class="dialog-header">
-        <span>Status</span>
+        <span>Tide Curve</span>
         <span class="dialog-header-close" onclick="closeGeneratedDialog();">&times</span>
     </div>
     <div style="text-align: left; max-height: 300px; overflow-y: scroll;">
@@ -129,6 +129,7 @@ console.log("Done with inner Module");
                            value="null"
                            label="Tide Curve"
                            title="Tide Curve"></graph-display>
+            <div id="tide-table" style="max-height: 60px; overflow-y: scroll;"></div>
         </div>
     </div>
 </dialog>    
@@ -252,9 +253,12 @@ function showGeneratedDialog(station) {
         console.log("CurveData Done");
         // Example: 
         // console.log(`${data.tideTable[0].type}: at ${dateFmt.formatDate(data.tideTable[0].at, 'd-m-y H:m')}, ${data.tideTable[0].wh} ${data.tideTable[0].unit}`)
+        let tableContent = "<pre>";
         data.tideTable.forEach(line => {
             console.log(`${line.type}: at ${dateFmt.formatDate(line.at, 'd-m-y H:m')}, ${line.wh} ${line.unit}`);
+            tableContent += (`${line.type}: at ${dateFmt.formatDate(line.at, 'd-m-y H:m')}, ${line.wh.toFixed(2)} ${line.unit}\n`);
         });
+        tableContent += "</pre>";
         // TODO Draw the graph.
         let graph = document.getElementById("tide-graph-01");
         let x = [];
@@ -324,6 +328,7 @@ function showGeneratedDialog(station) {
         graph.label = `WH at ${dateFmt.formatDate(new Date(data.now), 'd-M-y H:i')}, ${data.wh.toFixed(2)} ${tideStation.displayUnit}`;
         graph.repaint();
         document.getElementById("station-name").innerText = decodeURIComponent(station);
+        document.getElementById("tide-table").innerHTML = tableContent;
     }
     graphDialog.show();
 }
