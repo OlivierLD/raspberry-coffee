@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
 <!--
- | Requires the leafletjs resources to be in a "leaflet" directory under "web".
- | Available from http://leafletjs.com/
+ | leafletjs available from http://leafletjs.com/
  | Tutorials and examples at https://leafletjs.com/examples.html
- | Note: No native way to change orientation
  +-->
 <head>
 
@@ -152,6 +150,14 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
             <div style="margin-top: 5px;">
                 <button onclick="go(PAN);" title="Click to pan">Pan</button>            
                 <button onclick="go(FLY);" title="Click to fly">Fly</button>            
+            </div>
+            <hr/>
+            <div id="search-zone">
+                <input type="text" placeholder="Search Station..." id="search-field">
+                <button id="search-button" onclick="searchStation();" title="Search Station...">🔎</button>
+                <br/>
+                <div id="found-stations" style="max-height: 200px; overflow-y: scroll;">
+                </div>
             </div>
         </td>
     </tr>
@@ -406,6 +412,43 @@ map.addEventListener('mousemove', (event) => {
     }
 });
 
+function panToStation(stationFulllName) {
+    document.getElementById("station-list").value = stationFulllName;
+    go(PAN);
+}
+
+function produceSearchList(pattern) {
+    document.getElementById("found-stations").innerHTML = '';
+
+    let foundStation = [];
+    Object.keys(tideStations).forEach(station => {
+        let stationObj = tideStations[station];
+        if (decodeURIComponent(stationObj.fullName).toUpperCase().includes(pattern.toUpperCase())) {
+            foundStation.push(stationObj); 
+        }
+    });
+    console.log("Found.");
+    if (foundStation.length > 0) {
+        let foundContent = '<pre>';
+        foundStation.forEach(found => {
+            foundContent += `<a href="#" onclick="panToStation('${found.fullName}');">${decodeURIComponent(found.fullName)}</a>\n`;
+        });
+        foundContent += '</pre>';
+        document.getElementById("found-stations").innerHTML = foundContent;
+    } else {
+        alert(`No station found for ${pattern}`);
+    }
+}
+
+function searchStation() {
+    let valueToLookFor = document.getElementById("search-field").value;
+    if (valueToLookFor.trim().length > 0) {
+        produceSearchList(valueToLookFor);
+    } else {
+        alert("Nothing to look for...");
+    }
+}
+
 window.onload = () => {
     console.log("Data loaded!");
     Object.keys(tideStations).sort().forEach(station => {
@@ -425,6 +468,15 @@ window.onload = () => {
             .bindTooltip(`${decodeURIComponent(station)}`);                                
     });
     console.log("Markers loaded!");
+
+    let searchField = document.getElementById("search-field");
+    let searchButton = document.getElementById("search-button");
+    searchField.addEventListener("keyup", e => {
+        if (e.keyCode === 13) { // CR
+            e.preventDefault();
+            searchButton.click();
+        }
+    });
 };
 
 </script>

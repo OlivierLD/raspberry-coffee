@@ -1,12 +1,15 @@
 # ES6 Tide Engine, WiP (big time).
-This is a tentative, the Java version remains the reference.
+This is a tentative, the Java version remains the reference.  
+It could also look more like an exercise...  
+The data files are (very) big, there are more than 4000 stations to deal with... But we want to see if it is feasible.  
+Then we would see if that is any useful.
 
 ---
 **First thing to do, once**:   
 Unzip the file `json/json.zip` in the directory it is in. You should end up with a structure like
 ```
- +- ES6
- | +- json
+ +-+- ES6
+ | +-+- json
  | | +- constituents.js
  | | +- stations.js
  | +- tideEngine.js
@@ -51,4 +54,4 @@ More to come about Java...
 
 ---
 
-TODO: Data management in ES6, on any **TimeZone** (not Time Offset).
+TODO: Data management in ES6, on any **TimeZone** (_not_ Time Offset).
