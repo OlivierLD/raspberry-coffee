@@ -167,7 +167,6 @@ if [[ "${SERVER_FLAVOR}" != "none" ]]; then
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dautobind=false"
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.rest=false"
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
-    JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${HTTP_PORT}"
     JAVA_OPTIONS="${JAVA_OPTIONS} -Dstatic.docs=/"
     # JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.super.verbose=true"

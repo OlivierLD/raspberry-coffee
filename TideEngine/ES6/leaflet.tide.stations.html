@@ -3,6 +3,8 @@
 <!--
  | leafletjs available from http://leafletjs.com/
  | Tutorials and examples at https://leafletjs.com/examples.html
+ |
+ | This uses ES6 features, like modules, and others.
  +-->
 <head>
 
@@ -60,7 +62,7 @@ button.search-item {
     border: 0.5px solid silver;
 }
     </style>
-    <!--
+    <!-- 
     <link rel="stylesheet" href="leaflet/leaflet.css" />
     <script src="leaflet/leaflet.js"></script>
     -->
@@ -75,7 +77,7 @@ button.search-item {
     <script type="module" src="./webcomponents/GraphDisplay.js"></script>
 
     <script type="module">
-import * as tideEngine from './tideEngine.js';
+import * as tideEngine from './tideEngine.js'; // this one itself imports the json/js data files.
 
 // Adding features to the Date object.
 import * as dateFmt from './date.proto.js';
@@ -493,6 +495,7 @@ window.onload = () => {
     });
     console.log("Markers loaded!");
 
+    // Set action on [Return] on the searh field.
     let searchField = document.getElementById("search-field");
     let searchButton = document.getElementById("search-button");
     searchField.addEventListener("keyup", e => {

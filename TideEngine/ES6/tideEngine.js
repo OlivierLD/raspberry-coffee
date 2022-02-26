@@ -1,4 +1,4 @@
-// Load the data
+// Load the data. These are big files.
 import * as constituents from './json/constituents.js';
 import * as stations from './json/stations.js';
 
@@ -51,12 +51,16 @@ function getEpochFix(constMap, year, name) {
     return 0;
 }
 
+/**
+ * The heart of the whole thing.
+ * Exported at the end.
+ */
 let tideComputer = {
 
     getStations: () => {
         return stations.default.stations;
     },
-    // TODO The reload!! Duplicate the maps. See harmonicFixedForYear.
+    // TODO Manage the reload? Duplicate the maps? See harmonicFixedForYear. Look for 'harmonicFixedForYear' below.
     buildSiteConstSpeed: () => {
 
         let coeffMap = constituents.default["constSpeedMap"];
@@ -72,7 +76,7 @@ let tideComputer = {
         });
         return siteConstSpeed;
     },
-    findTideStation: (stationName, year) => {
+    findTideStation: (stationName, year) => { // also fixex the coefficients for the given year.
         // Try full match
         let ts = null;
         let keys = Object.keys(tideStations);
@@ -84,7 +88,7 @@ let tideComputer = {
             }
         }
         if (ts === null) {
-            // Try partial match
+            // Try first partial match
             for (let i = 0; i < keyLen; i++) {
                 if (keys[i].toLowerCase().includes(stationName.toLowerCase())) {
                     ts = tideStations[keys[i]];
@@ -102,11 +106,11 @@ let tideComputer = {
                     harmonics.forEach(harm => {
                     if (harm.name !== "x") {
                         let amplitudeFix = getAmplitudeFix(constituents.default["constSpeedMap"],
-                                                        year,
-                                                        harm.name);
+                                                           year,
+                                                           harm.name);
                         let epochFix = getEpochFix(constituents.default["constSpeedMap"],
-                                                year,
-                                                harm.name);
+                                                   year,
+                                                   harm.name);
                         let originalAmplitude = harm.amplitude;
                         let originalEpoch = harm.epoch * COEFF_FOR_EPOCH;
 
@@ -115,7 +119,7 @@ let tideComputer = {
                     }
                 });
             } else {
-                console.log(`Harmonics fixed for year ${ts.harmonicFixedForYear}`);
+                console.log(`Harmonics already fixed for year ${ts.harmonicFixedForYear}`);
             }
             ts.harmonicFixedForYear = year;
         }
@@ -147,7 +151,7 @@ let tideComputer = {
                 }
             }
             if (stationHarmonicCoeff === null) {
-                // Oooch!
+                // Oooch! TODO Honk.
             }
             let cs = constSpeed[k];
             let addition = (stationHarmonicCoeff.amplitude * Math.cos(cs.coeffValue * timeOffset - stationHarmonicCoeff.epoch));
@@ -160,6 +164,15 @@ let tideComputer = {
     }
 };
 
+/**
+ * Utility function.
+ * Decimal degrees to degrees, decimal minutes (2 decimal places).
+ * If ns_ew is provided ("ES" or "NS"), E, W, N, S will be used as prefixes
+ * If ns_ew is not provided, result will be signed.
+ * @param {float} val, the value to convert 
+ * @param {string} ns_ew, optional
+ * @returns string. The converted value.
+ */
 export function decToSex(val, ns_ew) {
     let absVal = Math.abs(val);
     let intValue = Math.floor(absVal);
@@ -168,7 +181,7 @@ export function decToSex(val, ns_ew) {
     dec *= 60; //    let s = i + "°" + dec.toFixed(2) + "'";
     //    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
   
-    let s = "";
+    let s = ""; // sign
   
     if (ns_ew !== undefined) {
       if (val < 0) {
