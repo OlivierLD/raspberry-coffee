@@ -442,15 +442,19 @@ function produceSearchList(pattern) {
     let foundStation = [];
     Object.keys(tideStations).forEach(station => {
         let stationObj = tideStations[station];
+        let foundOne = false;
         // Look for partial match
         if (decodeURIComponent(stationObj.fullName).toUpperCase().includes(pattern.toUpperCase())) {
+            foundOne = true;
             foundStation.push(stationObj); 
         }
-        // Add regex match
-        let regexPattern =  new RegExp(pattern, 'gi');
-        let match = regexPattern.test(decodeURIComponent(stationObj.fullName));
-        if (match) {
-            foundStation.push(stationObj); 
+        // Add regex match if not found above
+        if (!foundOne) {
+            let regexPattern =  new RegExp(pattern, 'gi');
+            let match = regexPattern.test(decodeURIComponent(stationObj.fullName));
+            if (match) {
+                foundStation.push(stationObj); 
+            }
         }
     });
     console.log("Found.");
@@ -460,7 +464,7 @@ function produceSearchList(pattern) {
     if (foundStation.length > 0) {
         foundContent += '<ul>';
         foundStation.forEach(found => {
-            foundContent += `<li><a href="#" onclick="panToStation('${found.fullName}');">${decodeURIComponent(found.fullName)}</a></li>\n`;
+            foundContent += `<li><a href="#" onclick="panToStation('${found.fullName}');" title="Click to go to&#13; ${decodeURIComponent(found.fullName)}">${decodeURIComponent(found.fullName)}</a></li>\n`;
         });
         foundContent += '</ul>';
         document.getElementById("found-stations").innerHTML = foundContent;
