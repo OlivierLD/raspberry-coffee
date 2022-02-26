@@ -169,7 +169,7 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
             </div>
             <hr/>
             <div id="search-zone">
-                <input type="text" class="search-item" placeholder="Search Stations..." id="search-field" title="Enter filter on station name">
+                <input type="text" class="search-item" placeholder="Search Stations..." id="search-field" title="Enter filter on station name.&#13;Supports RegExp.">
                 <button class="search-item" id="clear-search-button" onclick="clearSearch();" title="Clear Search...">&times;</button>
                 <button class="search-item" id="search-button" onclick="searchStation();" title="Search Stations...">🔎</button>
                 <br/>
@@ -442,7 +442,14 @@ function produceSearchList(pattern) {
     let foundStation = [];
     Object.keys(tideStations).forEach(station => {
         let stationObj = tideStations[station];
+        // Look for partial match
         if (decodeURIComponent(stationObj.fullName).toUpperCase().includes(pattern.toUpperCase())) {
+            foundStation.push(stationObj); 
+        }
+        // Add regex match
+        let regexPattern =  new RegExp(pattern, 'gi');
+        let match = regexPattern.test(decodeURIComponent(stationObj.fullName));
+        if (match) {
             foundStation.push(stationObj); 
         }
     });
@@ -495,7 +502,7 @@ window.onload = () => {
     });
     console.log("Markers loaded!");
 
-    // Set action on [Return] on the searh field.
+    // Set action on [Return] on the search field.
     let searchField = document.getElementById("search-field");
     let searchButton = document.getElementById("search-button");
     searchField.addEventListener("keyup", e => {
