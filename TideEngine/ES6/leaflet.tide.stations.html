@@ -45,6 +45,18 @@ dialog#generated-curve-dialog {
     min-width: 400px;
     min-height: 300px;
 }
+
+.search-item {
+    height: 22px;
+    margin-right: 0;
+    border-radius: 0;
+}
+button.search-item {
+    margin-left: -10px;
+    min-width: 28px;
+    height: 28px;
+    border: 0.5px solid silver;
+}
     </style>
     <!--
     <link rel="stylesheet" href="leaflet/leaflet.css" />
@@ -153,9 +165,11 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
             </div>
             <hr/>
             <div id="search-zone">
-                <input type="text" placeholder="Search Station..." id="search-field">
-                <button id="search-button" onclick="searchStation();" title="Search Station...">🔎</button>
+                <input type="text" class="search-item" placeholder="Search Stations..." id="search-field" title="Enter filter on station name">
+                <button class="search-item" id="clear-search-button" onclick="clearSearch();" title="Clear Search...">&times;</button>
+                <button class="search-item" id="search-button" onclick="searchStation();" title="Search Stations...">🔎</button>
                 <br/>
+                <div id="nb-found-stations" style="margin-top: 10px;"></div>
                 <div id="found-stations" style="max-height: 200px; overflow-y: scroll;">
                 </div>
             </div>
@@ -419,6 +433,7 @@ function panToStation(stationFulllName) {
 
 function produceSearchList(pattern) {
     document.getElementById("found-stations").innerHTML = '';
+    document.getElementById("nb-found-stations").innerHTML = '';
 
     let foundStation = [];
     Object.keys(tideStations).forEach(station => {
@@ -428,16 +443,23 @@ function produceSearchList(pattern) {
         }
     });
     console.log("Found.");
+    let nbFoundContent = `<small>${foundStation.length} station${foundStation.length > 1 ? 's' : ''} found for '${pattern}'</small>\n`;
+    document.getElementById("nb-found-stations").innerHTML = nbFoundContent;
+    let foundContent = '';
     if (foundStation.length > 0) {
-        let foundContent = '<pre>';
+        foundContent += '<ul>';
         foundStation.forEach(found => {
-            foundContent += `<a href="#" onclick="panToStation('${found.fullName}');">${decodeURIComponent(found.fullName)}</a>\n`;
+            foundContent += `<li><a href="#" onclick="panToStation('${found.fullName}');">${decodeURIComponent(found.fullName)}</a></li>\n`;
         });
-        foundContent += '</pre>';
+        foundContent += '</ul>';
         document.getElementById("found-stations").innerHTML = foundContent;
-    } else {
-        alert(`No station found for ${pattern}`);
+    // } else {
+    //     alert(`No station found for ${pattern}`);
     }
+}
+
+function clearSearch() {
+    document.getElementById("search-field").value = '';
 }
 
 function searchStation() {
@@ -445,7 +467,7 @@ function searchStation() {
     if (valueToLookFor.trim().length > 0) {
         produceSearchList(valueToLookFor);
     } else {
-        alert("Nothing to look for...");
+        console.log("Nothing to look for...");
     }
 }
 
