@@ -33,8 +33,8 @@ $ docker system prune
 #### To get started...
 After installing Docker, try this:
 ```
- $ docker run hello-world
- $ docker run docker/whalesay cowsay Hello there!
+ $ [sudo] docker run hello-world
+ $ [sudo] docker run docker/whalesay cowsay Hello there!
 ```
 This would tell you if your installation was successful.
 
