@@ -121,7 +121,7 @@ topEl.textContent = "Select Station:";
 topEl.value = "0";
 selectList.appendChild(topEl);
 
-Object.keys(tideStations).sort().forEach(station => {
+Object.keys(tideStations).sort((a, b) => Intl.Collator().compare(decodeURIComponent(a), decodeURIComponent(b))).forEach(station => {
     let el = document.createElement("option");
     el.textContent = decodeURIComponent(station); 
     el.value = station;

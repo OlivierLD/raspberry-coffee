@@ -221,6 +221,7 @@ The expected file is on your machine, named `tide.pdf`.
 
 
 ### TODO
+- Move web pages and scripts to ES6 (remove JQuery) 
 - Swing Implementation
     - See project `olivsoft-swing`
 - Android Implementation, etc.
