@@ -185,8 +185,7 @@ OpenSource JavaScript map API at <a href="https://leafletjs.com/" target="leafle
             </div>
             <hr/>
             <div id="search-zone">
-                <input type="text" class="search-item" placeholder="Search Stations..." id="search-field" title="Enter filter on station name.&#13;Supports RegExp.">
-                <button class="search-item" id="clear-search-button" onclick="clearSearch();" title="Clear Search...">&times;</button>
+                <input type="search" class="search-item" placeholder="Search Stations..." id="search-field" title="Enter filter on station name.&#13;Supports RegExp.">
                 <button class="search-item" id="search-button" onclick="searchStation();" title="Search Stations...">🔎</button>
                 <br/>
                 <div id="nb-found-stations" style="margin-top: 10px;"></div>
@@ -489,9 +488,9 @@ function produceSearchList(pattern) {
     }
 }
 
-function clearSearch() {
-    document.getElementById("search-field").value = '';
-}
+// function clearSearch() {
+//     document.getElementById("search-field").value = '';
+// }
 
 function searchStation() {
     let valueToLookFor = document.getElementById("search-field").value;

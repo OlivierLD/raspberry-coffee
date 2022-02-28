@@ -6,9 +6,10 @@ ARG no_proxy=""
 #ARG https_proxy="http://www-proxy.us.oracle.com:80"
 #ARG no_proxy=""
 #
-FROM debian
+# The :buster is option. But bullseye may have some security issues (when downloading the image)
+FROM debian:buster
 #
-# To run on a laptop - not necessaritly on an RPi (hence the default-jdk below)
+# To run on a laptop - not necessarily on an RPi (hence the default-jdk below)
 # Demos the NavServer (Tide, Almanac, Weather faxes, etc)
 # Clones the repo and recompiles everything.
 # proxy settings are passed as ARGs
