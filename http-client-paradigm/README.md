@@ -15,7 +15,7 @@ This comes from the following observation:
 > also running on a JVM, like Java, Scala, Kotlin, Clojure, Groovy, JRuby...
 > Find a list at <https://en.wikipedia.org/wiki/List_of_JVM_languages>.
 >
-> > This very interesting to see how the JVM gave birth to so many languages.
+> > This is very interesting to see how the JVM gave birth to so many languages.
 > > Implementing those languages comes down to implementing a compiler, that turns the
 > > specific code _into JVM byte code_ (for that, see [ASM](https://asm.ow2.io/), for example). 
 > > **Running** the code is the job of the JVM. 
@@ -23,7 +23,7 @@ This comes from the following observation:
 > Beside the elegance of their syntax and grammar, JVM-based languages come with the JVM features for free,
 > like distributed implementation, inter-JVMs communication, remote debugging, and way more.
 > 
-> _But_ writing those drivers takes time, and sometimes too long...
+> _But_ writing those drivers takes time, and sometimes too much time...
 > 
 > The thing is that it is quite easy to expose the features of the manufacturer-provided-Python-drivers through
 > protocols like HTTP and TCP (we will show how, look into `src/main/python-skeletons`). HTTP supports REST, that indeed
@@ -31,6 +31,8 @@ This comes from the following observation:
 > 
 > And this is not only applicable to JVM-based languages, we will also show how to do this from NodeJS (through Node-RED).
 > > Note: There is actually now a JVM implementation of NodeJS, see [GraalVM](https://www.graalvm.org/).
+> > > Do keep an eye on GraalVM, the number of languages it supports keeps growing.   
+> > > March 2022: They also support Python...
 > 
 > All this would fit perfectly in an Internet-Of-Things (IoT) environment. It can also be virtualized, with techniques like
 > Docker and Kubernetes.
@@ -57,7 +59,7 @@ such as:
 - [Processing](https://pi.processing.org/get-started/), Java 8 based.
 - [Node-RED](https://nodered.org/docs/getting-started/), NodeJS based (JavaScript, ES6)
 - Arduino (running - in this example - on an M5Stick-C)
-- C - Make a simple HTTP Request ib C
+- C - Make a simple HTTP Request in C
 - Python. A REST Client written for Python3, to close the loop.
 
 > Note: To install extra languages, [SDKMAN](https://sdkman.io/install) is the easiest, whatever your system is.
@@ -238,5 +240,10 @@ src/main/C>
 
 # WiP
 There is a TCP server and client cooking...
+
+- <https://docs.python.org/3/library/socketserver.html>
+- <https://realpython.com/python-sockets/?__s=zpz9ztquqgtc4pwfsubh>
+
+
 
 ---
