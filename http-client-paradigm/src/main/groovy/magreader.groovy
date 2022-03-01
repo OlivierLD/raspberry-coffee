@@ -3,7 +3,7 @@ import org.json.JSONObject
 
 /**
  * Calculate heading, pitch and roll
- * based on magnetometer data
+ * based on magnetometer data read from a REST Request.
  */
 def calculate = { Double x, Double y, Double z ->
     def heading = Math.toDegrees(Math.atan2(y, x))

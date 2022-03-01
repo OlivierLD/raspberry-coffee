@@ -6,6 +6,10 @@
 #include <netinet/in.h> /* struct sockaddr_in, struct sockaddr */
 #include <netdb.h>      /* struct hostent, gethostbyname */
 
+/**
+ * This is an HTTP Client, using REST request to read data from a magnetometer.
+ * The server connected to the magnetometer happens to be written in Python
+ */
 void error(const char *msg) {
     perror(msg);
     exit(0);

@@ -4,6 +4,10 @@ import http.client.HTTPClient
 import org.json.JSONObject
 import kotlin.math.atan2
 
+/**
+ * This is an HTTP Client, using REST request to read data from a magnetometer.
+ * The server connected to the magnetometer happens to be written in Python
+ */
 object KtMagReader {
 
     data class MagData(val heading: Double, val pitch: Double, val roll: Double)

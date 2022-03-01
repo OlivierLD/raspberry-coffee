@@ -1,6 +1,10 @@
 import http.client.HTTPClient;
 import org.json.JSONObject;
 
+/**
+ * This is an HTTP Client, using REST request to read data from a magnetometer.
+ * The server connected to the magnetometer happens to be written in Python
+ */
 
 final String restUrl = "http://192.168.42.9:8080/lis3mdl/cache";
 
