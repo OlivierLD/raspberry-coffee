@@ -393,7 +393,8 @@ do
 			  echo -e "----------- NavServer HTTP Ports ---------"
 				for pid in `cat km`
 				do
-				  netstat -vanp tcp | grep ${pid} | grep LISTEN
+				  # netstat -vanp tcp | grep ${pid} | grep LISTEN
+				  netstat -tunap | grep ${HTTP_PORT}
 				done
 			  echo -e "------------------------------------------"
 				rm km
