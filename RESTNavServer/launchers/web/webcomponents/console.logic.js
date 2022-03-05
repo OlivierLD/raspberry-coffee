@@ -645,6 +645,14 @@ function astroCallback(data) {
 	// if (data.moonPhase !== undefined) {
 	// 	console.log("Moon Phase:", data.moonPhase);
 	// }
+	let displayRawDataCheckBox = document.getElementById('raw-data-switch');
+	if (displayRawDataCheckBox) {
+		if (displayRawDataCheckBox.checked) {
+			// console.log('Displaying raw Data');
+			let dataDiv = document.getElementById('raw-data-div');
+			dataDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+		}
+	}
 
 	let worldMap = document.getElementById('world-map-01');
 	let skyMap = document.getElementById('sky-map-01');
@@ -1185,6 +1193,10 @@ function geoLocationStart() { // Deprecated
 
 let switchBoatData = (value) => {
 	document.getElementById('boat-data-button').style.display = value ? 'block' : 'none';
+};
+
+let switchRawData = (value) => {
+	document.getElementById('raw-data-div').style.display = value ? 'block' : 'none';
 };
 
 window.onload = () => {

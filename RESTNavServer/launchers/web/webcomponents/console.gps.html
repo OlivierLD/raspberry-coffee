@@ -307,7 +307,7 @@
             if (gpsPosition !== undefined) {
                 // let gpsDate = new Date(val);
                 let gpsDate = gpsTime;
-                /* global getAstroData DURATION_FMT withWanderingBodies withStars astroCallback */
+                /* global getAstroData DURATION_FMT withWanderingBodies withStars astroCallback (declared in console.logic.js) */
                 getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
             }
         });
@@ -1238,6 +1238,18 @@
            color: red;
            padding-left: 10px;
          }
+
+         div#raw-data-div {
+            display: none; 
+            border: 1px solid silver; 
+            border-radius: 10px; 
+            width: 95%; 
+            margin: auto; 
+            min-height: 100px; 
+            max-height: 150px; 
+            overflow-y: scroll;
+            padding-bottom: 10px;
+         }
     </style>
 
     <!-- All logic in the script below -->
@@ -1455,7 +1467,7 @@
 </div>
 
 <!-- the tabs -->
-<div class="tab" style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto;">
+<div class="tab" style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto auto;">
     <button class="tablinks active" onclick="openTab(event, 0);">Overview</button>
     <button class="tablinks" onclick="openTab(event, 1);">Raw Data</button>
     <button class="tablinks" onclick="openTab(event, 2);">Visible Sky</button>
@@ -1466,6 +1478,13 @@
     <div class="mess" style="vertical-align: middle;">With Boat Data</div>
     <label class="rocker rocker-tiny">
         <input type="checkbox" onchange="switchBoatData(this.checked);" id="boat-data-switch">
+        <span class="switch-left">Yes</span>
+        <span class="switch-right">No</span>
+    </label>
+
+    <div class="mess" style="vertical-align: middle;">With Raw Data</div>
+    <label class="rocker rocker-tiny">
+        <input type="checkbox" onchange="switchRawData(this.checked);" id="raw-data-switch">
         <span class="switch-left">Yes</span>
         <span class="switch-right">No</span>
     </label>
@@ -2762,6 +2781,7 @@
     </div>
 </div> <!-- End of Tab 6 -->
 
+<div id="raw-data-div"> <!-- Raw Astro Data placeholder --> </div>
 
 </body>
 </html>
