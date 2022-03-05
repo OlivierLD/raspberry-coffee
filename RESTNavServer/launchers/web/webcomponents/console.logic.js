@@ -93,10 +93,10 @@ function collapseExpandHeadsup() {
 	let slidersElem = document.getElementById("heads-up-sliders");
 	if (headsUpExpanded) {
 		slidersElem.style.display = 'none';
-		cmdElem.innerText = "+ Head up";
+		cmdElem.innerHTML = "&#9658; Head up";
 	} else {
 		slidersElem.style.display = 'block';
-		cmdElem.innerText = "- Head up";
+		cmdElem.innerHTML = "&#9660; Head up";
 	}
 	headsUpExpanded = !headsUpExpanded;
 }
