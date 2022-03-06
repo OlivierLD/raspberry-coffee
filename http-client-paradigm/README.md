@@ -1,4 +1,4 @@
-# HTTP Clients
+# HTTP and TCP Clients
 ### To get to sensor data, in (almost) any language.
 
 This comes from the following observation:
@@ -238,12 +238,12 @@ Content-Type: application/json
 src/main/C> 
 ```
 
-# WiP
-There is a TCP server and client cooking...
+# See also
+There are TCP server and client skeletons...  
+See in `src/main/python_skeletons`, `server/tcp_server_skeleton.py` and `client/tcp_client_skeleton.py`.
 
+And some links:
 - <https://docs.python.org/3/library/socketserver.html>
 - <https://realpython.com/python-sockets/?__s=zpz9ztquqgtc4pwfsubh>
-
-
 
 ---

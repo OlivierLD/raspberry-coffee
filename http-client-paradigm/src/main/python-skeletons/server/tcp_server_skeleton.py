@@ -2,14 +2,18 @@ import socket
 import sys
 import traceback
 
-machine_name = "127.0.0.1"
-tcp_port = 7002
-verbose = False
+machine_name: str = "127.0.0.1"
+tcp_port: int = 7002
+verbose: bool = False
 
-MACHINE_NAME_PRM_PREFIX = "--machine-name:"
-PORT_PRM_PREFIX = "--port:"
-VERBOSE_PREFIX = "--verbose:"
+CHUNK_SIZE: int = 1024  # To be re-used by the client.
 
+MACHINE_NAME_PRM_PREFIX: str = "--machine-name:"
+PORT_PRM_PREFIX: str = "--port:"
+VERBOSE_PREFIX: str = "--verbose:"
+
+print("Usage is:")
+print(f"python3 {__file__} [{MACHINE_NAME_PRM_PREFIX}127.0.0.1] [{PORT_PRM_PREFIX}7002] [{VERBOSE_PREFIX}true|false]\n")
 
 if len(sys.argv) > 0:  # Script name + X args
     for arg in sys.argv:
@@ -22,42 +26,58 @@ if len(sys.argv) > 0:  # Script name + X args
 
 
 # Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Bind the socket to the port
-server_address = (machine_name, tcp_port)
-print ('starting up on %s port %s' % server_address)
+server_address: tuple = (machine_name, tcp_port)
+print('starting up on %s port %s' % server_address)
 sock.bind(server_address)
 
 # Listen for incoming connections
 sock.listen(1)
 
-nb_messages = 0
-
-while True:
+nb_messages: int = 0
+keep_listening: bool = True
+connection: socket.socket
+client_address: tuple
+while keep_listening:
     # Wait for a connection
     print('waiting for a connection (one at a time)')
-    connection, client_address = sock.accept()
-
     try:
-        print('connection from', client_address)
-
-        # Receive the data in small chunks and retransmit it
-        while True:
-            data = connection.recv(1024) # Must be in sync with the client (same buffer size)
-            print('received "%s"' % data.decode('utf-8'))
-            if data:
-                print('Replying to the client')
-                nb_messages += 1
-                response = "#{}: {}".format(str(nb_messages), data.decode('utf-8'))
-                connection.sendall(response.encode('utf-8'))
-            else:
-                print('no more data from', client_address)
-                break
-    except:
-        print("Exception!")
-        traceback.print_exc(file=sys.stdout)
-    finally:
-        # Clean up the connection
-        print("\tClosing client connection for ", client_address)
-        connection.close()
+        connection, client_address = sock.accept()
+        print(f"connection:{type(connection)}, client_address:{type(client_address)}")
+    except KeyboardInterrupt as ki:
+        print("\nUser interrupted")
+        keep_listening = False
+    if keep_listening:
+        try:
+            print('connection from', client_address)
+            # Receive the data in small chunks and retransmit it
+            while True:
+                try:
+                    data: bytes = connection.recv(CHUNK_SIZE)  # Must be in sync with the client (same buffer size)
+                    print('received "%s"' % data.decode('utf-8'))
+                    # print(f"received '{data}' ({type(data)})")
+                    if data:
+                        print('Replying to the client')
+                        nb_messages += 1
+                        response: str = "#{}: {}".format(str(nb_messages), data.decode('utf-8'))
+                        connection.sendall(response.encode('utf-8'))
+                    else:
+                        print('no more data from', client_address)
+                        break
+                except KeyboardInterrupt as ki:
+                    print("User interrupted")
+                    keep_listening = False
+                    break
+        except KeyboardInterrupt as ki_2:
+            print("\nUser interrupted")
+            keep_listening = False
+        except Exception as ex:
+            print("Exception!")
+            traceback.print_exc(file=sys.stdout)
+        finally:
+            # Clean up the connection
+            print("\tClosing client connection for ", client_address)
+            connection.close()
+print("TCP Server is now down. Bye.")

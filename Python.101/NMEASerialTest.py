@@ -14,7 +14,7 @@
 import serial
 from typing import Dict  # , List, Set, Tuple, Optional
 
-DEBUG = False
+DEBUG: bool = False
 
 #
 # Basic parsers, like placeholders.
@@ -45,7 +45,7 @@ def gsv_parser(sentence: str) -> Dict[str, str]:
     return {"gsv": sentence}
 
 
-NMEA_PARSER_DICT = {
+NMEA_PARSER_DICT: Dict = {
     "GLL": gll_parser,
     "GSA": gsa_parser,
     "RMC": rmc_parser,
