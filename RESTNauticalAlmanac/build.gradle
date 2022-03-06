@@ -28,6 +28,7 @@ dependencies {
   implementation project(':http-tiny-server')
   implementation project(':NMEA-multiplexer')
   implementation project(':AstroComputer')  // a git submodule
+  testImplementation 'junit:junit:4.13'
 }
 
 shadowJar {

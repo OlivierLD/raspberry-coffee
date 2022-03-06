@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import calc.GeomUtil;
 
@@ -1787,6 +1789,15 @@ public class StringParsers {
 	 */
 	public static long durationToDate(String duration, String tz)
 					throws RuntimeException {
+		// A RegEx
+		final String regex = "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})\\.(\\d{3})(.)$";
+		final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+		final Matcher matcher = pattern.matcher(duration);
+		if (!matcher.find()) {
+			// TODO Oops
+			System.out.println("Oops, no match.");
+		}
+
 		String yyyy = duration.substring(0, 4);
 		String mm = duration.substring(5, 7);
 		String dd = duration.substring(8, 10);
