@@ -2167,7 +2167,7 @@ public class RESTImplementation {
 				.setZ(epochAndZs[1].getZ());
 	}
 
-	private static class BodyAt {
+	public static class BodyAt {
 		long epoch;
 		double alt;
 		double z;
@@ -2183,7 +2183,15 @@ public class RESTImplementation {
 		return getSunDataForAllDay(lat, lng, step, now);
 	}
 
-	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step, Calendar when) {
+	/**
+	 *
+	 * @param lat
+	 * @param lng
+	 * @param step in minutes
+	 * @param when
+	 * @return
+	 */
+	public List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step, Calendar when) { // Made public for the tests to access it.
 
 //		System.out.println("\t\tgetSunDataForAllDay for " + when);
 

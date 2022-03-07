@@ -13,29 +13,21 @@ WITH_NOHUP=
 # Program parameters
 NAV_SERVER_EXTRA_OPTIONS=
 #
-if [[ $# -gt 0 ]]
-then
-	for prm in $*
-	do
+if [[ $# -gt 0 ]]; then
+	for prm in $*; do
 	  echo "Processing ${prm} ..."
-	  if [[ ${prm} == "--browser:"* ]]
-	  then
+	  if [[ ${prm} == "--browser:"* ]]; then
 	    LAUNCH_BROWSER=${prm#*:}
-	  elif [[ ${prm} == "--http-port:"* ]]
-	  then
+	  elif [[ ${prm} == "--http-port:"* ]]; then
 	    HTTP_PORT=${prm#*:}
-	  elif [[ ${prm} == "--nohup:"* ]]
-	  then
+	  elif [[ ${prm} == "--nohup:"* ]]; then
 	    WITH_NOHUP=${prm#*:}
-	  elif [[ ${prm} == "--proxy:"* ]]
-	  then
+	  elif [[ ${prm} == "--proxy:"* ]]; then
 	    WITH_PROXY=${prm#*:}
-	    if [[ "${WITH_PROXY}" == "Y" ]] || [[ "${WITH_PROXY}" == "y" ]]
-	    then
+	    if [[ "${WITH_PROXY}" == "Y" ]] || [[ "${WITH_PROXY}" == "y" ]]; then
 	      NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --proxy"
 	    fi
-	  elif [[ ${prm} == "--option:"* ]]
-	  then
+	  elif [[ ${prm} == "--option:"* ]]; then
 	    USER_OPTION=${prm#*:}
 	  else
 	    echo "Unsupported parameter ${prm}"
@@ -44,8 +36,7 @@ then
 fi
 #
 function openBrowser() {
-  if [[ `uname -a` == *Linux* ]]
-  then
+  if [[ $(uname -a) == *Linux* ]]; then
     sensible-browser "$1"
   else
     open "$1"  # Darwin
@@ -61,8 +52,7 @@ sleep 1
 #
 NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --http-port:${HTTP_PORT}"
 #
-while [[ "${GO}" == "true" ]]
-do
+while [[ "${GO}" == "true" ]]; do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
 	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y --http-port:9999"
@@ -110,8 +100,7 @@ do
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
 	echo -e "|  Q. Quit ❎                        |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
-	if [[ "${USER_OPTION}" != "" ]]
-	then
+	if [[ "${USER_OPTION}" != "" ]]; then
 	  echo -e "------------------------------"
 	  echo -e ">> Using option ${USER_OPTION}"
 	  echo -e "------------------------------"
@@ -157,16 +146,14 @@ do
 	  "1")
   	  PROP_FILE=nmea.mux.no.gps.yaml
   	  NOHUP=""
-  	  if [[ "${WITH_NOHUP}" == "Y" ]]
-  	  then
+  	  if [[ "${WITH_NOHUP}" == "Y" ]]; then
   	    NOHUP="nohup "
   	    echo -e ">> Will use nohup"
   	  else
   	    # Ask if nohup, just in this case
   	    echo -en " ==> Use nohup (y|n) ? > "
   	    read REPLY
-        if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]
-        then
+        if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]; then
           NOHUP="nohup "
           echo -e ">> Will use nohup"
         fi
@@ -176,8 +163,7 @@ do
 	    # screen -S navserver -dm "sleep 5; ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS}"
 	    # echo -e "A screen session 'navserver' started"
 	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
@@ -188,8 +174,7 @@ do
 	    PROP_FILE=nmea.mux.interactive.time.properties
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
@@ -208,8 +193,7 @@ do
 	    PROP_FILE=nmea.mux.gps.properties
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5   # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
@@ -220,8 +204,7 @@ do
 	    PROP_FILE=nmea.mux.no.gps.properties
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date --sun-flower ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    # openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
@@ -233,8 +216,7 @@ do
 	    PROP_FILE=nmea.mux.kayak.log.properties
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -245,8 +227,7 @@ do
 	    PROP_FILE=nmea.mux.driving.log.properties
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    # openBrowser "http://localhost:${HTTP_PORT}/web/googlemaps.driving.html"
@@ -260,8 +241,7 @@ do
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -274,8 +254,7 @@ do
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
 	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -288,8 +267,7 @@ do
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
 	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -302,8 +280,7 @@ do
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
 	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -316,8 +293,7 @@ do
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
 	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -330,8 +306,7 @@ do
 	    # NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO:2010-11"
 	    NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -342,8 +317,7 @@ do
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --proxy --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
@@ -354,8 +328,7 @@ do
   	  PROP_FILE=nmea.mux.2.serial.yaml
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
@@ -368,8 +341,7 @@ do
   	  PROP_FILE=nmea.mux.gps.ais.yaml
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]
-	    then
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/nmea/admin.html"
@@ -385,17 +357,19 @@ do
 	    echo -e "Nav Server processes:"
 	    ps -ef | grep navrest.NavServer | grep -v grep
 	    ps -ef | grep navrest.NavServer | grep -v grep | grep -v killns | awk '{ print $2 }' > km
-			NB_L=`cat km | wc -l`
-			if [[ ${NB_L} == 0 ]]
-			then
+			NB_L=$(cat km | wc -l)
+			if [[ ${NB_L} == 0 ]]; then
 			  echo -e "No NavServer process found."
 			else
 			  echo -e "----------- NavServer HTTP Ports ---------"
-				for pid in `cat km`
-				do
-				  # netstat -vanp tcp | grep ${pid} | grep LISTEN
+        if [[ $(uname -a) == *Linux* ]]; then
+          for pid in $(cat km); do
+            netstat -vanp tcp | grep ${pid} | grep LISTEN
+            # netstat -tunap | grep ${HTTP_PORT}
+          done
+				else
 				  netstat -tunap | grep ${HTTP_PORT}
-				done
+				fi
 			  echo -e "------------------------------------------"
 				rm km
 			fi
