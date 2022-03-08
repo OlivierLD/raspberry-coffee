@@ -363,12 +363,11 @@ while [[ "${GO}" == "true" ]]; do
 			else
 			  echo -e "----------- NavServer HTTP Ports ---------"
         if [[ $(uname -a) == *Linux* ]]; then
+            netstat -tunap | grep ${HTTP_PORT}
+				else
           for pid in $(cat km); do
             netstat -vanp tcp | grep ${pid} | grep LISTEN
-            # netstat -tunap | grep ${HTTP_PORT}
           done
-				else
-				  netstat -tunap | grep ${HTTP_PORT}
 				fi
 			  echo -e "------------------------------------------"
 				rm km
