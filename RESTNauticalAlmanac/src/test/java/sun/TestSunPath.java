@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestSunPath {
@@ -29,7 +30,8 @@ public class TestSunPath {
             RESTImplementation me = new RESTImplementation(null);
             List<RESTImplementation.BodyAt> sunPath = me.getSunDataForAllDay(lat, lng, 20, refDate);
             // See https://www.epochconverter.com/?source=searchbar&q=to+date
-            System.out.println("Yo!");
+            // System.out.println("Yo!");
+            assertTrue("Size should be 73", sunPath.size() == 73);
         } catch (Exception ex) {
             fail(ex.getMessage());
         }

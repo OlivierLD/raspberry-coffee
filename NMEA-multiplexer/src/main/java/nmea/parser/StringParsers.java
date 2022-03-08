@@ -1853,6 +1853,10 @@ public class StringParsers {
 							Integer.parseInt(mi),
 							Integer.parseInt(ss));
 			calendar.set(Calendar.MILLISECOND, milliSec);
+			if (false) {
+				Date date = calendar.getTime();
+				System.out.println(String.format(">> Date: %s", SDF_UTC.format(date)));
+			}
 		} catch (NumberFormatException nfe) {
 			throw new RuntimeException("durationToDate, for [" + duration + "] : " + nfe.getMessage());
 		}
