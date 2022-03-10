@@ -42,9 +42,9 @@ This would tell you if your installation was successful.
 This project also provides a script that will build pre-defined Docker images (different OS's, with various features).
 Look into the script, the images are defined by the files `*.Dockerfile`.
 
-Just run `image.builder.sh`:
+Just run `image.builder.sh` (may require a `sudo`...):
 ```
- $ ./image.builder.sh
+ $ [sudo] ./image.builder.sh
 +-------------- D O C K E R   I M A G E   B U I L D E R ---------------+
 +------------------- Build and run a docker image. --------------------+
 |  1. Nav Server, Debian                                               |

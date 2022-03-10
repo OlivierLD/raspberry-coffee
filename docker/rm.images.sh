@@ -66,3 +66,14 @@ do
 done
 rm images > /dev/null
 echo Done.
+
+#
+# Also try this:
+#
+# sudo su -
+#
+# docker stop $(docker ps -aq)
+# docker rm $(docker ps -aq)
+# docker rmi $(docker images -aq)
+# docker volume prune
+#

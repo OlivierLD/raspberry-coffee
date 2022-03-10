@@ -15,4 +15,7 @@ done
 rm containers > /dev/null
 echo Done.
 
+#
+# Also try this:
+# docker stop $(docker ps -aq)
 # docker rm $(docker ps -aq)
