@@ -329,7 +329,11 @@ public class SystemUtils {
             String[] hardwareData = getRPiHardwareRevision();
             if (hardwareData != null) {
                 if (USE_2022_DATA) {
-                    System.out.println(String.format("Running on:\nModel: %s\nPCB Rev: %s\nMemory: %s\nManufactured by: %s",
+                    System.out.println(String.format("Running on:\n" +
+                                    "Model:           %s\n" +
+                                    "PCB Rev:         %s\n" +
+                                    "Memory:          %s\n" +
+                                    "Manufactured by: %s",
                             hardwareData[MODEL_IDX],
                             hardwareData[PCB_REV_IDX],
                             hardwareData[MEMORY_IDX],
