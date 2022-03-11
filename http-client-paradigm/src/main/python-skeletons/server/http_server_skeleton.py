@@ -269,7 +269,7 @@ print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
 print("Try curl -v -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
-print("or  curl -v -X VIEW http://{}:{}{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number,
+print(" or curl -v -X VIEW http://{}:{}{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number,
                                                                                     PATH_PREFIX))
 #
 try:
@@ -277,4 +277,4 @@ try:
 except KeyboardInterrupt:
     print("\n\t\tUser interrupted (server.serve), exiting.")
     keep_looping = False
-    x.join()
+    x.join()  # x = threading.Thread(target=do_stuff)
