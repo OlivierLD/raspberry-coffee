@@ -202,50 +202,92 @@ public class SystemUtils {
         return getCommandResult(command).get(0);
     }
 
-    private final static Map<String, String[]> matrix = new HashMap<>();
     // Find official info at https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
+    // Also https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use
+    private final static Map<String, String[]> matrix = new HashMap<>();
     static { // Revision, Release Date, Model, PCB Revision, Memory, Notes
         matrix.put("Beta", new String[]{"Q1 2012", "B (Beta)", "?", "256 MB", "Beta Board"});
         matrix.put("0002", new String[]{"Q1 2012", "B", "1.0", "256 MB", ""});
         matrix.put("0003", new String[]{"Q3 2012", "B (ECN0001)", "1.0", "256 MB", "Fuses mod and D14 removed"});
-        matrix.put("0004", new String[]{"Q3 2012", "B", "2.0", "256 MB", "(Mfg by Sony)"});
+        matrix.put("0004", new String[]{"Q3 2012", "B", "2.0", "256 MB", "(Mfg by Sony UK)"});
         matrix.put("0005", new String[]{"Q4 2012", "B", "2.0", "256 MB", "(Mfg by Qisda)"});
         matrix.put("0006", new String[]{"Q4 2012", "B", "2.0", "256 MB", "(Mfg by Egoman)"});
         matrix.put("0007", new String[]{"Q1 2013", "A", "2.0", "256 MB", "(Mfg by Egoman)"});
-        matrix.put("0008", new String[]{"Q1 2013", "A", "2.0", "256 MB", "(Mfg by Sony)"});
+        matrix.put("0008", new String[]{"Q1 2013", "A", "2.0", "256 MB", "(Mfg by Sony UK)"});
         matrix.put("0009", new String[]{"Q1 2013", "A", "2.0", "256 MB", "(Mfg by Qisda)"});
         matrix.put("000d", new String[]{"Q4 2012", "B", "2.0", "512 MB", "(Mfg by Egoman)"});
-        matrix.put("000e", new String[]{"Q4 2012", "B", "2.0", "512 MB", "(Mfg by Sony)"});
+        matrix.put("000e", new String[]{"Q4 2012", "B", "2.0", "512 MB", "(Mfg by Sony UK)"});
         matrix.put("000f", new String[]{"Q4 2012", "B", "2.0", "512 MB", "(Mfg by Qisda)"});
-        matrix.put("0010", new String[]{"Q3 2014", "B+", "1.0", "512 MB", "(Mfg by Sony)"});
-        matrix.put("0011", new String[]{"Q2 2014", "Compute Module 1", "1.0", "512 MB", "(Mfg by Sony)"});
-        matrix.put("0012", new String[]{"Q4 2014", "A+", "1.1", "256 MB", "(Mfg by Sony)"});
+        matrix.put("0010", new String[]{"Q3 2014", "B+", "1.0", "512 MB", "(Mfg by Sony UK)"});
+        matrix.put("0011", new String[]{"Q2 2014", "Compute Module 1", "1.0", "512 MB", "(Mfg by Sony UK)"});
+        matrix.put("0012", new String[]{"Q4 2014", "A+", "1.1", "256 MB", "(Mfg by Sony UK)"});
         matrix.put("0013", new String[]{"Q1 2015", "B+", "1.2", "512 MB", "(Mfg by Embest)"});
         matrix.put("0014", new String[]{"Q2 2014", "Compute Module 1", "1.0", "512 MB", "(Mfg by Embest)"});
         matrix.put("0015", new String[]{"?", "A+", "1.1", "256 MB / 512 MB", "(Mfg by Embest)"});
-        matrix.put("a01040", new String[]{"Unknown", "2 Model B", "1.0", "1 GB", "(Mfg by Sony)"});
-        matrix.put("a01041", new String[]{"Q1 2015", "2 Model B", "1.1", "1 GB", "(Mfg by Sony)"});
+        matrix.put("a01040", new String[]{"Unknown", "2 Model B", "1.0", "1 GB", "(Mfg by Sony UK)"});
+        matrix.put("a01041", new String[]{"Q1 2015", "2 Model B", "1.1", "1 GB", "(Mfg by Sony UK)"});
         matrix.put("a21041", new String[]{"Q1 2015", "2 Model B", "1.1", "1 GB", "(Mfg by Embest)"});
         matrix.put("a22042", new String[]{"Q3 2016", "2 Model B (with BCM2837)", "1.2", "1 GB", "(Mfg by Embest)"});
-        matrix.put("900021", new String[]{"Q3 2016", "A+", "1.1", "512 MB", "(Mfg by Sony)"});
-        matrix.put("900032", new String[]{"Q2 2016?", "B+", "1.2", "512 MB", "(Mfg by Sony)"});
-        matrix.put("900092", new String[]{"Q4 2015", "Zero", "1.2", "512 MB", "(Mfg by Sony)"});
-        matrix.put("900093", new String[]{"Q2 2016", "Zero", "1.3", "512 MB", "(Mfg by Sony)"});
+        matrix.put("900021", new String[]{"Q3 2016", "A+", "1.1", "512 MB", "(Mfg by Sony UK)"});
+        matrix.put("900032", new String[]{"Q2 2016?", "B+", "1.2", "512 MB", "(Mfg by Sony UK)"});
+        matrix.put("900092", new String[]{"Q4 2015", "Zero", "1.2", "512 MB", "(Mfg by Sony UK)"});
+        matrix.put("900093", new String[]{"Q2 2016", "Zero", "1.3", "512 MB", "(Mfg by Sony UK)"});
         matrix.put("920093", new String[]{"Q4 2016?", "Zero", "1.3", "512 MB", "(Mfg by Embest)"});
-        matrix.put("9000c1", new String[]{"Q1 2017", "Zero W", "1.1", "512 MB", "(Mfg by Sony)"});
-        matrix.put("a02082", new String[]{"Q1 2016", "3 Model B", "1.2", "1 GB", "(Mfg by Sony)"});
-        matrix.put("a020a0", new String[]{"Q1 2017", "Compute Module 3 (and CM3 Lite)", "1.0", "1 GB", "(Mfg by Sony)"});
+        matrix.put("9000c1", new String[]{"Q1 2017", "Zero W", "1.1", "512 MB", "(Mfg by Sony UK)"});
+        matrix.put("a02082", new String[]{"Q1 2016", "3 Model B", "1.2", "1 GB", "(Mfg by Sony UK)"});
+        matrix.put("a020a0", new String[]{"Q1 2017", "Compute Module 3 (and CM3 Lite)", "1.0", "1 GB", "(Mfg by Sony UK)"});
         matrix.put("a22082", new String[]{"Q1 2016", "3 Model B", "1.2", "1 GB", "(Mfg by Embest)"});
         matrix.put("a32082", new String[]{"Q4 2016", "3 Model B", "1.2", "1 GB", "(Mfg by Sony Japan)"});
-        matrix.put("a020d3", new String[]{"Q1 2018", "3 Model B+", "1.3", "1 GB", "(Mfg by Sony)"});
-        matrix.put("9020e0", new String[]{"Q4 2018", "3 Model A+", "1.0", "512 MB", "(Mfg by Sony)"});
-        matrix.put("a02100", new String[]{"Q1 2019", "Compute Module 3+", "1.0", "1 GB", "(Mfg by Sony)"});
-        matrix.put("a03111", new String[]{"Q2 2019", "4 Model B", "1.1", "1 GB", "(Mfg by Sony)"});
-        matrix.put("b03111", new String[]{"Q2 2019", "4 Model B", "1.1", "2 GB", "(Mfg by Sony)"});
-        matrix.put("c03111", new String[]{"Q2 2019", "4 Model B", "1.1", "4 GB", "(Mfg by Sony)"});
-        matrix.put("c03112", new String[]{"-------", "4 Model B", "1.2", "4 GB", "(Mfg by Sony)"});
-        matrix.put("d03114", new String[]{"-------", "4 Model B", "1.4", "8 GB", "(Mfg by Sony)"});
-        matrix.put("c03130", new String[]{"-------", "Pi 400", "1.0", "4 GB", "(Mfg by Sony)"});
+        matrix.put("a020d3", new String[]{"Q1 2018", "3 Model B+", "1.3", "1 GB", "(Mfg by Sony UK)"});
+        matrix.put("9020e0", new String[]{"Q4 2018", "3 Model A+", "1.0", "512 MB", "(Mfg by Sony UK)"});
+        matrix.put("a02100", new String[]{"Q1 2019", "Compute Module 3+", "1.0", "1 GB", "(Mfg by Sony UK)"});
+        matrix.put("a03111", new String[]{"Q2 2019", "4 Model B", "1.1", "1 GB", "(Mfg by Sony UK)"});
+        matrix.put("b03111", new String[]{"Q2 2019", "4 Model B", "1.1", "2 GB", "(Mfg by Sony UK)"});
+        matrix.put("c03111", new String[]{"Q2 2019", "4 Model B", "1.1", "4 GB", "(Mfg by Sony UK)"});
+        matrix.put("c03112", new String[]{"-------", "4 Model B", "1.2", "4 GB", "(Mfg by Sony UK)"});
+        matrix.put("d03114", new String[]{"-------", "4 Model B", "1.4", "8 GB", "(Mfg by Sony UK)"});
+        matrix.put("c03130", new String[]{"-------", "Pi 400", "1.0", "4 GB", "(Mfg by Sony UK)"});
+    }
+
+    private final static Map<String, String[]> matrix2022 = new HashMap<>();
+    static { // Revision, Release Date, Model, PCB Revision, Memory, Notes
+        matrix2022.put("900021", new String[] { "-------", "A+", "1.1", "512MB", "Sony UK" });
+        matrix2022.put("900032", new String[] { "-------", "B+", "1.2", "512MB", "Sony UK" });
+        matrix2022.put("900092", new String[] { "-------", "Zero", "1.2", "512MB", "Sony UK" });
+        matrix2022.put("900093", new String[] { "-------", "Zero", "1.3", "512MB", "Sony UK" });
+        matrix2022.put("9000c1", new String[] { "-------", "Zero W", "1.1", "512MB", "Sony UK" });
+        matrix2022.put("9020e0", new String[] { "-------", "3A+", "1.0", "512MB", "Sony UK" });
+        matrix2022.put("920092", new String[] { "-------", "Zero", "1.2", "512MB", "Embest" });
+        matrix2022.put("920093", new String[] { "-------", "Zero", "1.3", "512MB", "Embest" });
+        matrix2022.put("900061", new String[] { "-------", "CM", "1.1", "512MB", "Sony UK" });
+        matrix2022.put("a01040", new String[] { "-------", "2B", "1.0", "1GB", "Sony UK" });
+        matrix2022.put("a01041", new String[] { "-------", "2B", "1.1", "1GB", "Sony UK" });
+        matrix2022.put("a02082", new String[] { "-------", "3B", "1.2", "1GB", "Sony UK" });
+        matrix2022.put("a020a0", new String[] { "-------", "CM3", "1.0", "1GB", "Sony UK" });
+        matrix2022.put("a020d3", new String[] { "-------", "3B+", "1.3", "1GB", "Sony UK" });
+        matrix2022.put("a02042", new String[] { "-------", "2B (with BCM2837)", "1.2", "1GB", "Sony UK" });
+        matrix2022.put("a21041", new String[] { "-------", "2B", "1.1", "1GB", "Embest" });
+        matrix2022.put("a22042", new String[] { "-------", "2B (with BCM2837)", "1.2", "1GB", "Embest" });
+        matrix2022.put("a22082", new String[] { "-------", "3B", "1.2", "1GB", "Embest" });
+        matrix2022.put("a220a0", new String[] { "-------", "CM3", "1.0", "1GB", "Embest" });
+        matrix2022.put("a32082", new String[] { "-------", "3B", "1.2", "1GB", "Sony Japan" });
+        matrix2022.put("a52082", new String[] { "-------", "3B", "1.2", "1GB", "Stadium" });
+        matrix2022.put("a22083", new String[] { "-------", "3B", "1.3", "1GB", "Embest" });
+        matrix2022.put("a02100", new String[] { "-------", "CM3+", "1.0", "1GB", "Sony UK" });
+        matrix2022.put("a03111", new String[] { "-------", "4B", "1.1", "1GB", "Sony UK" });
+        matrix2022.put("b03111", new String[] { "-------", "4B", "1.1", "2GB", "Sony UK" });
+        matrix2022.put("b03112", new String[] { "-------", "4B", "1.2", "2GB", "Sony UK" });
+        matrix2022.put("b03114", new String[] { "-------", "4B", "1.4", "2GB", "Sony UK" });
+        matrix2022.put("c03111", new String[] { "-------", "4B", "1.1", "4GB", "Sony UK" });
+        matrix2022.put("c03112", new String[] { "-------", "4B", "1.2", "4GB", "Sony UK" });
+        matrix2022.put("c03114", new String[] { "-------", "4B", "1.4", "4GB", "Sony UK" });
+        matrix2022.put("d03114", new String[] { "-------", "4B", "1.4", "8GB", "Sony UK" });
+        matrix2022.put("c03130", new String[] { "-------", "Pi 400", "1.0", "4GB", "Sony UK" });
+        matrix2022.put("a03140", new String[] { "-------", "CM4", "1.0", "1GB", "Sony UK" });
+        matrix2022.put("b03140", new String[] { "-------", "CM4", "1.0", "2GB", "Sony UK" });
+        matrix2022.put("c03140", new String[] { "-------", "CM4", "1.0", "4GB", "Sony UK" });
+        matrix2022.put("d03140", new String[] { "-------", "CM4", "1.0", "8GB", "Sony UK" });
+        matrix2022.put("902120", new String[] { "-------", "Zero 2 W", "1.0", "512MB", "Sony UK" });
     }
 
     public final static int RELEASE_IDX = 0;
@@ -254,12 +296,16 @@ public class SystemUtils {
     public final static int MEMORY_IDX = 3;
     public final static int NOTES_IDX = 4;
 
+    private final static boolean USE_2022_DATA = true;
+
     public static String[] getRPiHardwareRevision() throws Exception {
         String command = "cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}' | sed 's/^1000//'";
         List<String> commandResult = getCommandResult(command);
         if (commandResult.size() > 0) {
             String result = getCommandResult(command).get(0);
-            return matrix.get(result);
+            return USE_2022_DATA ?
+                    matrix2022.get(result) :
+                    matrix.get(result);
         } else {
             return null;
         }
@@ -282,12 +328,24 @@ public class SystemUtils {
         try {
             String[] hardwareData = getRPiHardwareRevision();
             if (hardwareData != null) {
-                System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
-                        hardwareData[MODEL_IDX],
-                        hardwareData[RELEASE_IDX],
-                        hardwareData[PCB_REV_IDX],
-                        hardwareData[MEMORY_IDX],
-                        hardwareData[NOTES_IDX]));
+                if (USE_2022_DATA) {
+                    System.out.println(String.format("Running on:\n" +
+                                    "          Model: %s\n" +
+                                    "        PCB Rev: %s\n" +
+                                    "         Memory: %s\n" +
+                                    "Manufactured by: %s",
+                            hardwareData[MODEL_IDX],
+                            hardwareData[PCB_REV_IDX],
+                            hardwareData[MEMORY_IDX],
+                            hardwareData[NOTES_IDX]));
+                } else {
+                    System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
+                            hardwareData[MODEL_IDX],
+                            hardwareData[RELEASE_IDX],
+                            hardwareData[PCB_REV_IDX],
+                            hardwareData[MEMORY_IDX],
+                            hardwareData[NOTES_IDX]));
+                }
                 System.out.println();
             } else {
                 System.out.println(String.format(">> No data for this platform. See source of %s", SystemUtils.class.getName()));
