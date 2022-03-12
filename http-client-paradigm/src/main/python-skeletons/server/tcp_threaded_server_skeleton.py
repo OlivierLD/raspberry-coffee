@@ -41,13 +41,21 @@ sock.listen(1)
 
 keep_listening: bool = True
 
+#
+# This is where you would implement something a bit smarter.
+#
+def server_business(data: bytes, mess_no: int) -> str:
+    return "#{}: {}".format(str(mess_no), data.decode('utf-8'))
 
+#
+# To be invoked in a thread
+#
 def manage_client(_connection: socket.socket, _client_address: tuple) -> None:
     global keep_listening
     nb_messages: int = 0
     try:
         print('connection from', _client_address)
-        # Receive the data in small chunks and retransmit it
+        # Receive the data in small chunks and retransmit them
         while True:
             try:
                 data: bytes = _connection.recv(CHUNK_SIZE)  # Must be in sync with the client (same buffer size)
@@ -57,7 +65,9 @@ def manage_client(_connection: socket.socket, _client_address: tuple) -> None:
                 if data:
                     print('Replying to the client')
                     nb_messages += 1
-                    response: str = "#{}: {}".format(str(nb_messages), data.decode('utf-8'))
+                    # This where you'd implement the feature(s) of your server.
+                    response: str = server_business(data, nb_messages)
+                    #
                     _connection.sendall(response.encode('utf-8'))
                 else:
                     print('no more data from', _client_address)
@@ -78,11 +88,12 @@ def manage_client(_connection: socket.socket, _client_address: tuple) -> None:
         _connection.close()
 
 
+connection: socket.socket
+client_address: tuple
+
 while keep_listening:
     # Wait for a connection
     print('waiting for a connection (multi-threaded)')
-    connection: socket.socket
-    client_address: tuple
     try:
         connection, client_address = sock.accept()
         print(f"connection:{type(connection)}, client_address:{type(client_address)}")

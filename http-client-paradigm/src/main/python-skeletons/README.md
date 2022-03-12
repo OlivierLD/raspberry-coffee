@@ -92,10 +92,15 @@ Try that:
 ```text
 $ python3 tcp_server_skeleton.py --machine-name:$(hostname -I) [ --port:7002 --verbose:true ]
 ```
+   or
+```text
+$ python3 tcp_threaded_server_skeleton.py --machine-name:$(hostname -I) [ --port:7002 --verbose:true ]
+```
 - from `src/main/python-skeletons/client` (even from another machine on the same network):
 ```text
 $ python3 tcp_client_skeleton.py --machine-name:$(hostname -I) [ --port:7002 --verbose:true ]
 ```
+  of course, the `--machine-name:` is the name of the **server** machine. 
 - Also works from Java (lucky me), see `utils.samples.tcp.clients.TCPEchoClient` in `common-utils`.
 
 # TODO
