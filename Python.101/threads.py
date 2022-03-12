@@ -17,6 +17,9 @@ def loop(name: str) -> None:
     print("End of loop in thread {}".format(name))
 
 
+#
+# Spawns 2 threads, Bim, and Paf.
+#
 if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(format=format, level=logging.INFO,
@@ -25,7 +28,8 @@ if __name__ == "__main__":
     logging.info("Main    : before creating thread")
     x = threading.Thread(target=thread_function, args=("Bim",))
     y = threading.Thread(target=loop, args=("Paf",))
-    logging.info("Main    : before running thread")
+
+    logging.info("Main    : before running thread (thread is a {})".format(type(x)))
     x.start()
     y.start()
     logging.info("Main    : wait for the thread to finish")

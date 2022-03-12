@@ -45,13 +45,16 @@ while keep_looping:
         keep_looping = False
     else:
         try:
-            # Send data
-            message: str = user_input  # 'This is the message.  It will be repeated.'
-            # print('sending "%s"' % message)
-            sock.sendall(message.encode('utf-8'))
-            # Look for the response
-            data: str = sock.recv(CHUNK_SIZE).decode("utf-8")
-            print(f"received '{data}' ({type(data)})")
+            if len(user_input) > 0:   # Message must not be empty. See server implementation.
+                # Send data
+                message: str = user_input  # 'This is the message.  It will be repeated.'
+                # print('sending "%s"' % message)
+                sock.sendall(message.encode('utf-8'))
+                # Look for the response
+                data: str = sock.recv(CHUNK_SIZE).decode("utf-8")
+                print(f"received '{data}' ({type(data)})")
+            else:
+                print("No empty message please.")
         except Exception as ex:
             print("Exception: {}".format(ex))
             traceback.print_exc(file=sys.stdout)

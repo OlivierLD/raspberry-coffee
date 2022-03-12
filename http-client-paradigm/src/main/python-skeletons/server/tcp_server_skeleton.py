@@ -56,7 +56,8 @@ while keep_listening:
             while True:
                 try:
                     data: bytes = connection.recv(CHUNK_SIZE)  # Must be in sync with the client (same buffer size)
-                    print('received "%s"' % data.decode('utf-8'))
+                    if len(data) > 0:
+                        print('received "%s"' % data.decode('utf-8'))
                     # print(f"received '{data}' ({type(data)})")
                     if data:
                         print('Replying to the client')
