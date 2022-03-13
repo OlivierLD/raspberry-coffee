@@ -50,10 +50,10 @@ client_name: str
 payload: dict
 
 
-def keep_receiving(socket: socket.socket) -> None:
+def keep_receiving(_socket: socket.socket) -> None:
     while keep_looping:
         # Wait for the response
-        data: str = socket.recv(CHUNK_SIZE).decode("utf-8")
+        data: str = _socket.recv(CHUNK_SIZE).decode("utf-8")
         #
         if verbose:
             print(f"\treceived '{data}' ({type(data)})")
