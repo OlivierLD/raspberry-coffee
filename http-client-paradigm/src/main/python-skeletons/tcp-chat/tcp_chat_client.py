@@ -112,23 +112,6 @@ while keep_looping:
                 if verbose:
                     print('\tsending "%s"' % message)
                 sock.sendall(message.encode('utf-8'))
-                #
-                # # Wait for the response
-                # data: str = sock.recv(CHUNK_SIZE).decode("utf-8")
-                # #
-                # if verbose:
-                #     print(f"\treceived '{data}' ({type(data)})")
-                # if len(data.strip()) > 0:
-                #     response: dict = json.loads(data)
-                #     # Process response here
-                #     if 'client-list' in response:
-                #         print(f"{len(response['client-list'])} Client(s):")
-                #         for i in range(len(response['client-list'])):
-                #             print(f"- Client [{response['client-list'][i]['name']}]")
-                #     else:  # Assume message
-                #         print(f"Message from {response['user']}: {response['message']}")
-                # else:
-                #     print("Received dummy ping...")
             else:
                 print("No empty message please.")
         except Exception as ex:

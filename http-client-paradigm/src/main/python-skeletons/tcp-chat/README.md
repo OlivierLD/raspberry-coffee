@@ -3,8 +3,8 @@
 
 This presents a multi-threaded server, and the corresponding client (several instances can be spawned, lucky us!).
 
-It is implemented only the basic features of a chat server.  
-You need the clients and the server to be on a network when they can see each other, obviously.
+It is implementing only the basic features of a chat server.  
+You need the clients and the server to be on a network where they can see each other, obviously.
 
 ### Get Started
 From one terminal, from one machine, start the chat server:
