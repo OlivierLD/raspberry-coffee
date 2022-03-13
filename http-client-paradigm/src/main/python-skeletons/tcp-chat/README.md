@@ -6,6 +6,17 @@ This presents a multi-threaded server, and the corresponding client (several ins
 It is implementing only the basic features of a chat server.  
 You need the clients and the server to be on a network where they can see each other, obviously.
 
+### Requirements
+Written for python3.  
+Required modules
+- `socket`
+- `sys`
+- `traceback`
+- `threading`
+- `json`
+
+Those modules should be available in python3, without having to install them.
+
 ### Get Started
 From one terminal, from one machine, start the chat server:
 ```text
