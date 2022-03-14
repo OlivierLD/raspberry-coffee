@@ -49,6 +49,9 @@ first_time: bool = True
 client_name: str
 payload: dict
 
+RED_ON: str = "\033[031m"
+RED_OFF: str = "\033[0m"
+
 
 def keep_receiving(_socket: socket.socket) -> None:
     while keep_looping:
@@ -65,7 +68,8 @@ def keep_receiving(_socket: socket.socket) -> None:
                 for i in range(len(response['client-list'])):
                     print(f"- Client [{response['client-list'][i]['name']}]")
             else:  # Assume message
-                print(f"Message from {response['user']}: {response['message']}")
+                "\033[031m" + "Hello" + "\033[0m"
+                print(f"{RED_ON} Message from {response['user']}: {response['message']} {RED_OFF}")
         else:
             print("Received dummy ping...")
 
