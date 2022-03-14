@@ -40,8 +40,15 @@ server_address: tuple = (machine_name, tcp_port)
 print('connecting to %s port %s' % server_address)
 sock.connect(server_address)
 print('...Connected')
-print("To exit, type Q, QUIT, or EXIT (lower or upper case)")
-print("To get the list of connected clients, type L (lower or upper case)")
+
+
+def help() -> None:
+    print("To exit, type Q, QUIT, or EXIT (lower or upper case)")
+    print("To get the list of connected clients, type L (lower or upper case)")
+    print("To see this message again, type H (lower or upper case)")
+
+
+help()
 
 keep_looping: bool = True
 first_time: bool = True
@@ -93,11 +100,15 @@ while keep_looping:
     else:
         try:
             if len(user_input) > 0:   # Message must not be empty. See server implementation.
+                do_send: bool = True
                 if user_input.upper() == 'L':
                     # Client list request
                     if verbose:
                         print("\tClient List Request sent")
                     payload = { 'user': client_name, 'request': 'ClientList' }
+                elif user_input.upper() == 'H':
+                    do_send = False
+                    help()
                 else:
                     message: str = user_input
                     dest_ok: bool = False
@@ -112,10 +123,11 @@ while keep_looping:
                     payload = { 'user': client_name, 'message': message, 'dest': dest_name }
                     if verbose:
                         print(f"\tPayload is a {type(payload)}")
-                message: str = json.dumps(payload)
-                if verbose:
-                    print('\tsending "%s"' % message)
-                sock.sendall(message.encode('utf-8'))
+                if do_send:
+                    message: str = json.dumps(payload)
+                    if verbose:
+                        print('\tsending "%s"' % message)
+                    sock.sendall(message.encode('utf-8'))
             else:
                 print("No empty message please.")
         except Exception as ex:
