@@ -97,7 +97,7 @@ def find_who(_conn: socket.socket) -> str:
     return who
 
 
-def remove_from_list(_conn: socket.socket) -> None:
+def remove_from_list(_conn: socket.socket) -> str:
     name_to_remove: str = None
     for i in range(0, len(connected_clients)):
         if connected_clients[i].get_connection() == _conn:
@@ -108,6 +108,8 @@ def remove_from_list(_conn: socket.socket) -> None:
             break
     if name_to_remove is None:
         print("Connection to remove was not found...")
+    return name_to_remove
+
 
 #
 # This is where you would implement something a bit smarter.
@@ -188,9 +190,9 @@ def manage_client(_connection: socket.socket, _client_address: tuple) -> None:
         traceback.print_exc(file=sys.stdout)
     finally:
         # Clean up the connection
-        print("\tClosing client connection for ", _client_address)
         # Remove from list
-        remove_from_list(_connection)
+        removed: str = remove_from_list(_connection)
+        print(f"\tClosing client connection for {_client_address} ({ removed if removed is not None else 'Not Found'})")
         _connection.close()
 
 
