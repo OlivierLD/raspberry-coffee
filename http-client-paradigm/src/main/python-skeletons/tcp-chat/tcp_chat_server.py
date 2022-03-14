@@ -50,6 +50,7 @@ class ConnectedClient:  # This could be a dict. This class is just another optio
 connected_clients: [ConnectedClient] = []
 
 
+# TODO Check unicity, or accept same name more than once?
 def register_client(name, conn, addr) -> None:
     if verbose:
         print(f"\tCheck if {name} is already in...")
@@ -81,10 +82,10 @@ keep_listening: bool = True
 
 
 def build_client_list() -> [dict]:
-    list: [dict] = []
+    client_list: [dict] = []
     for i in range(0, len(connected_clients)):
-        list.append({ 'name': connected_clients[i].get_name() })
-    return list
+        client_list.append({ 'name': connected_clients[i].get_name() })
+    return client_list
 
 
 def find_who(_conn: socket.socket) -> str:

@@ -32,10 +32,10 @@ From another terminal, on the same machine, or on another one on the same networ
 ```text
 $ python3 tcp_chat_client.py --machine-name:${SERVER_IP}
 ```
-Then one time only, you will be prompted for your name:
+Then one time only, you will be prompted for a user name:
 ```text
 Usage is:
-python3 /Users/olediour/repos/raspberry-coffee/http-client-paradigm/src/main/python-skeletons/tcp-chat/tcp_chat_client.py [--machine-name:127.0.0.1] [--port:7002] [--verbose:true|false]
+python3 tcp_chat_client.py [--machine-name:127.0.0.1] [--port:7002] [--verbose:true|false]
 	where --machine-name: and --port: must match the server's settings.
 
 connecting to 127.0.0.1 port 7002
