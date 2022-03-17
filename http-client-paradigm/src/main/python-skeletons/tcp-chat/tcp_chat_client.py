@@ -23,7 +23,7 @@ DEST_NAME_PROMPT: str = "Dest name> "
 
 
 print("Usage is:")
-print(f"python3 {__file__} [{MACHINE_NAME_PRM_PREFIX}127.0.0.1] [{PORT_PRM_PREFIX}7002] [{VERBOSE_PREFIX}true|false]")
+print(f"python3 {__file__} [{MACHINE_NAME_PRM_PREFIX}{machine_name}] [{PORT_PRM_PREFIX}{tcp_port}] [{VERBOSE_PREFIX}true|false]")
 print(f"\twhere {MACHINE_NAME_PRM_PREFIX} and {PORT_PRM_PREFIX} must match the server's settings.\n")
 
 if len(sys.argv) > 0:  # Script name + X args

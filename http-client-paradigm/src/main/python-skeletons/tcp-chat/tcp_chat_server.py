@@ -17,7 +17,7 @@ VERBOSE_PREFIX: str = "--verbose:"
 SEND_DUMMY_PING: bool = False
 
 print("Usage is:")
-print(f"python3 {sys.argv[0] if len(sys.argv) >= 0 else __file__} [{MACHINE_NAME_PRM_PREFIX}127.0.0.1] [{PORT_PRM_PREFIX}7002] [{VERBOSE_PREFIX}true|false]")
+print(f"python3 {sys.argv[0] if len(sys.argv) >= 0 else __file__} [{MACHINE_NAME_PRM_PREFIX}{machine_name}] [{PORT_PRM_PREFIX}{tcp_port}] [{VERBOSE_PREFIX}true|false]")
 print(f"  for [{MACHINE_NAME_PRM_PREFIX}], use the machine's IP or name if you want it to be accessible by other machines.\n")
 
 if len(sys.argv) > 0:  # Script name + X args
