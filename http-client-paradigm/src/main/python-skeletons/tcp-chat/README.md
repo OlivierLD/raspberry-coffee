@@ -1,4 +1,4 @@
-# TCP Chat Server, and Client
+# Python TCP Chat Server, and Client
 ## A working simple example.
 
 This presents a multi-threaded server, and the corresponding client (several client instances can be spawned, lucky us!).
