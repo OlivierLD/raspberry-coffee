@@ -7,7 +7,7 @@ It is implementing only the basic features of a chat server.
 You need the clients and the server to be on a network where they can see each other, obviously.
 
 ### Requirements
-Written for python3.  
+Written for python3. This should work everywhere Python3 runs.  
 Required modules
 - `socket`
 - `sys`
