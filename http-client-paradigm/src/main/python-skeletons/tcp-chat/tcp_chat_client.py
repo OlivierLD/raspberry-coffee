@@ -17,6 +17,11 @@ MACHINE_NAME_PRM_PREFIX: str = "--machine-name:"
 PORT_PRM_PREFIX: str = "--port:"
 VERBOSE_PREFIX: str = "--verbose:"
 
+YOU_SAY_PROMPT: str =   "You say  > "
+YOUR_NAME_PROMPT: str = "Your name> "
+DEST_NAME_PROMPT: str = "Dest name> "
+
+
 print("Usage is:")
 print(f"python3 {__file__} [{MACHINE_NAME_PRM_PREFIX}127.0.0.1] [{PORT_PRM_PREFIX}7002] [{VERBOSE_PREFIX}true|false]")
 print(f"\twhere {MACHINE_NAME_PRM_PREFIX} and {PORT_PRM_PREFIX} must match the server's settings.\n")
@@ -77,6 +82,8 @@ def keep_receiving(_socket: socket.socket) -> None:
             else:  # Assume message
                 "\033[031m" + "Hello" + "\033[0m"
                 print(f"{RED_ON} Message from {response['user']}: {response['message']} {RED_OFF}")
+            # Re-display the prompt (for clarity)
+            print(YOU_SAY_PROMPT)
         else:
             print("Received dummy ping...")
 
@@ -92,9 +99,9 @@ except Exception as ex:
 # Interactive (client->server) loop
 while keep_looping:
     if first_time:
-        client_name = input("Your name> ")
+        client_name = input(YOUR_NAME_PROMPT)
         first_time = False
-    user_input: str = input("You say  > ")
+    user_input: str = input(YOU_SAY_PROMPT)
     if user_input.upper() == 'Q' or user_input.upper() == 'QUIT' or user_input.upper() == 'EXIT':
         keep_looping = False
     else:
@@ -114,7 +121,7 @@ while keep_looping:
                     dest_ok: bool = False
                     dest_name: str
                     while not dest_ok:
-                        dest_name = input("Dest name> ")  # Say ALL for everyone
+                        dest_name = input(DEST_NAME_PROMPT)  # Say ALL for everyone
                         if len(dest_name.strip()) > 0:
                             dest_ok = True
                         else:
