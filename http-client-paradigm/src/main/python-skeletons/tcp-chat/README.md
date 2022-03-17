@@ -41,8 +41,8 @@ From another terminal, on the same machine, or on another one on the same networ
 ```text
 $ python3 tcp_chat_client.py --machine-name:${SERVER_IP}
 ```
-Let's say - for the example - that the **server**'s IP is `192.168.1.18`.
-You would start the client like:
+Let's say - for the example - that the **server**'s IP is `192.168.1.18`.  
+_After starting the server_, you can start the client(s), you would do it like:
 ```text
 $ python3 tcp_chat_client.py --machine-name:192.168.1.18
 ```
