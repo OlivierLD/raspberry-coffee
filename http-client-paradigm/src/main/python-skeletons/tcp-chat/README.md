@@ -27,7 +27,7 @@ Those modules should be available in python3, without having to install them.
 ### Get Started
 > _**Note**_: If server and clients are not running on the same machine (like in the real world),
 > then you need to know the name - or IP address of the server, as explained below.  
-> If - like for tests - server and client(s) run on the box, then
+> If - like for tests - server and client(s) run on the same box, then
 > you can drop the `---machine-name:` parameter in the commands below.
 
 > On a Raspberry Pi, you can get the IP address of a machine, by typing `hostname -I`.  
