@@ -25,6 +25,11 @@ Those modules should be available in python3, without having to install them.
 > you can drop the `---machine-name:` parameter in the commands below.
 
 > On a Raspberry Pi, you can get the IP address of a machine, by typing `hostname -I`.  
+> Another option (on `bash`) would be `ifconfig | grep 192 | awk '{ print $2 }'`.  
+> The `--machine-name:` would be expressed like
+> ```text
+> --machine-name:$(ifconfig | grep 192 | awk '{ print $2 }')
+> ```
 > This might not be the case on other systems...
 
 From one terminal, from one machine, start the chat server:
