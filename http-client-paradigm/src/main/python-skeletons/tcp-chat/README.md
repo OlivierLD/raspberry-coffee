@@ -5,6 +5,12 @@ This presents a multi-threaded server, and the corresponding client (several cli
 
 It is implementing only the basic features of a chat server. 
 One of the requirements was to keep the code as small as possible.  
+You can:
+- start a server
+- then start clients, who can:
+  - Send message to each other or to everyone
+  - Get the list of the connected clients
+
 You need the clients and the server to be on a network where they can see each other, obviously.
 
 ### Requirements
