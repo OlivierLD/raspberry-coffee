@@ -80,7 +80,7 @@ def keep_receiving(_socket: socket.socket) -> None:
                 for i in range(len(response['client-list'])):
                     print(f"- Client [{response['client-list'][i]['name']}]")
             else:  # Assume message
-                "\033[031m" + "Hello" + "\033[0m"
+                # "\033[031m" + "Hello" + "\033[0m"
                 print(f"{RED_ON} Message from {response['user']}: {response['message']} {RED_OFF}")
             # Re-display the prompt (for clarity)
             print(YOU_SAY_PROMPT)
