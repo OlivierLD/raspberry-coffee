@@ -14,8 +14,8 @@ You can:
 You need the clients and the server to be on a network where they can see each other, obviously.
 
 ### Requirements
-Written for python3. This should work everywhere Python3 runs.  
-Required modules
+Written for python3. This should work everywhere python3 runs.  
+Required modules:
 - `socket`
 - `sys`
 - `traceback`
@@ -26,17 +26,17 @@ Those modules should be available in python3, without having to install them.
 
 ### Get Started
 > _**Note**_: If server and clients are not running on the same machine (like in the real world),
-> then you need to know the name - or IP address of the server, as explained below.  
+> then you need to know the name - or IP address - of the server, as explained below.  
 > If - like for tests - server and client(s) run on the same box, then
 > you can drop the `---machine-name:` parameter in the commands below.
 
 > On a Raspberry Pi, you can get the IP address of a machine, by typing `hostname -I`.  
-> Another option (on `bash`) would be `ifconfig | grep 192 | awk '{ print $2 }'`.  
+> This might not be the case on other systems...  
+> Another option (on `bash`) would be to use `ifconfig | grep 192 | awk '{ print $2 }'`.  
 > The `--machine-name:` would be expressed like
 > ```text
 > --machine-name:$(ifconfig | grep 192 | awk '{ print $2 }')
 > ```
-> This might not be the case on other systems...
 
 From one terminal, from one machine, start the chat server:
 ```text
@@ -89,7 +89,7 @@ From now on, you can:
   You say  > Bachi-bouzouk!
   Dest name> haddock
   ```
-  Message will be received by the receiver (`haddock` here) as
+  Message will be received by the receiver(s) (`haddock` here) as
   ```text
   Message from tintin: Bachi-bouzouk!
   ```
@@ -97,7 +97,8 @@ To exit the client, type `Q`, `QUIT`, or `EXIT` at the prompt.
 To quit the server, `Ctrl-C` in the terminal.
 
 ### Some things to note
-The client is multi-threaded too. The main thread sends the requests to the server,
-another thread is receiving the messages from the server.
+The client is multi-threaded too. 
+- The main thread sends the requests to the server,
+- another thread is receiving the messages from the server.
 
 --- 
