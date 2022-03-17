@@ -1,9 +1,10 @@
 # TCP Chat Server, and Client
 ## A working simple example.
 
-This presents a multi-threaded server, and the corresponding client (several instances can be spawned, lucky us!).
+This presents a multi-threaded server, and the corresponding client (several client instances can be spawned, lucky us!).
 
-It is implementing only the basic features of a chat server.  
+It is implementing only the basic features of a chat server. 
+One of the requirements was to keep the code as small as possible.  
 You need the clients and the server to be on a network where they can see each other, obviously.
 
 ### Requirements
