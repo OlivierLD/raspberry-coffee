@@ -8,4 +8,11 @@ Start the node server:
 
 > _Note_: May require a `npm install websocket` to work.
 
-Then from several browsers, reach http://localhost:9876/data/chat.app/chat.html
+> Another wya to do that
+> ```text
+> $ cd ..
+> $ npm install   # To do once
+> $ npm start
+> ```
+
+Then from several browsers, reach <http://localhost:9876/data/chat.app/chat.html>

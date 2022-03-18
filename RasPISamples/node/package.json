@@ -1,0 +1,16 @@
+{
+	"name": "misc.tests",
+	"version": "0.0.1",
+	"description": "LeapMotion and other fun stuff",
+	"keywords": [
+		"Stuff",
+		"Leap Motion",
+		"WebSockets"
+	],
+	"dependencies": {
+		"websocket": "^1.0.28"
+	},
+	"scripts": {
+		"start": "node server.js"
+	}
+}
