@@ -8,7 +8,7 @@ Start the node server:
 
 > _Note_: May require a `npm install websocket` to work.
 
-> Another wya to do that
+> Another way to do that
 > ```text
 > $ cd ..
 > $ npm install   # To do once
