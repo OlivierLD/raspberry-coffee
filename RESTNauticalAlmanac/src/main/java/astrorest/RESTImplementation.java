@@ -2267,8 +2267,8 @@ public class RESTImplementation {
 
 	/**
 	 *
-	 * @param lat
-	 * @param lng
+	 * @param lat latitude
+	 * @param lng longitude
 	 * @param step in minutes
 	 * @param when
 	 * @return

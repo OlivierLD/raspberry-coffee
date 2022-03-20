@@ -20,8 +20,12 @@ public class TestSunPath {
     @Test
 	public void rawSunPath() {
         try {
-            String date = "2011-02-06T14:41:42.000Z";
-            double lat = -10.761383333333333, lng = -156.24046666666666;
+//            String date = "2011-02-06T14:41:42.000Z";
+//            double lat = -10.761383333333333, lng = -156.24046666666666;
+
+            String date = "2022-03-20T10:41:42.000Z";
+            double lat = 47.661667, lng = -2.758167;
+
             long ld = StringParsers.durationToDate(date); // Returns epoch
             System.out.println(date + " => " + new Date(ld));
 
@@ -32,7 +36,7 @@ public class TestSunPath {
 
             RESTImplementation me = new RESTImplementation(null);
 
-            RESTImplementation.BodyDataForPos bodyData = me.getSunDataForDate(lat, lng, refDate);
+            // RESTImplementation.BodyDataForPos bodyData = me.getSunDataForDate(lat, lng, refDate);
 
             List<RESTImplementation.BodyAt> sunPath = me.getSunDataForAllDay(lat, lng, 20, refDate); // Sun Path?
             // See https://www.epochconverter.com/?source=searchbar&q=to+date
