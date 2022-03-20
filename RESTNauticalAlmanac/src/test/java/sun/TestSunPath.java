@@ -45,7 +45,7 @@ public class TestSunPath {
             // mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
             String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(sunPath);
             System.out.println(json);
-
+            // 73 = (3 * 24) + 1, where 3 = 60 / 20, 20 being the step.
             assertTrue("Size should be 73", sunPath.size() == 73);
         } catch (Exception ex) {
             fail(ex.getMessage());
