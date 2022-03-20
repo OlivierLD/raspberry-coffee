@@ -2073,6 +2073,62 @@ public class RESTImplementation {
 			this.sunTransitTime = transit;
 			return this;
 		}
+
+		public long getEpoch() {
+			return epoch;
+		}
+
+		public double getLat() {
+			return lat;
+		}
+
+		public double getLng() {
+			return lng;
+		}
+
+		public String getBody() {
+			return body;
+		}
+
+		public double getDecl() {
+			return decl;
+		}
+
+		public double getGha() {
+			return gha;
+		}
+
+		public double getAltitude() {
+			return altitude;
+		}
+
+		public double getZ() {
+			return z;
+		}
+
+		public double getEot() {
+			return eot;
+		}
+
+		public long getRiseTime() {
+			return riseTime;
+		}
+
+		public long getSetTime() {
+			return setTime;
+		}
+
+		public long getSunTransitTime() {
+			return sunTransitTime;
+		}
+
+		public double getRiseZ() {
+			return riseZ;
+		}
+
+		public double getSetZ() {
+			return setZ;
+		}
 	}
 
 	private BodyDataForPos getSunData(double lat, double lng) {
@@ -2080,7 +2136,8 @@ public class RESTImplementation {
 		return getSunDataForDate(lat, lng, current);
 	}
 
-	private BodyDataForPos getSunDataForDate(double lat, double lng, Calendar current) {
+	// Made public for external access (like tests)
+	public BodyDataForPos getSunDataForDate(double lat, double lng, Calendar current) {
 		AstroComputerV2 acv2 = new AstroComputerV2();
 		acv2.setDateTime(current.get(Calendar.YEAR),
 				current.get(Calendar.MONTH) + 1,
@@ -2141,7 +2198,8 @@ public class RESTImplementation {
 
 
 		// Get Equation of time, used to calculate solar time.
-		double eot = acv2.getSunMeridianPassageTime(lat, lng); // in decimal hours
+//		double eot = acv2.getSunMeridianPassageTime(lat, lng); // in decimal hours
+		double eot = acv2.getEoT(); // in decimal minutes
 
 //		return new BodyDataForPos(current.getTimeInMillis(), lat, lng, "Sun")
 //				.decl(sunDecl)
@@ -2174,6 +2232,30 @@ public class RESTImplementation {
 		public BodyAt(long epoch, double alt, double z) {
 			this.epoch = epoch;
 			this.alt = alt;
+			this.z = z;
+		}
+		// G~etter and Setters required by Jackson.
+		public long getEpoch() {
+			return epoch;
+		}
+
+		public void setEpoch(long epoch) {
+			this.epoch = epoch;
+		}
+
+		public double getAlt() {
+			return alt;
+		}
+
+		public void setAlt(double alt) {
+			this.alt = alt;
+		}
+
+		public double getZ() {
+			return z;
+		}
+
+		public void setZ(double z) {
 			this.z = z;
 		}
 	}

@@ -379,8 +379,9 @@ public class AlmanacComputer {
 			prevDec[i] = Double.MAX_VALUE;
 			prevLunar[i] = Double.MAX_VALUE;
 		}
-		for (int i = 0; i < prevStarLunars.length; i++)
+		for (int i = 0; i < prevStarLunars.length; i++) {
 			prevStarLunars[i] = Double.MAX_VALUE;
+		}
 	}
 
 	private static void xmlOutput() {
@@ -389,8 +390,9 @@ public class AlmanacComputer {
 
 		double[] deltaLunar = new double[]{0d, 0d, 0d, 0d, 0d, 0d};
 		double[] deltaStarLunar = new double[Star.getCatalog().length];
-		for (int i = 0; i < Star.getCatalog().length; i++)
+		for (int i = 0; i < Star.getCatalog().length; i++) {
 			deltaStarLunar[i] = 0d;
+		}
 
 		double deltaEOT = 0d;
 
