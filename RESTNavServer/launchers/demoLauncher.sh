@@ -164,10 +164,7 @@ while [[ "${GO}" == "true" ]]; do
 	    # echo -e "A screen session 'navserver' started"
 	    #
 	    # bash -c "exec -a ProcessName Command"
-	    #
-	    bash -c "exec -a NavServer ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS}" &
-	    #
-	    # ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
