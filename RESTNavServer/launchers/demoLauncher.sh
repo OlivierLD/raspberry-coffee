@@ -159,7 +159,7 @@ while [[ "${GO}" == "true" ]]; do
         fi
   	  fi
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
-	    # TODO a 'screen' option ?
+	    # QUESTION: a 'screen' option ?
 	    # screen -S navserver -dm "sleep 5; ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS}"
 	    # echo -e "A screen session 'navserver' started"
 	    #
@@ -167,7 +167,7 @@ while [[ "${GO}" == "true" ]]; do
 	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
-		    sleep 5 # Wait for the server to be operational
+		    sleep 5  # Wait (5s) for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    fi
 	    GO=false
