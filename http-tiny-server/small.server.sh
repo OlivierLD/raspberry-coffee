@@ -25,7 +25,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.util.logging.config.file=${SERVER_HOME_DIR}
 PORT=9876
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${PORT}"
 #
-HOSTNAME=$(hostname -I 2>/dev/null) || HOSTNAME=localhost
+HOSTNAME=$(hostname -I | awk '{ print $1 }' 2>/dev/null) || HOSTNAME=localhost
 #
 echo -e "Once started, reach http://${HOSTNAME}:${PORT}/web/index.html or http://${HOSTNAME}:${PORT}/zip/index.html"
 #
