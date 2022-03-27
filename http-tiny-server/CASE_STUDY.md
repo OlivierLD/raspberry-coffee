@@ -44,14 +44,13 @@ If no php server is available, you can install one.
 ```
 
 ### Run a PHP server locally
-
 ```
 $ HOSTNAME=$(hostname -I | awk '{ print $1 }' 2>/dev/null) || HOSTNAME=localhost
 $ php -S ${HOSTNAME}:3000
 ```
-Use the server's IP if you want to reach it from another box, not `localhost`.
+Use the server's IP address if you want to reach it from another box, not `localhost`.
 
-## Java (_this_ module)
+## Java (_this_ module!)
 Aha! Now we're talking.  
 Build the project (`../gradlew shadowJar`), and run the script `small.server.sh`.
 Look into it for details.
