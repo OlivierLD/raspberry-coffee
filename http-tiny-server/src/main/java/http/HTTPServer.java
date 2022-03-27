@@ -774,7 +774,8 @@ public class HTTPServer {
 								String directoryList = collect.stream()
 										.map(name -> String.format("<a href=\"%s/%s\">%s</a>", _path, name, name))
 										.collect(Collectors.joining("<br/>"));
-								String pageContent = String.format("<html lang='en_US'>" +
+								String pageContent = String.format("<!DOCTYPE html>" +
+										"<html lang='en_US'>" +
 										"<head>" +
 										"<style> a { font-family: 'Courier New'; } </style>" +
 										"</head>" +
