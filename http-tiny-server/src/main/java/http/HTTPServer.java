@@ -765,7 +765,7 @@ public class HTTPServer {
 							response.setPayload(String.format("File [%s] not found (%s).", fName, f.getAbsolutePath()).getBytes());
 						} else {
 							if (f.isDirectory()) { // List directory
-								System.out.println("Default listing");
+								// System.out.println("Default listing");
 								Set<String> collect = Stream.of(f.listFiles())
 //										.filter(file -> !file.isDirectory())
 										.map(File::getName)
@@ -795,6 +795,7 @@ public class HTTPServer {
 								response.setPayload(content);
 							}
 						}
+						System.out.printf("\"%s %s %s\" %d -\n", request.getVerb(), request.getPath(), request.getProtocol(), response.getStatus());
 						sendResponse(response, out);
 					} else {
 						if (requestManagers != null && requestManagers.size() > 0) {  // Manage it as a REST Request
