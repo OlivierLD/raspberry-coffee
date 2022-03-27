@@ -1,16 +1,5 @@
 /**
  * This is a small and tiny Web server. Mostly serves static pages and files.
- *
- * To debug:
- *   To install node-inspector, to do once:
- *   $ set HTTP_PROXY=http://www-proxy.us.oracle.com:80 # if needed for the install
- *   $ npm install -g node-inspector
- *
- *   To run node-inspector:
- *   $ node-inspector
- *
- * From another console:
- *   $ node --debug server.js
  */
 "use strict";
 
@@ -21,15 +10,16 @@ let port = 8080;
 
 let http = require('http');
 let fs = require('fs');
+let path = require('path');
 
 let verbose = false;
 
 let workDir = process.cwd();
 
 console.log("----------------------------------------------------");
-console.log("Usage: node " + __filename + " --verbose:true|false --port:XXXX --wdir:path/to/working/dir");
+console.log("Usage: node " + path.basename(__filename) + " --verbose:true|false --port:XXXX --wdir:path/to/working/dir");
 console.log("Example:");
-console.log("    node " + __filename + " --wdir:.");
+console.log("    node " + path.basename(__filename) + " --wdir:.");
 console.log("----------------------------------------------------");
 
 for (let i=0; i<process.argv.length; i++) {
