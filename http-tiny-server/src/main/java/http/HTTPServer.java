@@ -774,7 +774,15 @@ public class HTTPServer {
 								String directoryList = collect.stream()
 										.map(name -> String.format("<a href=\"%s/%s\">%s</a>", _path, name, name))
 										.collect(Collectors.joining("<br/>"));
-								byte[] content = directoryList.getBytes();
+								String pageContent = String.format("<html lang='en_US'>" +
+										"<head>" +
+										"<style> a { font-family: 'Courier New'; } </style>" +
+										"</head>" +
+										"<body>" +
+										"%s" +
+										"</body>" +
+										"</html>", directoryList);
+								byte[] content = pageContent.getBytes();
 								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length);
 								response.setPayload(content);
 							} else {
