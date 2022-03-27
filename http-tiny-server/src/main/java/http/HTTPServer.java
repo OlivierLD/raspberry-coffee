@@ -16,18 +16,12 @@ import java.io.OutputStream;
 import java.net.*;
 import java.nio.file.Files;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -770,12 +764,27 @@ public class HTTPServer {
 							response = new Response(request.getProtocol(), Response.NOT_FOUND);
 							response.setPayload(String.format("File [%s] not found (%s).", fName, f.getAbsolutePath()).getBytes());
 						} else {
-							ByteArrayOutputStream baos = new ByteArrayOutputStream();
-							Files.copy(f.toPath(), baos);
-							baos.close();
-							byte[] content = baos.toByteArray();
-							RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
-							response.setPayload(content);
+							if (f.isDirectory()) { // List directory
+								System.out.println("Default listing");
+								Set<String> collect = Stream.of(f.listFiles())
+//										.filter(file -> !file.isDirectory())
+										.map(File::getName)
+										.collect(Collectors.toSet());
+								final String _path = path;
+								String directoryList = collect.stream()
+										.map(name -> String.format("<a href=\"%s/%s\">%s</a>", _path, name, name))
+										.collect(Collectors.joining("<br/>"));
+								byte[] content = directoryList.getBytes();
+								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length);
+								response.setPayload(content);
+							} else {
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();
+								Files.copy(f.toPath(), baos);
+								baos.close();
+								byte[] content = baos.toByteArray();
+								RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
+								response.setPayload(content);
+							}
 						}
 						sendResponse(response, out);
 					} else {
