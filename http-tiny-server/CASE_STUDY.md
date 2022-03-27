@@ -22,7 +22,7 @@ $ python3 -m http.server ${HTTP_PORT}
 ```
 
 ## NodeJS
-Requires a little bit of code, like this [`server.js`](../RESTNavServer/launchers/web/scratch/fax-processor.v2/server.js).  
+Requires a little bit of code, like this [`server.js`](./server.js).  
 Then run `node server.js`. The port number is set in the code.
 
 ## php
