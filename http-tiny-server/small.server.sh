@@ -8,7 +8,7 @@
 # Example:
 # - You have run some "gradle test", and you want to see their result on their web page.
 # - From the directory you did the "gradle test" from, do a "small.server.sh"
-# - From a browser, reach http://localhost:9999/build/reports/tests/test/index.html
+# - From a browser, reach http://localhost:9876/build/reports/tests/test/index.html
 #
 SERVER_HOME_DIR=~/repos/raspberry-coffee/http-tiny-server/
 #
