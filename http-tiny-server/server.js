@@ -17,14 +17,12 @@ let verbose = false;
 let workDir = process.cwd();
 
 console.log("----------------------------------------------------");
-console.log("Usage: node " + path.basename(__filename) + " --verbose:true|false --port:XXXX --wdir:path/to/working/dir");
+console.log(`Usage: node ${path.basename(__filename)} --verbose:true|false --port:XXXX --wdir:path/to/working/dir`);
 console.log("Example:");
-console.log("    node " + path.basename(__filename) + " --wdir:.");
+console.log(`    node ${path.basename(__filename)} --wdir:.`);
 console.log("----------------------------------------------------");
 
-for (let i=0; i<process.argv.length; i++) {
-	console.log("arg #%d: %s", i, process.argv[i]);
-}
+process.argv.forEach((arg, i) => console.log("arg #%d: %s", i, arg));
 
 if (typeof String.prototype.startsWith !== 'function') {
 	String.prototype.startsWith = (str) => {
