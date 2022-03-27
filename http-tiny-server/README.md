@@ -309,5 +309,7 @@ Python HTTP/REST server, along with some use-cases and scenarios, [here](../http
 
 - Also see the script `small.server.sh`, to have this tiny http server ready from anywhere.
 
+- [Case Study](./CASE_STUDY.md) (several possibilities)
+
 ---
 
