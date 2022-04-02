@@ -78,7 +78,7 @@ def keep_receiving(_socket: socket.socket) -> None:
             response: dict = json.loads(data)
             # Process response here
             if 'client-list' in response:
-                print(f"{len(response['client-list'])} Client(s):")
+                print(f"\n{len(response['client-list'])} Client(s):")
                 for i in range(len(response['client-list'])):
                     print(f"- Client [{response['client-list'][i]['name']}]")
             else:  # Assume message
