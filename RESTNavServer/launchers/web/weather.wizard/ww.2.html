@@ -688,7 +688,7 @@
 
             // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData, null, 2) : compositeData));
             messageManager("Loading:");
-            messageManager(compositeData);
+            messageManager(JSON.stringify(compositeData, null, 2));
             worldMap.setCanvasWidth(compositeData.canvas.w);
             worldMap.setCanvasHeight(compositeData.canvas.h);
             worldMap.setNorth(compositeData.map.north);
