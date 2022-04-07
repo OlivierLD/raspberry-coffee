@@ -14,10 +14,11 @@ Good article [here](https://howchoo.com/g/nmrlzmq1ymn/how-to-install-docker-on-y
 and [here](https://phoenixnap.com/kb/docker-on-raspberry-pi).
 
 > #### To install Docker on Raspbian OS
-> - `sudo apt-get update && sudo apt-get upgrade`
-> - `curl -fsSL https://get.docker.com -o get-docker.sh`
-> - `sudo sh get-docker.sh`
-> - `sudo usermod -aG docker [user_name, like pi]`
+- `sudo apt-get update && sudo apt-get upgrade`
+- `curl -fsSL https://get.docker.com -o get-docker.sh`
+- `sudo sh get-docker.sh`
+- `sudo usermod -aG docker [user_name, like pi]`
+- `newgrp docker`
 
 If problem on Buster, see <https://www.raspberrypi.org/forums/viewtopic.php?t=273388>
 
