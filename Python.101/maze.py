@@ -5,6 +5,10 @@ import random
 # Create a maze using the depth-first algorithm described at
 # https://scipython.com/blog/making-a-maze/
 # Christian Hill, April 2017.
+#
+# Generates a random maze, and also write it to `maze.svg`
+#
+#
 
 class Cell:
     """A cell in the maze.
