@@ -58,7 +58,7 @@
                     existingContent += "\n";
                 }
                 existingContent = existingContent.replace("<pre>", "");
-                existingContent = existingContent.replace("</>pre>", "");
+                existingContent = existingContent.replace("</pre>", "");
                 existingContent += (typeof(mess) === 'object' ? JSON.stringify(mess, null, 2) : mess);
                 messZone.innerHTML = "<pre>" + existingContent + "</pre>";
             } else {
