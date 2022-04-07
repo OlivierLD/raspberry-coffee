@@ -26,7 +26,7 @@ Then
 > - `docker version`
 > - `docker info`
 
-To clean docker's cache (deep cleaning..., be carefull):
+To clean docker's cache (deep cleaning..., be careful):
 ```
 $ docker system prune
 ```
@@ -355,6 +355,16 @@ CONTAINER ID   IMAGE                       COMMAND       CREATED         STATUS 
 $ docker cp tides.zip 5ca873ab5074:~/tides.zip
 ```
 > The `docker cp` command can use Container ID, or name.
+
+- Connect to a running docker container
+```
+$ docker exec -it <container-id> bash
+```
+
+- Stop a running container
+```
+$ docker stop <container-id> 
+```
 
 ### Docker Registry
 At <https://hub.docker.com/>
