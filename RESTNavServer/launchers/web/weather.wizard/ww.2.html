@@ -53,12 +53,14 @@
         function messageManager(mess) {
             let messZone = document.getElementById("message-zone");
             if (messZone !== undefined && messZone !== null) {
-                let existingContent = messZone.innerText;
+                let existingContent = messZone.innerHTML;
                 if (existingContent.trim().length > 0) {
                     existingContent += "\n";
                 }
+                existingContent = existingContent.replace("<pre>", "");
+                existingContent = existingContent.replace("</>pre>", "");
                 existingContent += (typeof(mess) === 'object' ? JSON.stringify(mess, null, 2) : mess);
-                messZone.innerText = existingContent;
+                messZone.innerHTML = "<pre>" + existingContent + "</pre>";
             } else {
                 console.log(mess);
             }
@@ -688,7 +690,7 @@
 
             // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData, null, 2) : compositeData));
             messageManager("Loading:");
-            messageManager(JSON.stringify(compositeData, null, 2));
+            messageManager(compositeData);
             worldMap.setCanvasWidth(compositeData.canvas.w);
             worldMap.setCanvasHeight(compositeData.canvas.h);
             worldMap.setNorth(compositeData.map.north);
