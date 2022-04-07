@@ -686,7 +686,7 @@
               messageManager(mess);
             };
 
-            // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
+            // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData, null, 2) : compositeData));
             messageManager("Loading:");
             messageManager(compositeData);
             worldMap.setCanvasWidth(compositeData.canvas.w);
