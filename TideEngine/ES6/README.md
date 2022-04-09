@@ -53,6 +53,19 @@ node server.js &
 Default port number is `8888`.  
 _Note_: Use `./kill.node.sh` to stop the NodeJS server.
 
+#### Bonus: Debug a nodeJS app
+From on terminal
+```
+$ node --inspect server.js
+```
+From a Chrome browser:
+```
+chrome://inspect
+```
+... and follow the instructions.  
+Then from another browser, reach the URL served by the node server, like <http://localhost:8888/leaflet.tide.stations.html>,
+and you can set breakpoints in the server's code.
+
 ### For Java
 This repo contains a small Java HTTP server.  
 To build it:

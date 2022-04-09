@@ -21,6 +21,7 @@ def opencvVersion = "4.5.4"
 dependencies {
     implementation project(':common-utils')
     implementation project(':http-tiny-server')
+    implementation 'com.google.code.gson:gson:2.8.0'
 
     // The one below depends on where you have installed OpenCV
     if (System.getProperty("os.name").indexOf("Mac") > -1) {
