@@ -230,9 +230,13 @@ See below, the data come from the log file _and_ from the Serial GPS.
 
 
 ### Debugging
-
 - ~~Node-RED is lagging a bit behind, for now. The only tool you have is pretty much `console.log`...~~
 - See [this article](https://discourse.nodered.org/t/how-to-debug-an-own-node-with-the-node-js-debugger/5737)...
+
+### Further beyond
+Some other navigation tools, like SignalK, are using different data models
+(see <https://signalk.org/specification/1.7.0/doc/>, <https://signalk.org/specification/1.7.0/doc/data_model.html>).  
+Implementing the required transformations in Node-RED should be a no-brainer.
 
 ## Summary
 #### After comparing the Java implementation of the NMEA Multiplexer with what could be done with Node-RED
