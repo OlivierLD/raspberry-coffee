@@ -5,7 +5,7 @@
 - [Other JVM Languages](../OtherJVMLanguages/README.md)
 - [Monitor a Battery](../Monitor-Battery/README.md)
 - [Calibrate a LSM303](../I2C-SPI/lsm303.calibration/README.md), with no extra tools
-- [NMEA Multiplexer](../NMEA-Multilexer/README.md)
+- [NMEA Multiplexer](../NMEA-multiplexer/README.md)
     - Case study: [Comparison with Node-RED](../NMEA-multiplexer/casestudy.md)
 - [REST Nav Server](../RESTNavServer/README.md), gathering artifacts from several other projects (Nautical Almanac, Tide Computer, NMEA Multiplexer, ...)
     - Quick summary of the [problems to address](./happy.navserver/HappyNavserver.md) for a happy NavServer. 😊
