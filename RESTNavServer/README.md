@@ -193,6 +193,12 @@ Details below...
 
 > About the proxies, see the note [here](../common-utils/README.md#http-server-wip).
 
+> Note: `jq` can be used to transform the data model - to some extend.
+```
+.artObjects[] | select(.principalOrFirstMaker | test("van")) | {id: .id, artist: .principalOrFirstMaker}
+```
+
+
 ## Use it
 
 The web pages mentioned below are provided _as examples_ of the way to consume the REST services provided on the Raspberry Pi.
