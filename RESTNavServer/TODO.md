@@ -19,7 +19,7 @@
 
 ### Elaborate a deviation curve
 - From a Web/JavaScript UI, maybe? DONE. &#9989;
-  - - See `Project.Trunk/Deviation.Tool`
+  - See `Project.Trunk/Deviation.Tool`
 
 ### Elaborate polars
 - See Project.Trunk/PolarSmoother, Swing UI, and doc. &#9989;

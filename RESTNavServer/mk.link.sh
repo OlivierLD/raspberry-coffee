@@ -2,8 +2,7 @@
 # Makes the link from /dev/ttyACM0 to /dev/ttyS80, in case you see a "Port not found" on /dev/ttyACM0
 # Then you should read /dev/ttyS80
 #
-if [[ -L /dev/ttyS80 ]]
-then
+if [[ -L /dev/ttyS80 ]]; then
   echo -e "Sym Link /dev/ttyS80 already exists:"
   ls -lisa /dev/ttyS80
   echo -e "-----------------------"
