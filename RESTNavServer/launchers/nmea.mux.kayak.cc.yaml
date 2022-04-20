@@ -9,7 +9,9 @@ context:
   init.cache: true
 channels:
   - type: file
-    filename: ../../NMEA-multiplexer/sample.data/2018-11-24.Drakes.Estero.nmea
+    filename: ./sample.data/logged.data.zip
+    zip: true
+    path.in.zip: 2018-11-24.Drakes.Estero.nmea
     verbose: false
 forwarders:
   - class: nmea.forwarders.CharacterConsoleWriter
