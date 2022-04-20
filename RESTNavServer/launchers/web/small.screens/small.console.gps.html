@@ -172,6 +172,18 @@
 			padding: 0;
 		}
 
+		.display-2 {
+			width: 200px;
+			height: 300px;
+			border: 4px solid; /* Comment 2 lines to remove the frame */
+			border-radius: 10px;
+			display: grid;
+			grid-template-areas:
+					'top' 'middle-1' 'middle-2' 'bottom';
+			grid-gap: 0;
+			padding: 0;
+		}
+
 		.display-data {
 			grid-area: middle;
 			text-align: center;
@@ -179,6 +191,26 @@
 			margin: auto;
 			color: inherit;
 			font-size: 48px;
+			font-weight: bold;
+		}
+
+		.display-small-data-1 {
+			grid-area: middle-1;
+			text-align: center;
+			/* vertical-align: baseline; */
+			margin: auto;
+			color: inherit;
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		.display-small-data-2 {
+			grid-area: middle-2;
+			text-align: center;
+			/* vertical-align: baseline; */
+			margin: auto;
+			color: inherit;
+			font-size: 20px;
 			font-weight: bold;
 		}
 
@@ -201,10 +233,16 @@
 		}
 	</style>
 
+	<script type="module" src="../webcomponents/SatellitePlotter.js"></script>
+
+	<script type="text/javascript" src="../js/date.proto.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
 	<script type="text/javascript" src="js/ajax.manager.js"></script>
 
 	<script type="text/javascript">
+
+
+
 		/**
 		 *  SUBSCRIBERS HERE.
 		 *
@@ -214,25 +252,68 @@
 		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
 		events.subscribe('pos', function(val) {
-			// document.getElementById('sog').innerText = val.toFixed(2);
-			console.log(`POS: ${val}`);
+			let strLat = decToSex(val.lat, 'NS');
+			let strLng = decToSex(val.lng, 'EW');
+			document.getElementById('lat').innerHTML = strLat;
+			document.getElementById('lng').innerHTML = strLng;
 		});
 		events.subscribe('gps-time', function(val) {
-			// document.getElementById('cog').innerText = val.toFixed(0);
-			console.log(`GPS-TIME: ${val}`);
+            // val.format("Y-M-d H:i:s")
+			// let date = gpsTime.format("d-m-Y-l");
+			// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
+			document.getElementById('gps-date').innerText = val.format("Y-M-d");
+			document.getElementById('gps-time').innerText = val.format("H:i:s");
 		});
 		events.subscribe('gps-sat', function(val) {
 			// document.getElementById('bsp').innerText = val.toFixed(2);
-			console.log(`GPS-SAT: ${val}`);
+			// console.log(`GPS-SAT: ${JSON.stringify(val)}`);
+			let plotter = document.getElementById('sp-01');
+            plotter.setSatellites(val);
+            plotter.repaint();
+
 		});
 		events.subscribe('sog', function(val) {
 			document.getElementById('sog').innerText = val.toFixed(2);
-			console.log(`SOG: ${val}`);
+			// console.log(`SOG: ${val}`);
 		});
 		events.subscribe('cog', function(val) {
 			document.getElementById('cog').innerText = val.toFixed(0);
-			console.log(`COG: ${val}`);
+			// console.log(`COG: ${val}`);
 		});
+
+        function lpad(str, len, pad) {
+            let s = str;
+            while (s.length < len) {
+                s = (pad === undefined ? ' ' : pad) + s;
+            }
+            return s;
+        }
+
+		function decToSex(val, ns_ew) {
+			let absVal = Math.abs(val);
+			let intValue = Math.floor(absVal);
+			let dec = absVal - intValue;
+			let i = intValue;
+			dec *= 60;
+	//    var s = i + "°" + dec.toFixed(2) + "'";
+	//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+			let s = "";
+			if (ns_ew !== undefined) {
+				if (val < 0) {
+					s += (ns_ew === 'NS' ? 'S' : 'W');
+				} else {
+					s += (ns_ew === 'NS' ? 'N' : 'E');
+				}
+				s += " ";
+			} else {
+				if (val < 0) {
+					s += '-'
+				}
+			}
+			s += i + "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
+
+			return s;
+		}
 
 		window.onload = () => {
 			initAjax();
@@ -247,20 +328,22 @@
 
 	<div class="the-slides fade">
 		<div class="number-text">1 / 5</div>
-		<div class="display">
+		<div class="display-2">
 			<span class="display-title">Position</span>
-			<span class="display-data" id="bsp">00.00</span>
-			<span class="display-unit">knots</span>
+			<span class="display-small-data-1" id="lat">00 00.00</span>
+			<span class="display-small-data-2" id="lng">00 00.00</span>
+			<!--span class="display-unit">knots</span-->
 		</div>
 		<div class="text">POS</div>
 	</div>
 
 	<div class="the-slides fade">
 		<div class="number-text">2 / 5</div>
-		<div class="display">
+		<div class="display-2">
 			<span class="display-title">GPS Time</span>
-			<span class="display-data" id="aws">00.00</span>
-			<span class="display-unit">knots</span>
+			<span class="display-small-data-1" id="gps-date">DD-MMM-YYYY</span>
+			<span class="display-small-data-2" id="gps-time">00:00:00</span>
+			<span class="display-unit">UTC</span>
 		</div>
 		<div class="text">GPS</div>
 	</div>
@@ -268,9 +351,16 @@
 	<div class="the-slides fade">
 		<div class="number-text">3 / 5</div>
 		<div class="display">
-			<span class="display-title">GPS Sats</span>
+			<!--span class="display-title">GPS Sats</span>
 			<span class="display-data" id="awa">000</span>
-			<span class="display-unit">degrees</span>
+			<span class="display-unit">degrees</span-->
+
+			<satellite-plotter class="sat-plot-02 display-data"
+							   title="Satellites in view"
+							   id="sp-01"
+							   width="150"
+							   height="150"
+							   sat-in-view='{}'></satellite-plotter>
 		</div>
 		<div class="text">SAT</div>
 	</div>

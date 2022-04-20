@@ -1,6 +1,12 @@
 const spVerbose = true;
 const SAT_PLOT_TAG_NAME = 'satellite-plotter';
 
+if (Math.toRadians === undefined) {
+	Math.toRadians = (deg) => {
+		return deg * (Math.PI / 180);
+	};
+}
+
 /*
 * See custom properties in CSS.
 * =============================
@@ -229,6 +235,29 @@ class SatellitePlotter extends HTMLElement {
 		return colorConfig;
 	}
 
+	// More colors at https://www.w3schools.com/colors/colors_picker.asp
+	getSNRColor(snr) {
+		let c = 'lightGray';
+		if (snr !== undefined && snr !== null) {
+			if (snr > 0) {
+				c = 'red';
+			}
+			if (snr > 10) {
+				c = 'orange';
+			}
+			if (snr > 20) {
+				c = 'yellow';
+			}
+			if (snr > 30) {
+				c = 'lightGreen';
+			}
+			if (snr > 40) {
+				c = 'lime';
+			}
+		}
+		return c;
+	}
+
 	drawDisplay() {
 
 		let currentStyle = this.className;
@@ -329,7 +358,7 @@ class SatellitePlotter extends HTMLElement {
 			for (let satNum in this._satellites) {
 				context.beginPath();
 
-				context.fillStyle = getSNRColor(this._satellites[satNum].snr);
+				context.fillStyle = this.getSNRColor(this._satellites[satNum].snr);
 //              let satCircleRadius = radius * (Math.cos(toRadians(demoSat[i].el)));
 				let satCircleRadius = radius * ((90 - this._satellites[satNum].elevation) / 90);
 				let centerSat = {
