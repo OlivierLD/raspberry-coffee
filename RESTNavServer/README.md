@@ -320,6 +320,10 @@ Heads Up display, from a smart-phone:
 ![GRIB Rendering](./docimg/screenshot.09.png)
 Faxes and GRIB, together
 
+> _**Note**_: There is a tentative feature, to downoad and rework faxes, without a server, all the job being done _on the client side_.  
+> It has some (CORS) limitations... See in [launchers/web/scratch/fax-processor](launchers/web/scratch/fax-processor) and
+> [launchers/web/scratch/fax-processor.v2](launchers/web/scratch/fax-processor.v2).
+
 **Sight Reduction**
 
 ![Sight Reduction](./docimg/sight.reduction.01.png)
