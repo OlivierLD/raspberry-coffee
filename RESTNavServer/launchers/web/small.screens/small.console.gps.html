@@ -7,6 +7,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Multi-Screen</title>
+	<link rel="stylesheet" href="../webcomponents/css/rocker.css">
 	<style>
 		html {
 			display: table;
@@ -241,8 +242,6 @@
 
 	<script type="text/javascript">
 
-
-
 		/**
 		 *  SUBSCRIBERS HERE.
 		 *
@@ -322,7 +321,14 @@
 </head>
 <body>
 
-<input type="checkbox" onchange="manageClick(this);" /> Auto-scroll
+<!--input type="checkbox" onchange="manageClick(this);" /> Auto-scroll -->
+<span style="font-weight: bold;">Auto Scroll</span>
+<br/>
+<label class="rocker rocker-tiny">
+	<input type="checkbox" onchange="manageClick(this);" id="scroll-switch">
+	<span class="switch-left">On</span>
+	<span class="switch-right">Off</span>
+</label>
 
 <div class="slideshow-container">
 
