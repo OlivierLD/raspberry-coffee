@@ -60,11 +60,11 @@ function makeCode() {
   let dataport = document.getElementById("data-port");
   let pathprms = document.getElementById("path-prms");
 
-  let toDisplay = 'http://' + server.value + ':' + (dataport.value.length === 0 ? "80" : dataport.value) + pathprms.value
+  let toDisplay = 'http://' + server.value + ':' + (dataport.value.length === 0 ? "80" : dataport.value) + pathprms.value;
 
-  try { document.getElementById("url-2-display").innerHTML = "<a href='" + toDisplay + "' target='test' title='Test me'>" + toDisplay + "</a>"; }
-  catch (err) {}
-
+  try { 
+    document.getElementById("url-2-display").innerHTML = "<a href='" + toDisplay + "' target='test' title='Test me'>" + toDisplay + "</a>"; 
+  } catch (err) {}
   qrcode.makeCode(toDisplay);
 }
 
