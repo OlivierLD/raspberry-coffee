@@ -86,7 +86,7 @@ public class FONAManager {
 	}
 
 	public final static String CRLF = "\r\n";
-//private final static String CRCRLF                   = "\r\r\n";
+  //private final static String CRCRLF                   = "\r\r\n";
 
 	public final static String CONNECTION_OK = "AT" + CRLF + "OK" + CRLF;
 	public final static String ATI_RESPONSE = "ATI" + CRLF;
@@ -142,7 +142,7 @@ public class FONAManager {
 
 	private static boolean connectionEstablished = false;
 
-	private FONAClient parent;
+	private final FONAClient parent;
 
 	public FONAManager(FONAClient parent) {
 		this.parent = parent;
@@ -180,8 +180,9 @@ public class FONAManager {
 											String[] sa = DumpUtil.dualDump(mess);
 											if (sa != null) {
 												System.out.println("\t<<< [FONA] Received...");
-												for (String s : sa)
+												for (String s : sa) {
 													System.out.println("\t\t" + s);
+												}
 											}
 										} catch (Exception ex) {
 											System.out.println(ex.toString());
@@ -192,8 +193,9 @@ public class FONAManager {
 									fullMessage = new StringBuffer(); // Reset
 								}
 								//  delay(0.02f);
-								if (serial.available() == 0)
+								if (serial.available() == 0) {
 									delay(0.5f);
+								}
 							}
 							//   delay(0.5f);
 						} catch (IllegalStateException ise) {
@@ -226,8 +228,9 @@ public class FONAManager {
 							String[] sa = DumpUtil.dualDump(payload);
 							if (sa != null) {
 								System.out.println("\t<<< [FONA] Received...");
-								for (String s : sa)
+								for (String s : sa) {
 									System.out.println("\t\t" + s);
+								}
 							}
 						} catch (Exception ex) {
 							System.out.println(ex.toString());
@@ -235,11 +238,11 @@ public class FONAManager {
 					}
 
 					fullMessage.append(payload);
-					if (fullMessage.toString().endsWith(FONAManager.ACK) || (fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT))) // && fullMessage.toString().endsWith(CRLF)))
-					{
+					if (fullMessage.toString().endsWith(FONAManager.ACK) || (fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT))) { // && fullMessage.toString().endsWith(CRLF)))
 						String mess = fullMessage.toString(); // Send the full message. Parsed later.
-						if (getVerbose())
+						if (getVerbose()) {
 							System.out.println("   >> It is a " + (fullMessage.toString().endsWith(FONAManager.ACK) ? "ACK" : "Prompt"));
+						}
 						fonaOutput(mess);
 						// Reset
 						fullMessage = new StringBuffer();
@@ -264,8 +267,9 @@ public class FONAManager {
 								String[] sa = DumpUtil.dualDump(fullMessage.toString());
 								if (sa != null) {
 									System.out.println("\t<<< [FONA] Received...");
-									for (String s : sa)
+									for (String s : sa) {
 										System.out.println("\t\t" + s);
+									}
 								}
 							} catch (Exception ex) {
 								System.out.println(ex.toString());
@@ -321,12 +325,15 @@ public class FONAManager {
 		sendToFona(SET_TO_TEXT);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				// Absorb
 			}
 		}
 		expectingNotification = Thread.currentThread();
@@ -335,12 +342,15 @@ public class FONAManager {
 		sendToFona("AT+CSDH=1");
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				// Absorb
 			}
 		}
 		expectingNotification = null;
@@ -385,12 +395,15 @@ public class FONAManager {
 		sendToFona(SET_TO_TEXT);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				// Absorb
 			}
 		}
 		expectingNotification = null;
@@ -405,12 +418,15 @@ public class FONAManager {
 		sendToFona(SET_TO_TEXT);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				// Absorb
 			}
 		}
 		expectingNotification = null;
@@ -423,12 +439,15 @@ public class FONAManager {
 
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on, enter message");
+				}
 			} catch (InterruptedException ie) {
+				// Absorb
 			}
 		}
 		expectingNotification = null;
@@ -454,12 +473,15 @@ public class FONAManager {
 		sendToFona(first);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				// Absorb
 			}
 		}
 		expectingNotification = null;
@@ -484,8 +506,9 @@ public class FONAManager {
 						String[] sa = DumpUtil.dualDump(payload);
 						if (sa != null) {
 							System.out.println("\t>>> [FONA] Sent...");
-							for (String s : sa)
+							for (String s : sa) {
 								System.out.println("\t\t" + s);
+							}
 						}
 					} catch (Exception ex) {
 						System.out.println(ex.toString());
@@ -576,22 +599,25 @@ public class FONAManager {
 				if (parsed != null && parsed.length > 2) {
 					//  System.out.println("Network:" + parsed[2]);
 					this.parent.networkNameResponse(parsed[2]);
-				} else
+				} else {
 					System.out.println("Invalid Network Name response");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if (mess.startsWith(SET_TO_TEXT_RESPONSE)) {
 			// Release the waiting thread
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
 			} else {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Weird: no one is waiting...");
+				}
 			}
 		} else if (mess.startsWith(NUM_SMS_RESPONSE)) {
 			try {
@@ -606,8 +632,9 @@ public class FONAManager {
 			}
 		} else if (mess.startsWith(READ_SMS_RESPONSE)) {
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
@@ -616,12 +643,14 @@ public class FONAManager {
 			}
 //    System.out.println("Enter number of message to read here:...");
 		} else if (mess.startsWith(MESSAGE_PROMPT)) {
-			if (getVerbose())
+			if (getVerbose()) {
 				System.out.println("Enter message prompt, received:" + mess);
+			}
 			// Release the waiting thread
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
@@ -631,8 +660,9 @@ public class FONAManager {
 		} else if (mess.startsWith(READ_SMS_CONTENT_RESPONSE)) {
 			try {
 				String payload = mess.substring(mess.indexOf(CRLF) + CRLF.length());
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Message Content:" + payload);
+				}
 				ReceivedSMS sms = new ReceivedSMS(payload);
 				//   System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
 				this.parent.readSMS(sms);
@@ -666,16 +696,18 @@ public class FONAManager {
 					System.err.println("Original mess [" + mess + "], num:[" + num + "]");
 					nfe.printStackTrace();
 				}
-				if (mn != -1)
+				if (mn != -1) {
 					this.parent.smsDeletedResponse(mn, success);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if (mess.startsWith(RECEIVED_SMS)) {
 			try {
 				String messNumStr = mess.substring(mess.lastIndexOf(",") + 1, mess.lastIndexOf(CRLF));
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Received message #" + messNumStr);
+				}
 				delay(2f);
 				int messToRead = Integer.parseInt(messNumStr.trim());
 				this.parent.receivedSMS(messToRead);
@@ -685,25 +717,27 @@ public class FONAManager {
 		} else if (mess.startsWith(SOMEONE_CALLING)) {
 			//  System.out.println("Someone is calling!..");
 			this.parent.someoneCalling();
-		} else // The rest...
-		{
+		} else { // The rest...
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
 			} else {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("... No one is waiting on a lock.");
+				}
 			}
 			if (getVerbose()) {
 				try {
 					String[] usa = DumpUtil.dualDump(mess);
 					if (usa != null) {
 						System.out.println("\t<<< [FONA] Unknown format for received data...");
-						for (String s : usa)
+						for (String s : usa) {
 							System.out.println("\t\t" + s);
+						}
 					}
 				} catch (Exception ex) {
 					System.out.println(ex.toString());
@@ -716,6 +750,7 @@ public class FONAManager {
 		try {
 			Thread.sleep(Math.round(delay * 1_000L));
 		} catch (InterruptedException ie) {
+			// Absorb
 		}
 	}
 
@@ -764,10 +799,12 @@ public class FONAManager {
 
 		private String stripQuotes(String str) {
 			String s = str;
-			if (s.startsWith("\""))
+			if (s.startsWith("\"")) {
 				s = s.substring(1);
-			if (s.endsWith("\""))
+			}
+			if (s.endsWith("\"")) {
 				s = s.substring(0, s.length() - 1);
+			}
 			return s;
 		}
 	}
