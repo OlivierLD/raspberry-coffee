@@ -69,11 +69,43 @@ $ ../gradlew runSample -Pnum=[01..11]
 This will run the Swing examples in the `test` directory, from `gsg.examples.box3d.Sample01`
 to `gsg.examples.box3d.Sample11`.
 
-Also try
+- `01` Static 3D Box, triangle
+- `02` Spinning 3D Box, pyramid
+- `03` 3D Box, boxes and cubes.
+- `04` 3D box, cubes and segments
+- `05` Spinning 3D box, vectors
+- `06` 3D Box, draggable, with control widgets, and vectors.
+- `07` 3D Box, draggable with control widgets, spring.
+- `08` 3D Box, draggable, controls, cubes within cubes.
+- `09` 3D Box, wavefront. Use `../gradlew runSample -Pnum=09 -Pidx=[00..07]`
+  - `-Pidx=00` Paperboat
+  - `-Pidx=01` Cheoy Lee, hull only
+  - `-Pidx=02` Cheoy Lee, hull and rig
+  - `-Pidx=03` Cheoy Lee, hull and rig, v2
+  - `-Pidx=04` Merry Dream
+  - `-Pidx=05` Mehari (tender)
+  - `-Pidx=06` Kayak
+  - `-Pidx=07` Trimaran
+- `10` 3D Box, 3D Bezier.
+- `11` 3D Box, Small Bezier boat.
+
+Also try (2D Bezier, 3 Ctrl-points):
 ```
-../gradlew runBezierSample -Pnum=02
+../gradlew runBezierSample -Pnum=[01..02]
 ```
 
+Low Pass Filter:
+```
+../gradlew runSample2
+```
+2D Bezier, 5 draggable Ctrl-Points:
+```
+../gradlew runSample3
+```
+Two 2D Bezier, draggable Ctrl-Points:
+```
+../gradlew runSample4
+```
 
 #### Some utility methods
 In those utilities, just provide the (spatial, absolute) vertices of the points, segments, arrows and boxes to draw.
