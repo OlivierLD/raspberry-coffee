@@ -339,11 +339,11 @@
 
 			const slider = document.querySelector('.slideshow-container');
 			slider.addEventListener('touchstart', e => {
-				touchstartX = e.changedTouches[0].screenX
+				touchstartX = e.changedTouches[0].screenX;
 			});
 
 			slider.addEventListener('touchend', e => {
-				touchendX = e.changedTouches[0].screenX
+				touchendX = e.changedTouches[0].screenX;
 				handleGesture();
 			});
 		}
