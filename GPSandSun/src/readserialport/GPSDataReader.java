@@ -37,13 +37,14 @@ public class GPSDataReader {
 				// print out the data received to the console
 				String data = event.getAsciiString();
 				System.out.println("Got Data (" + data.length() + " byte(s))");
-				if (data.startsWith("$"))
+				if (data.startsWith("$")) {
 					System.out.println(data);
-				else {
+				} else {
 					String hexString = "";
 					char[] ca = data.toCharArray();
-					for (int i = 0; i < ca.length; i++)
+					for (int i = 0; i < ca.length; i++) {
 						hexString += (lpad(Integer.toHexString(ca[i]), "0", 2) + " ");
+					}
 					System.out.println(hexString);
 				}
 			} catch (IOException ioe) {

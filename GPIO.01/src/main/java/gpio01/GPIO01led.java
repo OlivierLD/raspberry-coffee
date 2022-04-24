@@ -6,11 +6,9 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
-public class GPIO01led
-{
+public class GPIO01led {
   public static void main(String... args)
-    throws InterruptedException
-  {
+    throws InterruptedException {
 
     System.out.println("GPIO Control - pin 01 ... started.");
 
