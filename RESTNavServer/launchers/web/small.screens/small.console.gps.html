@@ -232,6 +232,17 @@
 			color: inherit;
 			font-size: 14px;
 		}
+
+		.sat-plot-01 {
+			--border-color: silver;
+			--with-gradient: true;
+			--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: DarkGrey;
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--line-color: grey;
+			--font: Arial;
+		}
 	</style>
 
 	<script type="module" src="../webcomponents/SatellitePlotter.js"></script>
@@ -361,11 +372,12 @@
 			<span class="display-data" id="awa">000</span>
 			<span class="display-unit">degrees</span-->
 
-			<satellite-plotter class="sat-plot-02 display-data"
+			<satellite-plotter class="sat-plot-01 display-data"
 							   title="Satellites in view"
 							   id="sp-01"
 							   width="150"
 							   height="150"
+							   with-border="true"
 							   sat-in-view='{}'></satellite-plotter>
 		</div>
 		<div class="text">SAT</div>
