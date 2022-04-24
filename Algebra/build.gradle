@@ -95,6 +95,7 @@ def bezierTestNum = '01'
 
 task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a Bezier works. Use -Pnum=[01..02] (default 01)") {
     // println("Task [${name}]: Yoho!!")
+    println "See how a Bezier works. Use -Pnum=[01..02] (default 01)"
     println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
     println "01: 2D Bezier, with 3 Ctrl Points"
     println "02: 2D Bezier, with 4 Ctrl Points"
