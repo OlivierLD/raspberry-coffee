@@ -318,8 +318,35 @@
 			return s;
 		}
 
+		// Swipe detection
+		let touchstartX = 0
+		let touchendX = 0
+
+		var slider;
+
+		function handleGesture() {
+			if (touchendX < touchstartX) {
+				// alert('swiped left!');
+				plusSlides(+1);
+			}
+			if (touchendX > touchstartX) {
+				// alert('swiped right!');
+				plusSlides(-1);
+			}
+		};
+
 		window.onload = () => {
 			initAjax();
+
+			slider = document.querySelector('.slideshow-container');
+			slider.addEventListener('touchstart', e => {
+				touchstartX = e.changedTouches[0].screenX
+			});
+
+			slider.addEventListener('touchend', e => {
+				touchendX = e.changedTouches[0].screenX
+				handleGesture();
+			});
 		}
 	</script>
 </head>
