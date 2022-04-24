@@ -64,7 +64,7 @@ $ ../gradlew runSample
 ```
 This task can take parameters:
 ```
-$ ../gradlew runSample -Pnum=[01..10]
+$ ../gradlew runSample -Pnum=[01..11]
 ```
 This will run the Swing examples in the `test` directory, from `gsg.examples.box3d.Sample01`
 to `gsg.examples.box3d.Sample09`.
