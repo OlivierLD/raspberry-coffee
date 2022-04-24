@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <!--
  | Should be suitable for a small screen device (tablet, smart-phone, smart-watch...)
- | Warning: this is not a responsive UI
+ | Warning: this is not a responsive UI.
+ | Can use swipe gestures on cell-phones and tablets.
  +-->
 <html>
 <head>
@@ -423,7 +424,7 @@
 	</div>
 
 	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>
-	<div class="next" onclick="plusSlides(1);">&#10095;</div>
+	<div class="next" onclick="plusSlides(+1);">&#10095;</div>
 
 	<div class="dots">
 		<span class="dot" onclick="currentSlide(1);" title="POS"></span>
@@ -434,7 +435,6 @@
 	</div>
 	
 </div>
-<br>
 
 <script type="text/javascript">
 	let auto = false;
