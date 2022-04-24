@@ -322,8 +322,6 @@
 		let touchstartX = 0
 		let touchendX = 0
 
-		var slider;
-
 		function handleGesture() {
 			if (touchendX < touchstartX) {
 				// alert('swiped left!');
@@ -338,7 +336,7 @@
 		window.onload = () => {
 			initAjax();
 
-			slider = document.querySelector('.slideshow-container');
+			const slider = document.querySelector('.slideshow-container');
 			slider.addEventListener('touchstart', e => {
 				touchstartX = e.changedTouches[0].screenX
 			});
