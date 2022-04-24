@@ -77,7 +77,7 @@ to `gsg.examples.box3d.Sample11`.
 - `06` 3D Box, draggable, with control widgets, and vectors.
 - `07` 3D Box, draggable with control widgets, spring.
 - `08` 3D Box, draggable, controls, cubes within cubes.
-- `09` 3D Box, wavefront. Use `./gradlew runSample -Pnum=09 -Pidx=[00..07]`
+- `09` 3D Box, wavefront. Use `../gradlew runSample -Pnum=09 -Pidx=[00..07]`
   - `-Pidx=00` Paperboat
   - `-Pidx=01` Cheoy Lee, hull only
   - `-Pidx=02` Cheoy Lee, hull and rig
