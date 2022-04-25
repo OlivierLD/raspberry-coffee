@@ -180,13 +180,17 @@ In this example, each servo is driven by a slide bar displayed on the Processing
 
 ----------------------------------------------
 
-## Note
+## Notes
 To know what version of Java Processing is using, just write a sketch like
 ```java
 noLoop();
 println(String.format("Using Java version %s", System.getProperty("java.version")));
 ```
 and run it. The result is shown in the console.
+
+> Even if you're using Java 8 and above, some limitations seem to exist, regarding
+> lambdas and streaming APIs...
+
 
 
 And more to come.
