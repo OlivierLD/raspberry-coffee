@@ -1143,6 +1143,14 @@
             text-align: center;
         }
 
+        .control-style {
+            width: 350px; 
+            height: 600px; 
+            resize: both; 
+            overflow-x: scroll; 
+            overflow-y: scroll;
+        }
+
         .table-style {
             padding: 5px;
             background: #fff;
@@ -1175,13 +1183,13 @@
     <table border="0">
         <tr>
             <td valign="top" rowspan="2">
-                <div id="map-container" class="map-style">
+                <div id="map-container" class="map-style" style="padding: 5px; border: 1px solid silver; border-radius: 5px;">
                     <canvas id="mapCanvas" width="1400" height="900"></canvas>
                 </div>
             </td>
             <td valign="top">
                 <!--div style="max-width: 350px; height: 600px; resize: both; overflow-x: scroll; overflow-y: scroll;"-->
-                <div style="width: 350px; height: 600px; resize: both; overflow-x: scroll; overflow-y: scroll;">
+                <div class="control-style" style="padding: 5px; border: 1px solid silver; border-radius: 5px;">
                     <input type="checkbox" onchange="changeChart(this);" checked/> With Chart&nbsp;
                     <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
                     <input type="checkbox" onchange="changeTropics(this);"/> With Tropics
