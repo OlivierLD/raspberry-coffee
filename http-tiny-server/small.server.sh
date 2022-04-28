@@ -28,5 +28,8 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${PORT}"
 HOSTNAME=$(hostname -I | awk '{ print $1 }' 2>/dev/null) || HOSTNAME=localhost
 #
 echo -e "Once started, reach http://${HOSTNAME}:${PORT}/web/index.html or http://${HOSTNAME}:${PORT}/zip/index.html"
+echo -e "                                             |"
+echo -e "                                             ${PWD}/web/index.html"
+echo -e "Running from ${PWD}"
 #
 java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer
