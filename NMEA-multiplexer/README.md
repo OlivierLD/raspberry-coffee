@@ -1,6 +1,8 @@
 # NMEA Multiplexer
 
-> For the impatient: [Get started fast](./getstarted.md). 
+The `main` method is in `nmea.mux.GenericNMEAMultiplexer`.
+
+> For the impatient: [Get started, fast](./getstarted.md). 
 
 NMEA channels management, in and out.
 
@@ -19,7 +21,7 @@ For example:
 
 [NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
 
-> _Note_: here is an _opened_ question:
+> _Note_: here is an _<u>opened</u>_ question:
 >
 > Some softwares are using more "modern" technologies to shape the data (like `GPSd`, `SignalK`, ..., they use JSON over REST/HTTP), but what is the point?
 > `text/plain` has always been a supported mime-type, suitable for NMEA Sentences... 
@@ -29,6 +31,12 @@ For example:
 > 
 > NMEA Parsers are available in OpenSource, in several languages. In this project, you'll find
 > at least one in Java, and for ES6.
+> 
+> > This being said... You will see in this project that there is a data-cache that can be used,
+> > at least, in the case of the REST Server (also part of this project, and heavily used in the `RESTNavServer`).
+> > This cache can be pinged and used from REST requests; as such, it has a JSON format...,
+> > the requirements sound a lot like the ones SignalK is addressing.   
+> > The remaining point would be to agree on the JSON Schema to use, and there no standard about that yet.
 
 --------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.

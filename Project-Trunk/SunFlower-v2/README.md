@@ -354,4 +354,10 @@ Here is an interesting setting, with a Raspberry Pi Zero:
             
 ![RPi Zero](./pictures/RPi.zero.display.jpg)
 
+### TODO Next...
+- Add a compass (magnetometer)
+- Add a GPS
+
+
+
 ---
