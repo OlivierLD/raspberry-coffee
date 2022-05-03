@@ -238,16 +238,25 @@
 		.sat-plot-01 {
 			--border-color: rgba(128, 128, 128, 0.5);
 		}
+
+		.displayContent {
+			margin : auto;
+		}
+
 	</style>
 
 	<!-- This refers to a sibling directory... Could be copied in the js directory, if needed. -->
 	<script type="module" src="../webcomponents/SatellitePlotter.js"></script>
+
+	<script type="text/javascript" src="js/TrackMap.js"></script>
 
 	<script type="text/javascript" src="../js/date.proto.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
 	<script type="text/javascript" src="js/ajax.manager.js"></script>
 
 	<script type="text/javascript">
+
+		let displayMap; // The map
 
 		/**
 		 *  SUBSCRIBERS HERE.
@@ -262,6 +271,7 @@
 			let strLng = decToSex(val.lng, 'EW');
 			document.getElementById('lat').innerHTML = strLat;
 			document.getElementById('lng').innerHTML = strLng;
+			displayMap.addPoint(val);
 		});
 		events.subscribe('gps-time', function(val) {
             // val.format("Y-M-d H:i:s")
@@ -281,10 +291,12 @@
 		events.subscribe('sog', function(val) {
 			document.getElementById('sog').innerText = val.toFixed(2);
 			// console.log(`SOG: ${val}`);
+			displayMap.setLastSog(val);
 		});
 		events.subscribe('cog', function(val) {
 			document.getElementById('cog').innerText = val.toFixed(0);
 			// console.log(`COG: ${val}`);
+			displayMap.setLastCog(val);
 		});
 
         function lpad(str, len, pad) {
@@ -339,6 +351,9 @@
 		window.onload = () => {
 			initAjax();
 
+			displayMap = new TrackMap('mapCanvas', 180, 250, 'black', 'red', 'green', 400);
+			displayMap.repaint();
+
 			const slider = document.querySelector('.slideshow-container');
 			slider.addEventListener('touchstart', e => {
 				touchstartX = e.changedTouches[0].screenX;
@@ -365,7 +380,7 @@
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 5</div>
+		<div class="number-text">1 / 6</div>
 		<div class="display-2">
 			<span class="display-title">Position</span>
 			<span class="display-small-data-1" id="lat">00 00.00</span>
@@ -376,7 +391,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 5</div>
+		<div class="number-text">2 / 6</div>
 		<div class="display-2">
 			<span class="display-title">GPS Time</span>
 			<span class="display-small-data-1" id="gps-date">DD-MMM-YYYY</span>
@@ -387,7 +402,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 5</div>
+		<div class="number-text">3 / 6</div>
 		<div class="display">
 			<!--span class="display-title">GPS Sats</span>
 			<span class="display-data" id="awa">000</span>
@@ -405,7 +420,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 5</div>
+		<div class="number-text">4 / 6</div>
 		<div class="display">
 			<span class="display-title">Course Over Ground</span>
 			<span class="display-data" id="cog">000</span>
@@ -415,7 +430,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 5</div>
+		<div class="number-text">5 / 6</div>
 		<div class="display">
 			<span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
@@ -423,6 +438,17 @@
 		</div>
 		<div class="text">SOG</div>
 	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">6 / 6</div>
+		<div class="display">
+			
+			<canvas id="mapCanvas" class="displayContent" width="180" height="250" title="Track Map"></canvas>
+
+		</div>
+		<div class="text">MAP</div>
+	</div>
+
 
 	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>
 	<div class="next" onclick="plusSlides(+1);">&#10095;</div>
@@ -433,6 +459,7 @@
 		<span class="dot" onclick="currentSlide(3);" title="SAT"></span>
 		<span class="dot" onclick="currentSlide(4);" title="COG"></span>
 		<span class="dot" onclick="currentSlide(5);" title="SOG"></span>
+		<span class="dot" onclick="currentSlide(6);" title="MAP"></span>
 	</div>
 	
 </div>

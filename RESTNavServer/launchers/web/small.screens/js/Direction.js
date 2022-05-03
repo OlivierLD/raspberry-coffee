@@ -1,5 +1,7 @@
 /*
  * @author Olivier Le Diouris
+ * This is NOT a Web Component.
+ * Works on non-web-components-savvy browsers
  */
 "use strict";
 
