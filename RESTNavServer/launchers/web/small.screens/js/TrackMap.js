@@ -4,6 +4,17 @@
  */
 "use strict";
 
+/**
+ * Draw a map of the current path (stored positions)
+ * 
+ * @param {string} cName Canvas Name. Mandatory prm.
+ * @param {number} width Canvas width, default 400
+ * @param {number} height Canvas height, default 400
+ * @param {color} bgColor Background color, default black
+ * @param {color} fgColor Foreground (track) color, default red
+ * @param {color} gridColor Grid color, default green
+ * @param {number} buffSize Max number of points in the track, default 400
+ */
 function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 
 	this.bg = (bgColor || 'black');
