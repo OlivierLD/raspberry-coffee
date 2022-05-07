@@ -260,7 +260,7 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 
 ---
 
-_**Work in progress**_, an NMEA console with Web Components:
+_**Work (always) in progress**_, an NMEA console with Web Components:
 Web Component is [a standard](https://www.webcomponents.org/specs), being more and more adopted.
 It does indeed make the HTML pages much simpler. We'll move to it. For example, the dynamic world map below is invoked from html with this kind of snippet:
 ```html
@@ -287,6 +287,16 @@ Equipped with Head-Up Display (HUD) features (for reflection in a wind shield, f
 Heads Up display, from a smart-phone:
 
 ![HeadsUp display](./docimg/headsup.01.jpg)
+
+GPS Console, suitable for all kinds of devices (laptops, tablets, cell-phones)  
+Below, a replay of a kayak trip...
+
+| Position |             UTC Date              | GPS Sats |
+|:--------:|:---------------------------------:|:--------:|
+| ![POS](./docimg/small.gps.01.png) | ![UTC](./docimg/small.gps.02.png) | ![SAT](./docimg/small.gps.03.png) |
+|    COG   |                SOG                | MAP |
+| ![COG](./docimg/small.gps.04.png) | ![SOG](./docimg/small.gps.05.png) | ![MAP](./docimg/small.gps.06.png) |
+
 
 ---
 
