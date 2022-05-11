@@ -2,31 +2,31 @@ package nmea;
 
 import calc.calculation.AstroComputer;
 import calc.calculation.SightReductionUtil;
+import nmea.api.NMEAClient;
+import nmea.api.NMEAEvent;
+import nmea.api.NMEAListener;
+import nmea.parser.GeoPos;
+import nmea.parser.RMC;
+import nmea.parser.StringParsers;
 
 import java.text.DecimalFormat;
 
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import ocss.nmea.api.NMEAClient;
-import ocss.nmea.api.NMEAEvent;
-import ocss.nmea.api.NMEAListener;
-import ocss.nmea.parser.GeoPos;
-import ocss.nmea.parser.RMC;
-import ocss.nmea.parser.StringParsers;
 
 /**
  * Reads the GPS Data, parse the RMC String
  * Display astronomical data
  */
-public class CustomNMEAReader extends NMEAClient {
+public class CustomRMCReader extends NMEAClient {
     private final static DecimalFormat DFH = new DecimalFormat("#0.00'\272'");
     private final static DecimalFormat DFZ = new DecimalFormat("##0.00'\272'");
 
     private static GeoPos prevPosition = null;
     private static long prevDateTime = -1L;
 
-    public CustomNMEAReader() {
+    public CustomRMCReader() {
         super();
     }
 
@@ -36,7 +36,12 @@ public class CustomNMEAReader extends NMEAClient {
         manageData(e.getContent().trim());
     }
 
-    private static CustomNMEAReader customClient = null;
+    @Override
+    public Object getBean() {
+        return null;
+    }
+
+    private static CustomRMCReader customClient = null;
 
     private static void manageData(String sentence) {
         boolean valid = StringParsers.validCheckSum(sentence);
@@ -104,7 +109,7 @@ public class CustomNMEAReader extends NMEAClient {
             }
         }
 
-        customClient = new CustomNMEAReader();
+        customClient = new CustomRMCReader();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
@@ -117,7 +122,7 @@ public class CustomNMEAReader extends NMEAClient {
         customClient.startWorking(); // Feignasse!
     }
 
-    private void stopDataRead() {
+    public void stopDataRead() {
         if (customClient != null) {
             for (NMEAListener l : customClient.getListeners()) {
               l.stopReading(new NMEAEvent(this));

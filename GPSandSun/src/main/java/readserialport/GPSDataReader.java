@@ -4,6 +4,7 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialFactory;
 
 import java.io.IOException;
+import utils.StringUtils;
 
 /**
  * Just reads the GPS data.
@@ -12,6 +13,7 @@ import java.io.IOException;
  * Uses the Serial communication packages from PI4J
  */
 public class GPSDataReader {
+
 	public static void main(String... args)
 					throws InterruptedException, NumberFormatException {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
@@ -43,7 +45,7 @@ public class GPSDataReader {
 					String hexString = "";
 					char[] ca = data.toCharArray();
 					for (int i = 0; i < ca.length; i++) {
-						hexString += (lpad(Integer.toHexString(ca[i]), "0", 2) + " ");
+						hexString += (StringUtils.lpad(Integer.toHexString(ca[i]), 2, "0") + " ");
 					}
 					System.out.println(hexString);
 				}

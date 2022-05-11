@@ -2,6 +2,9 @@ package nmea;
 
 import calc.calculation.AstroComputer;
 import calc.calculation.SightReductionUtil;
+import nmea.parser.GeoPos;
+import nmea.parser.RMC;
+import nmea.parser.StringParsers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,10 +13,6 @@ import java.text.DecimalFormat;
 
 import java.util.Calendar;
 import java.util.TimeZone;
-
-import ocss.nmea.parser.GeoPos;
-import ocss.nmea.parser.RMC;
-import ocss.nmea.parser.StringParsers;
 
 /**
  * Parse the RMC string from a log file.

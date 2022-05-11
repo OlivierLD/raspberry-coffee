@@ -1,5 +1,5 @@
 #!/bin/bash
-JAVAC_OPTIONS="-sourcepath ./src"
+JAVAC_OPTIONS="-sourcepath ./src/main/java"
 JAVAC_OPTIONS="${JAVAC_OPTIONS} -d ./classes"
 echo ${JAVAC_OPTIONS}
 CP=./classes

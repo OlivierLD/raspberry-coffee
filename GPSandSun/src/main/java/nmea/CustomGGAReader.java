@@ -1,21 +1,16 @@
 package nmea;
 
-import calc.calculation.AstroComputer;
-import calc.calculation.SightReductionUtil;
 
-import java.text.DecimalFormat;
+import nmea.api.NMEAClient;
+import nmea.api.NMEAEvent;
+import nmea.api.NMEAListener;
+import nmea.parser.GeoPos;
+import nmea.parser.StringParsers;
+import nmea.parser.UTC;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-import ocss.nmea.api.NMEAClient;
-import ocss.nmea.api.NMEAEvent;
-import ocss.nmea.api.NMEAListener;
-import ocss.nmea.parser.GeoPos;
-import ocss.nmea.parser.RMC;
-import ocss.nmea.parser.StringParsers;
-import ocss.nmea.parser.UTC;
+
 
 /**
  * Reads the GPS Data, parse the GGA String
@@ -29,6 +24,11 @@ public class CustomGGAReader extends NMEAClient {
     public void dataDetectedEvent(NMEAEvent e) {
 //  System.out.println("Received:" + e.getContent());
         manageData(e.getContent().trim());
+    }
+
+    @Override
+    public Object getBean() {
+        return null;
     }
 
     private static CustomGGAReader customClient = null;
@@ -80,7 +80,7 @@ public class CustomGGAReader extends NMEAClient {
         customClient.startWorking(); // Feignasse!
     }
 
-    private void stopDataRead() {
+    public void stopDataRead() {
         if (customClient != null) {
             for (NMEAListener l : customClient.getListeners()) {
               l.stopReading(new NMEAEvent(this));
