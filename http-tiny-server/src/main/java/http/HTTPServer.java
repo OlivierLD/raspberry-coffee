@@ -81,6 +81,7 @@ public class HTTPServer {
 
 	private Function<HTTPServer.Request, HTTPServer.Response> proxyFunction = null;
 	private Consumer<Integer> portOpenCallback = null;
+	private Runnable shutdownCallback = null;
 
 	/*
 	  For CORS, to be returned in the Response:
@@ -391,9 +392,13 @@ public class HTTPServer {
 				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", this.getPort()));
 				System.out.println("On exit (stopRunning) -> " + returned);
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 			System.out.println("Done.");
+		}
+		if (this.shutdownCallback != null) {
+			this.shutdownCallback.run();
 		}
 	}
 
@@ -816,7 +821,7 @@ public class HTTPServer {
 											sendResponse(response, out);
 										} catch (Exception err) {
 											System.err.println("+-----------------------------------------------");
-											System.err.println(String.format("| Caught error sending back response:\n%s", response.toString()));
+											System.err.println(String.format("| Caught error sending back response:\n| %s", String.valueOf(response)));
 											System.err.println("+-----------------------------------------------");
 											err.printStackTrace();
 										}
@@ -1080,6 +1085,10 @@ public class HTTPServer {
 		this.portOpenCallback = portCallback;
 	}
 
+	public void setShutdownCallback(Runnable callback) {
+		this.shutdownCallback = callback;
+	}
+
 	public void setProxyFunction(Function<HTTPServer.Request, HTTPServer.Response> proxyFunction) {
 		this.proxyFunction = proxyFunction;
 	}
@@ -1170,28 +1179,36 @@ public class HTTPServer {
 	}
 
 	private void sendResponse(Response response, OutputStream os) {
-		try {
-			os.write(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()).getBytes());
-			if (response.getHeaders() != null) {
-				response.getHeaders().keySet().stream().forEach(k -> {
-					try {
-						os.write(String.format("%s: %s\r\n", k, response.getHeaders().get(k)).getBytes());
-					} catch (SocketException se) {
-						manageSocketException(se, response.toString());
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
-				});
+		if (response != null) {
+			try {
+				os.write(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()).getBytes());
+				if (response.getHeaders() != null) {
+					response.getHeaders().keySet().stream().forEach(k -> {
+						try {
+							os.write(String.format("%s: %s\r\n", k, response.getHeaders().get(k)).getBytes());
+						} catch (SocketException se) {
+							manageSocketException(se, response.toString());
+						} catch (IOException ioe) {
+							ioe.printStackTrace();
+						}
+					});
+				}
+				os.write("\r\n".getBytes()); // End Of Header
+				if (response.getPayload() != null) {
+					os.write(response.getPayload());
+					os.flush();
+				}
+			} catch (SocketException se) {
+				manageSocketException(se, response.toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Throwable t) {
+				t.printStackTrace();
 			}
-			os.write("\r\n".getBytes()); // End Of Header
-			if (response.getPayload() != null) {
-				os.write(response.getPayload());
-				os.flush();
-			}
-		} catch (SocketException se) {
-			manageSocketException(se, response.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+//			if (verbose) {
+				HTTPContext.getInstance().getLogger().info("In sendResponse, Response is null. Doing nothing.");
+//			}
 		}
 	}
 
