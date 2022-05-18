@@ -276,7 +276,7 @@ public class HTTPServerTests {
 			fail(ex.toString());
 		} finally {
 			boolean serverRunning = httpServer.isRunning();
-			System.out.printf("HTTP Server is %srunning.\n", serverRunning ? "still " : "not ");
+			System.out.printf("HTTP Server is %s running.\n", serverRunning ? "still" : "not");
 			if (true) {
 				if (serverRunning) {
 					if ((t1 != null && t1.isAlive()) || (t2 != null && t2.isAlive()) || (t3 != null && t3.isAlive())) {
