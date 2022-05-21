@@ -6,8 +6,8 @@
 
 ## Here is an example use case
 
-- You have run some `gradle test`, and you want to see their result on their web page.
-- From the directory you did the `gradle test` from, you want to see the test results, from a browser
+- On some remote server of yours, you have run some `gradle test`, and you want to see their result on their web page.
+- From the directory you did the `gradle test` from, you want to see the test results, from a browser running on a laptop, which is not where the tests have been running.
 - You'd like to reach a url like <http://192.168.1.18:9876/build/reports/tests/test/index.html> ...
 
 This requires some kind of small HTTP server, to server this HTTP request.

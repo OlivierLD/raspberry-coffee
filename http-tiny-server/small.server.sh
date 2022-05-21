@@ -26,8 +26,11 @@ PORT=9876
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${PORT}"
 #
 HOSTNAME=$(hostname -I | awk '{ print $1 }' 2>/dev/null) || HOSTNAME=localhost
+if [[ "${HOSTNAME}" == "" ]]; then
+  HOSTNAME=localhost
+fi
 #
-echo -e "Once started, reach http://${HOSTNAME}:${PORT}/web/index.html or http://${HOSTNAME}:${PORT}/zip/index.html"
+echo -e "Once started, reach http://${HOSTNAME}:${PORT}/web/index.html or http://${HOSTNAME}:${PORT}/zip/index.html (if web.zip is available)"
 echo -e "                                             |"
 echo -e "                                             ${PWD}/web/index.html"
 echo -e "Running from ${PWD}"
