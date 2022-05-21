@@ -1,7 +1,8 @@
 # Case Study (WiP)
 > I want to run a simple HTTP server on my own box,
 > possibly managing REST requests.  
-> How can I do that?
+> How can I do that?  
+> What language can I use?
 
 ## Here is an example use case
 
