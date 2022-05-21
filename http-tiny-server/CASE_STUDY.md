@@ -56,4 +56,13 @@ Aha! Now we're talking.
 Build the project (`../gradlew shadowJar`), and run the script `small.server.sh`.
 Look into it for details.
 
+## _Note_
+Once started, all the servers above can be accessed in a language agnostic way,
+like with `curl` or `wget`, or whatever piece of code that can act as an HTTP client.
+
+```
+$ curl -X GET http://localhost:9876/web/index.html
+$ wget http://localhost:9876/web/index.html -o test.html
+```
+
 ---
