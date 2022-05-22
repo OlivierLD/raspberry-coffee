@@ -141,7 +141,7 @@ if (toDegrees === undefined) {
     };
 }
 
-let sign = (d) => {
+let sign = (d) => { // TODO Use Math.sign.
 	let s = 0;
 	if (d > 0.0) {
 		s = 1;
@@ -174,7 +174,7 @@ let getGCDistanceInNM = (from, to) => {
  * Points coordinates in Radians
  * returned value in radians
  */
-let calculateRhumLine = (from, to) => {
+let calculateRhumbLine = (from, to) => {
 	let nsDir = (to.lat > from.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
 	let arrG = to.lng;
 	let staG = from.lng;
@@ -339,6 +339,6 @@ if (false) {
 	console.log("GC distance", gc.getDistanceInNM().toFixed(0), "nm");
 
 	console.log("\nRhumbline test");
-	let loxo = calculateRhumLine(from, to);
+	let loxo = calculateRhumbLine(from, to);
 	console.log("Heading", toDegrees(loxo.heading).toFixed(0) + '\272', "Dist:", loxo.dist.toFixed(1), "nm");
 }
