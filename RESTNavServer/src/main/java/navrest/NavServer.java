@@ -36,7 +36,7 @@ public class NavServer {
 		if (port != null) {
 			try {
 				httpPort = Integer.parseInt(port);
-				System.out.println(String.format("Will use HTTP Port %d (from -Dhttp.port", httpPort));
+				System.out.println(String.format("Will use HTTP Port %d (from -Dhttp.port)", httpPort));
 			} catch (NumberFormatException nfe) {
 				System.err.println(nfe.toString());
 			}

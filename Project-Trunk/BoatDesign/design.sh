@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Uncomment if needed...
+# See <https://www.baeldung.com/linux/no-x11-display-error>
+# export DISPLAY=:0.0
+#
 CP=./build/libs/BoatDesign-1.0-all.jar
 LOGGING_FLAGS="-Djava.util.logging.config.file=./logging.properties"
 #
