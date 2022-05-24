@@ -1,0 +1,46 @@
+{
+  "comments" : [ "First point of rail is first point of bow", "Last point of keel is first point of keel", "Length is 550 (for rail, and keel)", "Displ ~0.560" ],
+  "description" : "Inspired by the Ikone JS we saw in Etel",
+  "default-points" : {
+    "keel" : [ {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : -2.0
+    }, {
+      "x" : 349.35185185185185,
+      "y" : 0.0,
+      "z" : -38.611111111111114
+    }, {
+      "x" : 550.0,
+      "y" : 0.0,
+      "z" : 10.0
+    } ],
+    "rail" : [ {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 75.0
+    }, {
+      "x" : 15.277777777777779,
+      "y" : 20.37037037037037,
+      "z" : 75.0
+    }, {
+      "x" : 69.642857,
+      "y" : 86.785714,
+      "z" : 47.5
+    }, {
+      "x" : 312.68518518518516,
+      "y" : 159.90740740740742,
+      "z" : 45.357143
+    }, {
+      "x" : 550.0,
+      "y" : 80.0,
+      "z" : 56.0
+    } ]
+  },
+  "dimensions" : {
+    "box-z" : [ -0.6, 1.25 ],
+    "default-lht" : 5.5,
+    "box-y" : [ -2.0, 2.0 ],
+    "box-x" : [ 0.0, 6.0 ]
+  }
+}
