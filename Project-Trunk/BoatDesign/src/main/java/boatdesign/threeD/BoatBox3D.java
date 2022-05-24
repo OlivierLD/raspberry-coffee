@@ -493,7 +493,7 @@ public class BoatBox3D extends Box3D {
                     }
                     // Beams? (WiP)
                     if (beams) {
-                        for (List<VectorUtils.Vector3D> bezierPoints : beamBezierPts) {
+                        for (List<VectorUtils.Vector3D> bezierPoints : beamBezierPts) { // TODO Synchronize?
                             from = null;
                             for (VectorUtils.Vector3D to : bezierPoints) {
                                 if (from != null) {

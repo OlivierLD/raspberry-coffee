@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
- * A Swing Application
+ * A Swing Application. The main.
  *
  * Using default WhiteBoard Writer
  * <p>
@@ -424,6 +424,14 @@ public class ThreeViews {
             }
             // Done
             getLogger().log(Level.INFO, "Done repainting.");
+
+            if (true) {
+                // A test, store XZ panel as an image
+                File imageFile = new File("XZ_test.png");
+                this.whiteBoardXZ.createImage(imageFile, "png", this.whiteBoardXZ.getWidth(), this.whiteBoardXZ.getHeight());
+                System.out.printf("See file %s\n", imageFile.getAbsolutePath());
+            }
+
         });
         repainter.start();
 

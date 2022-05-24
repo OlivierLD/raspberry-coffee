@@ -48,4 +48,8 @@ Then do the hydrostatic calculations.
 - <https://sailboatdata.com/sailboat/corsaire>
 - ...
 
+
+## TODO
+- pdf output ?... (See in app.samples.VikingSunCompass, oliv-swing)
+
 ---

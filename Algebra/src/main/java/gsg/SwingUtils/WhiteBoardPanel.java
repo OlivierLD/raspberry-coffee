@@ -853,7 +853,7 @@ public class WhiteBoardPanel extends JPanel {
     /**
      * Save the current view to a file
      * @param f the file to create
-     * @param ext the image extension (jpg, png, etc), used by ImageIO
+     * @param ext the image extension (jpg, png, etc), used by ImageIO, no dot in this value.
      * @param width image width
      * @param height image height
      */
