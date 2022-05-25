@@ -213,6 +213,8 @@ public class WhiteBoardPanel extends JPanel {
     private boolean withGrid = false;
     private boolean xEqualsY = true;
 
+    private Object userParameters = null;
+
     private Double forcedMinY = null;
     private Double forcedMaxY = null;
 
@@ -330,6 +332,13 @@ public class WhiteBoardPanel extends JPanel {
 
     public void setXLabelGenerator(Function<Integer, String> xLabelGenerator) {
         this.xLabelGenerator = xLabelGenerator;
+    }
+
+    public void setUserParameters(Object o) {
+        this.userParameters = o;
+    }
+    public Object getUserParameters() {
+        return this.userParameters;
     }
 
     private Function<Double, Integer> getCanvasXCoord;
@@ -933,6 +942,13 @@ public class WhiteBoardPanel extends JPanel {
     }
 
     public void addSerie(DataSerie serie) {
+        this.dataSeries.add(serie);
+    }
+
+    public void addSerie(DataSerie serie, Color enforced) {
+        if (enforced != null) {
+            serie.color = enforced;
+        }
         this.dataSeries.add(serie);
     }
 

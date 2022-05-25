@@ -120,6 +120,13 @@ public class ThreeViews {
     private final WhiteBoardPanel whiteBoardXZ; // side
     private final WhiteBoardPanel whiteBoardYZ; // facing
 
+    private static class UserWBParameters {
+        boolean generateImage = false;
+        boolean bw = false;
+        boolean hideCP = false;
+        boolean hideCC = false;
+    }
+
     private VectorUtils.Vector3D centerOfHull = null; // aka Centre de Carene.
 
     private final BoatBox3D box3D;
@@ -132,6 +139,62 @@ public class ThreeViews {
 
     private String description;
     private List<String> comments;
+
+    // Parameter form for the whiteboard: generate image, B&W, hide ctrl-points,...)
+    private class WhiteBoardOptionPanel extends JPanel {
+        JCheckBox generateImage;
+        JCheckBox blackAndWhite;
+        JCheckBox hideCtrlPoints;
+        JCheckBox hideCC;
+
+        public WhiteBoardOptionPanel() {
+            super();
+            this.setPreferredSize(new Dimension(500, 100));
+            this.setLayout(new FlowLayout());
+
+            generateImage = new JCheckBox("Generate Image");
+            this.add(generateImage, null);
+            blackAndWhite = new JCheckBox("Black & White");
+            this.add(blackAndWhite, null);
+            hideCtrlPoints = new JCheckBox("Hide Ctrl-Points");
+            this.add(hideCtrlPoints, null);
+            hideCC = new JCheckBox("Hide CC (Center of Hull)");
+            this.add(hideCC, null);
+        }
+
+        public boolean isGenerateImageChecked() {
+            return (generateImage != null && generateImage.isSelected());
+        }
+        public boolean isBWChecked() {
+            return (blackAndWhite != null && blackAndWhite.isSelected());
+        }
+        public boolean isHideCtrlPtsChecked() {
+            return (hideCtrlPoints != null && hideCtrlPoints.isSelected());
+        }
+        public boolean isHideCCChecked() {
+            return (hideCC != null && hideCC.isSelected());
+        }
+        public void setGenerateImage(boolean b) {
+            if (generateImage != null) {
+                generateImage.setSelected(b);
+            }
+        }
+        public void setBW(boolean b) {
+            if (blackAndWhite != null) {
+                blackAndWhite.setSelected(b);
+            }
+        }
+        public void setHideCP(boolean b) {
+            if (hideCtrlPoints != null) {
+                hideCtrlPoints.setSelected(b);
+            }
+        }
+        public void setHideCC(boolean b) {
+            if (hideCC != null) {
+                hideCC.setSelected(b);
+            }
+        }
+    }
 
     private void fileNew_ActionPerformed(ActionEvent ae) {
         getLogger().log(Level.INFO, "File New...");
@@ -425,11 +488,14 @@ public class ThreeViews {
             // Done
             getLogger().log(Level.INFO, "Done repainting.");
 
-            if (true) {
+            if (((UserWBParameters)whiteBoardXZ.getUserParameters()).generateImage) {
+                System.out.println("Generating image, as requested");
                 // A test, store XZ panel as an image
                 File imageFile = new File("XZ_test.png");
                 this.whiteBoardXZ.createImage(imageFile, "png", this.whiteBoardXZ.getWidth(), this.whiteBoardXZ.getHeight());
                 System.out.printf("See file %s\n", imageFile.getAbsolutePath());
+            } else {
+                System.out.println("Skipping image generation");
             }
 
         });
@@ -552,7 +618,7 @@ public class ThreeViews {
                                 .graphicType(WhiteBoardPanel.GraphicType.LINE)
                                 .lineThickness(1)
                                 .color(Color.RED);
-                        whiteBoardXZ.addSerie(buttockXZSerie);
+                        whiteBoardXZ.addSerie(buttockXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
                         whiteBoardXZ.repaint();
                     } else {
                         // TODO Others, BEAM
@@ -573,14 +639,18 @@ public class ThreeViews {
                         .graphicType(WhiteBoardPanel.GraphicType.POINTS)
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
-                whiteBoardXZ.addSerie(ccXZSerie);
+                if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCC) {
+                    whiteBoardXZ.addSerie(ccXZSerie);
+                }
 
-                WhiteBoardPanel.TextSerie ccXZTextSerie = new WhiteBoardPanel.TextSerie(xzCC.get(0), "CC", 0, 6, WhiteBoardPanel.TextSerie.Justification.CENTER);
-                ccXZTextSerie.setTextColor(new Color(0, 102, 0, 200));
-                ccXZTextSerie.setFont(new Font("Courier", Font.BOLD, 12));
-                whiteBoardXZ.resetAllText();
-                whiteBoardXZ.addTextSerie(ccXZTextSerie);
-                whiteBoardXZ.repaint();
+                if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCC) {
+                    WhiteBoardPanel.TextSerie ccXZTextSerie = new WhiteBoardPanel.TextSerie(xzCC.get(0), "CC", 0, 6, WhiteBoardPanel.TextSerie.Justification.CENTER);
+                    ccXZTextSerie.setTextColor(new Color(0, 102, 0, 200));
+                    ccXZTextSerie.setFont(new Font("Courier", Font.BOLD, 12));
+                    whiteBoardXZ.resetAllText();
+                    whiteBoardXZ.addTextSerie(ccXZTextSerie);
+                    whiteBoardXZ.repaint();
+                }
                 // YZ
                 List<VectorUtils.Vector2D> yzCC = List.of(new VectorUtils.Vector2D(centerOfHull.getY(), centerOfHull.getZ()));
                 WhiteBoardPanel.DataSerie ccYZSerie = new WhiteBoardPanel.DataSerie()
@@ -830,14 +900,18 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            whiteBoardXZ.addSerie(railCtrlXZSerie);
+            if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCP) {
+                whiteBoardXZ.addSerie(railCtrlXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            }
             // XZ - Keel
             WhiteBoardPanel.DataSerie keelCtrlXZSerie = new WhiteBoardPanel.DataSerie()
                     .data(keelCtrlPtsXZVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            whiteBoardXZ.addSerie(keelCtrlXZSerie);
+            if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCP) {
+                whiteBoardXZ.addSerie(keelCtrlXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            }
 
             // YZ - Rail
             WhiteBoardPanel.DataSerie railCtrlYZSerie = new WhiteBoardPanel.DataSerie()
@@ -876,14 +950,14 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardXZ.addSerie(railDataXZSerie);
+            whiteBoardXZ.addSerie(railDataXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
             // XZ - Keel
             WhiteBoardPanel.DataSerie keelDataXZSerie = new WhiteBoardPanel.DataSerie()
                     .data(keelDataXZVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
-                    .color(Color.BLUE);
-            whiteBoardXZ.addSerie(keelDataXZSerie);
+                    .color(Color.BLUE); // ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : Color.BLUE);
+            whiteBoardXZ.addSerie(keelDataXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
 
             // YZ - Rail
             WhiteBoardPanel.DataSerie railDataYZSerie = new WhiteBoardPanel.DataSerie()
@@ -1189,15 +1263,41 @@ public class ThreeViews {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                int mask = e.getModifiersEx();
 //                getLogger().log(Level.INFO, "Click on whiteboard");
-                if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
+                if (SwingUtilities.isRightMouseButton(e) && ((mask & MouseEvent.SHIFT_DOWN_MASK) != 0)) { // Shift + Right-click
+                    // Dialog for options (generate image, B&W, no ctrl-points,...)
+                    System.out.println(">> Shift + Right click ?");
+                    WhiteBoardOptionPanel wbop = new WhiteBoardOptionPanel();
+                    UserWBParameters userPrms = (UserWBParameters)whiteBoardXZ.getUserParameters();
+                    wbop.setGenerateImage(userPrms.generateImage);
+                    wbop.setBW(userPrms.bw);
+                    wbop.setHideCP(userPrms.hideCP);
+                    wbop.setHideCC(userPrms.hideCC);
+
+                    int response = JOptionPane.showConfirmDialog(whiteBoardXZ, wbop, "WhiteBoard Parameters", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (response == JOptionPane.OK_OPTION) {
+                        System.out.println("OK!");
+//                        System.out.printf("Generate Image: %s\n", wbop.isGenerateImageChecked() ? "yes" : "no");
+                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).generateImage = wbop.isGenerateImageChecked();
+                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw = wbop.isBWChecked();
+                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCP = wbop.isHideCtrlPtsChecked();
+                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCC = wbop.isHideCCChecked();
+                    } else {
+                        System.out.println("Canceled.");
+                    }
+                } else if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
+                    System.out.println(">> Right click ?");
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXZ, Orientation.XZ);
                     if (closePoint != null) {
                         BezierPopup popup = new BezierPopup(instance, closePoint);
                         popup.show(whiteBoardXZ, e.getX(), e.getY());
+                    } else {
+                        System.out.println("Dummy right-click. No point close to it.");
                     }
                 } else {
                     // Regular click.
+                    System.out.println(">> Regular click ?");
                     // Drop point here. Where is the list
                     AddCtrlPointPanel addPointPanel = new AddCtrlPointPanel(railCtrlPoints.size(), keelCtrlPoints.size());
                     int response = JOptionPane.showConfirmDialog(frame,
@@ -1297,7 +1397,7 @@ public class ThreeViews {
                 }
                 VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardXZ); //, Orientation.XZ);
                 if (whiteBoardMousePos != null) {
-                    whiteBoardXZ.setToolTipText(String.format("<html>X: %.02f<br>Z: %.02f</html>",
+                    whiteBoardXZ.setToolTipText(String.format("<html>X: %.02f<br/>Z: %.02f<br/><p>Use Shift + Right-Click<br/>for parameters</p></html>",
                             whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
                 }
             }
@@ -1917,8 +2017,13 @@ public class ThreeViews {
         instance = this;
 
         this.whiteBoardXY = new WhiteBoardPanel(); // from above
+        this.whiteBoardXY.setUserParameters(new UserWBParameters());
+
         this.whiteBoardXZ = new WhiteBoardPanel(); // side
+        this.whiteBoardXZ.setUserParameters(new UserWBParameters());
+
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
+        this.whiteBoardYZ.setUserParameters(new UserWBParameters());
 
         this.initConfiguration(true);
         /*BoatBox3D*/
