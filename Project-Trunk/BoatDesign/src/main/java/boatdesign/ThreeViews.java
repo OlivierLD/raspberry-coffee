@@ -10,6 +10,11 @@ import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
 import gsg.VectorUtils;
 
+import oracle.xml.parser.v2.XMLDocument;
+import oracle.xml.parser.v2.XMLElement;
+
+import org.w3c.dom.Text;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
@@ -132,10 +137,12 @@ public class ThreeViews {
 
     private JTextPane dataTextArea = null;
     private JTextPane boatDataTextArea = null;
+    private JTextPane xmlTextArea = null;
     private JTextPane messageTextArea = null;
 
     private static ThreeViews instance;
 
+    private String boatName;
     private String description;
     private List<String> comments;
 
@@ -211,6 +218,7 @@ public class ThreeViews {
                 -60,
                 120,
                 650,
+                "Boat Name",
                 "Mini",
                 "Default values.");
 
@@ -223,6 +231,7 @@ public class ThreeViews {
             // Grab the data
             NewDataPanel.PanelData panelData = panel.getPanelData();
             Map<String, Object> theMap = new HashMap<>();
+            theMap.put("boat-name", panelData.getBoatName());
             theMap.put("description", panelData.getDescription());
             String comments = panelData.getComments();
             if (comments != null) {
@@ -318,6 +327,7 @@ public class ThreeViews {
                 this.box3D.getMinZ(),
                 this.box3D.getMaxZ(),
                 this.box3D.getDefaultLHT(),
+                this.boatName,
                 this.description,
                 this.comments == null ? null : this.comments.stream().collect(Collectors.joining("\n")));
 
@@ -330,6 +340,7 @@ public class ThreeViews {
             // Grab the data
             NewDataPanel.PanelData panelData = panel.getPanelData();
             Map<String, Object> theMap = new HashMap<>();
+            theMap.put("boat-name", panelData.getBoatName());
             theMap.put("description", panelData.getDescription());
             String comments = panelData.getComments();
             if (comments != null) {
@@ -385,6 +396,7 @@ public class ThreeViews {
                 this.box3D.getMinZ(),
                 this.box3D.getMaxZ(),
                 this.box3D.getDefaultLHT(),
+                this.boatName,
                 this.description,
                 this.comments == null ? null : this.comments.stream().collect(Collectors.joining("\n")));
 
@@ -397,6 +409,7 @@ public class ThreeViews {
             // Grab the data
             NewDataPanel.PanelData panelData = panel.getPanelData();
             Map<String, Object> theMap = new HashMap<>();
+            theMap.put("boat-name", panelData.getBoatName());
             theMap.put("description", panelData.getDescription());
             String comments = panelData.getComments();
             if (comments != null) {
@@ -551,6 +564,21 @@ public class ThreeViews {
                 }
                 boatDataTextArea.setText(json);
 
+                // TODO Do we need another callback here ?
+                xmlTextArea.setText("Calculated XML would eventually go here");
+
+                XMLDocument doc = new XMLDocument();
+                XMLElement root = (XMLElement) doc.createElement("boat-data");
+                doc.appendChild(root);
+                Text nameValue = doc.createTextNode("#text");
+                nameValue.setNodeValue("Akeu Coucou");
+                root.appendChild(nameValue);
+                try {
+                    doc.print(System.out); // TODO A ByteArrayOutputStream ?
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
                 if (map.get("lwl-start") != null) {
                     // CC position
                     Double xCC = (Double) map.get("cc-x");
@@ -593,6 +621,8 @@ public class ThreeViews {
                         }
                     }
                 }
+
+
             }, mess -> {
                 messageTextArea.setText(mess);
             }, map -> {
@@ -644,7 +674,7 @@ public class ThreeViews {
                     }
                 }
             });
-            // Stop repainter
+            // Stop re-painter
             keepLooping.set(false);
             getLogger().log(Level.INFO, "Refresh completed!");
             refreshButton.setEnabled(true);
@@ -1072,6 +1102,7 @@ public class ThreeViews {
                     });
                 }
             }
+            this.boatName = (String) initConfig.get("boat-name");
             this.description = (String) initConfig.get("description");
             this.comments = (List) initConfig.get("comments");
         } else {
@@ -2033,6 +2064,27 @@ public class ThreeViews {
                 new GridBagConstraints(1,
                         1,
                         1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+
+        // Add XML Panel. TODO: define frame step, waterline step, etc... Here, or somewhere else.
+        JPanel xmlPanel = new JPanel(new BorderLayout());
+        xmlPanel.setBorder(BorderFactory.createTitledBorder("XML for Publication"));
+        xmlTextArea = new JTextPane();
+        xmlTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
+        JScrollPane xmlDataScrollPane = new JScrollPane(xmlTextArea);
+        xmlDataScrollPane.setPreferredSize(new Dimension(300, 225));
+        // dataScrollPane.setSize(new Dimension(300, 250));
+        xmlPanel.add(xmlDataScrollPane, BorderLayout.CENTER);
+
+        bottomRightPanel.add(xmlPanel,
+                new GridBagConstraints(0,
+                        2,
+                        2,
                         1,
                         1.0,
                         0.0,

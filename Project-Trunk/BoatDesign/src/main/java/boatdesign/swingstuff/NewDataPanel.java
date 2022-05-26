@@ -28,6 +28,7 @@ public class NewDataPanel extends JPanel {
     private JLabel maxZLabel = new JLabel("Max Z");
     private JLabel defaultLHTLabel = new JLabel("Default LHT");
 
+    private JLabel boatNameLabel = new JLabel("Boat Name");
     private JLabel descriptionLabel = new JLabel("Description");
     private JLabel commentsLabel = new JLabel("Comments");
 
@@ -44,6 +45,7 @@ public class NewDataPanel extends JPanel {
 
     JFormattedTextField defaultLhtValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
 
+    JTextField boatNameField = new JTextField();
     JTextField descriptionField = new JTextField();
     JTextPane commentsTextArea = new JTextPane();
     JScrollPane commentsScrollPane = new JScrollPane(commentsTextArea);
@@ -236,8 +238,8 @@ public class NewDataPanel extends JPanel {
                         GridBagConstraints.CENTER,
                         GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
-        // Description
-        this.add(descriptionLabel,
+        // Boat Name
+        this.add(boatNameLabel,
                 new GridBagConstraints(0,
                         2,
                         2,
@@ -247,9 +249,30 @@ public class NewDataPanel extends JPanel {
                         GridBagConstraints.EAST,
                         GridBagConstraints.CENTER, // EAST,
                         new Insets(0, 0, 0, 5), 0, 0));
-        this.add(descriptionField,
+        this.add(boatNameField,
                 new GridBagConstraints(2,
                         2,
+                        5,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+        // Description
+        this.add(descriptionLabel,
+                new GridBagConstraints(0,
+                        3,
+                        2,
+                        1,
+                        1.0,
+                        1.0,
+                        GridBagConstraints.EAST,
+                        GridBagConstraints.CENTER, // EAST,
+                        new Insets(0, 0, 0, 5), 0, 0));
+        this.add(descriptionField,
+                new GridBagConstraints(2,
+                        3,
                         5,
                         1,
                         1.0,
@@ -260,7 +283,7 @@ public class NewDataPanel extends JPanel {
         // Comments
         this.add(commentsLabel,
                 new GridBagConstraints(0,
-                        3,
+                        4,
                         2,
                         1,
                         1.0,
@@ -271,7 +294,7 @@ public class NewDataPanel extends JPanel {
         commentsScrollPane.setPreferredSize(new Dimension(300, 200));
         this.add(commentsScrollPane,
                 new GridBagConstraints(2,
-                        3,
+                        4,
                         5,
                         1,
                         1.0,
@@ -294,7 +317,7 @@ public class NewDataPanel extends JPanel {
             this.fileChooser.revalidate();
             this.add(this.fileChooser,
                     new GridBagConstraints(0,
-                            4,
+                            5,
                             7,
                             1,
                             1.0,
@@ -313,6 +336,7 @@ public class NewDataPanel extends JPanel {
         double minZ;
         double maxZ;
         double defaultLHT;
+        String boatName;
         String description;
         String comments;
         String fileName;
@@ -345,6 +369,10 @@ public class NewDataPanel extends JPanel {
             return defaultLHT;
         }
 
+        public String getBoatName() {
+            return boatName;
+        }
+
         public String getDescription() {
             return description;
         }
@@ -365,6 +393,7 @@ public class NewDataPanel extends JPanel {
                           double minZ,
                           double maxZ,
                           double defaultLHT,
+                          String boatName,
                           String description,
                           String comments) {
         this.minXValue.setValue(minX);
@@ -376,6 +405,7 @@ public class NewDataPanel extends JPanel {
 
         this.defaultLhtValue.setValue(defaultLHT);
 
+        this.boatNameField.setText(boatName);
         this.descriptionField.setText(description);
         this.commentsTextArea.setText(comments);
     }
@@ -390,6 +420,7 @@ public class NewDataPanel extends JPanel {
         panelData.minZ = (double)this.minZValue.getValue();
         panelData.maxZ = (double)this.maxZValue.getValue();
         panelData.defaultLHT = (double)this.defaultLhtValue.getValue();
+        panelData.boatName = this.boatNameField.getText();
         panelData.description = this.descriptionField.getText();
         panelData.comments = this.commentsTextArea.getText();
 

@@ -1,4 +1,5 @@
 {
+  "boat-name": "Boat Name",
   "description": "Points created by default when starting the program. Like the tri...",
   "comments": [
     "First point of rail is first point of bow",
