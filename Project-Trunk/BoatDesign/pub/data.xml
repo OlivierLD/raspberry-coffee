@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
 <boat-design>
     <boat-data>
-        <file-name>la.tete.a.toto.550.ikone.json</file-name>
+        <boat-name>La T&#234;te &#224; Toto</boat-name>
         <comments>
             <comment>First point of rail is first point of bow</comment>
             <comment>Last point of keel is first point of keel</comment>
             <comment>Length is 550 (for rail, and keel)</comment>
-            <comment>Displ ~0.560</comment>
+            <comment>Displ ~0.560 m3</comment>
         </comments>
         <description>Inspired by the Ikone JS we saw in Etel</description>
         <default-points>
@@ -57,7 +57,8 @@
         </dimensions>
     </boat-data>
     <drawings>
-        <from-top>../XY.png</from-top>
+        <water-lines>../XY.png</water-lines>
         <buttocks>../XZ.png</buttocks>
+        <frames>../YZ.png</frames>
     </drawings>
 </boat-design>
