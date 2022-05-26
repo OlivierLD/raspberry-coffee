@@ -3,9 +3,10 @@ echo ----------------------------
 echo T900 publisher
 echo ----------------------------
 #
-export SCRIPT_DIR=`dirname $0`
-echo moving to ${SCRIPT_DIR}
+export SCRIPT_DIR=$(dirname $0)
+echo -e "Moving to ${SCRIPT_DIR}"
 cd ${SCRIPT_DIR}
+echo -e "Working from $(pwd -P)"
 #
 export HOME=..
 #
@@ -18,8 +19,7 @@ export CP=${CP}:${HOME}/libs/xdo-0301.jar
 XSL_STYLESHEET=
 PRM_OPTION="-docconf ./config.cfg"
 LOOP=true
-while [ "$LOOP" == "true" ]
-do
+while [ "$LOOP" == "true" ]; do
 	clear
 	echo -e "+-------------------------------+"
 	echo -e "| Publication - Tables 900      |"

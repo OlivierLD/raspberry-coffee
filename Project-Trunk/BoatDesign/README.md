@@ -39,6 +39,8 @@ Then do the hydrostatic calculations.
       - Fill the script `SmallBoat.550.prms.scad` with the data you get when using the `scad` radio-button for the Bezier control points.
     - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
+- **pdf / fop** output ?... with XY.png, XZ.png, etc.
+  - Work in progress in the `pub` folder.
 
 ### Hints
 - The main of the Swing app is in `boatdesign.ThreeViews`.
@@ -47,9 +49,5 @@ Then do the hydrostatic calculations.
 ### Some small boats
 - <https://sailboatdata.com/sailboat/corsaire>
 - ...
-
-
-## TODO
-- pdf output ?... (See in app.samples.VikingSunCompass, oliv-swing)
 
 ---

@@ -1536,10 +1536,10 @@ public class ThreeViews {
 
             @Override
             public void mousePressed(MouseEvent e) {
-//        System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
+//              System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                 if (closePoint != null) {
-//            getLogger().log(Level.INFO, "Found it!");
+//                  getLogger().log(Level.INFO, "Found it!");
                     whiteBoardYZ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
             }

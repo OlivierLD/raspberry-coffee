@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<boat-design>
+    <boat-data>
+        <file-name>la.tete.a.toto.550.ikone.json</file-name>
+        <comments>
+            <comment>First point of rail is first point of bow</comment>
+            <comment>Last point of keel is first point of keel</comment>
+            <comment>Length is 550 (for rail, and keel)</comment>
+            <comment>Displ ~0.560</comment>
+        </comments>
+        <description>Inspired by the Ikone JS we saw in Etel</description>
+        <default-points>
+            <keel>
+                <x number="true">0.0</x>
+                <y number="true">0.0</y>
+                <z number="true">-2.0</z>
+            </keel>
+            <keel>
+                <x number="true">349.35185185185185</x>
+                <y number="true">0.0</y>
+                <z number="true">-38.611111111111114</z>
+            </keel>
+            <keel>
+                <x number="true">550.0</x>
+                <y number="true">0.0</y>
+                <z number="true">10.0</z>
+            </keel>
+            <rail>
+                <x number="true">0.0</x>
+                <y number="true">0.0</y>
+                <z number="true">75.0</z>
+            </rail>
+            <rail>
+                <x number="true">67.22222222222223</x>
+                <y number="true">86.785714</y>
+                <z number="true">54.074074074074076</z>
+            </rail>
+            <rail>
+                <x number="true">312.68518518518516</x>
+                <y number="true">159.90740740740742</y>
+                <z number="true">45.357143</z>
+            </rail>
+            <rail>
+                <x number="true">550.0</x>
+                <y number="true">80.0</y>
+                <z number="true">56.0</z>
+            </rail>
+        </default-points>
+        <dimensions>
+            <box-z number="true">-0.6</box-z>
+            <box-z number="true">1.25</box-z>
+            <default-lht number="true">5.5</default-lht>
+            <box-y number="true">-2.0</box-y>
+            <box-y number="true">2.0</box-y>
+            <box-x number="true">0.0</box-x>
+            <box-x number="true">6.0</box-x>
+        </dimensions>
+    </boat-data>
+    <drawings>
+        <from-top>../XY.png</from-top>
+        <buttocks>../XZ.png</buttocks>
+    </drawings>
+</boat-design>

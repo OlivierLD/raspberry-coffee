@@ -7,9 +7,10 @@
 CP=./build/libs/BoatDesign-1.0-all.jar
 LOGGING_FLAGS="-Djava.util.logging.config.file=./logging.properties"
 #
+# init.json is the default init-file
+#
 OPT=
-if [[ "$1" != "" ]]
-then
+if [[ "$1" != "" ]]; then
   OPT="-Dinit-file=$1"
 fi
 #
