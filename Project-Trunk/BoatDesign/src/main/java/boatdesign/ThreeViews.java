@@ -1106,7 +1106,7 @@ public class ThreeViews {
 
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXY.setGraphicTitle("XY - Top"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXY.setGraphicTitle("Water Lines"); // XY - Top"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXY.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardXY.setSize(new Dimension(800, 200));
         whiteBoardXY.setPreferredSize(new Dimension(600, 250));
@@ -1130,7 +1130,7 @@ public class ThreeViews {
 
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXZ.setGraphicTitle("XZ - Side"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXZ.setGraphicTitle("Buttocks"); // XZ - Side"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXZ.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardXZ.setSize(new Dimension(800, 200));
         whiteBoardXZ.setPreferredSize(new Dimension(600, 250));
@@ -1155,7 +1155,7 @@ public class ThreeViews {
 
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardYZ.setGraphicTitle("YZ - Face"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardYZ.setGraphicTitle("Frames"); // YZ - Face"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardYZ.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardYZ.setSize(new Dimension(400, 200));
         whiteBoardYZ.setPreferredSize(new Dimension(400, 250));
