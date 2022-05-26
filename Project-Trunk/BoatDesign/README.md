@@ -41,6 +41,7 @@ Then do the hydrostatic calculations.
 - Data to Processing (see PitchRoll.pde ...)
 - **pdf / fop** output ?... with XY.png, XZ.png, etc.
   - Work in progress in the `pub` folder.
+- Multi-lang - Soft and publications 
 
 ### Hints
 - The main of the Swing app is in `boatdesign.ThreeViews`.

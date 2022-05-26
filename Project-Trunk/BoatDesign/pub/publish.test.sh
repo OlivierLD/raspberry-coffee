@@ -11,7 +11,8 @@ echo -e "Working from $(pwd -P)"
 export HOME=../../../RESTNavServer/launchers
 #
 export CP=
-export CP=${CP}:${HOME}/../build/libs/RESTNavServer-1.0-all.jar  # For the XML Parser
+# export CP=${CP}:${HOME}/../build/libs/RESTNavServer-1.0-all.jar  # For the XML Parser
+export CP=${CP}:../build/libs/BoatDesign-1.0-all.jar  # For the XML Parser
 export CP=${CP}:${HOME}/libs/orai18n-collation.jar
 export CP=${CP}:${HOME}/libs/orai18n-mapping.jar
 export CP=${CP}:${HOME}/libs/fnd2.zip
@@ -62,7 +63,7 @@ while [ "$LOOP" == "true" ]; do
 			read a
       ;;
     "2")
-			java -classpath ${CP} tables.Dieumegard > dieumegard.xml
+#			java -classpath ${CP} tables.Dieumegard > dieumegard.xml
 			#
       java -classpath ${CP} oracle.xml.parser.v2.oraxsl -s html.xsl -l dieumegard.xml -o . -r html
       #

@@ -20,6 +20,7 @@ repositories {
 dependencies {
   implementation 'org.glassfish.jersey.core:jersey-client:2.25.1'
   implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
+  implementation 'oracle:xmlparser:2.0'
   implementation project(':Algebra')
   // https://mvnrepository.com/artifact/org.jogamp.jogl/jogl-all-main, For OpenGL for Java
   // implementation 'org.jogamp.jogl:jogl-all-main:2.3.2'
