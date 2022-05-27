@@ -23,10 +23,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -482,6 +479,28 @@ public class ThreeViews {
 
     private AtomicBoolean keepLooping = new AtomicBoolean(true);
 
+    private static XMLDocument buildXMLforPublishing(Map<String, Object> dataMap) {
+        XMLDocument doc = new XMLDocument();
+        XMLElement root = (XMLElement) doc.createElement("boat-design");
+        doc.appendChild(root);
+
+        XMLElement boatData = (XMLElement) doc.createElement("boat-data");
+        root.appendChild(boatData);
+
+        XMLElement boatName = (XMLElement) doc.createElement("boat-name");
+        boatData.appendChild(boatName);
+        Text boatNameValue = doc.createTextNode("#text");
+        boatName.appendChild(boatNameValue);
+        String mapBoatName = (String)dataMap.get("boat-name");
+        boatNameValue.setNodeValue(mapBoatName);
+
+//        Text nameValue = doc.createTextNode("#text");
+//        nameValue.setNodeValue("Calculated XML would eventually go here");
+//        root.appendChild(nameValue);
+
+        return doc;
+    }
+
     private void refreshBoatShape() {
         Thread repainter = new Thread(() -> {
             keepLooping.set(true);
@@ -558,23 +577,22 @@ public class ThreeViews {
                 String json;
                 try {
                     json = mapper.writerWithDefaultPrettyPrinter()
-                            .writeValueAsString(map);
+                                 .writeValueAsString(map);
                 } catch (JsonProcessingException jpe) {
                     json = map.toString();
                 }
                 boatDataTextArea.setText(json);
 
-                // TODO Do we need another callback here ?
-                xmlTextArea.setText("Calculated XML would eventually go here");
 
-                XMLDocument doc = new XMLDocument();
-                XMLElement root = (XMLElement) doc.createElement("boat-data");
-                doc.appendChild(root);
-                Text nameValue = doc.createTextNode("#text");
-                nameValue.setNodeValue("Akeu Coucou");
-                root.appendChild(nameValue);
+                XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig);
                 try {
-                    doc.print(System.out); // TODO A ByteArrayOutputStream ?
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    doc.print(baos);
+                    String xmlString = baos.toString();
+//                    System.out.println(xmlString);
+                    // TODO Do we need another callback here (in refreshData) ?
+                    xmlTextArea.setText(xmlString);
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
