@@ -1,4 +1,5 @@
 {
+  "boat-name": "Tri, main hull",
   "comments" : [ "30' trimaran main hull.", "First point of rail is first point of bow", "Last point of bow is first point of keel" ],
   "description" : "Points created by default when starting the program. Like the tri...",
   "default-points" : {
