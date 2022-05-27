@@ -494,9 +494,108 @@ public class ThreeViews {
         String mapBoatName = (String)dataMap.get("boat-name");
         boatNameValue.setNodeValue(mapBoatName);
 
-//        Text nameValue = doc.createTextNode("#text");
-//        nameValue.setNodeValue("Calculated XML would eventually go here");
-//        root.appendChild(nameValue);
+        XMLElement comments = (XMLElement) doc.createElement("comments");
+        boatData.appendChild(comments);
+
+        List<String> mapComments = (List)dataMap.get("comments");
+        mapComments.forEach(mapComment -> {
+            XMLElement comment = (XMLElement) doc.createElement("comment");
+            comments.appendChild(comment);
+            Text txtComment = doc.createTextNode("#text");
+            comment.appendChild(txtComment);
+            txtComment.setNodeValue(mapComment);
+        });
+        XMLElement description = (XMLElement) doc.createElement("description");
+        boatData.appendChild(description);
+        Text descriptionValue = doc.createTextNode("#text");
+        description.appendChild(descriptionValue);
+        String mapDescription = (String)dataMap.get("description");
+        descriptionValue.setNodeValue(mapDescription);
+
+        XMLElement defaultPoints = (XMLElement) doc.createElement("default-points");
+        boatData.appendChild(defaultPoints);
+        // The ctrl points
+        Map<String, Object> mapDefaultPoints = (Map)dataMap.get("default-points");
+        List<Object> mapKeelPoints = (List)mapDefaultPoints.get("keel");
+        mapKeelPoints.forEach(kp -> {
+            double x = ((Map<String, Double>)kp).get("x");
+            double y = ((Map<String, Double>)kp).get("y");
+            double z = ((Map<String, Double>)kp).get("z");
+            XMLElement keelPoint = (XMLElement) doc.createElement("keel");
+            defaultPoints.appendChild(keelPoint);
+
+            XMLElement xKeelPoint = (XMLElement) doc.createElement("x");
+            keelPoint.appendChild(xKeelPoint);
+            Text xValue = doc.createTextNode("#text");
+            xKeelPoint.appendChild(xValue);
+            xValue.setNodeValue(String.valueOf(x));
+
+            XMLElement yKeelPoint = (XMLElement) doc.createElement("y");
+            keelPoint.appendChild(yKeelPoint);
+            Text yValue = doc.createTextNode("#text");
+            yKeelPoint.appendChild(yValue);
+            yValue.setNodeValue(String.valueOf(y));
+
+            XMLElement zKeelPoint = (XMLElement) doc.createElement("z");
+            keelPoint.appendChild(zKeelPoint);
+            Text zValue = doc.createTextNode("#text");
+            zKeelPoint.appendChild(zValue);
+            zValue.setNodeValue(String.valueOf(z));
+        });
+
+        List<Object> mapRailPoints = (List)mapDefaultPoints.get("rail");
+        mapRailPoints.forEach(kp -> {
+            double x = ((Map<String, Double>)kp).get("x");
+            double y = ((Map<String, Double>)kp).get("y");
+            double z = ((Map<String, Double>)kp).get("z");
+            XMLElement railPoint = (XMLElement) doc.createElement("rail");
+            defaultPoints.appendChild(railPoint);
+
+            XMLElement xKeelPoint = (XMLElement) doc.createElement("x");
+            railPoint.appendChild(xKeelPoint);
+            Text xValue = doc.createTextNode("#text");
+            xKeelPoint.appendChild(xValue);
+            xValue.setNodeValue(String.valueOf(x));
+
+            XMLElement yKeelPoint = (XMLElement) doc.createElement("y");
+            railPoint.appendChild(yKeelPoint);
+            Text yValue = doc.createTextNode("#text");
+            yKeelPoint.appendChild(yValue);
+            yValue.setNodeValue(String.valueOf(y));
+
+            XMLElement zKeelPoint = (XMLElement) doc.createElement("z");
+            railPoint.appendChild(zKeelPoint);
+            Text zValue = doc.createTextNode("#text");
+            zKeelPoint.appendChild(zValue);
+            zValue.setNodeValue(String.valueOf(z));
+        });
+
+        // TODO Dimensions required ?
+        XMLElement dimensions = (XMLElement) doc.createElement("dimensions");
+        boatData.appendChild(dimensions);
+        // TODO The dimensions (if required)...
+
+        // Drawings
+        XMLElement drawings = (XMLElement) doc.createElement("drawings");
+        root.appendChild(drawings);
+
+        XMLElement waterLines = (XMLElement) doc.createElement("water-lines");
+        drawings.appendChild(waterLines);
+        Text waterlineValue = doc.createTextNode("#text");
+        waterLines.appendChild(waterlineValue);
+        waterlineValue.setNodeValue("XY.png or something...");
+
+        XMLElement buttocks = (XMLElement) doc.createElement("buttocks");
+        drawings.appendChild(buttocks);
+        Text buttocksValue = doc.createTextNode("#text");
+        buttocks.appendChild(buttocksValue);
+        buttocksValue.setNodeValue("XZ.png or something...");
+
+        XMLElement frames = (XMLElement) doc.createElement("frames");
+        drawings.appendChild(frames);
+        Text framesValue = doc.createTextNode("#text");
+        frames.appendChild(framesValue);
+        framesValue.setNodeValue("YZ.png or something...");
 
         return doc;
     }
