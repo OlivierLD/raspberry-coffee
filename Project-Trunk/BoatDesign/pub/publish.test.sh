@@ -52,7 +52,7 @@ while [ "$LOOP" == "true" ]; do
 			#
 			echo -e "Create the data.xml here..."
 			#
-			DATA=data.xml
+			DATA=data.2.xml
 			XSL=./data-fo.xsl
 			OUTPUT=data.pdf
 			COMMAND="java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor ${PRM_OPTION} -xml ${DATA} -xsl ${XSL} -pdf ${OUTPUT}"

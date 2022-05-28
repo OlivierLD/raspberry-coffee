@@ -1,0 +1,76 @@
+<boat-design>
+    <boat-data>
+        <boat-name>La Tête à Toto</boat-name>
+        <comments>
+            <comment>First point of rail is first point of bow</comment>
+            <comment>First point of keel is last point of bow</comment>
+            <comment>Length is 550 (for rail, and keel)</comment>
+            <comment>Displ ~0.560</comment>
+        </comments>
+        <description>Inspired by the Ikone JS we saw in Etel</description>
+        <ctrl-points>
+            <keel>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>-2.0</z>
+            </keel>
+            <keel>
+                <x>349.35185185185185</x>
+                <y>0.0</y>
+                <z>-38.611111111111114</z>
+            </keel>
+            <keel>
+                <x>550.0</x>
+                <y>0.0</y>
+                <z>10.0</z>
+            </keel>
+            <rail>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>75.0</z>
+            </rail>
+            <rail>
+                <x>67.22222222222223</x>
+                <y>86.785714</y>
+                <z>54.074074074074076</z>
+            </rail>
+            <rail>
+                <x>312.68518518518516</x>
+                <y>159.90740740740742</y>
+                <z>45.357143</z>
+            </rail>
+            <rail>
+                <x>550.0</x>
+                <y>80.0</y>
+                <z>56.0</z>
+            </rail>
+        </ctrl-points>
+        <dimensions/>
+        <calculated>
+            <lengths>
+                <loa>5.5000</loa>
+                <lwl-start>0.0000</lwl-start>
+                <lwl-end>5.0218</lwl-end>
+                <lwl>5.0218</lwl>
+            </lengths>
+            <depths>
+                <max-depth>-0.1773</max-depth>
+                <max-depth-x>2.7295</max-depth-x>
+            </depths>
+            <widths>
+                <max-width>2.2872</max-width>
+                <max-width-x>3.3925</max-width-x>
+            </widths>
+            <D>
+                <displ>0.6020</displ>
+                <cc-x>2.8803</cc-x>
+                <cc-z>-0.1366</cc-z>
+            </D>
+        </calculated>
+    </boat-data>
+    <drawings>
+        <water-lines>../XY.png</water-lines>
+        <buttocks>../XZ.png</buttocks>
+        <frames>../YZ.png</frames>
+    </drawings>
+</boat-design>

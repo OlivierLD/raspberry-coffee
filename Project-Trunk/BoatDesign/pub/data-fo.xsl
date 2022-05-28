@@ -43,12 +43,12 @@
 
           <fo:block margin="0.4in" break-after="page">
             <!-- Ctrl Points coordinates -->
-            <fo:block text-align="center" font-family="Courier New" font-size="8pt" font-style="italic" margin="0in">
-              B&#233;zier Control Points
+            <fo:block text-align="center" font-family="Courier New" font-weight="bold" font-size="12pt" font-style="italic" margin="0in">
+              B&#233;zier Control Points (values in cm)
             </fo:block>
 
             <fo:block text-align="left" font-weight="bold" font-family="Courier" font-size="10pt"  margin="5mm">
-              Keel - (<xsl:value-of select="count(/boat-design/boat-data/default-points/keel)"/> point(s))
+              Keel - (<xsl:value-of select="count(/boat-design/boat-data/ctrl-points/keel)"/> point(s))
             </fo:block>
 
             <!--xsl:for-each select="/boat-design/boat-data/default-points/keel">
@@ -80,7 +80,7 @@
 
               <fo:table-body>
 
-                <xsl:for-each select="/boat-design/boat-data/default-points/keel">
+                <xsl:for-each select="/boat-design/boat-data/ctrl-points/keel">
                   <fo:table-row>
                     <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="x"/> </fo:block></fo:table-cell>
                     <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="y"/> </fo:block></fo:table-cell>
@@ -92,7 +92,7 @@
             </fo:table>
 
             <fo:block text-align="left" font-weight="bold" font-family="Courier" font-size="10pt" margin="5mm">
-              Rail - (<xsl:value-of select="count(/boat-design/boat-data/default-points/rail)"/> point(s))
+              Rail - (<xsl:value-of select="count(/boat-design/boat-data/ctrl-points/rail)"/> point(s))
             </fo:block>
             <fo:table border="0">
               <fo:table-column column-width="50mm"/>
@@ -114,7 +114,7 @@
               </fo:table-header>
 
               <fo:table-body>
-                <xsl:for-each select="/boat-design/boat-data/default-points/rail">
+                <xsl:for-each select="/boat-design/boat-data/ctrl-points/rail">
                   <fo:table-row>
                     <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="x"/> </fo:block></fo:table-cell>
                     <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="y"/> </fo:block></fo:table-cell>
@@ -124,6 +124,50 @@
               </fo:table-body>
 
             </fo:table>
+
+
+            <fo:block margin-top="15mm">
+              <fo:block text-align="center" font-family="Courier New" font-weight="bold" font-size="12pt" font-style="italic" margin="0in">
+                Dimensions (values in meters)
+              </fo:block>
+              <fo:table border="1">
+                <fo:table-column column-width="40mm"/>
+                <fo:table-column column-width="30mm"/>
+                <fo:table-column column-width="50mm"/>
+                <fo:table-column column-width="50mm"/>
+
+                <fo:table-body>
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" font-style="italic"> LOA </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="/boat-design/boat-data/calculated/lengths/loa"/> </fo:block></fo:table-cell>
+                  </fo:table-row>
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" font-style="italic"> LWL </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="/boat-design/boat-data/calculated/lengths/lwl"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > From <xsl:value-of select="/boat-design/boat-data/calculated/lengths/lwl-start"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > To <xsl:value-of select="/boat-design/boat-data/calculated/lengths/lwl-end"/> </fo:block></fo:table-cell>
+                  </fo:table-row>
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" font-style="italic"> Max Beam </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="/boat-design/boat-data/calculated/widths/max-width"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > At <xsl:value-of select="/boat-design/boat-data/calculated/widths/max-width-x"/> </fo:block></fo:table-cell>
+                  </fo:table-row>
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" font-style="italic"> Max depth </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="/boat-design/boat-data/calculated/depths/max-depth"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > At <xsl:value-of select="/boat-design/boat-data/calculated/depths/max-depth-x"/> </fo:block></fo:table-cell>
+                  </fo:table-row>
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" font-style="italic"> D </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="/boat-design/boat-data/calculated/D/displ"/> m<fo:inline padding-left="1pt" baseline-shift="super" font-size="8pt">3</fo:inline> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > CC-x <xsl:value-of select="/boat-design/boat-data/calculated/D/cc-x"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > CC-z <xsl:value-of select="/boat-design/boat-data/calculated/D/cc-z"/> </fo:block></fo:table-cell>
+                  </fo:table-row>
+                </fo:table-body>
+              </fo:table>
+
+            </fo:block>
+
           </fo:block>
 
           <fo:block margin="12mm" break-after="page">
@@ -162,6 +206,40 @@
               <!--fo:external-graphic src="url('../XY.png')"/-->
               <fo:external-graphic src="url('{/boat-design/drawings/frames}')" />
             </fo:block>
+
+            <fo:block text-align="left" font-weight="bold" font-family="Courier" font-size="10pt" margin="5mm">
+              Frames Coordinates
+            </fo:block>
+            <fo:table border="0">
+              <fo:table-column column-width="50mm"/>
+              <fo:table-column column-width="50mm"/>
+              <fo:table-column column-width="50mm"/>
+
+              <fo:table-header>
+                <fo:table-row>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">X</fo:block>
+                  </fo:table-cell>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">Y</fo:block>
+                  </fo:table-cell>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">Z</fo:block>
+                  </fo:table-cell>
+                </fo:table-row>
+              </fo:table-header>
+
+              <fo:table-body>
+                <!--xsl:for-each select="/boat-design/boat-data/ctrl-points/rail"-->
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" > <!--xsl:value-of select="x"/--> 25 </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <!--xsl:value-of select="y"/--> 0.0 </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <!--xsl:value-of select="z"/--> 0.0 </fo:block></fo:table-cell>
+                  </fo:table-row>
+                <!--/xsl:for-each-->
+              </fo:table-body>
+
+            </fo:table>
 
           </fo:block>
 

@@ -26,6 +26,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,6 +53,8 @@ import java.util.stream.Collectors;
  * Calculation done in BoatBox3D, look for "// Actual shape calculation takes place here." in this BoatBox3D class.
  */
 public class ThreeViews {
+
+    private final static NumberFormat NUM_FMT = new DecimalFormat("#0.0000");
 
     // See in the starting script LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
     private final static Logger LOGGER = Logger.getLogger(ThreeViews.class.getName()); //  .getLogger(Logger.GLOBAL_LOGGER_NAME); // BoatBox3D.class;
@@ -479,7 +482,17 @@ public class ThreeViews {
 
     private AtomicBoolean keepLooping = new AtomicBoolean(true);
 
-    private static XMLDocument buildXMLforPublishing(Map<String, Object> dataMap) {
+    private static XMLElement createTextNode(XMLDocument doc, String name, String value) {
+        XMLElement xmlElement = (XMLElement) doc.createElement(name);
+        Text nodeValue = doc.createTextNode("#text");
+        xmlElement.appendChild(nodeValue);
+        nodeValue.setNodeValue(value);
+//        boatData.appendChild(boatName);
+        return xmlElement;
+    }
+
+    private static XMLDocument buildXMLforPublishing(Map<String, Object> dataMap,
+                                                     Map<String, Object> calculatedMap) {
         XMLDocument doc = new XMLDocument();
         XMLElement root = (XMLElement) doc.createElement("boat-design");
         doc.appendChild(root);
@@ -487,32 +500,18 @@ public class ThreeViews {
         XMLElement boatData = (XMLElement) doc.createElement("boat-data");
         root.appendChild(boatData);
 
-        XMLElement boatName = (XMLElement) doc.createElement("boat-name");
-        boatData.appendChild(boatName);
-        Text boatNameValue = doc.createTextNode("#text");
-        boatName.appendChild(boatNameValue);
-        String mapBoatName = (String)dataMap.get("boat-name");
-        boatNameValue.setNodeValue(mapBoatName);
+        boatData.appendChild(createTextNode(doc, "boat-name", (String)dataMap.get("boat-name")));
 
         XMLElement comments = (XMLElement) doc.createElement("comments");
         boatData.appendChild(comments);
 
         List<String> mapComments = (List)dataMap.get("comments");
         mapComments.forEach(mapComment -> {
-            XMLElement comment = (XMLElement) doc.createElement("comment");
-            comments.appendChild(comment);
-            Text txtComment = doc.createTextNode("#text");
-            comment.appendChild(txtComment);
-            txtComment.setNodeValue(mapComment);
+            comments.appendChild(createTextNode(doc, "comment", mapComment));
         });
-        XMLElement description = (XMLElement) doc.createElement("description");
-        boatData.appendChild(description);
-        Text descriptionValue = doc.createTextNode("#text");
-        description.appendChild(descriptionValue);
-        String mapDescription = (String)dataMap.get("description");
-        descriptionValue.setNodeValue(mapDescription);
+        boatData.appendChild(createTextNode(doc, "description", (String)dataMap.get("description")));
 
-        XMLElement defaultPoints = (XMLElement) doc.createElement("default-points");
+        XMLElement defaultPoints = (XMLElement) doc.createElement("ctrl-points");
         boatData.appendChild(defaultPoints);
         // The ctrl points
         Map<String, Object> mapDefaultPoints = (Map)dataMap.get("default-points");
@@ -524,23 +523,9 @@ public class ThreeViews {
             XMLElement keelPoint = (XMLElement) doc.createElement("keel");
             defaultPoints.appendChild(keelPoint);
 
-            XMLElement xKeelPoint = (XMLElement) doc.createElement("x");
-            keelPoint.appendChild(xKeelPoint);
-            Text xValue = doc.createTextNode("#text");
-            xKeelPoint.appendChild(xValue);
-            xValue.setNodeValue(String.valueOf(x));
-
-            XMLElement yKeelPoint = (XMLElement) doc.createElement("y");
-            keelPoint.appendChild(yKeelPoint);
-            Text yValue = doc.createTextNode("#text");
-            yKeelPoint.appendChild(yValue);
-            yValue.setNodeValue(String.valueOf(y));
-
-            XMLElement zKeelPoint = (XMLElement) doc.createElement("z");
-            keelPoint.appendChild(zKeelPoint);
-            Text zValue = doc.createTextNode("#text");
-            zKeelPoint.appendChild(zValue);
-            zValue.setNodeValue(String.valueOf(z));
+            keelPoint.appendChild(createTextNode(doc, "x", String.valueOf(x)));
+            keelPoint.appendChild(createTextNode(doc, "y", String.valueOf(y)));
+            keelPoint.appendChild(createTextNode(doc, "z", String.valueOf(z)));
         });
 
         List<Object> mapRailPoints = (List)mapDefaultPoints.get("rail");
@@ -551,23 +536,9 @@ public class ThreeViews {
             XMLElement railPoint = (XMLElement) doc.createElement("rail");
             defaultPoints.appendChild(railPoint);
 
-            XMLElement xKeelPoint = (XMLElement) doc.createElement("x");
-            railPoint.appendChild(xKeelPoint);
-            Text xValue = doc.createTextNode("#text");
-            xKeelPoint.appendChild(xValue);
-            xValue.setNodeValue(String.valueOf(x));
-
-            XMLElement yKeelPoint = (XMLElement) doc.createElement("y");
-            railPoint.appendChild(yKeelPoint);
-            Text yValue = doc.createTextNode("#text");
-            yKeelPoint.appendChild(yValue);
-            yValue.setNodeValue(String.valueOf(y));
-
-            XMLElement zKeelPoint = (XMLElement) doc.createElement("z");
-            railPoint.appendChild(zKeelPoint);
-            Text zValue = doc.createTextNode("#text");
-            zKeelPoint.appendChild(zValue);
-            zValue.setNodeValue(String.valueOf(z));
+            railPoint.appendChild(createTextNode(doc, "x", String.valueOf(x)));
+            railPoint.appendChild(createTextNode(doc, "y", String.valueOf(y)));
+            railPoint.appendChild(createTextNode(doc, "z", String.valueOf(z)));
         });
 
         // TODO Dimensions required ?
@@ -575,27 +546,43 @@ public class ThreeViews {
         boatData.appendChild(dimensions);
         // TODO The dimensions (if required)...
 
+        XMLElement calculated = (XMLElement) doc.createElement("calculated");
+        boatData.appendChild(calculated);
+
+        XMLElement lengths = (XMLElement) doc.createElement("lengths");
+        calculated.appendChild(lengths);
+
+        lengths.appendChild(createTextNode(doc, "loa", NUM_FMT.format((double)((Map<String, Object>)dataMap.get("dimensions")).get("default-lht"))));
+        lengths.appendChild(createTextNode(doc, "lwl-start", NUM_FMT.format((double)calculatedMap.get("lwl-start"))));
+        lengths.appendChild(createTextNode(doc, "lwl-end", NUM_FMT.format((double)calculatedMap.get("lwl-end"))));
+        lengths.appendChild(createTextNode(doc, "lwl", NUM_FMT.format((double)calculatedMap.get("lwl"))));
+
+        XMLElement depths = (XMLElement) doc.createElement("depths");
+        calculated.appendChild(depths);
+
+        depths.appendChild(createTextNode(doc, "max-depth", NUM_FMT.format((double)calculatedMap.get("max-depth"))));
+        depths.appendChild(createTextNode(doc, "max-depth-x", NUM_FMT.format((double)calculatedMap.get("max-depth-x"))));
+
+        XMLElement widths = (XMLElement) doc.createElement("widths");
+        calculated.appendChild(widths);
+
+        widths.appendChild(createTextNode(doc, "max-width", NUM_FMT.format(2d * (double)calculatedMap.get("max-width"))));
+        widths.appendChild(createTextNode(doc, "max-width-x", NUM_FMT.format((double)calculatedMap.get("max-width-x"))));
+
+        XMLElement displ = (XMLElement) doc.createElement("D");
+        calculated.appendChild(displ);
+
+        displ.appendChild(createTextNode(doc, "displ", NUM_FMT.format((double)calculatedMap.get("displ-m3"))));
+        displ.appendChild(createTextNode(doc, "cc-x", NUM_FMT.format((double)calculatedMap.get("cc-x"))));
+        displ.appendChild(createTextNode(doc, "cc-z", NUM_FMT.format((double)calculatedMap.get("cc-z"))));
+
         // Drawings
         XMLElement drawings = (XMLElement) doc.createElement("drawings");
         root.appendChild(drawings);
 
-        XMLElement waterLines = (XMLElement) doc.createElement("water-lines");
-        drawings.appendChild(waterLines);
-        Text waterlineValue = doc.createTextNode("#text");
-        waterLines.appendChild(waterlineValue);
-        waterlineValue.setNodeValue("XY.png or something...");
-
-        XMLElement buttocks = (XMLElement) doc.createElement("buttocks");
-        drawings.appendChild(buttocks);
-        Text buttocksValue = doc.createTextNode("#text");
-        buttocks.appendChild(buttocksValue);
-        buttocksValue.setNodeValue("XZ.png or something...");
-
-        XMLElement frames = (XMLElement) doc.createElement("frames");
-        drawings.appendChild(frames);
-        Text framesValue = doc.createTextNode("#text");
-        frames.appendChild(framesValue);
-        framesValue.setNodeValue("YZ.png or something...");
+        drawings.appendChild(createTextNode(doc, "water-lines", "XY.png or something..."));
+        drawings.appendChild(createTextNode(doc, "buttocks", "XZ.png or something..."));
+        drawings.appendChild(createTextNode(doc, "frames", "YZ.png or something..."));
 
         return doc;
     }
@@ -682,8 +669,8 @@ public class ThreeViews {
                 }
                 boatDataTextArea.setText(json);
 
-
-                XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig);
+                // XML for XSL-FO publishing
+                XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig, map);
                 try {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     doc.print(baos);

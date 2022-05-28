@@ -4,7 +4,7 @@
         <boat-name>La T&#234;te &#224; Toto</boat-name>
         <comments>
             <comment>First point of rail is first point of bow</comment>
-            <comment>Last point of keel is first point of keel</comment>
+            <comment>First point of keel is last point of bow</comment>
             <comment>Length is 550 (for rail, and keel)</comment>
             <comment>Displ ~0.560 m3</comment>
         </comments>

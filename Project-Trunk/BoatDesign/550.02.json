@@ -1,5 +1,5 @@
 {
-  "comments" : [ "First point of rail is first point of bow", "Last point of keel is first point of keel", "Length id 550 (for rail, and keel)" ],
+  "comments" : [ "First point of rail is first point of bow", "First point of keel is last point of bow", "Length id 550 (for rail, and keel)" ],
   "description" : "Points created by default when starting the program",
   "default-points" : {
     "keel" : [ {
