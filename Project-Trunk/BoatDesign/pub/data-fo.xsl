@@ -153,7 +153,7 @@
                     <fo:table-cell><fo:block font-family="Courier" > At <xsl:value-of select="/boat-design/boat-data/calculated/widths/max-width-x"/> </fo:block></fo:table-cell>
                   </fo:table-row>
                   <fo:table-row border-width="1px" border-style="solid">
-                    <fo:table-cell><fo:block font-family="Courier" font-style="italic"> Max depth </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" font-style="italic"> Max Draft </fo:block></fo:table-cell>
                     <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="/boat-design/boat-data/calculated/depths/max-depth"/> </fo:block></fo:table-cell>
                     <fo:table-cell><fo:block font-family="Courier" > At <xsl:value-of select="/boat-design/boat-data/calculated/depths/max-depth-x"/> </fo:block></fo:table-cell>
                   </fo:table-row>
