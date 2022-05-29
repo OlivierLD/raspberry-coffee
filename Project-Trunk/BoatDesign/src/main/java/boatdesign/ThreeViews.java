@@ -14,6 +14,7 @@ import gsg.VectorUtils;
 import oracle.xml.parser.v2.XMLDocument;
 import oracle.xml.parser.v2.XMLElement;
 
+import org.w3c.dom.Comment;
 import org.w3c.dom.Text;
 
 import javax.swing.*;
@@ -618,14 +619,48 @@ public class ThreeViews {
         displ.appendChild(createTextNode(doc, "cc-x", NUM_FMT.format((double)calculatedMap.get("cc-x"))));
         displ.appendChild(createTextNode(doc, "cc-z", NUM_FMT.format((double)calculatedMap.get("cc-z"))));
 
+        // TODO Keel and Rail coordinates
+        XMLElement keelAndRails = (XMLElement) doc.createElement("keel-and-rails");
+        root.appendChild(keelAndRails);
+        XMLElement keel = (XMLElement) doc.createElement("keel");
+        keelAndRails.appendChild(keel);
+        List<Map<String, Double>> keelPoints = (List<Map<String, Double>>)((Map<String, Object>)dataMap.get("default-points")).get("keel");
+        List<Bezier.Point3D> keelCtrlPoints = new ArrayList<>();
+        keelPoints.forEach(kp ->  keelCtrlPoints.add(new Bezier.Point3D(kp.get("x"), kp.get("y"), kp.get("z"))) );
+        Bezier keelBezier = new Bezier(keelCtrlPoints);
+        System.out.println("Ah!");
+        for (int x=0; x<=(loa * 100.0); x+=10) { // in cm
+            try {
+                double t = keelBezier.getTForGivenX(0, 1E-2, x, 1E-4);
+                Bezier.Point3D keelPoint = keelBezier.getBezierPoint(t);
+                XMLElement keelElement = createTextNode(doc, "keel", NUM_FMT.format(keelPoint.getZ()));
+                keelElement.setAttribute("x", String.valueOf(x));
+                keel.appendChild(keelElement);
+            } catch (Bezier.TooDeepRecursionException tdre) {
+                tdre.printStackTrace();
+            }
+        }
+
         // Drawings
         XMLElement drawings = (XMLElement) doc.createElement("drawings");
         root.appendChild(drawings);
 
         drawings.appendChild(createTextNode(doc, "water-lines", "../XY.png")); // TODO Real image names
-        drawings.appendChild(createTextNode(doc, "buttocks", "../XZ.png"));    // TODO Real image names
-        drawings.appendChild(createTextNode(doc, "frames", "../YZ.png"));      // TODO Real image names
+        XMLElement wlCoordinates = (XMLElement) doc.createElement("wl-coordinates");
+        drawings.appendChild(wlCoordinates);
+        // TODO The coordinates
+        Comment commentWL = doc.createComment("TODO, water-lines");
+        wlCoordinates.appendChild(commentWL);
 
+        drawings.appendChild(createTextNode(doc, "buttocks", "../XZ.png"));    // TODO Real image names
+        XMLElement buttocksCoordinates = (XMLElement) doc.createElement("buttocks-coordinates");
+        drawings.appendChild(buttocksCoordinates);
+        // TODO The coordinates
+        Comment commentB = doc.createComment("TODO, buttocks");
+        buttocksCoordinates.appendChild(commentB);
+
+        drawings.appendChild(createTextNode(doc, "frames", "../YZ.png"));      // TODO Real image names
+        // Coordinates
         XMLElement frameCoordinates = (XMLElement) doc.createElement("frame-coordinates");
         drawings.appendChild(frameCoordinates);
         allFramesCtrlPts.forEach(frameBezier -> {
@@ -1302,7 +1337,7 @@ public class ThreeViews {
 
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXY.setGraphicTitle("Water Lines"); // XY - Top"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXY.setGraphicTitle(BoatDesignResourceBundle.buildMessage("water-lines")); // XY - Top"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXY.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardXY.setSize(new Dimension(800, 200));
         whiteBoardXY.setPreferredSize(new Dimension(600, 250));
@@ -1326,7 +1361,7 @@ public class ThreeViews {
 
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXZ.setGraphicTitle("Buttocks"); // XZ - Side"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXZ.setGraphicTitle(BoatDesignResourceBundle.buildMessage("buttocks")); // XZ - Side"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXZ.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardXZ.setSize(new Dimension(800, 200));
         whiteBoardXZ.setPreferredSize(new Dimension(600, 250));
@@ -1351,7 +1386,7 @@ public class ThreeViews {
 
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardYZ.setGraphicTitle("Frames"); // YZ - Face"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardYZ.setGraphicTitle(BoatDesignResourceBundle.buildMessage("frames")); // YZ - Face"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardYZ.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardYZ.setSize(new Dimension(400, 200));
         whiteBoardYZ.setPreferredSize(new Dimension(400, 250));

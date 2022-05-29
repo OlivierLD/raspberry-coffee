@@ -234,9 +234,10 @@ public class Bezier {
                 return ((val - val1) / (val2 - val1));
             }
         }
-        double[] minMax = this.getMinMax(coordinate, precision); // precision? or other value?
+        double[] minMax = this.getMinMax(coordinate, precision); // precision? or other value? See below.
 
-        if (val < minMax[0] || val > minMax[1]) {
+//        if (val < minMax[0] || (val > minMax[1] )) { // TODO precision... Check (just) below.
+        if (val < minMax[0] || (val - minMax[1]) > precision) {
             return -1; // Not in range!
         }
         for (double t=startAt; t<=1+inc; t+=inc) {  // TODO verify the limit (of a double...)
