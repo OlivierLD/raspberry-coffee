@@ -207,7 +207,7 @@
             </fo:block>
 
             <fo:block text-align="left" font-weight="bold" font-family="Courier" font-size="10pt" margin="5mm">
-              Frames Coordinates
+              Frames Coordinates (values in cm)
             </fo:block>
             <fo:table border="0">
               <fo:table-column column-width="50mm"/>

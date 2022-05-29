@@ -3,6 +3,7 @@ package boatdesign;
 import bezier.Bezier;
 import boatdesign.swingstuff.NewDataPanel;
 import boatdesign.threeD.BoatBox3D;
+import boatdesign.utils.BoatDesignResourceBundle;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.SwingUtils;
@@ -71,7 +72,7 @@ public class ThreeViews {
     private double defaultLHT;
     private double xMaxWidth = -1.0;
 
-    private final static String TITLE = "3D Bezier Drawing Board (WiP). Rail and Keel.";
+    private final static String TITLE = BoatDesignResourceBundle.buildMessage("app-title");
 
     private static JFrame frame;
     private final ThreeDPanelWithWidgets threeDPanel;
@@ -96,8 +97,8 @@ public class ThreeViews {
     private final JMenu menuHelp = new JMenu();
     private final JMenuItem menuHelpAbout = new JMenuItem();
     private JLabel topLabel;
-    private final JButton refreshButton = new JButton("Refresh Boat Shape");
-    private final JButton stopRefreshButton = new JButton("Stop Refresh");
+    private final JButton refreshButton = new JButton(BoatDesignResourceBundle.buildMessage("refresh-boat-shape"));
+    private final JButton stopRefreshButton = new JButton(BoatDesignResourceBundle.buildMessage("stop-refresh"));
 
     private final JRadioButton jsonRadioButton = new JRadioButton("json");
     private final JRadioButton scadRadioButton = new JRadioButton("scad");
