@@ -62,9 +62,9 @@
                 <max-width-x>3.3925</max-width-x>
             </widths>
             <D>
-                <displ>0.6020</displ>
-                <cc-x>2.8803</cc-x>
-                <cc-z>-0.1366</cc-z>
+                <displ>0.5599</displ>
+                <cc-x>3.1407</cc-x>
+                <cc-z>-0.1367</cc-z>
             </D>
         </calculated>
     </boat-data>
@@ -72,5 +72,115 @@
         <water-lines>../XY.png</water-lines>
         <buttocks>../XZ.png</buttocks>
         <frames>../YZ.png</frames>
+        <frame-coordinates>
+            <frame x="100.0000">
+                <rail>
+                    <y>69.1288</y>
+                    <z>59.9562</z>
+                </rail>
+                <keel>
+                    <z>-10.9591</z>
+                </keel>
+                <frame-coord-z w="10.0000">-10.5586</frame-coord-z>
+                <frame-coord-z w="20.0000">-9.2116</frame-coord-z>
+                <frame-coord-z w="30.0000">-6.6098</frame-coord-z>
+                <frame-coord-z w="40.0000">-2.2288</frame-coord-z>
+                <frame-coord-z w="50.0000">4.9715</frame-coord-z>
+                <frame-coord-z w="60.0000">17.7805</frame-coord-z>
+            </frame>
+            <frame x="200.0000">
+                <rail>
+                    <y>100.2443</y>
+                    <z>54.0727</z>
+                </rail>
+                <keel>
+                    <z>-16.4303</z>
+                </keel>
+                <frame-coord-z w="10.0000">-16.2456</frame-coord-z>
+                <frame-coord-z w="20.0000">-15.6486</frame-coord-z>
+                <frame-coord-z w="30.0000">-14.5593</frame-coord-z>
+                <frame-coord-z w="40.0000">-12.8683</frame-coord-z>
+                <frame-coord-z w="50.0000">-10.4176</frame-coord-z>
+                <frame-coord-z w="60.0000">-6.9659</frame-coord-z>
+                <frame-coord-z w="70.0000">-2.1076</frame-coord-z>
+                <frame-coord-z w="80.0000">4.9443</frame-coord-z>
+                <frame-coord-z w="90.0000">16.2013</frame-coord-z>
+                <frame-coord-z w="100.0000">47.2831</frame-coord-z>
+            </frame>
+            <frame x="300.0000">
+                <rail>
+                    <y>113.3471</y>
+                    <z>51.6909</z>
+                </rail>
+                <keel>
+                    <z>-17.5284</z>
+                </keel>
+                <frame-coord-z w="10.0000">-17.3874</frame-coord-z>
+                <frame-coord-z w="20.0000">-16.9361</frame-coord-z>
+                <frame-coord-z w="30.0000">-16.1230</frame-coord-z>
+                <frame-coord-z w="40.0000">-14.8808</frame-coord-z>
+                <frame-coord-z w="50.0000">-13.1180</frame-coord-z>
+                <frame-coord-z w="60.0000">-10.7054</frame-coord-z>
+                <frame-coord-z w="70.0000">-7.4492</frame-coord-z>
+                <frame-coord-z w="80.0000">-3.0343</frame-coord-z>
+                <frame-coord-z w="90.0000">3.1184</frame-coord-z>
+                <frame-coord-z w="100.0000">12.3361</frame-coord-z>
+                <frame-coord-z w="110.0000">29.9454</frame-coord-z>
+            </frame>
+            <frame x="400.0000">
+                <rail>
+                    <y>111.4924</y>
+                    <z>51.7764</z>
+                </rail>
+                <keel>
+                    <z>-12.9150</z>
+                </keel>
+                <frame-coord-z w="10.0000">-12.7787</frame-coord-z>
+                <frame-coord-z w="20.0000">-12.3419</frame-coord-z>
+                <frame-coord-z w="30.0000">-11.5537</frame-coord-z>
+                <frame-coord-z w="40.0000">-10.3472</frame-coord-z>
+                <frame-coord-z w="50.0000">-8.6308</frame-coord-z>
+                <frame-coord-z w="60.0000">-6.2737</frame-coord-z>
+                <frame-coord-z w="70.0000">-3.0777</frame-coord-z>
+                <frame-coord-z w="80.0000">1.2860</frame-coord-z>
+                <frame-coord-z w="90.0000">7.4407</frame-coord-z>
+                <frame-coord-z w="100.0000">16.9053</frame-coord-z>
+                <frame-coord-z w="110.0000">37.6732</frame-coord-z>
+            </frame>
+            <frame x="500.0000">
+                <rail>
+                    <y>94.6057</y>
+                    <z>54.0435</z>
+                </rail>
+                <keel>
+                    <z>-0.3873</z>
+                </keel>
+                <frame-coord-z w="10.0000">-0.2266</frame-coord-z>
+                <frame-coord-z w="20.0000">0.2952</frame-coord-z>
+                <frame-coord-z w="30.0000">1.2536</frame-coord-z>
+                <frame-coord-z w="40.0000">2.7550</frame-coord-z>
+                <frame-coord-z w="50.0000">4.9571</frame-coord-z>
+                <frame-coord-z w="60.0000">8.1137</frame-coord-z>
+                <frame-coord-z w="70.0000">12.6822</frame-coord-z>
+                <frame-coord-z w="80.0000">19.6730</frame-coord-z>
+                <frame-coord-z w="90.0000">32.6738</frame-coord-z>
+            </frame>
+            <frame x="550.0000">
+                <rail>
+                    <y>80.0000</y>
+                    <z>56.0000</z>
+                </rail>
+                <keel>
+                    <z>10.0000</z>
+                </keel>
+                <frame-coord-z w="10.0000">10.1919</frame-coord-z>
+                <frame-coord-z w="20.0000">10.8257</frame-coord-z>
+                <frame-coord-z w="30.0000">12.0176</frame-coord-z>
+                <frame-coord-z w="40.0000">13.9462</frame-coord-z>
+                <frame-coord-z w="50.0000">16.9117</frame-coord-z>
+                <frame-coord-z w="60.0000">21.5000</frame-coord-z>
+                <frame-coord-z w="70.0000">29.2231</frame-coord-z>
+            </frame>
+        </frame-coordinates>
     </drawings>
 </boat-design>

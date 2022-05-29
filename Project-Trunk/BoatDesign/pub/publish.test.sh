@@ -24,7 +24,7 @@ LOOP=true
 while [ "$LOOP" == "true" ]; do
 	clear
 	echo -e "+-------------------------------+"
-	echo -e "| Publication - Tables 900      |"
+	echo -e "| Publication - Bezier Boat     |"
 	echo -e "+-------------------------------+"
 	echo -e "| 0. FOP Processor help         |"
 	echo -e "| 1. First test (pdf)           |"
@@ -50,7 +50,7 @@ while [ "$LOOP" == "true" ]; do
     "1")
 			echo Publishing, please be patient...
 			#
-			echo -e "Create the data.xml here..."
+			echo -e "Create the data.xml here...?"
 			#
 			DATA=data.2.xml
 			XSL=./data-fo.xsl

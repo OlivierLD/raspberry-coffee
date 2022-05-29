@@ -120,9 +120,9 @@ public class ThreeViews {
     private List<Bezier.Point3D> keelCtrlPoints = new ArrayList<>();
 
     // The WhiteBoard instantiations
-    private final WhiteBoardPanel whiteBoardXY; // from above
-    private final WhiteBoardPanel whiteBoardXZ; // side
-    private final WhiteBoardPanel whiteBoardYZ; // facing
+    private final WhiteBoardPanel whiteBoardXY; // from above, water-lines
+    private final WhiteBoardPanel whiteBoardXZ; // side, buttocks
+    private final WhiteBoardPanel whiteBoardYZ; // facing, frames
 
     private static class UserWBParameters {
         boolean generateImage = false;
@@ -487,12 +487,52 @@ public class ThreeViews {
         Text nodeValue = doc.createTextNode("#text");
         xmlElement.appendChild(nodeValue);
         nodeValue.setNodeValue(value);
-//        boatData.appendChild(boatName);
+
         return xmlElement;
     }
 
+    private static void processFrame(XMLDocument doc, XMLElement frameCoordinates, double loa, List<Bezier.Point3D> frameBezier) {
+        double x = frameBezier.get(0).getX();
+        XMLElement oneFrame = (XMLElement) doc.createElement("frame");
+        oneFrame.setAttribute("x", NUM_FMT.format(x + (loa * 100.0 / 2.0)));
+        frameCoordinates.appendChild(oneFrame);
+        // first: rail, last: keel
+        double yRail = frameBezier.get(0).getY();
+        double zRail = frameBezier.get(0).getZ();
+        double zKeel = frameBezier.get(frameBezier.size() - 1).getZ();
+        XMLElement rail = (XMLElement) doc.createElement("rail");
+        oneFrame.appendChild(rail);
+        rail.appendChild(createTextNode(doc, "y", NUM_FMT.format(yRail)));
+        rail.appendChild(createTextNode(doc, "z", NUM_FMT.format(zRail)));
+
+        XMLElement keel = (XMLElement) doc.createElement("keel");
+        oneFrame.appendChild(keel);
+        keel.appendChild(createTextNode(doc, "z", NUM_FMT.format(zKeel)));
+        // Coordinates. Step: buttocks - TODO 10 for now
+        for (int w=10; w<yRail; w+=10.0) {
+            // Get the value for given w
+            String zStrValue = "-";
+            Bezier bezier = new Bezier(frameBezier);
+            try {
+                double t = bezier.getTForGivenY(0, 1E-1, w, 1E-4, false); // false: because => rail to keel
+                Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
+                double zValue = bezierPoint.getZ();
+                zStrValue = NUM_FMT.format(zValue);
+            } catch (Bezier.TooDeepRecursionException e) {
+                e.printStackTrace();
+            }
+
+            XMLElement frameCoord = createTextNode(doc, "frame-coord-z", zStrValue);
+            frameCoord.setAttribute("w", NUM_FMT.format(w));
+            oneFrame.appendChild(frameCoord);
+        }
+    }
+
     private static XMLDocument buildXMLforPublishing(Map<String, Object> dataMap,
-                                                     Map<String, Object> calculatedMap) {
+                                                     Map<String, Object> calculatedMap,
+                                                     List<List<Bezier.Point3D>> allFramesCtrlPts,
+                                                     List<List<Bezier.Point3D>> allBeamsCtrlPts,
+                                                     List<Bezier.Point3D> ctrlPointsTransom) {
         XMLDocument doc = new XMLDocument();
         XMLElement root = (XMLElement) doc.createElement("boat-design");
         doc.appendChild(root);
@@ -552,7 +592,8 @@ public class ThreeViews {
         XMLElement lengths = (XMLElement) doc.createElement("lengths");
         calculated.appendChild(lengths);
 
-        lengths.appendChild(createTextNode(doc, "loa", NUM_FMT.format((double)((Map<String, Object>)dataMap.get("dimensions")).get("default-lht"))));
+        double loa = (double)((Map<String, Object>)dataMap.get("dimensions")).get("default-lht");
+        lengths.appendChild(createTextNode(doc, "loa", NUM_FMT.format(loa)));
         lengths.appendChild(createTextNode(doc, "lwl-start", NUM_FMT.format((double)calculatedMap.get("lwl-start"))));
         lengths.appendChild(createTextNode(doc, "lwl-end", NUM_FMT.format((double)calculatedMap.get("lwl-end"))));
         lengths.appendChild(createTextNode(doc, "lwl", NUM_FMT.format((double)calculatedMap.get("lwl"))));
@@ -580,9 +621,17 @@ public class ThreeViews {
         XMLElement drawings = (XMLElement) doc.createElement("drawings");
         root.appendChild(drawings);
 
-        drawings.appendChild(createTextNode(doc, "water-lines", "XY.png or something..."));
-        drawings.appendChild(createTextNode(doc, "buttocks", "XZ.png or something..."));
-        drawings.appendChild(createTextNode(doc, "frames", "YZ.png or something..."));
+        drawings.appendChild(createTextNode(doc, "water-lines", "../XY.png")); // TODO Real image names
+        drawings.appendChild(createTextNode(doc, "buttocks", "../XZ.png"));    // TODO Real image names
+        drawings.appendChild(createTextNode(doc, "frames", "../YZ.png"));      // TODO Real image names
+
+        XMLElement frameCoordinates = (XMLElement) doc.createElement("frame-coordinates");
+        drawings.appendChild(frameCoordinates);
+        allFramesCtrlPts.forEach(frameBezier -> {
+            processFrame(doc, frameCoordinates, loa, frameBezier);
+        });
+        // Transom
+        processFrame(doc, frameCoordinates, loa, ctrlPointsTransom);
 
         return doc;
     }
@@ -670,7 +719,14 @@ public class ThreeViews {
                 boatDataTextArea.setText(json);
 
                 // XML for XSL-FO publishing
-                XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig, map);
+                List<List<Bezier.Point3D>> allFramesCtrlPts = this.box3D.getFrameCtrlPts();
+                List<List<Bezier.Point3D>> allBeamsCtrlPts = this.box3D.getBeamCtrlPts();
+                List<Bezier.Point3D> ctrlPointsTransom = this.box3D.getTransomCtrlPoint();
+                XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig,
+                                                                   map,
+                                                                   allFramesCtrlPts,
+                                                                   allBeamsCtrlPts,
+                                                                   ctrlPointsTransom);
                 try {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     doc.print(baos);
@@ -687,7 +743,7 @@ public class ThreeViews {
                     // CC position
                     Double xCC = (Double) map.get("cc-x");
                     Double zCC = (Double) map.get("cc-z");
-                    if (xCC != null && zCC != null&& xCC != -0.01 && zCC != -0.01) {
+                    if (xCC != null && zCC != null && xCC != -0.01 && zCC != -0.01) {
                         // Display on 2D whiteboards
                         centerOfHull = new VectorUtils.Vector3D()
                                 .x(xCC * 1e2)
@@ -734,12 +790,16 @@ public class ThreeViews {
                     if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.FRAME)) {
                         List<VectorUtils.Vector3D> data = (List)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D ?
                         List<VectorUtils.Vector2D> framePtsYZVectors = new ArrayList<>();
-                        // Find x position of the max width
+                        // Find x position of the max width. 'data' contains the points. Rail to Keel.
                         data.forEach(pt -> {
                             // Transom sometime goes on the wrong side...
                             boolean right = pt.getX() < (this.xMaxWidth - (this.defaultLHT / 2));
                             framePtsYZVectors.add(new VectorUtils.Vector2D(right ? pt.getY() : -pt.getY(), pt.getZ()));
                         });
+                        // TODO get here the required coordinates for the frame.
+                        // With X, rail value, keel value, points of the frame (Y & Z), with step on Y.
+                        // Keel & Rail ctrl points in initConfig.default-points
+
                         WhiteBoardPanel.DataSerie frameYZSerie = new WhiteBoardPanel.DataSerie()
                                 .data(framePtsYZVectors)
                                 .graphicType(WhiteBoardPanel.GraphicType.LINE)

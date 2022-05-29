@@ -102,6 +102,34 @@ public class BoatBox3D extends Box3D {
             new Bezier.Point3D((-centerOnXValue + xOffset) + 550.0, 65.0, 5.642857),
             new Bezier.Point3D((-centerOnXValue + xOffset) + 550.000000, 0.000000, 5.000000)); // PT A
 
+    public List<List<Bezier.Point3D>> getFrameCtrlPts() {
+        return frameCtrlPts;
+    }
+
+    public List<List<Bezier.Point3D>> getBeamCtrlPts() {
+        return beamCtrlPts;
+    }
+
+    public List<VectorUtils.Vector3D> getBezierPointsRail() {
+        return bezierPointsRail;
+    }
+
+    public List<VectorUtils.Vector3D> getBezierPointsBow() {
+        return bezierPointsBow;
+    }
+
+    public List<VectorUtils.Vector3D> getBezierPointsKeel() {
+        return bezierPointsKeel;
+    }
+
+    public List<VectorUtils.Vector3D> getBezierPointsTransom() {
+        return bezierPointsTransom;
+    }
+
+    public List<Bezier.Point3D> getTransomCtrlPoint() {
+        return ctrlPointsTransom;
+    }
+
     private List<List<Bezier.Point3D>> frameCtrlPts = new ArrayList<>();
     private List<List<Bezier.Point3D>> beamCtrlPts = new ArrayList<>();
 
