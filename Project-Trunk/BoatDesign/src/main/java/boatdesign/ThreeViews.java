@@ -139,6 +139,8 @@ public class ThreeViews {
 
     private JTextPane dataTextArea = null;
     private JTextPane boatDataTextArea = null;
+
+    private JCheckBox displayXMLTextArea = null;
     private JTextPane xmlTextArea = null;
     private JTextPane messageTextArea = null;
 
@@ -535,6 +537,9 @@ public class ThreeViews {
                                                      List<List<Bezier.Point3D>> allFramesCtrlPts,
                                                      List<List<Bezier.Point3D>> allBeamsCtrlPts,
                                                      List<Bezier.Point3D> ctrlPointsTransom) {
+
+        getLogger().log(Level.INFO, "Starting XML Calculation...");
+
         XMLDocument doc = new XMLDocument();
         XMLElement root = (XMLElement) doc.createElement("boat-design");
         doc.appendChild(root);
@@ -690,6 +695,8 @@ public class ThreeViews {
         // Transom
         processFrame(doc, frameCoordinates, loa, ctrlPointsTransom);
 
+        getLogger().log(Level.INFO, "Done with XML Calculation!");
+
         return doc;
     }
 
@@ -776,7 +783,7 @@ public class ThreeViews {
                 boatDataTextArea.setText(json);
 
                 // XML for XSL-FO publishing
-                if (true) { // TODO USer Option
+                if (displayXMLTextArea.isSelected()) {
                     List<List<Bezier.Point3D>> allFramesCtrlPts = this.box3D.getFrameCtrlPts();
                     List<List<Bezier.Point3D>> allBeamsCtrlPts = this.box3D.getBeamCtrlPts();
                     List<Bezier.Point3D> ctrlPointsTransom = this.box3D.getTransomCtrlPoint();
@@ -980,9 +987,10 @@ public class ThreeViews {
                 .collect(Collectors.joining(", "));
 
         return String.format("extVolume = %s;\nrail = %s;\nkeel = %s;\n",
-                String.format("[ %f, %f, %f ]", this.box3D.getDefaultLHT(), 0d, 0d),
-                String.format("[ %s ]", collectRail),
-                String.format("[ %s ]", collectKeel));
+                    String.format("[ %f, %f, %f ]", this.box3D.getDefaultLHT(), 0d, 0d),
+                    String.format("[ %s ]", collectRail),
+                    String.format("[ %s ]", collectKeel)
+        );
     }
 
     private void setBezierData() {
@@ -2303,10 +2311,24 @@ public class ThreeViews {
         // Add XML Panel. TODO: define frame step, waterline step, etc... Here, or somewhere else.
         JPanel xmlPanel = new JPanel(new BorderLayout());
         xmlPanel.setBorder(BorderFactory.createTitledBorder("XML for Publication"));
+
+        displayXMLTextArea = new JCheckBox("Calculate XML for publishing");
+        xmlPanel.add(displayXMLTextArea, BorderLayout.NORTH);
+        displayXMLTextArea.setSelected(true);
+        displayXMLTextArea.addChangeListener(evt -> {
+            boolean checked = ((JCheckBox) evt.getSource()).isSelected();
+            if (checked) {
+                System.out.println("Will calculate");
+            } else {
+                System.out.println("Will NOT calculate");
+            }
+        });
+
         xmlTextArea = new JTextPane();
         xmlTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         JScrollPane xmlDataScrollPane = new JScrollPane(xmlTextArea);
         xmlDataScrollPane.setPreferredSize(new Dimension(300, 225));
+
         // dataScrollPane.setSize(new Dimension(300, 250));
         xmlPanel.add(xmlDataScrollPane, BorderLayout.CENTER);
 
@@ -2387,7 +2409,7 @@ public class ThreeViews {
         this.initComponents();
     }
 
-    public Logger getLogger() {
+    public static Logger getLogger() {
         return LOGGER;
     }
 
