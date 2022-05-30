@@ -169,6 +169,74 @@
 
           </fo:block>
 
+          <fo:block break-after="page"  margin-left="1cm">
+            <fo:block text-align="left" font-weight="bold" font-family="Courier" font-size="10pt"  margin="5mm">
+              Keel - (values in cm)
+            </fo:block>
+
+            <fo:table border="0">
+              <fo:table-column column-width="50mm"/>
+              <fo:table-column column-width="50mm"/>
+
+              <fo:table-header>
+                <fo:table-row>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">X</fo:block>
+                  </fo:table-cell>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">Z</fo:block>
+                  </fo:table-cell>
+                </fo:table-row>
+              </fo:table-header>
+
+              <fo:table-body>
+
+                <xsl:for-each select="/boat-design/keel-and-rails/keel/keel">
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="./@x"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="."/> </fo:block></fo:table-cell>
+                  </fo:table-row>
+                </xsl:for-each>
+              </fo:table-body>
+
+            </fo:table>
+
+            <fo:block text-align="left" font-weight="bold" font-family="Courier" font-size="10pt" margin="5mm">
+              Rail - (values in cm)
+            </fo:block>
+            <fo:table border="0">
+              <fo:table-column column-width="50mm"/>
+              <fo:table-column column-width="50mm"/>
+              <fo:table-column column-width="50mm"/>
+
+              <fo:table-header>
+                <fo:table-row>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">X</fo:block>
+                  </fo:table-cell>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">Y</fo:block>
+                  </fo:table-cell>
+                  <fo:table-cell>
+                    <fo:block font-weight="bold">Z</fo:block>
+                  </fo:table-cell>
+                </fo:table-row>
+              </fo:table-header>
+
+              <fo:table-body>
+                <xsl:for-each select="/boat-design/keel-and-rails/rail/rail">
+                  <fo:table-row>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="./@x"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="./y"/> </fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block font-family="Courier" > <xsl:value-of select="./z"/> </fo:block></fo:table-cell>
+                  </fo:table-row>
+                </xsl:for-each>
+              </fo:table-body>
+
+            </fo:table>
+
+          </fo:block>
+
           <fo:block margin="12mm" break-after="page">
             <!-- Drawings -->
             <fo:block text-align="left" font-weight="bold" font-family="Courier" font-size="10pt" margin="5mm">

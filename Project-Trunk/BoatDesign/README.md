@@ -39,9 +39,10 @@ Then do the hydrostatic calculations.
       - Fill the script `SmallBoat.550.prms.scad` with the data you get when using the `scad` radio-button for the Bezier control points.
     - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
+- Check the CC position...
 - **pdf / xsl-fop** output... with XY.png, XZ.png, etc.
   - Work in progress in the `pub` folder.
-  - MAke it an option.
+  - Make it an option.
 - Multi-lang - Soft and publications (resource bundle), in progress. See number formats...
 
 ### Hints

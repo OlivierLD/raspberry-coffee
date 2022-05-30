@@ -619,16 +619,16 @@ public class ThreeViews {
         displ.appendChild(createTextNode(doc, "cc-x", NUM_FMT.format((double)calculatedMap.get("cc-x"))));
         displ.appendChild(createTextNode(doc, "cc-z", NUM_FMT.format((double)calculatedMap.get("cc-z"))));
 
-        // TODO Keel and Rail coordinates
+        // Keel and Rail coordinates
         XMLElement keelAndRails = (XMLElement) doc.createElement("keel-and-rails");
         root.appendChild(keelAndRails);
+        // Keel
         XMLElement keel = (XMLElement) doc.createElement("keel");
         keelAndRails.appendChild(keel);
         List<Map<String, Double>> keelPoints = (List<Map<String, Double>>)((Map<String, Object>)dataMap.get("default-points")).get("keel");
         List<Bezier.Point3D> keelCtrlPoints = new ArrayList<>();
         keelPoints.forEach(kp ->  keelCtrlPoints.add(new Bezier.Point3D(kp.get("x"), kp.get("y"), kp.get("z"))) );
         Bezier keelBezier = new Bezier(keelCtrlPoints);
-        System.out.println("Ah!");
         for (int x=0; x<=(loa * 100.0); x+=10) { // in cm
             try {
                 double t = keelBezier.getTForGivenX(0, 1E-2, x, 1E-4);
@@ -636,6 +636,27 @@ public class ThreeViews {
                 XMLElement keelElement = createTextNode(doc, "keel", NUM_FMT.format(keelPoint.getZ()));
                 keelElement.setAttribute("x", String.valueOf(x));
                 keel.appendChild(keelElement);
+            } catch (Bezier.TooDeepRecursionException tdre) {
+                tdre.printStackTrace();
+            }
+        }
+        // Rail
+        XMLElement rail = (XMLElement) doc.createElement("rail");
+        keelAndRails.appendChild(rail);
+        List<Map<String, Double>> railPoints = (List<Map<String, Double>>)((Map<String, Object>)dataMap.get("default-points")).get("rail");
+        List<Bezier.Point3D> railCtrlPoints = new ArrayList<>();
+        railPoints.forEach(kp ->  railCtrlPoints.add(new Bezier.Point3D(kp.get("x"), kp.get("y"), kp.get("z"))) );
+        Bezier railBezier = new Bezier(railCtrlPoints);
+        for (int x=0; x<=(loa * 100.0); x+=10) { // in cm
+            try {
+                double t = railBezier.getTForGivenX(0, 1E-2, x, 1E-4);
+                Bezier.Point3D railPoint = railBezier.getBezierPoint(t);
+                XMLElement railElement = (XMLElement) doc.createElement("rail");
+                railElement.setAttribute("x", String.valueOf(x));
+                rail.appendChild(railElement);
+
+                railElement.appendChild(createTextNode(doc, "y", NUM_FMT.format(railPoint.getY())));
+                railElement.appendChild(createTextNode(doc, "z", NUM_FMT.format(railPoint.getZ())));
             } catch (Bezier.TooDeepRecursionException tdre) {
                 tdre.printStackTrace();
             }
@@ -755,26 +776,27 @@ public class ThreeViews {
                 boatDataTextArea.setText(json);
 
                 // XML for XSL-FO publishing
-                List<List<Bezier.Point3D>> allFramesCtrlPts = this.box3D.getFrameCtrlPts();
-                List<List<Bezier.Point3D>> allBeamsCtrlPts = this.box3D.getBeamCtrlPts();
-                List<Bezier.Point3D> ctrlPointsTransom = this.box3D.getTransomCtrlPoint();
-                XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig,
-                                                                   map,
-                                                                   allFramesCtrlPts,
-                                                                   allBeamsCtrlPts,
-                                                                   ctrlPointsTransom);
-                try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    doc.print(baos);
-                    String xmlString = baos.toString();
+                if (true) { // TODO USer Option
+                    List<List<Bezier.Point3D>> allFramesCtrlPts = this.box3D.getFrameCtrlPts();
+                    List<List<Bezier.Point3D>> allBeamsCtrlPts = this.box3D.getBeamCtrlPts();
+                    List<Bezier.Point3D> ctrlPointsTransom = this.box3D.getTransomCtrlPoint();
+                    XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig,
+                            map,
+                            allFramesCtrlPts,
+                            allBeamsCtrlPts,
+                            ctrlPointsTransom);
+                    try {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        doc.print(baos);
+                        String xmlString = baos.toString();
 //                    System.out.println(xmlString);
-                    // TODO Do we need another callback here (in refreshData) ?
-                    xmlTextArea.setText(xmlString);
+                        // TODO Do we need another callback here (in refreshData) ?
+                        xmlTextArea.setText(xmlString);
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
-
                 if (map.get("lwl-start") != null) {
                     // CC position
                     Double xCC = (Double) map.get("cc-x");
@@ -1979,7 +2001,9 @@ public class ThreeViews {
             public void checkValue() {
                 if (!frameStepValue.getText().trim().isEmpty()) {
                     try {
-                        double val = Double.parseDouble(frameStepValue.getText());
+//                        double val = Double.parseDouble(frameStepValue.getText());
+                        Object value = frameStepValue.getValue();
+                        double val = (value instanceof Long) ? (long)(value) : (double)(value);
                         box3D.setFrameIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
@@ -2012,7 +2036,10 @@ public class ThreeViews {
             public void checkValue() {
                 if (!wlStepValue.getText().trim().isEmpty()) {
                     try {
-                        double val = Double.parseDouble(wlStepValue.getText());
+//                        double val = Double.parseDouble(wlStepValue.getText());
+                        Object value = wlStepValue.getValue();
+                        double val = (value instanceof Long) ? (long)(value) : (double)(value);
+
                         box3D.setWlIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
@@ -2045,7 +2072,9 @@ public class ThreeViews {
             public void checkValue() {
                 if (!buttockStepValue.getText().trim().isEmpty()) {
                     try {
-                        double val = Double.parseDouble(buttockStepValue.getText());
+//                        double val = Double.parseDouble(buttockStepValue.getText());
+                        Object value = buttockStepValue.getValue();
+                        double val = (value instanceof Long) ? (long)(value) : (double)(value);
                         box3D.setButtockIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
@@ -2571,15 +2600,18 @@ public class ThreeViews {
         }
 
         public double getXValue() {
-            return Double.parseDouble(this.xValue.getText());
+            Object value = this.xValue.getValue();
+            return (value instanceof Long) ? (long)value : (double)value;
         }
 
         public double getYValue() {
-            return Double.parseDouble(this.yValue.getText());
+            Object value = this.yValue.getValue();
+            return (value instanceof Long) ? (long)value : (double)value;
         }
 
         public double getZValue() {
-            return Double.parseDouble(this.zValue.getText());
+            Object value = this.zValue.getValue();
+            return (value instanceof Long) ? (long)value : (double)value;
         }
 
         private void jbInit() {
