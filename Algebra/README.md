@@ -107,6 +107,12 @@ Two 2D Bezier, draggable Ctrl-Points:
 ../gradlew runSample4
 ```
 
+Animated Bezier Curves
+
+|          t = 0.438           |          t = 0.767           |          t = 1.000           |
+|:----------------------------:|:----------------------------:|:----------------------------:|
+| ![1](./docimg/bezier_01.png) | ![2](./docimg/bezier_02.png) | ![3](./docimg/bezier_03.png) |
+
 #### Some utility methods
 In those utilities, just provide the (spatial, absolute) vertices of the points, segments, arrows and boxes to draw.
 Rotations and space-to-screen operations are taken care of, from the context.
