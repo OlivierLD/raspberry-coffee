@@ -2314,7 +2314,7 @@ public class ThreeViews {
 
         displayXMLTextArea = new JCheckBox("Calculate XML for publishing");
         xmlPanel.add(displayXMLTextArea, BorderLayout.NORTH);
-        displayXMLTextArea.setSelected(true);
+        displayXMLTextArea.setSelected(false); // Uncheck by default
         displayXMLTextArea.addChangeListener(evt -> {
             boolean checked = ((JCheckBox) evt.getSource()).isSelected();
             if (checked) {
