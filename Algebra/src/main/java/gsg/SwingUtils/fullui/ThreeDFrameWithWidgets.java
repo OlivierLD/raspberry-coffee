@@ -220,6 +220,13 @@ public class ThreeDFrameWithWidgets
 
 		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+		JPanel bottomPanelHolder = new JPanel();
+		bottomPanelHolder.setLayout(new BorderLayout());
+
+		JCheckBox displayConfig = new JCheckBox("Display Config Widgets");
+		displayConfig.setSelected(true);
+		bottomPanelHolder.add(displayConfig, BorderLayout.NORTH);
+
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridBagLayout());
 		bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), "3D Box config"));
@@ -1028,7 +1035,13 @@ public class ThreeDFrameWithWidgets
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 0), 0, 0));
 
-		this.add(bottomPanel, BorderLayout.SOUTH);
+		bottomPanelHolder.add(bottomPanel, BorderLayout.CENTER);
+
+		this.add(bottomPanelHolder, BorderLayout.SOUTH);
+		displayConfig.addChangeListener(evt -> {
+			boolean checked = ((JCheckBox) evt.getSource()).isSelected();
+			bottomPanel.setVisible(checked);
+		});
 
 		this.pack();
 	}

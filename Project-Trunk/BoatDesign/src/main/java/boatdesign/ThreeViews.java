@@ -2312,25 +2312,38 @@ public class ThreeViews {
         JPanel xmlPanel = new JPanel(new BorderLayout());
         xmlPanel.setBorder(BorderFactory.createTitledBorder("XML for Publication"));
 
-        displayXMLTextArea = new JCheckBox("Calculate XML for publishing");
+        displayXMLTextArea = new JCheckBox("Calculate XML for xsl-fo publishing");
         xmlPanel.add(displayXMLTextArea, BorderLayout.NORTH);
-        displayXMLTextArea.setSelected(false); // Uncheck by default
-        displayXMLTextArea.addChangeListener(evt -> {
-            boolean checked = ((JCheckBox) evt.getSource()).isSelected();
-            if (checked) {
-                System.out.println("Will calculate");
-            } else {
-                System.out.println("Will NOT calculate");
-            }
-        });
+        displayXMLTextArea.setSelected(true); // Uncheck by default
 
         xmlTextArea = new JTextPane();
         xmlTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         JScrollPane xmlDataScrollPane = new JScrollPane(xmlTextArea);
-        xmlDataScrollPane.setPreferredSize(new Dimension(300, 225));
+        xmlDataScrollPane.setPreferredSize(new Dimension(300, 225)); // 225));
+//        xmlDataScrollPane.setVisible(false);
 
         // dataScrollPane.setSize(new Dimension(300, 250));
         xmlPanel.add(xmlDataScrollPane, BorderLayout.CENTER);
+
+        displayXMLTextArea.addChangeListener(evt -> {
+            boolean checked = ((JCheckBox) evt.getSource()).isSelected();
+            xmlDataScrollPane.setVisible(checked);
+
+//            int width = xmlDataScrollPane.getSize().width;
+//            System.out.printf(">> Width is %d\n", width);
+//            if (checked) {
+//                System.out.println("Will calculate XML");
+//                xmlDataScrollPane.setSize(width, 225);
+//                xmlDataScrollPane.setPreferredSize(new Dimension(width, 225)); // 225));
+//            } else {
+//                System.out.println("Will NOT calculate XML");
+//                xmlDataScrollPane.setSize(width, 20);
+//                xmlDataScrollPane.setPreferredSize(new Dimension(width, 20)); // 225));
+//            }
+//            xmlPanel.repaint(); // TODO Tweak that ? rightPane.repaint(); ?
+////            rightPane.repaint();
+//            this.frame.repaint();
+        });
 
         bottomRightPanel.add(xmlPanel,
                 new GridBagConstraints(0,
