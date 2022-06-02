@@ -8,22 +8,27 @@ public class BoatDesignResourceBundle {
     private static String baseName = "boatdesign.utils." + "bd";
     private static ResourceBundle resourceBundle;
 
+    private final static boolean BUNDLE_VERBOSE = "true".equals(System.getProperty("bundle-verbose"));
+
     private BoatDesignResourceBundle() {
     }
 
     public static synchronized ResourceBundle getBoatDesignResourceBundle() {
-        if (resourceBundle == null) {
+        if (BoatDesignResourceBundle.resourceBundle == null) {
             try {
-                resourceBundle = ResourceBundle.getBundle(baseName);
-//              System.out.println("ResourceBundle created");
+                BoatDesignResourceBundle.resourceBundle = ResourceBundle.getBundle(baseName);
+                if (BUNDLE_VERBOSE) {
+                    System.out.println("ResourceBundle created");
+                }
             } catch (MissingResourceException mre) {
-                if (true) // verbose of some sort...
+                if (BUNDLE_VERBOSE) {
                     System.err.println("Missing Resource:" + mre.getMessage());
+                }
             }
-//        } else {
-//            System.out.println("ResourceBundle reused");
+        } else if (BUNDLE_VERBOSE) {
+            System.out.println("ResourceBundle reused");
         }
-        return resourceBundle;
+        return BoatDesignResourceBundle.resourceBundle;
     }
 
     public static String buildMessage(String id) {
@@ -45,5 +50,4 @@ public class BoatDesignResourceBundle {
         }
         return mess;
     }
-
 }

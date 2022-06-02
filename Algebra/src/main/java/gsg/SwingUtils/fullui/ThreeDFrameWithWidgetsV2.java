@@ -64,7 +64,6 @@ public class ThreeDFrameWithWidgetsV2
 	 * initialize the form.
 	 */
 	private void initComponents() {
-
 		this.getContentPane().setLayout(new BorderLayout());
 		this.add(threeDPanel, BorderLayout.CENTER);
 		this.pack();

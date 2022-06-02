@@ -1235,7 +1235,8 @@ public class BoatBox3D extends Box3D {
                 synchronized (frameBezierPts) {
                     frameBezierPts.add(bezierPointsFrame);
                     if (progressCallback != null) {
-                        progressCallback.accept(Map.of(TYPE, FRAME, DATA, bezierPointsFrame)); // Should be a List<VectorUtils.Vector3D>
+                        progressCallback.accept(Map.of(TYPE, FRAME,
+                                                       DATA, bezierPointsFrame)); // Should be a List<VectorUtils.Vector3D>
                     }
                 }
 
@@ -1249,7 +1250,8 @@ public class BoatBox3D extends Box3D {
                 synchronized (beamBezierPts) {
                     beamBezierPts.add(bezierPointsBeam);
                     if (progressCallback != null) {
-                        progressCallback.accept(Map.of(TYPE, BEAM, DATA, bezierPointsBeam));
+                        progressCallback.accept(Map.of(TYPE, BEAM,
+                                                       DATA, bezierPointsBeam));
                     }
                 }
 
@@ -1263,7 +1265,8 @@ public class BoatBox3D extends Box3D {
                 if (bezierPointsTransom != null && bezierPointsTransom.size() > 0 && bezierPointsTransom.get(0).getY() < 0) {
                     System.err.println("Negative Y in the transom!!");
                 }
-                progressCallback.accept(Map.of(TYPE, FRAME, DATA, bezierPointsTransom));
+                progressCallback.accept(Map.of(TYPE, FRAME,
+                                               DATA, bezierPointsTransom));
             }
 
             // Add last beam, for the transom (last rail point). TODO Add it to transom?
@@ -1285,7 +1288,8 @@ public class BoatBox3D extends Box3D {
                 synchronized (beamBezierPts) {
                     beamBezierPts.add(bezierPointsBeam); // Transom
                     if (progressCallback != null) {
-                        progressCallback.accept(Map.of(TYPE, BEAM, DATA, bezierPointsBeam));
+                        progressCallback.accept(Map.of(TYPE, BEAM,
+                                                       DATA, bezierPointsBeam));
                     }
                 }
             }
@@ -1463,7 +1467,8 @@ public class BoatBox3D extends Box3D {
                     synchronized (hLines) {
                         hLines.add(waterLine);
                         if (progressCallback != null) {
-                            progressCallback.accept(Map.of(TYPE, WATERLINE, DATA, waterLine));
+                            progressCallback.accept(Map.of(TYPE, WATERLINE,
+                                                           DATA, waterLine));
                         }
                     }
                     // Displacement (CC's height/depth)?
@@ -1641,7 +1646,8 @@ public class BoatBox3D extends Box3D {
                     synchronized (vLines) {
                         vLines.add(vLine);
                         if (progressCallback != null) {
-                            progressCallback.accept(Map.of(TYPE, BUTTOCK, DATA, vLine));
+                            progressCallback.accept(Map.of(TYPE, BUTTOCK,
+                                                           DATA, vLine));
                         }
                     }
                 } catch (Exception ex) {

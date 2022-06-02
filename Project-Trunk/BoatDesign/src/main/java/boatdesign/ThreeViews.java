@@ -40,18 +40,23 @@ import java.util.stream.Collectors;
 
 /**
  * A Swing Application. The main.
- *
+ * <p>
  * Using default WhiteBoard Writer
+ * </p>
  * <p>
- * 2D Bezier example. (<- So so...)
+ * 2D Bezier example. (<- So so...) <br/>
  * With draggable control points (hence the MouseListener, MouseMotionListener).
+ * </p>
  * <p>
- * 2 Bézier curves:
- * - One for the rail
- * - One for the keel
+ * The whole boat is defined by 2 Bézier curves (their ctrl points, actually):
+ * <ul>
+ *  <li>One for the rail</li>
+ *  <li>One for the keel</li>
+ * </ul>
+ * </p>
  * <p>
  * Bow is correlated, transom too. See in {@link BoatBox3D}
- *
+ *</p>
  * Calculation done in BoatBox3D, look for "// Actual shape calculation takes place here." in this BoatBox3D class.
  */
 public class ThreeViews {
@@ -162,13 +167,13 @@ public class ThreeViews {
             this.setPreferredSize(new Dimension(500, 100));
             this.setLayout(new FlowLayout());
 
-            generateImage = new JCheckBox("Generate Image");
+            generateImage = new JCheckBox(BoatDesignResourceBundle.buildMessage("generate-image"));
             this.add(generateImage, null);
-            blackAndWhite = new JCheckBox("Black & White");
+            blackAndWhite = new JCheckBox(BoatDesignResourceBundle.buildMessage("black-and-white"));
             this.add(blackAndWhite, null);
-            hideCtrlPoints = new JCheckBox("Hide Ctrl-Points");
+            hideCtrlPoints = new JCheckBox(BoatDesignResourceBundle.buildMessage("hide-ctrl-points"));
             this.add(hideCtrlPoints, null);
-            hideCC = new JCheckBox("Hide CC (Center of Hull)");
+            hideCC = new JCheckBox(BoatDesignResourceBundle.buildMessage("hide-cc"));
             this.add(hideCC, null);
         }
 
@@ -710,7 +715,7 @@ public class ThreeViews {
                     System.err.println(">>> " + cme);
                 }
                 try {
-                    Thread.sleep(1_000L);
+                    Thread.sleep(1_000L); // Snap every second.
                 } catch (InterruptedException ie) {
                     // Absorb
                 }

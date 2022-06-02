@@ -41,9 +41,10 @@ public class Sample10 {
         List<Bezier.Point3D> ctrlPoints = List.of(
                 new Bezier.Point3D(-60, -80, 30),
                 new Bezier.Point3D(60, -40, -50),
-                new Bezier.Point3D(45, 30, 60),
+                new Bezier.Point3D(45, 30, 90),
                 new Bezier.Point3D(30, 60, -30),
-                new Bezier.Point3D(-60, 90, -30));
+                new Bezier.Point3D(-60, 90, -30),
+                new Bezier.Point3D(60, 90, 30));
         // Generate the data, the Bézier curve.
         Bezier bezier = new Bezier(ctrlPoints);
         List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>();
