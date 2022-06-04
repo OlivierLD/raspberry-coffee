@@ -36,6 +36,9 @@
             <!--fo:block text-align="center">
               <fo:external-graphic src="url('sextant.gif')"/>
             </fo:block-->
+            <fo:block text-align="left" font-family="Book Antiqua" font-size="10pt" font-style="normal" margin="0.5in">
+              Published <xsl:value-of select="/boat-design/published"/>
+            </fo:block>
             <fo:block text-align="left" font-family="Times" font-size="8pt" font-style="italic" margin="0.5in">
               &#169; Oliv Cool Stuff Soft  
             </fo:block>

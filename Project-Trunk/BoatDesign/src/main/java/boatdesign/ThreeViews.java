@@ -29,6 +29,7 @@ import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -62,6 +63,7 @@ import java.util.stream.Collectors;
 public class ThreeViews {
 
     private final static NumberFormat NUM_FMT = new DecimalFormat("#0.0000");
+    private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS z '(UTC'Z')'");
 
     // See in the starting script LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
     private final static Logger LOGGER = Logger.getLogger(ThreeViews.class.getName()); //  .getLogger(Logger.GLOBAL_LOGGER_NAME); // BoatBox3D.class;
@@ -548,6 +550,7 @@ public class ThreeViews {
         XMLDocument doc = new XMLDocument();
         XMLElement root = (XMLElement) doc.createElement("boat-design");
         doc.appendChild(root);
+        root.appendChild(createTextNode(doc, "published", SDF.format(new Date())));
 
         XMLElement boatData = (XMLElement) doc.createElement("boat-data");
         root.appendChild(boatData);
