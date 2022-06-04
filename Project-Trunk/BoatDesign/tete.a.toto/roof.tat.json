@@ -1,0 +1,39 @@
+{
+  "comments" : [ "For OpenSCAD module generation." ],
+  "boat-name" : "Roof TaT",
+  "description" : "A roof. Drawn upside-down.",
+  "default-points" : {
+    "keel" : [ {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 51.0
+    }, {
+      "x" : 10.74074074074074,
+      "y" : 0.0,
+      "z" : 7.4074074074
+    }, {
+      "x" : 200.0,
+      "y" : 0.0,
+      "z" : 1.8518518519
+    } ],
+    "rail" : [ {
+      "x" : 0.0,
+      "y" : 0.0,
+      "z" : 51.0
+    }, {
+      "x" : 0.0,
+      "y" : 60.0,
+      "z" : 51.0
+    }, {
+      "x" : 200.0,
+      "y" : 80.0,
+      "z" : 51.0
+    } ]
+  },
+  "dimensions" : {
+    "box-z" : [ -0.1, 0.6 ],
+    "default-lht" : 2.0,
+    "box-y" : [ -1.2, 1.2 ],
+    "box-x" : [ 0.0, 2.4 ]
+  }
+}

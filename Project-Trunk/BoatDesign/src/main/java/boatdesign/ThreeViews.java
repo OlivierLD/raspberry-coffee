@@ -754,11 +754,12 @@ public class ThreeViews {
                 System.out.println("Skipping YZ image generation");
             }
 
+            getLogger().log(Level.INFO, "Bottom of repainter thread.");
         });
         repainter.start();
 
         Thread refresher = new Thread(() -> {
-            getLogger().log(Level.INFO, "Starting refresh...");
+            getLogger().log(Level.INFO, "Starting data (text) refresh...");
             refreshButton.setEnabled(false);
             stopRefreshButton.setEnabled(true);
             boatDataTextArea.setText("Re-calculating...");
@@ -812,7 +813,7 @@ public class ThreeViews {
                         ex.printStackTrace();
                     }
                 }
-                if (map.get("lwl-start") != null) {
+                if (map.get("lwl-start") != null && ((double)map.get("displa-m3")) > 0) {
                     // CC position
                     Double xCC = (Double) map.get("cc-x");
                     Double zCC = (Double) map.get("cc-z");
@@ -1574,7 +1575,7 @@ public class ThreeViews {
                 }
                 VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardXY); //, Orientation.XZ);
                 if (whiteBoardMousePos != null) {
-                    whiteBoardXY.setToolTipText(String.format("<html>X: %.02f<br/>Z: %.02f<br/><p>Use Shift + Right-Click<br/>for parameters</p></html>",
+                    whiteBoardXY.setToolTipText(String.format("<html>X: %.02f<br/>Y: %.02f<br/><p>Use Shift + Right-Click<br/>for parameters</p></html>",
                             whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
                 }
             }
@@ -1858,7 +1859,7 @@ public class ThreeViews {
                 }
                 VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardYZ); //, Orientation.XZ);
                 if (whiteBoardMousePos != null) {
-                    whiteBoardYZ.setToolTipText(String.format("<html>X: %.02f<br/>Z: %.02f<br/><p>Use Shift + Right-Click<br/>for parameters</p></html>",
+                    whiteBoardYZ.setToolTipText(String.format("<html>Y: %.02f<br/>Z: %.02f<br/><p>Use Shift + Right-Click<br/>for parameters</p></html>",
                             whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
                 }
             }

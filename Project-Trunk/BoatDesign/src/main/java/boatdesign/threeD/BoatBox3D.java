@@ -963,7 +963,7 @@ public class BoatBox3D extends Box3D {
         // Also find the widest point
         double maxWidth = 0d, maxWidthX = 0d;
         double maxHeight = 0d;
-        double maxDepth = 0d, maxDepthX = 0d;
+        double maxDraft = 0d, maxDraftX = 0d;
         double lwl = 0.0, lwlStart = 0d, lwlEnd = 0d;
         Bezier.Point3D maxWidthPoint = null;
         if (messCallback != null) {
@@ -1045,17 +1045,21 @@ public class BoatBox3D extends Box3D {
         for (double t=0; t<=1.001; t+=0.01) { // TODO Limit (double...)
             Bezier.Point3D tick = bezierKeel.getBezierPoint(t);
             bezierPointsKeel.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
-            if (tick.getZ() < maxDepth) {
-                maxDepth = tick.getZ();
+            if (tick.getZ() < maxDraft) {
+                maxDraft = tick.getZ();
                 maxDepthPoint = tick;
                 maxDepthT = t;
             }
         }
         if (maxDepthPoint != null) {
-            maxDepthX = maxDepthPoint.getX() - (-centerOnXValue + xOffset);
+            maxDraftX = maxDepthPoint.getX() - (-centerOnXValue + xOffset);
         }
         if (localVerbose || verbose) {
-            System.out.printf("Max Depth: %f, at X:%f\n", maxDepth, maxDepthPoint.getX() - (-centerOnXValue + xOffset));
+            if (maxDepthPoint != null) {
+                System.out.printf("Max Draft: %f, at X:%f\n", maxDraft, maxDepthPoint.getX() - (-centerOnXValue + xOffset));
+            } else {
+                System.out.println("No max draft");
+            }
         }
         // End of LWL
         double t2For0 = -1d;
@@ -1317,9 +1321,9 @@ public class BoatBox3D extends Box3D {
             }
         }
 
-        if (waterlines || this.keepWoring) { // Construction. TODO Calculate anyway?
+        if (waterlines && this.keepWoring) { // Construction. TODO Calculate anyway?
             // H lines. Use a step for waterlines. maxDepth, maxHeight, wlIncrement.
-            double from = Math.ceil(maxDepth / wlIncrement) * wlIncrement;
+            double from = Math.ceil(maxDraft / wlIncrement) * wlIncrement;
             double to = Math.floor(maxHeight / wlIncrement) * wlIncrement;
             if (localVerbose || verbose) {
                 System.out.printf("WL from %f to %f\n", from, to);
@@ -1511,7 +1515,7 @@ public class BoatBox3D extends Box3D {
                 System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m\n", (zDispl), (zCenterOfHull * 1e-2)); // TODO Display diff in disp in % ?
             }
         }
-        if (buttocks || this.keepWoring) { // Calculate anyway?
+        if (buttocks && this.keepWoring) { // Calculate anyway?
             double from = buttockIncrement;
             double to = Math.floor(maxWidth / buttockIncrement) * buttockIncrement;
             if (localVerbose || verbose) {
@@ -1566,7 +1570,9 @@ public class BoatBox3D extends Box3D {
                     }
                     _previousRailPoint = railBezierPoint;
                 }
-                final Bezier.Point3D lastButtockPoint = _lastButtockPoint;
+                final Bezier.Point3D lastButtockPoint = (_lastButtockPoint != null && _firstButtockPoint != null && (_lastButtockPoint.getX() > _firstButtockPoint.getX())) ?
+                        _lastButtockPoint :
+                        _lastButtockPoint != null ? _lastButtockPoint : null;
                 final Bezier.Point3D firstButtockPoint = _firstButtockPoint;
                 if (localVerbose || verbose) {
                     System.out.println("For Y:" + y + ", first point " + _firstButtockPoint + ", last point " + _lastButtockPoint);
@@ -1590,8 +1596,9 @@ public class BoatBox3D extends Box3D {
                     AtomicBoolean addTheFirstPoint = new AtomicBoolean(false);
                     frameBeziers.forEach(bezier -> {
                         boolean increase = (bezier.getBezierPoint(0).getY() < bezier.getBezierPoint(1).getY());
-                        double t = 0;
+                        double t = 0.0;
                         try {
+                            System.out.printf("Looking for t, for Y=%f, and X=%f\n", y, bezier.getControlPoints().get(0).getX());
                             t = bezier.getTForGivenY(0, 1e-1, y, 1e-4, increase);
                         } catch (Bezier.TooDeepRecursionException tdre) {
                             if (this.parent != null) {
@@ -1660,8 +1667,8 @@ public class BoatBox3D extends Box3D {
                     Map.ofEntries(Map.entry("max-width", Double.valueOf(maxWidth * 1e-2)),
                             Map.entry("max-width-x", Double.valueOf(maxWidthX * 1e-2)),
                             Map.entry("max-height", Double.valueOf(maxHeight * 1e-2)),
-                            Map.entry("max-depth", Double.valueOf(maxDepth * 1e-2)),
-                            Map.entry("max-depth-x", Double.valueOf(maxDepthX * 1e-2)),
+                            Map.entry("max-depth", Double.valueOf(maxDraft * 1e-2)),
+                            Map.entry("max-depth-x", Double.valueOf(maxDraftX * 1e-2)),
                             Map.entry("lwl", Double.valueOf(lwl * 1e-2)),
                             Map.entry("lwl-start", Double.valueOf(lwlStart * 1e-2)),
                             Map.entry("lwl-end", Double.valueOf(lwlEnd * 1e-2)),

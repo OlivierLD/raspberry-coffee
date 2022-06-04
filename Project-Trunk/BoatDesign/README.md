@@ -37,13 +37,16 @@ Then do the hydrostatic calculations.
   - Data to `STL` (rendered by many), `gcode`, etc. Done ✅.
     - See <https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Bezier>
       - Fill the script `SmallBoat.550.prms.scad` with the data you get when using the `scad` radio-button for the Bezier control points.
+        - _Note_: Make sure you use the dot (.) as decimal separator. If you are in French, the separator would be th comma (,),and OpenSCAD may not like it...
     - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
 - Check the CC position...
 - **pdf / xsl-fop** output... with XY.png, XZ.png, etc.
   - Work in progress in the `pub` folder.
   - Make it an option.
-- Multi-lang - Soft and publications (resource bundle), in progress. See number formats...
+- Multi-lang - Soft and publications (resource bundle), in progress.
+- For the calculation/drawings: A step for the computation, a step for the drawing.
+- Case of other modules, like roofs (keel is on top).
 
 ### Hints
 - The main of the Swing app is in `boatdesign.ThreeViews`.
