@@ -47,6 +47,7 @@ Then do the hydrostatic calculations.
 - Multi-lang - Soft and publications (resource bundle), in progress.
 - For the calculation/drawings: A step for the computation, a step for the drawing.
 - Case of other modules, like roofs (keel is on top).
+- Refresh (open a small boat, then open a bigger one: resize all the panels). Done ✅.
 
 ### Hints
 - The main of the Swing app is in `boatdesign.ThreeViews`.

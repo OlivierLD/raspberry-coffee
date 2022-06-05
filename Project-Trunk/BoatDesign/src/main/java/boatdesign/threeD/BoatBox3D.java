@@ -1396,7 +1396,7 @@ public class BoatBox3D extends Box3D {
                         tdre.printStackTrace();
                         tBow = -1;
                     }
-                    if (tBow != -1) {
+                    if (tBow != -1 && tBow != Double.NaN) {
                         Bezier.Point3D bezierPoint = bezierBow.getBezierPoint(tBow);
 //                        System.out.println("WL " + z + " - 1 : x=" + bezierPoint.getX());
 //                        if (!waterLine.contains(bezierPoint)) {
@@ -1598,7 +1598,7 @@ public class BoatBox3D extends Box3D {
                         boolean increase = (bezier.getBezierPoint(0).getY() < bezier.getBezierPoint(1).getY());
                         double t = 0.0;
                         try {
-                            System.out.printf("Looking for t, for Y=%f, and X=%f\n", y, bezier.getControlPoints().get(0).getX());
+//                            System.out.printf("Looking for t, for Y=%f, and X=%f\n", y, bezier.getControlPoints().get(0).getX());
                             t = bezier.getTForGivenY(0, 1e-1, y, 1e-4, increase);
                         } catch (Bezier.TooDeepRecursionException tdre) {
                             if (this.parent != null) {

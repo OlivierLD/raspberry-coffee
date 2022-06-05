@@ -813,7 +813,7 @@ public class ThreeViews {
                         ex.printStackTrace();
                     }
                 }
-                if (map.get("lwl-start") != null && ((double)map.get("displa-m3")) > 0) {
+                if (map.get("lwl-start") != null && ((double)map.get("displ-m3")) > 0) {
                     // CC position
                     Double xCC = (Double) map.get("cc-x");
                     Double zCC = (Double) map.get("cc-z");
