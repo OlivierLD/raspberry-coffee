@@ -148,12 +148,11 @@ public class BeziersAtWorkSample01 {
                 animator = new Thread(() -> animate(), "Animator");
                 animator.start();
             } else {
-
                 System.out.println("Animator already running");
                 if (animateSuspended) { // Resuming
                     if (animator.isAlive()) {
                         System.out.println("... Resuming");
-//                        synchronized (animator) {
+//                        synchronized (animator) { // That one does not work as expected...
 //                            animator.notify();
 //                        }
                         synchronized (lock) {
@@ -201,7 +200,7 @@ public class BeziersAtWorkSample01 {
     public BeziersAtWorkSample01() {
     }
     private boolean animateSuspended = false;
-    private Object lock = new Object(); // wiat/notify on the animator thread did not work for me... :(
+    private Object lock = new Object(); // wait/notify on the animator thread did not work for me... :(
     private Thread animator = null;
 
     /**

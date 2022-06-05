@@ -144,9 +144,32 @@ public class BeziersAtWorkSample02 {
 
         refreshButton.addActionListener(e -> refreshData());
         animateButton.addActionListener(e -> {
-            Thread animator = new Thread(() -> animate(), "Animator");
-            animator.start();
+            if (animator == null || !animator.isAlive()) {
+                System.out.println("Starting new Animator");
+                animateSuspended = false;
+                animator = new Thread(() -> animate(), "Animator");
+                animator.start();
+            } else {
+                System.out.println("Animator already running");
+                if (animateSuspended) { // Resuming
+                    if (animator.isAlive()) {
+                        System.out.println("... Resuming");
+//                        synchronized (animator) { // That one does not work as expected...
+//                            animator.notify();
+//                        }
+                        synchronized (lock) {
+                            lock.notify();
+                        }
+                        System.out.println("    Notification sent.");
+                    }
+                    animateSuspended = false;
+                } else {
+                    System.out.println("... Suspending");
+                    animateSuspended = true;
+                }
+            }
         });
+        animateButton.setToolTipText("Start/Stop");
 
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -195,6 +218,9 @@ public class BeziersAtWorkSample02 {
 
     public BeziersAtWorkSample02() {
     }
+    private boolean animateSuspended = false;
+    private Object lock = new Object(); // wait/notify on the animator thread did not work for me... :(
+    private Thread animator = null;
 
     public void animate() {
         whiteBoard.resetAllData();
@@ -227,13 +253,11 @@ public class BeziersAtWorkSample02 {
 
         // Now, animate.
         final double tIncrement = 1e-3; // 0.005;
-        animateButton.setEnabled(false);
+//        animateButton.setEnabled(false);
         for (double t=0.0; t<=1 + tIncrement; t += tIncrement) {
-
             try {
                 final double _t = t;
                 SwingUtilities.invokeAndWait(() -> {
-
                     List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
                     for (double bezierT=0; bezierT<=_t; bezierT += tIncrement) {
                         Bezier.Point3D tick = bezier.getBezierPoint(bezierT);
@@ -330,11 +354,26 @@ public class BeziersAtWorkSample02 {
                         }
                     }
                 });
+                if (animateSuspended) {
+                    try {
+                        synchronized(lock) {
+                            System.out.println("    Waiting");
+                            lock.wait(); // Expect notify
+                            System.out.println("    Waiter notified !");
+                        }
+                        animateSuspended = false; // double layer...
+                    } catch (InterruptedException ie) {
+                        System.err.println("Exception in the wait:");
+                        ie.printStackTrace();
+                    }
+//                } else {
+//                    System.out.println("Keep working !");
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-        animateButton.setEnabled(true);
+//        animateButton.setEnabled(true);
     }
 
     public static void main(String... args) {
