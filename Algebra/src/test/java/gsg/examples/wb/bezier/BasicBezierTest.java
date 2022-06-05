@@ -3,7 +3,9 @@ package gsg.examples.wb.bezier;
 import bezier.Bezier;
 
 import java.util.List;
-
+/*
+ * No GUI
+ */
 public class BasicBezierTest {
     private final static List<Bezier.Point3D> ctrlPoints = List.of(
             new Bezier.Point3D(-60, -20, 0),

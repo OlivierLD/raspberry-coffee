@@ -36,8 +36,8 @@ public class BeziersAtWorkSample01 {
     private final JMenu menuHelp = new JMenu();
     private final JMenuItem menuHelpAbout = new JMenuItem();
     private JLabel topLabel;
-    private final JButton refreshButton = new JButton("Refresh Data");
-    private final JButton animateButton = new JButton("Animate");
+    private final JButton refreshButton = new JButton("Reset Data");
+    private final JButton animateButton = new JButton("Animate Bézier");
 
     private final static int WIDTH = 800;
     private final static int HEIGHT = 600;
@@ -142,9 +142,33 @@ public class BeziersAtWorkSample01 {
 
         refreshButton.addActionListener(e -> refreshData());
         animateButton.addActionListener(e -> {
-            Thread animator = new Thread(() -> animate(), "Animator");
-            animator.start();
+            if (animator == null || !animator.isAlive()) {
+                System.out.println("Starting new Animator");
+                animateSuspended = false;
+                animator = new Thread(() -> animate(), "Animator");
+                animator.start();
+            } else {
+
+                System.out.println("Animator already running");
+                if (animateSuspended) { // Resuming
+                    if (animator.isAlive()) {
+                        System.out.println("... Resuming");
+//                        synchronized (animator) {
+//                            animator.notify();
+//                        }
+                        synchronized (lock) {
+                            lock.notify();
+                        }
+                        System.out.println("    Notification sent.");
+                    }
+                    animateSuspended = false;
+                } else {
+                    System.out.println("... Suspending");
+                    animateSuspended = true;
+                }
+            }
         });
+        animateButton.setToolTipText("Start / Stop");
 
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -166,26 +190,9 @@ public class BeziersAtWorkSample01 {
         // >> HERE: Add the WitheBoard to the JFrame
         frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new GridBagLayout());
-        bottomPanel.add(refreshButton,
-                new GridBagConstraints(0,
-                0,
-                1,
-                1,
-                1.0,
-                0.0,
-                GridBagConstraints.WEST,
-                GridBagConstraints.NONE,
-                new Insets(0, 0, 0, 0), 0, 0));
-        bottomPanel.add(animateButton, new GridBagConstraints(0,
-                1,
-                1,
-                1,
-                0.0,
-                0.0,
-                GridBagConstraints.WEST,
-                GridBagConstraints.NONE,
-                new Insets(0, 0, 0, 0), 0, 0));
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(refreshButton);
+        bottomPanel.add(animateButton);
 
         frame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 //        frame.pack();
@@ -193,7 +200,13 @@ public class BeziersAtWorkSample01 {
 
     public BeziersAtWorkSample01() {
     }
+    private boolean animateSuspended = false;
+    private Object lock = new Object(); // wiat/notify on the animator thread did not work for me... :(
+    private Thread animator = null;
 
+    /**
+     * Call in the thread animating the Bezier on the WhiteBoard.
+     */
     public void animate() {
         whiteBoard.resetAllData();
 
@@ -305,6 +318,21 @@ public class BeziersAtWorkSample01 {
                         }
                     }
                 });
+                if (animateSuspended) {
+                    try {
+                        synchronized(lock) {
+                            System.out.println("    Waiting");
+                            lock.wait(); // Expect notify
+                            System.out.println("    Waiter notified !");
+                        }
+                        animateSuspended = false; // double layer...
+                    } catch (InterruptedException ie) {
+                        System.err.println("Exception in the wait:");
+                        ie.printStackTrace();
+                    }
+//                } else {
+//                    System.out.println("Keep working !");
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
