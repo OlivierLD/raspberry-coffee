@@ -74,10 +74,10 @@ public class HTTPServer {
 	private final static String DEFAULT_STATIC_ZIP_DOCS_PATH = "/zip/";
 
 	private static boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
-	private static boolean verboseDump = "true".equals(System.getProperty("http.verbose.dump", "false"));
-	private int port = -1;
+	private final static boolean verboseDump = "true".equals(System.getProperty("http.verbose.dump", "false"));
+	private int port;
 
-	private Thread httpListenerThread;
+	private final Thread httpListenerThread;
 
 	private Function<HTTPServer.Request, HTTPServer.Response> proxyFunction = null;
 	private Consumer<Integer> portOpenCallback = null;
@@ -205,7 +205,7 @@ public class HTTPServer {
 			string.append(this.verb).append(" ").append(this.path).append(" ").append(this.protocol);
 
 			if (this.headers != null) {
-				this.headers.keySet().stream()
+				this.headers.keySet()
 								.forEach(k -> string.append("\n").append(k).append(":").append(this.headers.get(k)));
 			}
 			if (this.content != null) {
@@ -279,7 +279,7 @@ public class HTTPServer {
 			sb.append(this.status).append(" ").append(this.protocol);
 
 			if (this.headers != null) {
-				this.headers.keySet().stream()
+				this.headers.keySet()
 								.forEach(k -> sb.append("\n").append(k).append(":").append(this.headers.get(k)));
 			}
 			if (this.payload != null) {
@@ -292,7 +292,7 @@ public class HTTPServer {
 	/**
 	 * Used for REST. See usages of this class.
 	 *
-	 * Note: Parameters (query string and body payloads) are defined and managed at he operation implementation (fn) level.
+	 * Note: Parameters (query string and body payloads) are defined and managed at the operation implementation (fn) level.
 	 * We are not re-writing Swagger ;)
 	 *
 	 */
@@ -306,8 +306,8 @@ public class HTTPServer {
 		 *
 		 * @param verb GET, PUT, POST, or DELETE
 		 * @param path can include {parameters}
-		 * @param fn
-		 * @param description
+		 * @param fn the code (function) to execute
+		 * @param description Quick descritoin
 		 */
 		public Operation(String verb, String path, Function<HTTPServer.Request, HTTPServer.Response> fn, String description) {
 			this.verb = verb;
@@ -403,10 +403,10 @@ public class HTTPServer {
 	}
 
 	private boolean keepRunning = true;
-	private boolean autoBind = false;
+	private final boolean autoBind;
 	private boolean sendCleanStopSignal = true;
-	private List<String> staticDocumentsLocation = null;
-	private List<String> staticZippedDocumentsLocation = null;
+	private final List<String> staticDocumentsLocation;
+	private final List<String> staticZippedDocumentsLocation;
 	private static final String DEFAULT_RESOURCE = "index.html";
 
 	public List<String> getStaticDocumentsLocation() {
@@ -438,7 +438,8 @@ public class HTTPServer {
 							.filter(op -> requestManager.getRESTOperationList().stream()
 									.filter(newOp -> (newOp.getVerb().equals(op.getVerb()) &&
 											RESTProcessorUtil.pathsAreIdentical(newOp.getPath(), op.getPath())))
-									.collect(Collectors.counting()) > 0)
+                                    .count() > 0)
+//									.collect(Collectors.counting()) > 0)
 							.collect(Collectors.toList());
 					if (dups.size() > 0) {
 						String duplicates = dups.stream()
@@ -525,7 +526,7 @@ public class HTTPServer {
 	 *
 	 * @param port HTTP port
 	 * @param requestManager for the REST Requests
-	 * @throws Exception
+	 * @throws Exception Oops
 	 */
 	public HTTPServer(int port, RESTRequestManager requestManager) throws Exception {
 		this(port, requestManager, new Properties(), false);
@@ -536,7 +537,7 @@ public class HTTPServer {
 	}
 
 	private class RequestHandler extends Thread {
-		private Socket client;
+		private final Socket client;
 
 		public RequestHandler(Socket socket) {
 			this.client = socket;
@@ -558,7 +559,7 @@ public class HTTPServer {
 				boolean top = true;
 				Map<String, String> headers = new HashMap<>();
 //					while ((line = in.readLine()) != null)
-				int read = 0;
+				int read;
 				boolean cr = false, lf = false;
 				boolean lineAvailable = false;
 				boolean inPayload = false;
@@ -665,7 +666,7 @@ public class HTTPServer {
 								if (request != null && !inPayload) {
 									if (line.contains(":")) { // Header?
 										if (line.indexOf(" ") > 0 && line.indexOf(" ") < line.indexOf(":")) { // TODO: Not start with Verb
-											// Not a GET http://machine HTTP/1.1	, with the protocol in the request
+											// Not a GET http://machine HTTP/1.1, with the protocol in the request
 										} else {
 											String headerKey = line.substring(0, line.indexOf(":"));
 											String headerValue = line.substring(line.indexOf(":") + 1);
@@ -693,10 +694,11 @@ public class HTTPServer {
 					HTTPContext.getInstance().getLogger().info(">>> End of HTTP Request <<<");
 				}
 				if (request != null) {
-					String path = request.getPath();
+                    // String protocol = request.getProtocol();
+                    String path = request.getPath();
 					if (request.getQueryStringParameters() != null && request.getQueryStringParameters().keySet().contains("verbose")) {
 						String verb = request.getQueryStringParameters().get("verbose");
-						verbose = (verb == null || verb.toUpperCase().equals("YES") || verb.toUpperCase().equals("TRUE") || verb.toUpperCase().equals("ON"));
+						verbose = (verb == null || verb.equalsIgnoreCase("YES") || verb.equalsIgnoreCase("TRUE") || verb.equalsIgnoreCase("ON"));
 					}
 					if ("/exit".equals(path)) {
 						System.out.println("Received an exit signal (path)");
@@ -904,8 +906,8 @@ public class HTTPServer {
 	}
 	/**
 	 *
-	 * @param port
-	 * @param requestManager
+	 * @param port port number
+	 * @param requestManager The RequestManager to use
 	 * @param properties can contain a static.docs properties, comma-separated list of the directories considered as containing static documents.
 	 *                   Defaulted to "/web/". Example: "/web/,/admin/docs/,/static/".
 	 * @throws Exception
@@ -985,7 +987,7 @@ public class HTTPServer {
 							if (verbose) {
 								System.out.println("-- Dumping: --");
 								List<String> st = DumpUtil.whoCalledMe();
-								st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
+								st.forEach(el -> System.out.println(String.format("\t%s", el)));
 								System.out.println("--------------");
 							}
 						} catch (BindException be) {
@@ -1117,8 +1119,8 @@ public class HTTPServer {
 	/**
 	 * Full mime-type list at https://www.sitepoint.com/web-foundations/mime-types-complete-list/
 	 *
-	 * @param f
-	 * @return
+	 * @param f file name (full)
+	 * @return the mime-type for the given file name
 	 */
 	private static String getContentType(String f) { // TODO add more types, as/when required
 		String contentType = HttpHeaders.TEXT_PLAIN;
@@ -1183,7 +1185,7 @@ public class HTTPServer {
 			try {
 				os.write(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()).getBytes());
 				if (response.getHeaders() != null) {
-					response.getHeaders().keySet().stream().forEach(k -> {
+					response.getHeaders().keySet().forEach(k -> {
 						try {
 							os.write(String.format("%s: %s\r\n", k, response.getHeaders().get(k)).getBytes());
 						} catch (SocketException se) {
@@ -1216,12 +1218,12 @@ public class HTTPServer {
 	 * Default proxy implementation.
 	 * Does only some logging
 	 *
-	 * @param request
-	 * @return
+	 * @param request the request
+	 * @return the response
 	 */
 	protected static Response defaultProxy(Request request) {
 		// An HTTPClient makes the received request, and sends back the response
-		Response response = null;
+		Response response;
 		try {
 			response = HTTPClient.doRequest(request);
 		} catch (Exception ex) {
@@ -1229,28 +1231,28 @@ public class HTTPServer {
 		}
 		if (verbose || verboseDump) { // Dump response elements
 			System.out.println();
-			final int PAD = 72;
-			String rCode = String.format("%sResponse code: %d", StringUtils.lpad("", PAD), response.getStatus());
+			final int PAD_LENGTH = 72;
+			String rCode = String.format("%sResponse code: %d", StringUtils.lpad("", PAD_LENGTH), response.getStatus());
 			System.out.println(rCode);
 			if (response.getHeaders() != null) {
 				Map<String, String> respHeaders = response.getHeaders();
 				if (verboseDump) {
-					respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD));
+					respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD_LENGTH));
 					System.out.println();
 				}
 				if (verbose) {
-					respHeaders.keySet().forEach(k -> System.out.println(String.format("%s%s: %s", StringUtils.lpad("", PAD), k, respHeaders.get(k))));
+					respHeaders.keySet().forEach(k -> System.out.println(String.format("%s%s: %s", StringUtils.lpad("", PAD_LENGTH), k, respHeaders.get(k))));
 				}
 			}
 			if (response.getPayload() != null) {
 				if (response.getHeaders() != null && response.getHeaders().get(HttpHeaders.CONTENT_TYPE) != null && isText(response.getHeaders().get(HttpHeaders.CONTENT_TYPE))) {
 					String responsePayload = new String(response.getPayload());
 					if (verboseDump) {
-						DumpUtil.displayDualDump(responsePayload, PAD);
+						DumpUtil.displayDualDump(responsePayload, PAD_LENGTH);
 						System.out.println();
 					}
 					if (verbose) {
-						System.out.println(String.format("%s%s", StringUtils.lpad("", PAD), responsePayload));
+						System.out.println(String.format("%s%s", StringUtils.lpad("", PAD_LENGTH), responsePayload));
 					}
 				} else {
 					String mimeType = "-none-";
@@ -1273,7 +1275,7 @@ public class HTTPServer {
 
 	private static Thread waiter = null;
 
-	private static boolean withRest = "true".equals(System.getProperty("with.rest", "true"));
+	private final static boolean withRest = "true".equals(System.getProperty("with.rest", "true"));
 
 	/**
 	 * For dev tests, example, default proxy.
@@ -1368,7 +1370,6 @@ public class HTTPServer {
 	}
 	private HTTPServer.Response emptyOperation(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-
 		return response;
 	}
 
