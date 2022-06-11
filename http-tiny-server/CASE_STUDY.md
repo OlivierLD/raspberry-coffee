@@ -8,9 +8,9 @@
 
 - On some remote server of yours, you have run some `gradle test`, and you want to see their result on their web page.
 - From the directory you did the `gradle test` from, you want to see the test results, from a browser running on a laptop, which is not where the tests have been running.
-- You'd like to reach a url like <http://192.168.1.18:9876/build/reports/tests/test/index.html> ...
+- If the IP address of the _server_ where the tests have been running is `192.168.1.18`, you'd like to reach a url like <http://192.168.1.18:9876/build/reports/tests/test/index.html> ...
 
-This requires some kind of small HTTP server, to server this HTTP request.
+This requires some kind of small HTTP server, to serve this HTTP request.
 
 And several options are available.
 
@@ -51,7 +51,7 @@ $ php -S ${HOSTNAME}:3000
 ```
 Use the server's IP address if you want to reach it from another box, not `localhost`.
 
-## Java (_this_ module!)
+## Java (_this_ module 😎 !)
 Aha! Now we're talking.  
 Build the project (`../gradlew shadowJar`), and run the script `small.server.sh`.
 Look into it for details.
