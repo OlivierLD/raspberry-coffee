@@ -60,6 +60,7 @@ Look into it for details.
 Once started, all the servers above can be accessed in a language agnostic way,
 like with `curl` or `wget`, or whatever piece of code that can act as an HTTP client.
 
+From the client side:
 ```
 HOST_NAME=192.168.1.18
 HTTP_PORT=9876
