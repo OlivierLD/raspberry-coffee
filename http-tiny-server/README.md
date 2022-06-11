@@ -3,24 +3,26 @@
 > A Java alternative to `python -m SimpleHTTPServer` (or `python3 -m http.server`). Can also serve REST requests.
 > Can serve static documents _<u>from an archive</u>_, to save space.
 
+For more details on the paradigm, see this [Case Study](./CASE_STUDY.md).  
+
 Can be used
 - to serve
-    - static HTML (and related) documents (from the file system, or archived in a zip)
+    - static HTML (and related) documents (from the file system, or archived in a zip, to save space)
     - REST requests
 - as an HTTP Proxy
 
 **Designed to be as tiny and small as possible**, to run on small boards (like the Raspberry Pi Zero).
 
-- No security (SSL) available. 
-- ~~_Not even multi-threaded_~~. Nov 2019: Now multi-threaded
+- No security (SSL) available. (Maybe some day. See <https://docs.oracle.com/javase/10/security/sample-code-illustrating-secure-socket-connection-client-and-server.htm#JSSEC-GUID-1B7038DC-7564-4EE6-A1DF-6B1445077E2E>)
+- ~~_Not even multi-threaded_~~. Nov 2019: Now multi-threaded.
 - **Some restrictions exist (`100-continue`, Multipart, binary data, CORS, ...)**
 - Not compliant with _any_ coding standard, like JAX-RS, MicroProfile, JEE, etc
 
 > _May 2019_: The archive containing the core classes is just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
 > Helidon or SpringBoot would definitely run on a Raspberry Pi, I've tested them. But again,
-> the goal here is to be HTTP and REST compliant (any REST or HTTP client would work), and remain as small as possible. 
+> the goal here is to be HTTP and REST compliant (any REST or HTTP client would work), and remain _<u>as small as possible</u>_. 
 
-Logging available.
+Logging available (`java.util.logging`).
 
 Some special resources are reserved, like `/exit`, `/test`, feel free to comment them if needed.
 

@@ -201,7 +201,7 @@ Figure can be rotated with the sliders at the bottom, or by dragging the mouse o
 
 ## Bézier curves
 A type of curve created by [Pierre Bézier](https://en.wikipedia.org/wiki/Pierre_B%C3%A9zier).  
-Good doc at <https://javascript.info/bezier-curve>, interactive, really cool.  
+_Good doc_ at <https://javascript.info/bezier-curve>, interactive, really cool.  
 Bézier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
 
 See in the class `bezier.Bezier`.  

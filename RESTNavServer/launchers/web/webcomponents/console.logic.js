@@ -1162,6 +1162,7 @@ const onPosError= (err) => {
 	}
 	document.getElementById("accuracy").innerHTML= `<small>${errMess}</small>`;
 	console.log(errMess);
+	console.log(`Code ${err.code}, mess: ${err.message}`);
 };
 
 let watchId;

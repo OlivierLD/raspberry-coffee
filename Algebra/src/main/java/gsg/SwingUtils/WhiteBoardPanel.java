@@ -371,10 +371,8 @@ public class WhiteBoardPanel extends JPanel {
         VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRanges(allData);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
         // Warning: Not supported by Java 8
-        double minDblY = Objects.requireNonNullElseGet(forcedMinY,
-                () -> graphicRange.getMinY());
-        double maxDblY = Objects.requireNonNullElseGet(forcedMaxY,
-                () -> graphicRange.getMaxY());
+        double minDblY = Objects.requireNonNullElseGet(forcedMinY, () -> graphicRange.getMinY());
+        double maxDblY = Objects.requireNonNullElseGet(forcedMaxY, () -> graphicRange.getMaxY());
         double yAmplitude = maxDblY - minDblY;
 
         int margins = graphicMargins;
