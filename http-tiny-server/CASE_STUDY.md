@@ -61,8 +61,13 @@ Once started, all the servers above can be accessed in a language agnostic way,
 like with `curl` or `wget`, or whatever piece of code that can act as an HTTP client.
 
 ```
-$ curl -X GET http://localhost:9876/web/index.html
-$ wget http://localhost:9876/web/index.html -o test.html
+HOST_NAME=192.168.1.18
+HTTP_PORT=9876
+$ curl -X GET http://${HOST_NAME}:${HTTP_PORT}/web/index.html
+$ wget http://${HOST_NAME}:${HTTP_PORT}/web/index.html -o test.html
 ```
+Of course, modify the environment variables `HOST_NAME` and `HTTP_PORT`.  
+Depending on the various flavors, the ports are `8000`, `8080`, `3000`, `9876`. They all can be changed,
+but just make sure you are using in the request the port you've set for the server.
 
 ---
