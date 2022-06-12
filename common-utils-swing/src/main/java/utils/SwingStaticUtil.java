@@ -98,7 +98,7 @@ public class SwingStaticUtil {
 	}
 	/**
 	 * Open the JFileChooser with the given parameters.
-	 * REquired a Swing context.
+	 * Requires a Swing context.
 	 *
 	 * @param mode JFileChooser.FILES_ONLY, JFileChooser.DIRECTORIES_ONLY, JFileChooser.FILES_AND_DIRECTORIES
 	 * @param flt null or a filter like {'txt', 'json'},
@@ -138,7 +138,6 @@ public class SwingStaticUtil {
 				fileName = chooser.getSelectedFile().toString();
 				break;
 			case JFileChooser.CANCEL_OPTION:
-				break;
 			case JFileChooser.ERROR_OPTION:
 				break;
 		}
