@@ -1,7 +1,18 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-compileJava.options.encoding = 'ISO-8859-1'
-apply plugin: 'maven'
+//apply plugin: 'java'
+//apply plugin: 'idea'
+//compileJava.options.encoding = 'ISO-8859-1'
+//apply plugin: 'maven'
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+shadowJar {
+    zip64 true
+}
 
 group = 'oliv.raspi.coffee'
 version = '1.0'

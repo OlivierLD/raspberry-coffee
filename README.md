@@ -1,11 +1,39 @@
 <h1><img align="middle" alt="Raspberry Coffee" src="./raspberryCoffee.png"> Raspberry Coffee</h1>
 
-#### Java code and wiring for the Raspberry Pi, featuring reusable libraries and snippets ####
-It uses the [`PI4J library`](http://pi4j.com), itself relying on [`WiringPi`](http://wiringpi.com/).
+---
 
+#### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets ####
+
+---
+
+It uses the [`PI4J library`](http://pi4j.com), itself relying on [`WiringPi`](http://wiringpi.com/).  
+The project - and its different modules - are built using [`Gradle`](https://gradle.org/).
+
+### Java
+Since 2019 or so, Java (JDK 11) comes with the RasPi OS.  
+So you do not need to install it. To check its availability:
+```
+$ java -version
+$ javac -version
+```
+
+### PI4J
+PI4J is a Java library that will help you access `GPIO`, `I2C`, and other hardware protocols.
 ```
 $ curl -s get.pi4j.com | sudo bash
 ```
+
+### Gradle
+The project comes with scripts `gradlew` (and its `gradlew.bat`, for Windows).  
+The `w` stands for `wrapper`. When used - like in `./gradlew tasks --all`, the wrapper
+will check if `gradle` is here, and install it if it is not there.
+This installation is driven by the file `gradle/wrapper/gradle-wrapper.properties`.
+This is the file to deal with, if an upgrade of the Gradle version is required.
+
+### Integrated Development Environment (IDE)
+IDEs are not mandatory, but they make Java development easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
+I like IntelliJ, but you can use anyone you like.
+
 ---
 
 ### Get started, from scratch, now!

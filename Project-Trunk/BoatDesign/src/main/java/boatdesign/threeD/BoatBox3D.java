@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -646,6 +644,12 @@ public class BoatBox3D extends Box3D {
         this.setAfterDrawer(afterDrawer);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        System.out.println(">> Super!"); // For interception...
+    }
+
     public void refreshValues(double minX,
                               double maxX,
                               double minY,
@@ -666,8 +670,7 @@ public class BoatBox3D extends Box3D {
         this.setzMax(maxZ);
         this.setXLabelTransformer(x -> String.valueOf(x + (defaultLht / 2.0)));
         // The text fields
-
-
+        // . . .
     }
 
     public double getMinX() {
@@ -1101,6 +1104,11 @@ public class BoatBox3D extends Box3D {
             bezierPointsTransom.add(transomPt);
         }
         // TODO Transom beam here?
+
+        /*
+         * Rails and keel are done,
+         * Now calculating the frames, waterlines, buttocks.
+         */
 
         List<Bezier> frameBeziers = new ArrayList<>();
         List<Bezier> beamBeziers = new ArrayList<>();

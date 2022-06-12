@@ -607,9 +607,9 @@ public class Box3D extends JPanel {
 
     /**
      * Warning: this one is adding 180 to the direction.
-     * @param x
-     * @param y
-     * @return direction, [0..360[
+     * @param x delta X
+     * @param y delta Y
+     * @return direction, in degrees, [0..360[
      */
     private static double getDir(double x, double y) {
         double direction = 180 + Math.toDegrees(Math.atan2(x, y));
