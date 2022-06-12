@@ -18,7 +18,7 @@ $ javac -version
 ```
 
 ### PI4J
-PI4J is a Java library that will help you access `GPIO`, `I2C`, and other hardware protocols.
+PI4J is a Java library that will help you access `GPIO`, `I2C`, `SPI`, and other hardware protocols.
 ```
 $ curl -s get.pi4j.com | sudo bash
 ```

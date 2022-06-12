@@ -1,5 +1,7 @@
 # [DIOZERO](https://www.diozero.com/)
 
-Another solution than `PI4J`. Let's try.
+Another option than `PI4J`. Let's give it a try.  
+
+- [diozero git repo](https://github.com/mattjlewis/diozero)
 
 ---
