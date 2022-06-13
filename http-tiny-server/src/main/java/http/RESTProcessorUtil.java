@@ -12,8 +12,8 @@ import java.util.stream.IntStream;
 public class RESTProcessorUtil {
 
 	/**
-	 * Make sure no operation is duplicated. Check on Verb anf Path
-	 * Throws an Exception isf a duplicate operation is found.
+	 * Make sure no operation is duplicated. Check on Verb and Path
+	 * Throws an Exception if a duplicate operation is found.
 	 * @param opList
 	 */
 	public static void checkDuplicateOperations(List<HTTPServer.Operation> opList) {
