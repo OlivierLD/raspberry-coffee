@@ -55,6 +55,7 @@ Then do the hydrostatic calculations.
 
 ### Some small boats
 - <https://sailboatdata.com/sailboat/corsaire>
+- <https://www.asmaraudeur.com/>
 - ...
 
 ---
