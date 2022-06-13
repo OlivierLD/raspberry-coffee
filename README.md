@@ -30,11 +30,11 @@ will check if `gradle` is here, and install it if it is not there.
 This installation is driven by the file `gradle/wrapper/gradle-wrapper.properties`.
 This is the file to deal with, if an upgrade of the Gradle version is required.
 
-> _<u>Note</u>_: We are using here the `shadowJar` plug-in with Gradle. This plug-in allows the generation of what's also called a "fat-jar",
-> a _**single**_ jar for all the application, including all its dependencies.  
+> _<u>Note</u>_: We are using here the `shadowJar` Gradle plug-in. This plug-in allows the generation of what's also called a "fat-jar",
+> a _**single**_ jar for all the application, including _**all**_ its dependencies.  
 > That does indeed make deployment and distribution much easier.
 
-> _<u>Another note</u>_: Some scripts will be features here, to run the different modules.
+> _<u>Another note</u>_: Some scripts will be featured here, to run the different modules.
 > **Those scripts are written to run in the development environment**. They can be easily tweaked to run 
 > in any other context.  
 > _Example_:  
@@ -77,6 +77,10 @@ I like IntelliJ, but you can use anyone you want or prefer.
 
 ---
 
+This being said, let's go.
+
+---
+
 ### Get started, from scratch, now!
 If `git` and `java` are available (and they should) on your Raspberry Pi, just run
 ```
@@ -85,7 +89,7 @@ bash -c "$(curl -L https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/
 
 ---
 This project contains Java code, many times translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
-More consistent samples can be found in the RasPISamples module (being moved to the Project.Trunk module), where several components have been assembled together.
+More consistent samples can be found in the RasPISamples module (being moved to the `Project-Trunk` module), where several components have been assembled together.
 Do take a look, it also comes with a readme file.
 
 ---
