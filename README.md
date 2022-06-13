@@ -30,19 +30,61 @@ will check if `gradle` is here, and install it if it is not there.
 This installation is driven by the file `gradle/wrapper/gradle-wrapper.properties`.
 This is the file to deal with, if an upgrade of the Gradle version is required.
 
+> _<u>Note</u>_: We are using here the `shadowJar` plug-in with Gradle. This plug-in allows the generation of what's also called a "fat-jar",
+> a _**single**_ jar for all the application, including all its dependencies.  
+> That does indeed make deployment and distribution much easier.
+
+> _<u>Another note</u>_: Some scripts will be features here, to run the different modules.
+> **Those scripts are written to run in the development environment**. They can be easily tweaked to run 
+> in any other context.  
+> _Example_:  
+> The `NMEA-multiplexer` project has many dependencies, remote ones, and local ones:
+> ```
+>    implementation 'com.pi4j:pi4j-core:1.2'
+>    implementation 'org.rxtx:rxtx:2.1.7'
+>    implementation 'org.scala-lang:scala-library:2.13.3'
+>    implementation "org.scala-lang:scala-compiler:2.13.3"
+>    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
+>    implementation 'org.java-websocket:Java-WebSocket:1.5.2'
+>    implementation 'com.google.code.gson:gson:2.8.0'
+>    implementation 'org.fusesource.jansi:jansi:1.11'
+>    implementation 'oracle:xmlparser:2.0'
+>    implementation 'org.yaml:snakeyaml:1.21'
+>    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+>    implementation group: 'org.json', name: 'json', version: '20190722'
+>    implementation project(':http-tiny-server')
+>    implementation project(':common-utils')
+>    implementation project(':I2C-SPI')
+>    implementation project(':AstroComputer')
+>    implementation project(':LoRa')    // Needed for a publisher
+> ```
+> Building the module with a `../gradlew shadowJar` will generate a **_single jar file_** named `./build/libs/NMEA-multiplexer-1.0-all.jar`, 
+> used for example in the script `ais.test.sh`:
+> ```
+> CP=./build/libs/NMEA-multiplexer-1.0-all.jar
+> java -cp ${CP} nmea.consumers.client.AISClient
+> ```
+> You may very well run the **exact** same thing, by delivering only the script and the jar, together in the same folder,
+> all you need to do is to change the location of the delivered jar-file (saying script and jar are in the same location):
+> ```
+> java -cp ./NMEA-multiplexer-1.0-all.jar nmea.consumers.client.AISClient
+> ```
+> 
+
 ### Integrated Development Environment (IDE)
 IDEs are not mandatory, but they make Java development easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
-I like IntelliJ, but you can use anyone you like.
+I like IntelliJ, but you can use anyone you want or prefer.
 
 ---
 
 ### Get started, from scratch, now!
+If `git` and `java` are available (and they should) on your Raspberry Pi, just run
 ```
 bash -c "$(curl -L https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh)"
 ```
 
 ---
-This project contains Java code, mostly translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
+This project contains Java code, many times translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
 More consistent samples can be found in the RasPISamples module (being moved to the Project.Trunk module), where several components have been assembled together.
 Do take a look, it also comes with a readme file.
 
