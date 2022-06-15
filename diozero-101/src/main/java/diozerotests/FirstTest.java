@@ -19,7 +19,7 @@ public class FirstTest {
             led.toggle();
         }
 
-        System.out.println("Button test...");
+        System.out.println("Button test... (20s)");
         try (Button button = new Button(12); LED led = new LED(18)) {
             button.whenPressed(nanoTime -> led.on());
             button.whenReleased(nanoTime -> led.off());
