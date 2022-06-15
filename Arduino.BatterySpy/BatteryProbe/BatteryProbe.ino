@@ -64,7 +64,7 @@ void setup() {
   while (!Serial);
 
   Serial.begin(9600); // Console
-  Serial.println(F("Battery Probe, reacheable by SMS"));
+  Serial.println(F("Battery Probe, reachable by SMS"));
   Serial.println(F("By OlivSoft"));
   Serial.println(F("--------------------------------"));
   Serial.println(F("Initializing....(May take ~3 seconds)"));

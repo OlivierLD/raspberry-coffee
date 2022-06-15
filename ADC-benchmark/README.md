@@ -29,7 +29,6 @@ As such, returns 2<sup><small>10</small></sup> values, in \[0..1023\].
 
 ![MCP3008](./RPi-MCP3008-Pot_bb.png)
 
-
 ```
  $ ./run.sh --channel:5
 Read an ADC for 3.3 Volt estimation

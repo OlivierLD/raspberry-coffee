@@ -3,7 +3,7 @@
 Another option than `PI4J`. Let's give it a try.  
 Seems not to require any system library. Interesting.
 
-- [diozero git repo](https://github.com/mattjlewis/diozero)
+- diozero [git repo](https://github.com/mattjlewis/diozero)
 
 Run this first sample, from the `diozero-101` folder:
 ```

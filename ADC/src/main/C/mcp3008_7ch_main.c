@@ -19,8 +19,7 @@
 #define ADC_CHANNEL_5 5
 #define ADC_CHANNEL_6 6
 
-int main(void)
-{
+int main(void) {
   fprintf(stdout, "Raspberry Pi reads an ADC\n") ;
 
   initMPC3008();
@@ -29,8 +28,7 @@ int main(void)
   int lastRead_0 = -100, lastRead_1 = -100, lastRead_2 = -100, 
       lastRead_3 = -100, lastRead_4 = -100, lastRead_5 = -100, lastRead_6 = -100;
   int tolerance = 10;
-  while (go)
-  {
+  while (go) {
     int pot_0 = readMCP3008(ADC_CHANNEL_0);
     int pot_1 = readMCP3008(ADC_CHANNEL_1);
     int pot_2 = readMCP3008(ADC_CHANNEL_2);
@@ -48,8 +46,7 @@ int main(void)
     int potAdjust_6 = abs(pot_6 - lastRead_6);
 
     if (potAdjust_0 > tolerance || potAdjust_1 > tolerance || potAdjust_2 > tolerance ||
-        potAdjust_3 > tolerance || potAdjust_4 > tolerance || potAdjust_5 > tolerance || potAdjust_6 > tolerance)
-    {
+        potAdjust_3 > tolerance || potAdjust_4 > tolerance || potAdjust_5 > tolerance || potAdjust_6 > tolerance) {
       int volume_0 = (int)((float)pot_0 / 10.23);
       int volume_1 = (int)((float)pot_1 / 10.23);
       int volume_2 = (int)((float)pot_2 / 10.23);

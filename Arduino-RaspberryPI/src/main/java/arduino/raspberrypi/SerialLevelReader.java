@@ -24,8 +24,9 @@ public class SerialLevelReader {
 	}
 
 	public synchronized static void appendToStream(String str) {
-		if (stream == null)
-			stream = new StringBuffer();
+		if (stream == null) {
+            stream = new StringBuffer();
+        }
 		stream.append(str);
 	}
 
@@ -37,17 +38,19 @@ public class SerialLevelReader {
 			String s = elem[i];
 			if (validCheckSum(s, false)) {
 				int level = parseMessage(s);
-				if ("true".equals(System.getProperty("verbose", "false")))
-					System.out.println("\tLevel is " + level);
+				if ("true".equals(System.getProperty("verbose", "false"))) {
+                    System.out.println("\tLevel is " + level);
+                }
 				if (level != getPreviousLevel()) {
 					System.out.println("Arduino said level is :" + level);
 					setPreviousLevel(level);
 				}
 			} else {
-				if (i == elem.length - 1)
-					newStr.append(s);
-				else
-					System.err.println("\t>>> Oops! Invalid String [" + s + "]");
+				if (i == elem.length - 1) {
+                    newStr.append(s);
+                } else {
+                    System.err.println("\t>>> Oops! Invalid String [" + s + "]");
+                }
 			}
 		}
 		// Reset
@@ -71,8 +74,9 @@ public class SerialLevelReader {
 		boolean b = false;
 		try {
 			int starIndex = sentence.indexOf("*");
-			if (starIndex < 0)
-				return false;
+			if (starIndex < 0) {
+                return false;
+            }
 			String csKey = sentence.substring(starIndex + 1);
 			int csk = Integer.parseInt(csKey, 16);
 			String str2validate = sentence.substring(1, starIndex); // sentence.indexOf("*"));
@@ -158,9 +162,9 @@ public class SerialLevelReader {
 			} catch (IOException ioe) {
 				throw new RuntimeException(ioe);
 			}
-			if ("true".equals(System.getProperty("verbose", "false")))
-				System.out.println("Payload [" + payload + "]");
-
+			if ("true".equals(System.getProperty("verbose", "false"))) {
+                System.out.println("Payload [" + payload + "]");
+            }
 			appendToStream(payload);
 			processStream();
 		});

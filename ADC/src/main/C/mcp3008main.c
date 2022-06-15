@@ -13,8 +13,7 @@
 
 #define ADC_CHANNEL 0 // 0 to 7, 8 channels on the MCP3008 
 
-int main(void)
-{
+int main(void) {
   fprintf(stdout, "Raspberry Pi reads an ADC\n") ;
 
   initMPC3008();
@@ -22,13 +21,11 @@ int main(void)
   bool go = true;
   int lastRead = -100;
   int tolerance = 10;
-  while (go)
-  {
+  while (go) {
     bool trimPotChanged = false;
     int pot = readMCP3008(ADC_CHANNEL);
     int potAdjust = abs(pot - lastRead);
-    if (potAdjust > tolerance)
-    {
+    if (potAdjust > tolerance) {
       trimPotChanged = true;
       int volume = (int)((float)pot / 10.23);
       fprintf(stdout, "Pot volume:%d %% value:%d\n", volume, pot); 

@@ -24,29 +24,35 @@ public class SerialReader {
 		boolean b = false;
 		try {
 			int starIndex = sentence.indexOf("*");
-			if (starIndex < 0)
-				return false;
+			if (starIndex < 0) {
+                return false;
+            }
 			String csKey = sentence.substring(starIndex + 1);
 			int csk = Integer.parseInt(csKey, 16);
 			String str2validate = sentence.substring(1, sentence.indexOf("*"));
 			int calcCheckSum = calculateCheckSum(str2validate);
 			b = (calcCheckSum == csk);
 		} catch (Exception ex) {
-			if (verb) System.err.println("Oops:" + ex.getMessage());
+			if (verb) {
+                System.err.println("Oops:" + ex.getMessage());
+            }
 		}
 		return b;
 	}
 
 	private final static String generateNMEAString(String payload, String prefix, String id) {
-		if (prefix == null || prefix.length() != 2)
-			throw new IllegalArgumentException("Bad prefix [" + prefix + "], must be 2 character long.");
-		if (id == null || id.length() != 3)
-			throw new IllegalArgumentException("Bad ID [" + id + "], must be 3 character long.");
+		if (prefix == null || prefix.length() != 2) {
+            throw new IllegalArgumentException("Bad prefix [" + prefix + "], must be 2 character long.");
+        }
+		if (id == null || id.length() != 3) {
+            throw new IllegalArgumentException("Bad ID [" + id + "], must be 3 character long.");
+        }
 		String nmea = prefix + id + "," + payload;
 		int cs = calculateCheckSum(nmea);
 		String cks = Integer.toString(cs, 16).toUpperCase();
-		if (cks.length() < 2)
-			cks = "0" + cks;
+		if (cks.length() < 2) {
+            cks = "0" + cks;
+        }
 		nmea += ("*" + cks);
 		return "$" + nmea;
 	}
@@ -98,10 +104,11 @@ public class SerialReader {
 			} catch (IOException ioe) {
 				throw new RuntimeException(ioe);
 			}
-			if (validCheckSum(payload, false))
-				System.out.print("Arduino said:" + payload);
-			else
-				System.out.println("\tOops! Invalid String [" + payload + "]");
+			if (validCheckSum(payload, false)) {
+                System.out.print("Arduino said:" + payload);
+            } else {
+                System.out.println("\tOops! Invalid String [" + payload + "]");
+            }
 		});
 
 		try {

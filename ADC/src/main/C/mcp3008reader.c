@@ -21,8 +21,7 @@
 #define ADC_CHANNEL 0 // 0 to 7, 8 channels on the MCP3008 
 #define DISPLAY_DIGIT 0
 
-void initMPC3008(void)
-{
+void initMPC3008(void) {
   wiringPiSetup();
   pinMode(SPI_CLK,  OUTPUT);
   pinMode(SPI_MOSI, OUTPUT);
@@ -35,8 +34,7 @@ void initMPC3008(void)
   pinMode (SPI_MISO, INPUT);
 }
 
-int readMCP3008(int channel)
-{
+int readMCP3008(int channel) {
   int i;
   digitalWrite(SPI_CS, HIGH);
 
@@ -47,33 +45,33 @@ int readMCP3008(int channel)
   adcCommand |= 0x18; // 0x18 = 00011000
   adcCommand <<= 3;
   // Send 5 bits: 8 - 3. 8 input channels on the MCP3008.
-  for (i=0; i<5; i++)
-  {
-    if (DISPLAY_DIGIT)
+  for (i=0; i<5; i++) {
+    if (DISPLAY_DIGIT) {
       fprintf(stdout, "(i=%d) ADCCOMMAND: 0x%04x\n", i, adcCommand);
-    if ((adcCommand & 0x80) != 0x0) // 0x80 = 0&10000000
+    }
+    if ((adcCommand & 0x80) != 0x0) { // 0x80 = 0&10000000
       digitalWrite(SPI_MOSI, HIGH);
-    else
+    } else {
       digitalWrite(SPI_MOSI, LOW);
+    }
     adcCommand <<= 1;   
     digitalWrite(SPI_CLK, HIGH);
     digitalWrite(SPI_CLK, LOW);
   }
 
   int adcOut = 0;
-  for (i=0; i<12; i++) // Read in one empty bit, one null bit and 10 ADC bits
-  {
+  for (i=0; i<12; i++) { // Read in one empty bit, one null bit and 10 ADC bits
     digitalWrite(SPI_CLK, HIGH);
     digitalWrite(SPI_CLK, LOW);
     adcOut <<= 1;
 
-    if (digitalRead(SPI_MISO) == HIGH)
-    {
+    if (digitalRead(SPI_MISO) == HIGH) {
       // Shift one bit on the adcOut
       adcOut |= 0x1;
     }
-    if (DISPLAY_DIGIT)
+    if (DISPLAY_DIGIT) {
       fprintf(stdout, "ADCOUT: 0x%04x\n", (adcOut));
+    }
   }
   digitalWrite(SPI_CS, HIGH);
 

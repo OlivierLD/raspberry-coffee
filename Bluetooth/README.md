@@ -12,6 +12,9 @@ and as a developer, all you need to care about is the serial communication, on e
 
 Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, as demoed below.
 
+> **Think of Bluetooth as a serial cable**. It works if both ends are connected.
+> You cannot connect if another cable is already there.
+
 > Example: Once your Bluetooth mouse is paired with a computer A, a computer B cannot access it.
 > Your BT mouse does not drive more than one computer. This could make some sense 🤓 
 

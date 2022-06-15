@@ -23,7 +23,7 @@ void setup() {
 
   Wire.onReceive(ALAMODE_onReceive);
   Wire.onRequest(ALAMODE_onRequest);
-  for (int ii=0; ii < N_DATA_BYTE; ii++){
+  for (int ii=0; ii < N_DATA_BYTE; ii++) {
     data[ii] = 255;
   }
 //data[1] = test_SD();
@@ -138,7 +138,7 @@ uint8_t test_SD() {
         int ii = 0;
         
         while (myFile.available()) {
-  	      if(msg[ii++] != myFile.read()){
+  	      if(msg[ii++] != myFile.read()) {
   	        status |= 1;
   	      }
         }
