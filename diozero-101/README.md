@@ -1,6 +1,7 @@
 # [DIOZERO](https://www.diozero.com/)
 
 Another option than `PI4J`. Let's give it a try.  
+Seems not to require any system library. Interesting.
 
 - [diozero git repo](https://github.com/mattjlewis/diozero)
 
