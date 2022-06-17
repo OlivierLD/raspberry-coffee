@@ -488,6 +488,7 @@ public class TCPWatch {
 	}
 
 	// A Map ;). Approximate, square projection... (for now)
+	@SuppressWarnings("unchecked")
 	private static void displayPage_Track(ScreenBuffer sb) {
 		sb.clear();
 		sb.rectangle(0, 0, WIDTH - 1, HEIGHT - 1);

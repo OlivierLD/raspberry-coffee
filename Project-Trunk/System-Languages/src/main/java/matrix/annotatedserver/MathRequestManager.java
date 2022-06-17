@@ -39,6 +39,7 @@ public class MathRequestManager implements RESTRequestManager {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<HTTPServer.Operation> buildOperationList(AnnotatedRESTImplementation instance) {
 		Class<AnnotatedRESTImplementation> server = (Class<AnnotatedRESTImplementation>)instance.getClass();
 		String root = "/";
