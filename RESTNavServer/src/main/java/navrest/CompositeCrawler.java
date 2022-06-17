@@ -63,6 +63,7 @@ public class CompositeCrawler {
 		return (Map<String, Object>)catalogObject;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Pattern> buildPatternList() throws Exception {
 		Map<String, Object> catalog = getCompositeCatalog();
 		List<Pattern> patternList = new ArrayList<>();

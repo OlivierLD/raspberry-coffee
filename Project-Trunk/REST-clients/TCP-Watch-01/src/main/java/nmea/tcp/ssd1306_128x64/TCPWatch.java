@@ -46,7 +46,6 @@ import java.util.logging.Logger;
  * Uses SPI interface for the 128x64 OLED Screen
  * One standalone class.
  */
-@SuppressWarnings("unchecked")
 public class TCPWatch {
 
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);

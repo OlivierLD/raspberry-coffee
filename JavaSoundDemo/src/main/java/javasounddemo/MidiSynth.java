@@ -737,7 +737,7 @@ public class MidiSynth extends JPanel implements ControlContext {
 			return b;
 		}
 
-
+		@SuppressWarnings("unchecked")
 		public void actionPerformed(ActionEvent e) {
 			JButton button = (JButton) e.getSource();
 			if (button.equals(recordB)) {

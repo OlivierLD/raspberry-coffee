@@ -67,6 +67,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Map<String, TideStation> getStationData() throws Exception {
 		Map<String, TideStation> stationData;
 		try {

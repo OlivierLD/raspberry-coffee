@@ -147,6 +147,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 
 	private static boolean calibration = false;
 
+	@SuppressWarnings("unchecked")
 	public LelandPrototype() {
 		fonaClient = this;
 		data = new LevelMaterial[NB_CHANNELS];
@@ -531,6 +532,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 	}
 	*/
 	@Override
+	@SuppressWarnings("unchecked")
 	public void setTypeOfChannel(int channel, SevenADCChannelsManager.Material material, float val) {
 		data[channel] = new LevelMaterial(val, material);
 		manageData();
@@ -699,6 +701,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 		}
 
 		@Override
+		@SuppressWarnings("unchecked")
 		public boolean equals(Object other) {
 			if (other == null) {
 				return false;

@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
  *
  * Notice the methods {@link #buildOperationList} and {@link #processRequest}
  */
-@SuppressWarnings("unchecked")
 public class PoloRESTRequestManager implements RESTRequestManager {
 
 	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose"));

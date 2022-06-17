@@ -50,6 +50,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 			this.keepPolling = false;
 		}
 
+		@SuppressWarnings("unchecked")
 		public void run() {
 
 			while (keepPolling) {

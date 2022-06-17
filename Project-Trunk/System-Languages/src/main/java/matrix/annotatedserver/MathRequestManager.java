@@ -14,7 +14,6 @@ import java.util.Optional;
  *
  * Notice the methods {@link #buildOperationList} and {@link #processRequest}
  */
-@SuppressWarnings("unchecked")
 public class MathRequestManager implements RESTRequestManager {
 
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose"));
