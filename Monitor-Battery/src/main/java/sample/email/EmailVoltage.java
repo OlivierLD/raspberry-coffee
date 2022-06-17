@@ -1,9 +1,11 @@
 package sample.email;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+//import java.io.BufferedReader;
+//import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import email.EmailSender;
+
+import javax.mail.MessagingException;
 
 import static utils.StaticUtil.userInput;
 
@@ -47,9 +49,13 @@ public class EmailVoltage {
 			} else {
 				float data = Float.parseFloat(str);
 				System.out.println("Sending");
-				sender.send(destEmail,
-								"PI Volt",
-								"{ voltage: " + String.valueOf(data) + " }");
+				try {
+					sender.send(destEmail,
+							"PI Volt",
+							"{ voltage: " + String.valueOf(data) + " }");
+				} catch (MessagingException me) {
+					throw me;
+				}
 				System.out.println("Sent.");
 			}
 		}

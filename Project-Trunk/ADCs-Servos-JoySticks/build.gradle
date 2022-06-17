@@ -21,7 +21,10 @@ repositories {
 
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
-  implementation 'com.google.code.gson:gson:2.8.0'
+//  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation 'org.json:json:20141113'
+  implementation 'org.fusesource.jansi:jansi:1.11'
+  implementation 'org.java-websocket:Java-WebSocket:1.5.2'
   implementation project(':common-utils')
   implementation project(':HanoiTower')
   implementation project(':ADC')

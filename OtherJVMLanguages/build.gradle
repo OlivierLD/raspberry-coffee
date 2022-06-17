@@ -44,6 +44,7 @@ dependencies {
     implementation 'org.glassfish.jersey.core:jersey-client:2.25.1'
     implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
 
+    implementation 'com.pi4j:pi4j-core:1.2'
 
     implementation project(':I2C-SPI')
     implementation project(':MindWave')

@@ -11,21 +11,6 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-// sourceCompatibility = 1.8
-
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -33,6 +18,11 @@ repositories {
 }
 
 dependencies {
+  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation 'com.pi4j:pi4j-core:1.2'
+
   implementation project(':http-tiny-server')
+  implementation project(':common-utils')
+  implementation project(':AstroComputer')
   implementation project(':I2C-SPI')
 }

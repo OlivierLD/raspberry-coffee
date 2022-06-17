@@ -759,6 +759,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response postForwarder(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<Forwarder> opFwd = null;
@@ -1517,6 +1518,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response postComputer(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<Computer> opComputer = null;
@@ -1633,6 +1635,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response putChannel(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<NMEAClient> opClient = null;
@@ -1850,6 +1853,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response putForwarder(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<NMEAClient> opClient = null;
@@ -1885,6 +1889,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response putComputer(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<Computer> opComputer = null;
@@ -2283,6 +2288,7 @@ public class RESTImplementation {
 			NMEADataCache.AIS
 	});
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response getCache(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		// Tiny object option
@@ -2410,6 +2416,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response getDevCurve(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();

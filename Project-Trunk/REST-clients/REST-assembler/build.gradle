@@ -37,24 +37,6 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDir 'src/java'
-//        }
-//        scala {
-//            srcDir 'src/scala'
-//        }
-//        kotlin {
-//            srcDir 'src/kotlin'
-//        }    }
-//    test {
-//        java {
-//            srcDir 'tests/java'
-//        }
-//    }
-//}
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -62,6 +44,8 @@ repositories {
 }
 
 dependencies {
+
+    implementation 'com.pi4j:pi4j-core:1.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'org.codehaus.groovy:groovy-all:2.4.6'
@@ -74,9 +58,11 @@ dependencies {
 
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     implementation 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.10'
+    implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'org.ajoberstar:gradle-git:1.1.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
 
+    implementation project(':common-utils')
     implementation project(':http-tiny-server')
     implementation project(':ADC')
 }

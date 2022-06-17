@@ -17,6 +17,7 @@ repositories {
 
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':common-utils')
   implementation project(':I2C-SPI')
 }
 

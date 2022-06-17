@@ -40,11 +40,11 @@ public class PIControllerMain implements RaspberryPIEventListener {
 			if ("-verbose".equals(args[i])) {
 				verbose = true;
 				System.setProperty("verbose", "true");
-			} else if (args[i].startsWith("-send:"))
+			} else if (args[i].startsWith("-send:")) {
 				providerSend = args[i].substring("-send:".length());
-			else if (args[i].startsWith("-receive:"))
+			} else if (args[i].startsWith("-receive:")) {
 				providerReceive = args[i].substring("-receive:".length());
-			else if ("-help".equals(args[i])) {
+			} else if ("-help".equals(args[i])) {
 				System.out.println("Usage:");
 				System.out.println("  java pi4j.email.PIControllerMain -verbose -send:google -receive:yahoo -help");
 				System.exit(0);
@@ -59,8 +59,9 @@ public class PIControllerMain implements RaspberryPIEventListener {
 			boolean keepLooping = true;
 			while (keepLooping) {
 				List<EmailReceiver.ReceivedMessage> received = receiver.receive();
-				if (verbose || received.size() > 0)
+				if (verbose || received.size() > 0) {
 					System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
+				}
 				for (EmailReceiver.ReceivedMessage mess : received) {
 					//      System.out.println(s);
 					String operation = "";

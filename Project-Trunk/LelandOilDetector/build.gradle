@@ -13,19 +13,6 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 repositories {

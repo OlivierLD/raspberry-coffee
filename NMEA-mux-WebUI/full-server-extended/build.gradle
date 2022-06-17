@@ -18,28 +18,14 @@ repositories {
     maven { url "http://lediouris.net/maven2" }
 }
 
-// sourceCompatibility = 1.8
-// targetCompatibility = 1.8
-
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/java']
-//        }
-//    }
-//    test {
-//        java {
-//            srcDir 'tests/java'
-//        }
-//    }
-//}
-
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation project(':common-utils')
     implementation project(':NMEA-mux-extensions')
     implementation project(':RESTNavServer')
-//    implementation project(':NMEA-multiplexer') // RESTNavServer contains NMEA-multiplexer
+    implementation project(':NMEA-multiplexer') // RESTNavServer contains NMEA-multiplexer
 }
 
 shadowJar {
