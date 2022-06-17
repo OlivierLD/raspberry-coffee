@@ -1,6 +1,5 @@
 package phonekeyboard3x4;
 
-import membrane.MembraneKeyPad1x4;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public class PinsCustomization {
 			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
-			assertTrue(ex.getMessage().startsWith("Please provide both "));
+			assertTrue(String.format("Unexpected error message [%s]", ex.getMessage()), ex.getMessage().contains("cannot appear more than once"));
 			System.out.println(String.format("As expected [%s]", ex.toString()));
 		}
 	}
