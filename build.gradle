@@ -51,7 +51,7 @@ build.doFirst {
     println "| If needed, you can exclude them, like in ./gradlew clean build -x :<module-name>:compileScala "
     println "| On low-RAM boards, use --no-daemon, like in ./gradlew --no-daemon clean build "
     println "| "
-    println "| Also consider trying ./gradlew clean build -x test -x :opencv "
+    println "| Also consider trying ./gradlew clean build -x test -x :opencv:compileJava "
     println "+---------------------------------------------------------------------------------------"
     println " ... and the --continue flag is still available."
     println "+---------------------------------------------------------------------------------------"
