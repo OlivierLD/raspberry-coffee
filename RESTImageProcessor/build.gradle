@@ -8,21 +8,7 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//    resources {
-//      srcDir 'src/resources'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 
 repositories {
   mavenCentral()

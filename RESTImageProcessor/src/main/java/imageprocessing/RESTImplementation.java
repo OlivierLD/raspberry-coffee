@@ -26,6 +26,7 @@ import java.util.*;
  * have the required requests processed.
  * </p>
  */
+@SuppressWarnings("unchecked")
 public class RESTImplementation {
 
 	private static boolean verbose = "true".equals(System.getProperty("image.verbose", "false"));
