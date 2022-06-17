@@ -36,6 +36,7 @@ public class NMEAtoCSV {
 	private final static String STRINGS_PRM_PREFIX = "--data:";
 	private final static String BREAK_AT_PRM_PREFIX = "--break-at:";
 
+	@SuppressWarnings("unchecked")
 	public static void main(String... args) {
 
 		System.out.println(String.format("Running from %s.", System.getProperty("user.dir")));

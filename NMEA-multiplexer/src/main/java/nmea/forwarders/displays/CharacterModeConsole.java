@@ -241,6 +241,7 @@ public class CharacterModeConsole {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private double getValueFromCache(String key, NMEADataCache ndc) {
 		double value = 0;
 		switch (key) {
@@ -417,6 +418,7 @@ public class CharacterModeConsole {
 		return value;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initConsole(Properties consoleProps) throws Exception {
 		consoleData = new HashMap<>();
 
@@ -747,6 +749,7 @@ public class CharacterModeConsole {
 	}
 
 	// Properties test
+	@SuppressWarnings("unchecked")
 	public static void main(String... args) throws Exception {
 		String propFileName = System.getProperty("console.definition", "char.console.properties"); // "D:\\_mywork\\dev-corner\\olivsoft\\OlivSoftDesktop\\char.console.properties"
 		Map<String, ConsoleData> consoleData = new HashMap<>();

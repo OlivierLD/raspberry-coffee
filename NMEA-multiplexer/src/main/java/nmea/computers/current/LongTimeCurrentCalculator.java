@@ -94,6 +94,7 @@ public class LongTimeCurrentCalculator /* extends Computer */ {
 		this.bspBuffer = new ArrayList<>();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void start() {
 		System.out.println(this.getClass().getName() + " is starting...");
 		final long _betweenLoops = betweenLoops;

@@ -126,6 +126,7 @@ public class AISManager extends Computer {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void setProperties(Properties props) {
 		this.props = props;
 		this.minimumDistance = Double.parseDouble(props.getProperty("minimum.distance", String.valueOf(DEFAULT_MINIMUM_DISTANCE)));

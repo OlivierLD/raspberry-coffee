@@ -945,6 +945,7 @@ public class MuxInitializer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     static Properties yamlToProperties(Map<String, Object> yamlMap) {
         Properties properties = new Properties();
 

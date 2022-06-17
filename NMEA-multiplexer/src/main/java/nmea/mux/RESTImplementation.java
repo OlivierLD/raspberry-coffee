@@ -1069,6 +1069,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	private HTTPServer.Response postChannel(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<NMEAClient> opClient = null;

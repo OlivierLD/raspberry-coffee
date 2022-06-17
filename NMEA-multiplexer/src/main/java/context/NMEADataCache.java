@@ -360,6 +360,7 @@ public class NMEADataCache
 	 * Close to AutoParse. Could be more widely used!
 	 * @param nmeaSentence
 	 */
+	@SuppressWarnings("unchecked")
 	public void parseAndFeed(String nmeaSentence) {
 		if (StringParsers.validCheckSum(nmeaSentence)) {
 			// Increment # of messages processed
