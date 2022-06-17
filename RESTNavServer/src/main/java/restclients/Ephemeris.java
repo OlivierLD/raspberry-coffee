@@ -74,6 +74,7 @@ public class Ephemeris {
 	/**
 	 * TODO Isolate prms in a properties file.
 \	 */
+	@SuppressWarnings("unchecked")
 	private final static void go() throws Exception {
 
 		String serverName = "localhost", serverPort = "9999";

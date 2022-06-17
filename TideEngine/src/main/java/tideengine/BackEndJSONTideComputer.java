@@ -32,6 +32,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public Constituents buildConstituents() throws Exception {
 		Constituents constituents;
 		try {

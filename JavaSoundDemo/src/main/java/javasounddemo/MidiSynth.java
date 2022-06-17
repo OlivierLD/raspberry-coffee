@@ -210,6 +210,7 @@ public class MidiSynth extends JPanel implements ControlContext {
 	 * Piano renders black & white keys and plays the notes for a MIDI
 	 * channel.
 	 */
+	@SuppressWarnings("unchecked")
 	class Piano extends JPanel implements MouseListener {
 
 		Vector blackKeys = new Vector();
@@ -482,6 +483,7 @@ public class MidiSynth extends JPanel implements ControlContext {
 	/**
 	 * A collection of MIDI controllers.
 	 */
+	@SuppressWarnings("unchecked")
 	class Controls extends JPanel implements ActionListener, ChangeListener, ItemListener {
 
 		public JButton recordB;

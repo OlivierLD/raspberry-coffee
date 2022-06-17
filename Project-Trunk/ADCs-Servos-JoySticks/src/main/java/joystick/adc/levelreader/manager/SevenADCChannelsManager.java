@@ -40,6 +40,7 @@ public class SevenADCChannelsManager {
 
 	/* Used to smooth the values */
 	private final float[] smoothedChannelVolumes = new float[]{0f, 0f, 0f, 0f, 0f, 0f, 0f};
+	@SuppressWarnings("unchecked")
 	private final List<Integer>[] smoothedChannel = new List[7];
 	private final static int WINDOW_WIDTH = Integer.parseInt(System.getProperty("smooth.width", "100")); // For smoothing
 

@@ -89,6 +89,7 @@ public class AISTargetLogger extends Computer {
 	 * @param mess Received message
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public void write(byte[] mess) {
 		String sentence = new String(mess);
 //	System.out.println(String.format("In AIS Target Computer, write method: %s", sentence));

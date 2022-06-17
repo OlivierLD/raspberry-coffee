@@ -210,6 +210,7 @@ public class Nokia5110Processor implements Forwarder {
 			 * @param payload one of { "speed-unit": "kmh" }, { "speed-unit": "mph" }, { "speed-unit": "ms" }, or { "speed-unit": "kts" }
 			 */
 			@Override
+			@SuppressWarnings("unchecked")
 			public void topicBroadcast(String topic, Object payload){
 //			System.out.println("Topic:" + topic + ", payload:" + payload);
 				if (payload instanceof Map) {

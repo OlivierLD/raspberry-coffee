@@ -563,6 +563,7 @@ public class ImageTable
 
 		ColumnHeaderToolTips() {}
 
+		@SuppressWarnings("unchecked")
 		public void setToolTip(TableColumn col, String tooltip) {
 			if (tooltip == null) {
 				this.tips.remove(col);

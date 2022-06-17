@@ -30,15 +30,21 @@
 package javasounddemo;
 
 
-import java.awt.*;
-import java.awt.event.*;
+import javax.sound.midi.MidiSystem;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Vector;
-import javax.sound.sampled.*;
-import javax.sound.midi.*;
 
 /**
  * The Java Sound Samples : MidiSynth, Juke, CapturePlayback, Groove.
@@ -53,7 +59,7 @@ public class JavaSound extends JPanel implements ChangeListener, Runnable {
 	private int width = 760, height = 500;
 	private int index;
 
-
+	@SuppressWarnings("unchecked")
 	public JavaSound(String audioDirectory) {
 
 		setLayout(new BorderLayout());
@@ -134,6 +140,7 @@ public class JavaSound extends JPanel implements ChangeListener, Runnable {
 	/**
 	 * Lazy load the tabbed pane with CapturePlayback, MidiSynth and Groove.
 	 */
+	@SuppressWarnings("unchecked")
 	public void run() {
 		EmptyBorder eb = new EmptyBorder(5, 5, 5, 5);
 		BevelBorder bb = new BevelBorder(BevelBorder.LOWERED);

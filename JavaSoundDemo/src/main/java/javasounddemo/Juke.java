@@ -154,6 +154,7 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addSound(File file) {
 		String s = file.getName();
 		if (s.endsWith(".au") || s.endsWith(".rmf") ||
@@ -882,7 +883,7 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 			frame.setVisible(true);
 		}
 
-
+		@SuppressWarnings("unchecked")
 		public void actionPerformed(ActionEvent e) {
 			Object object = e.getSource();
 			if (object instanceof JTextField) {
@@ -915,7 +916,6 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
-						;
 					} else {
 						loadJuke(name);
 					}

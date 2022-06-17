@@ -302,6 +302,7 @@ public class ThreeViews {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void fileOpen_ActionPerformed(ActionEvent ae) {
         String fName = SwingUtils.chooseFile(null,
                 JFileChooser.FILES_ONLY,
@@ -539,6 +540,7 @@ public class ThreeViews {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static XMLDocument buildXMLforPublishing(Map<String, Object> dataMap,
                                                      Map<String, Object> calculatedMap,
                                                      List<List<Bezier.Point3D>> allFramesCtrlPts,
@@ -708,6 +710,7 @@ public class ThreeViews {
         return doc;
     }
 
+    @SuppressWarnings("unchecked")
     private void refreshBoatShape() {
         Thread repainter = new Thread(() -> {
             keepLooping.set(true);
@@ -1296,6 +1299,7 @@ public class ThreeViews {
         frame.setVisible(true);
     }
 
+    @SuppressWarnings("unchecked")
     private void initConfiguration(boolean full) {
         if (initConfig != null) {
 
@@ -2763,6 +2767,7 @@ public class ThreeViews {
      * Main for the Swing app.
      * @param args Unused.
      */
+    @SuppressWarnings("unchecked")
     public static void main(String... args) {
 
         try {

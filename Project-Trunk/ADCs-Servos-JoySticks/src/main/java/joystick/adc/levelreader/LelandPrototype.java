@@ -15,6 +15,7 @@ public class LelandPrototype implements AirWaterOilInterface {
 	private final static NumberFormat DF31 = new DecimalFormat("000.0");
 	private final static NumberFormat DF4 = new DecimalFormat("###0");
 
+	@SuppressWarnings("unchecked")
 	public LelandPrototype() {
 		data = new LevelMaterial[7];
 		for (int i = 0; i < data.length; i++) {
@@ -56,6 +57,7 @@ public class LelandPrototype implements AirWaterOilInterface {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void setTypeOfChannel(int channel, SevenADCChannelsManager.Material material, float val) {
 		data[channel] = new LevelMaterial(val, material);
 		displayData();
@@ -103,6 +105,7 @@ public class LelandPrototype implements AirWaterOilInterface {
 		}
 
 		@Override
+		@SuppressWarnings("unchecked")
 		public boolean equals(Object other) {
 			if (other == null) {
 				return false;

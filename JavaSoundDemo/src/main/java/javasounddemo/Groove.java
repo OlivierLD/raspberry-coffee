@@ -94,6 +94,7 @@ public class Groove extends JPanel implements ActionListener, ControlContext, Me
 									"Open cuica", "Mute triangle", "Open triangle"};
 	private Vector data = new Vector(instruments.length);
 
+	@SuppressWarnings("unchecked")
 	public Groove() {
 		setLayout(new BorderLayout(5, 0));
 		EmptyBorder eb = new EmptyBorder(5, 5, 5, 5);

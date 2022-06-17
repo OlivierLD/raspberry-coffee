@@ -46,6 +46,7 @@ public class CompositeCrawler {
 		}
 	};
 
+	@SuppressWarnings("unchecked")
 	private Map<String, Object> getCompositeCatalog() throws Exception {
 		File catalog = new File(COMPOSITE_CATALOG);
 		if (!catalog.exists()) {
@@ -145,6 +146,7 @@ public class CompositeCrawler {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getCompositeHierarchy(String filter) throws Exception {
 		Map<String, Object> composites = new TreeMap<>();
 		composites = this.crawl(new File("web"), 0, this.buildPatternList(), composites, filter);

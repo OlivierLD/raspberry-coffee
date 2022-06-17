@@ -50,6 +50,7 @@ public class TempoDial extends JPanel {
 	private Data currentData;
 	private Sequencer sequencer;
 
+	@SuppressWarnings("unchecked")
 	public TempoDial() {
 		setBackground(new Color(20, 20, 20));
 		ellipse = new Ellipse2D.Float(2, 20, 92, 120);
