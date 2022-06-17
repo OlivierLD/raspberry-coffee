@@ -193,6 +193,7 @@ public class RESTImplementation {
 	 * @param request
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	private Response requestTransformation(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 

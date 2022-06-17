@@ -41,6 +41,7 @@ public class MathRequestManager implements RESTRequestManager {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<HTTPServer.Operation> getRESTOperationList() {
 		return restImplementation.getOperations();
 	}
