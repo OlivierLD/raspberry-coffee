@@ -29,6 +29,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+    // none
 }
 
 repositories {
@@ -42,7 +43,15 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" } // PI4J ?
 }
 
-build.doFirst {
+tasks.register('info') {
+    // See this https://docs.gradle.org/current/userguide/tutorial_using_tasks.html
+    println "+------------------- B U I L D   I N F O R M A T I O N ---------------------------------"
+    println "| This (root) build file allows you to validate the whole project ($project.name) "
+    println "| Note that all sub-modules can be built independently, like (for example) : "
+    println "| \$ cd RESTNavServer "
+    println "| \$ ../gradlew clean build "
+    println "| or "
+    println "| \$ ../gradlew clean shadowJar "
     println "+---------------------------------------------------------------------------------------"
     println "| >>> You may want to comment or uncomment several modules in 'settings.gradle':"
     println "|     - opencv"
@@ -53,8 +62,16 @@ build.doFirst {
     println "| "
     println "| Also consider trying ./gradlew clean build -x test "
     println "| If you've not installed opencv:"
-    println "| Also consider trying ./gradlew clean build [-x test] -x :opencv:compileJava -x :Project-Trunk:WebcamTemplate:compileJava"
+    println "| Also you can try ./gradlew clean build [-x test] -x :opencv:compileJava -x :Project-Trunk:WebcamTemplate:compileJava"
     println "+---------------------------------------------------------------------------------------"
     println " ... and the --continue flag is still available."
     println "+---------------------------------------------------------------------------------------"
+}
+
+task printInfo() {
+    dependsOn tasks.info
+}
+
+build.doFirst () {
+    tasks.info
 }
