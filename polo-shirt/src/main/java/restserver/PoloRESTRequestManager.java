@@ -214,6 +214,7 @@ public class PoloRESTRequestManager implements RESTRequestManager {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<RESTOperation> buildOperationList(AnnotatedRESTImplementation instance) {
 		Class<AnnotatedRESTImplementation> server = (Class<AnnotatedRESTImplementation>)instance.getClass();
 		String root = "/";
@@ -331,6 +332,7 @@ public class PoloRESTRequestManager implements RESTRequestManager {
 		return operations;
 	}
 
+	@SuppressWarnings("unchecked")
 	public HTTPServer.Response processRequest(HTTPServer.Request request) throws UnsupportedOperationException {
 		Optional<RESTOperation> opOp = operations
 				.stream()
