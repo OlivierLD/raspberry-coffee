@@ -20,9 +20,9 @@ public class EmailVoltage {
 		for (int i = 0; i < args.length; i++) {
 			if ("-verbose".equals(args[i])) {
 				System.setProperty("verbose", "true");
-			} else if (args[i].startsWith("-send:"))
+			} else if (args[i].startsWith("-send:")) {
 				providerSend = args[i].substring("-send:".length());
-			else if (args[i].startsWith("-sendto:")) {
+			} else if (args[i].startsWith("-sendto:")) {
 				sendTo = args[i].substring("-sendto:".length());
 				dest = sendTo.split(",");
 			} else if ("-help".equals(args[i])) {

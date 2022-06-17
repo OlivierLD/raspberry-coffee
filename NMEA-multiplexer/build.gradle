@@ -12,7 +12,7 @@ version = '1.0'
 repositories {
     mavenLocal()
     mavenCentral()
-//  maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://oss.sonatype.org/content/groups/public" }
     maven { url "https://www.datanucleus.org/downloads/maven2" }
     maven { url "https://mvnrepository.com/artifact" }
 }
@@ -24,7 +24,7 @@ compileJava {
 }
 
 dependencies {
-    implementation 'com.pi4j:pi4j-core:2.1.1' // 1.2'
+    implementation 'com.pi4j:pi4j-core:1.2' // 2.1.1' Warning: 'com.pi4j.io.i2c.I2CFactory' seems not to be inversion 2.1.1
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation 'org.scala-lang:scala-library:2.13.3'
     implementation "org.scala-lang:scala-compiler:2.13.3"
