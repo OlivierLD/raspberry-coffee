@@ -33,7 +33,8 @@ shadowJar {
     zip64 true
 }
 
-compileJava.options.compilerArgs += ["-Xlint:none"]
+//compileJava.options.compilerArgs += ["-Xlint:none"]
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 
 task runJuke(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'javasounddemo.Juke'

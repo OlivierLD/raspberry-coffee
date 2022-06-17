@@ -13,6 +13,8 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
+
 repositories {
   mavenCentral()
   mavenLocal()

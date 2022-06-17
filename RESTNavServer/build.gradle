@@ -8,8 +8,7 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-// sourceCompatibility = 1.8
-// targetCompatibility = 1.8
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 
 repositories {
   mavenLocal()
