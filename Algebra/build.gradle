@@ -42,19 +42,6 @@ dependencies {
 def testNum = '01'
 
 task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box samples. Use -Pnum=[01..11] (default 01)") {
-    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
-    println "01: 3D Plan triangle, AfterDraw"
-    println "02: 3D pyramid, animated"
-    println "03: 3D cubes, boxes, arrows"
-    println "04: 3D boxes and segments"
-    println "05: 3D vectors, sum of vectors, animated"
-    println "06: 3D vectors and sums, draggable, with widgets"
-    println "07: 3D spring, draggable, with widgets"
-    println "08: 3D boxes, scaled, translated, draggable, with widgets"
-    println "09: 3D wavefront (.obj), draggable, widgets. Use -Pidx=[0..7]"
-    println "10: First 3D Bezier sample, draggable, widgets"
-    println "11: Small 3D Bezier boat, draggable, widgets, xLabel Tx"
-
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -95,11 +82,6 @@ def bezierTestNum = '01'
 
 task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a Bezier works. Use -Pnum=[01..02] (default 01)") {
     // println("Task [${name}]: Yoho!!")
-    println "See how a Bezier works. Use -Pnum=[01..02] (default 01)"
-    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
-    println "01: 2D Bezier, with 3 Ctrl Points"
-    println "02: 2D Bezier, with 4 Ctrl Points"
-
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -130,7 +112,7 @@ task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a B
 }
 
 task runSample2(type: JavaExec, dependsOn: build, description: "Swing UI sample. Lowpass") {
-    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
+//    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -142,7 +124,7 @@ task runSample2(type: JavaExec, dependsOn: build, description: "Swing UI sample.
 }
 
 task runSample3(type: JavaExec, dependsOn: build, description: "Swing UI sample. Bezier.") {
-    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
+//    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -154,7 +136,7 @@ task runSample3(type: JavaExec, dependsOn: build, description: "Swing UI sample.
 }
 
 task runSample4(type: JavaExec, dependsOn: build, description: "Swing UI sample. 2 Bezier curves.") {
-    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
+//    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -163,4 +145,28 @@ task runSample4(type: JavaExec, dependsOn: build, description: "Swing UI sample.
     classpath sourceSets.test.runtimeClasspath
     main = 'gsg.examples.wb.bezier.SwingSample12'
     workingDir "."
+}
+
+build.doFirst {
+    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
+    println ""
+    println "Task runSample:"
+    println "01: 3D Plan triangle, AfterDraw"
+    println "02: 3D pyramid, animated"
+    println "03: 3D cubes, boxes, arrows"
+    println "04: 3D boxes and segments"
+    println "05: 3D vectors, sum of vectors, animated"
+    println "06: 3D vectors and sums, draggable, with widgets"
+    println "07: 3D spring, draggable, with widgets"
+    println "08: 3D boxes, scaled, translated, draggable, with widgets"
+    println "09: 3D wavefront (.obj), draggable, widgets. Use -Pidx=[0..7]"
+    println "10: First 3D Bezier sample, draggable, widgets"
+    println "11: Small 3D Bezier boat, draggable, widgets, xLabel Tx"
+
+    println ""
+    println "Task runBezierSample:"
+    println "See how a Bezier works. Use -Pnum=[01..02] (default 01)"
+    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
+    println "01: 2D Bezier, with 3 Ctrl Points"
+    println "02: 2D Bezier, with 4 Ctrl Points"
 }
