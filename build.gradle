@@ -56,8 +56,17 @@ tasks.register('info') {
     println "| >>> You may want to comment or uncomment several modules in 'settings.gradle':"
     println "|     - opencv"
     println "|     - Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
-    println "| Also, depending on your environment, scala steps might be too demanding..."
+    println "| Also, depending on your environment, scala nd kotlin steps might be too demanding..."
     println "| If needed, you can exclude them, like in ./gradlew clean build -x :<module-name>:compileScala "
+    println "|   -x :RasPISamples:compileScala " +
+            "-x :OtherJVMLanguages:compileScala " +
+            "-x :http-client-paradigm:compileScala " +
+            "-x RESTClients:REST-assembler:compileScala " +
+            "-x :Project-Trunk:System-Languages:compileKotlin " +
+            "-x :Project-Trunk:System-Languages:compileScala " +
+            "-x :Project-Trunk:Weather-Station-Implementation:compileScala " +
+            "-x :Project-Trunk:REST-clients:REST-assembler:compileKotlin " +
+            "-x :Project-Trunk:REST-clients:REST-assembler:compileScala"
     println "| On low-RAM boards, use --no-daemon, like in ./gradlew --no-daemon clean build "
     println "| "
     println "| Also consider trying ./gradlew clean build -x test "
