@@ -39,13 +39,13 @@ dependencies {
 
 tasks.withType(JavaExec) {
     if (System.getProperty("os.name").indexOf("Mac") > -1) {
-        println "Running on Mac"
+        println "WebCamTemplate: Running on Mac"
         // For Mac
         systemProperty "java.library.path", "/usr/local/share/java/opencv4/:/usr/local/Cellar/openssl/1.0.2s/lib/"
 //      systemProperty "java.library.path", "/usr/local/Cellar/opencv/${opencvVersion}/share/java/opencv4/:/usr/local/Cellar/openssl/1.0.2s/lib/"
 //      systemProperty "java.library.path", "/usr/local/Cellar/opencv/${opencvVersion}/share/java/opencv4/" // Mac
     } else {
-        println "Running on Raspberry Pi"
+        println "WebCamTemplate: Running on Raspberry Pi"
 //        systemProperty "java.library.path", "/usr/local/share/java/opencv4" // Raspberry Pi
         systemProperty "java.library.path", "/home/pi/opencv-${opencvVersion}/build/lib" // Raspberry Pi
     }
