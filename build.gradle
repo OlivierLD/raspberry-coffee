@@ -66,6 +66,11 @@ tasks.register('info') {
     println "+---------------------------------------------------------------------------------------"
     println " ... and the --continue flag is still available."
     println "+---------------------------------------------------------------------------------------"
+    println "-- Note on OpenCV --"
+    println " Projects opencv and Project-Trunk:WebcamTemplate use OpenCV "
+    println " They require OpenCV to be installed, and they refer to OpenCV's jar files."
+    println " In their gradle.build file, modify the variable opencvVersion, and possibly the location of the required jar-files"
+    println "+---------------------------------------------------------------------------------------"
 }
 
 task printInfo() {
