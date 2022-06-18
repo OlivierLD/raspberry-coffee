@@ -19,8 +19,8 @@ object DLListener extends App {
 
   // creating Master actor
   val masterActorSystem = ActorSystem("Master")
-  val master = masterActorSystem.actorOf(Props[Master], "Master")
-  val listener = masterActorSystem.actorOf(Props[DeadLettersListener])
+  val master = masterActorSystem.actorOf(Props[Master](), "Master")
+  val listener = masterActorSystem.actorOf(Props[DeadLettersListener]())
 
   // subscribe listener to Master's DeadLetters
   masterActorSystem.eventStream.subscribe(listener, classOf[DeadLetter])

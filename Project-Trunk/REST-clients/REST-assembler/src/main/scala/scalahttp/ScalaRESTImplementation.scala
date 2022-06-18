@@ -19,7 +19,7 @@ class ScalaRESTImplementation {
   private var physicalRelayManager: RelayManager = null
   private var physicalADCChannel: ADCChannel = null
 
-  def this(restRequestManager: ScalaHttpRequestManager) {
+  def this(restRequestManager: ScalaHttpRequestManager) = {
     this()
     this.httpRequestManager = restRequestManager
     // Check duplicates in operation list. Barfs if duplicate is found.

@@ -12,7 +12,7 @@ class TestActor extends Actor {
     case AskNameMessage => // respond to the 'ask' request
       try { Thread.sleep(2000L); } catch { case ex: Exception => ex.printStackTrace }
       println("Now releasing.")
-      sender ! "Oliv"
+      sender() ! "Oliv"
     case _ => println("that was unexpected")
   }
 }
@@ -21,7 +21,7 @@ object Actors_101 extends App {
 
   // create the system and actor
   val system = ActorSystem("AskTestSystem")
-  val olivActor = system.actorOf(Props[TestActor], name = "olivActor")
+  val olivActor = system.actorOf(Props[TestActor](), name = "olivActor")
 
   // (1) this is one way to "ask" another actor for information
   implicit val timeout = Timeout(5 seconds)
@@ -36,5 +36,5 @@ object Actors_101 extends App {
   val result2 = Await.result(future2, 3 seconds)
   println(">> Second attempt: " + result2)
 
-  system.shutdown
+  system.shutdown()
 }

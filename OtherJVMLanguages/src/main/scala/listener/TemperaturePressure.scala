@@ -61,7 +61,7 @@ class PubSubActor(actorName: String) extends Actor {
 }
 
 object Main {
-  def main(args: Array[String]) {
+  def main(args: Array[String]):Unit = {
     val context = ActorSystem("PubSubSystem")
 
     // One producer, One consumer
@@ -77,7 +77,7 @@ object Main {
             println(s"Sending stop request to $act")
             act ! new ExitMsg
           })
-          context.shutdown
+          context.shutdown()
           println("If needed, free resources here.") // Free resources here
         }) // ,
     // "Shutdown Hook")

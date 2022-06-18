@@ -70,5 +70,5 @@ object WaitReleaseSample {
     println("Bye now")
   }
 
-  def sleep(duration: Long) { Thread sleep(duration) }
+  def sleep(duration: Long):Unit = { Thread sleep(duration) }
 }

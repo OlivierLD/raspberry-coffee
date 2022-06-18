@@ -7,7 +7,7 @@ import sevensegdisplay.SevenSegment
 
 object Clock {
   @throws[IOException]
-  def main(args: Array[String]) {
+  def main(args: Array[String]):Unit = {
     val segment: SevenSegment = new SevenSegment(0x70, true)
     println("Press CTRL+C to exit")
 

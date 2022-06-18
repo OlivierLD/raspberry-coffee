@@ -105,7 +105,7 @@ class SquareMatrix (dim: Int) {
   private var dimension: Int = dim
   private var elements: Array[Array[Double]] = Array.ofDim[Double](dim, dim)
 
-  def this(dim: Int, elements: Double*) {
+  def this(dim: Int, elements: Double*) = {
     this(dim)
     if (elements == null) {
       throw new IllegalArgumentException("Elements array cannot be null")
@@ -124,7 +124,7 @@ class SquareMatrix (dim: Int) {
     this.dimension
   }
 
-  def setElementAt(value: Double, row:Int, col:Int) {
+  def setElementAt(value: Double, row:Int, col:Int): Unit = {
     this.elements(row)(col) = value
   }
 
@@ -188,11 +188,11 @@ object SystemUtils {
     }
   }
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
 
     var sqMat = new SquareMatrix(3, 1, 2, 3, 4, 5, 6, 7, 8, 9)
     sqMat.display
-    println
+    println()
     // Samples...
     MatrixUtils.minor(sqMat, 2, 2).display
 

@@ -6,7 +6,7 @@ import com.pi4j.system.SystemInfo
  * If you see errors about that, check your sensors...
  */
 object Scala_Sensors {
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     println("Hello, Scala world! Reading sensors.")
     val bmp180  = new BMP180
     val htu21df = new HTU21DF

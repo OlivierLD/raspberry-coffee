@@ -20,7 +20,7 @@ class HelloActor extends Actor {
       (1 to i).foreach( x => {
         ret += (s + " ")
       })
-      sender ! ret
+      sender() ! ret
     case x: Any       => println("Got an un-managed " + x.getClass + " : " + x.toString) // Class
     case _            => println("huh? what?")                                           // Anything else... (like what?)
   }
@@ -33,7 +33,7 @@ case class TellMeSomething(what: String, repeat: Int)
 object HelloActor extends App {
   val system = ActorSystem("HelloSystem")
   // default Actor constructor
-  val helloActor = system.actorOf(Props[HelloActor], name = "helloactor")
+  val helloActor = system.actorOf(Props[HelloActor](), name = "helloactor")
   // Sen various messages, see how they are received
   helloActor ! "hello"
   helloActor ! "buenos dias"
@@ -47,5 +47,5 @@ object HelloActor extends App {
   println(">> Result is: " + result)
 
   // Done!
-  system.shutdown
+  system.shutdown()
 }
