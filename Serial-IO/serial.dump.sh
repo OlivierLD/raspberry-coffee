@@ -2,8 +2,10 @@
 #
 # Read a Serial device
 #
-CP=./build/libs/Serial-IO-1.0-all.jar
-CP=${CP}:/usr/share/java/RXTXcomm.jar
+# CP=./build/libs/Serial-IO-1.0-all.jar
+# CP=${CP}:/usr/share/java/RXTXcomm.jar
+# Should work too:
+CP=$(find . -name '*-all.jar')
 echo Make sure the device is connected through its USB socket.
 #
 # SERIAL_PORT=/dev/ttyUSB0 # RPi

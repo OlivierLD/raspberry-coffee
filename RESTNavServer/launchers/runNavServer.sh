@@ -55,13 +55,14 @@ GRIB_VERBOSE=false
 AIS_VERBOSE=false
 REST_VERBOSE=false
 #
-CP=../build/libs/RESTNavServer-1.0-all.jar
+# CP=../build/libs/RESTNavServer-1.0-all.jar
+CP=$(find .. -name '*-all.jar')
+#
 OS=$(uname -a | awk '{ print $1 }')
 if [[ "${OS}" == "Darwin" ]]; then
   CP=${CP}:./libs/RXTXcomm.jar # for Mac
-fi
-if [[ "${OS}" == "Linux" ]]; then
-  CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+elif [[ "${OS}" == "Linux" ]]; then
+  CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi. Should already be in the fat-jar.
 fi
 #
 JAVA_OPTS=
