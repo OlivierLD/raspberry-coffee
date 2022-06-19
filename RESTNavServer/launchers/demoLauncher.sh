@@ -170,6 +170,7 @@ while [[ "${GO}" == "true" ]]; do
 		    sleep 5  # Wait (5s) for the server to be operational
 		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    fi
+	    echo -e "Also try: curl -X GET http://localhost:${HTTP_PORT}/mux/cache | jq"
 	    GO=false
 	    ;;
 	  "2")
