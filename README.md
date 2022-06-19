@@ -71,6 +71,38 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 > ```
 > 
 
+### Gradle tweaks
+From the root of this project, you can run a full build, that would also tell you if everything is working.
+Just run
+```
+$ ./gradlew clean build
+```
+Depending on the size of the computer you are using (a laptop, a Raspberry Pi Zero, etc), you might want to skip
+demanding steps (like Scala and Kotlin compilations), or the tests, if they are not required in your context.
+To skip a task in Gradle, you need to use the `-x` (like eXclude) flag.  
+Example, to skip the tests:
+```
+$ ./gradlew clean build -x test
+```
+To skip the Scala and Kotlin compilations, and the tests:
+```
+$ ./gradlew clean build -x test -x :RasPISamples:compileScala \
+                                -x :OtherJVMLanguages:compileScala \
+                                -x :http-client-paradigm:compileScala \
+                                -x :http-client-paradigm:compileKotlin \
+                                -x RESTClients:REST-assembler:compileScala \
+                                -x :Project-Trunk:System-Languages:compileKotlin \
+                                -x :Project-Trunk:System-Languages:compileScala \
+                                -x :Project-Trunk:Weather-Station-Implementation:compileScala \
+                                -x :Project-Trunk:REST-clients:REST-assembler:compileKotlin \
+                                -x :Project-Trunk:REST-clients:REST-assembler:compileScala
+```
+Some parts of this project use `OpenCV`, that need to be installed separately. If you've not installed it,
+or wish to skip those steps, use
+```
+$ ./gradlew clean build -x :opencv:compileJava -x :Project-Trunk:WebcamTemplate:compileJava
+```
+
 ### Integrated Development Environment (IDE)
 IDEs are not mandatory, but they make Java development easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
 I like IntelliJ, but you can use anyone you want or prefer.
