@@ -647,7 +647,7 @@ public class BoatBox3D extends Box3D {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.println(">> Super!"); // For interception...
+//        System.out.println(">> Super!"); // For interception...
     }
 
     public void refreshValues(double minX,

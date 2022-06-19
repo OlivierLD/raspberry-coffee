@@ -8,10 +8,10 @@
 > ```
 > Uncaught TypeError: Failed to resolve module specifier "three". Relative references must start with either "/", "./", or "../".
 > ```
-> imports from CDN seem to work.
+> imports from CDN seem to work.   
+> _Note_: 
+> - in `index.04.html`, the file `calculated.js` is derived from the `calculated.json` generated from the Swing UI launched from `design.sh`,
+> launch the program with `-Dspit-out-points=true` and do a `Refresh Boat Shape` (button).
+> - in `index.05.html`, the file `calculated.json` is read directly into a JS variable.
 
 ---
-
-
-
-

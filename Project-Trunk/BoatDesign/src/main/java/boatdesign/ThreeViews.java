@@ -471,6 +471,7 @@ public class ThreeViews {
         }
     }
 
+    // Spits out the Rail and Keel on the console.
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         getLogger().log(Level.INFO, "Ctrl Points:\nRail:");
         this.railCtrlPoints.forEach(pt -> getLogger().log(Level.INFO, String.format("%s", pt)));
@@ -1889,7 +1890,7 @@ public class ThreeViews {
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
-        menuFileSpit.setText("Spit out points");
+        menuFileSpit.setText("Spit out points (console)");
         menuFileSpit.addActionListener(this::fileSpit_ActionPerformed);
 
         menuFileNew.setText("New...");
