@@ -103,6 +103,11 @@ or wish to skip those steps, use
 $ ./gradlew clean build -x :opencv:compileJava -x :Project-Trunk:WebcamTemplate:compileJava
 ```
 
+To know the structure of the full project:
+```
+$ ./gradlew projects [--info]
+```
+
 ### Integrated Development Environment (IDE)
 IDEs are not mandatory, but they make Java development easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
 I like IntelliJ, but you can use anyone you want or prefer.
