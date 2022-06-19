@@ -26,12 +26,10 @@ import { ConvexGeometry } from 'https://cdn.skypack.dev/three@0.132.0/examples/j
 let calculatedPoints;
 
 fetch('./calculated.json')
-.then(response => {
-   return response.json();
-})
+.then(response => response.json())
 .then(data => {
     calculatedPoints = data;
-    doYourJob();
+    doYourJob(); // Defined below
 });
 
 let doYourJob = () => {
