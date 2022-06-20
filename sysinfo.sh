@@ -23,5 +23,5 @@ lscpu
 echo -e "-------------------------"
 echo -e "Architecture: $(getconf LONG_BIT) bits"
 echo -e "-------------------------"
-file /lib/systems/systemd
+file /lib/systemd/systemd
 echo -e "-------------------------"
