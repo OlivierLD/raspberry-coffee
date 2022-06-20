@@ -1,12 +1,21 @@
 <h1><img align="middle" alt="Raspberry Coffee" src="./raspberryCoffee.png"> Raspberry Coffee</h1>
 
+#### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets
+
+--- 
+
+- Sensor interaction
+- NMEA protocol implementations
+
+Main keywords:
+- `Raspberry Pi`
+- `Java`
+- `PI4J`
+- `Gradle`
+
 ---
 
-#### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets ####
-
----
-
-It uses the [`PI4J library`](http://pi4j.com), itself relying on [`WiringPi`](http://wiringpi.com/).  
+It uses the [`PI4J library`](http://pi4j.com) (version **1.x**, version **2.x** brings in some new architecture and paradigm, not dealt with yet), itself relying on [`WiringPi`](http://wiringpi.com/).  
 The project - and its different modules - are built using [`Gradle`](https://gradle.org/).
 
 ### Java
@@ -18,7 +27,7 @@ $ javac -version
 ```
 
 ### PI4J
-PI4J is a Java library that will help you access `GPIO`, `I2C`, `SPI`, and other hardware protocols.
+PI4J is a Java library that will help you access `GPIO`, `I2C`, `SPI`, `PWM`, and other hardware protocols.
 ```
 $ curl -s get.pi4j.com | sudo bash
 ```
