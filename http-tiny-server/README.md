@@ -46,6 +46,10 @@ Whatever request points to this resource(s) will be treated as a static request.
 > Example: you started the `HTTPServer` with the default properties.
 > A request like `http://localhost:9999/web/index.html` will look for an `index.html` in a `web` directory
 > under the directory the `HTTPServer` has been started from.
+> > If you want to look for the static files in the directory you started the sever from, just use a `static.docs` set to `/`:
+> > ```
+> > JAVA_OPTIONS="${JAVA_OPTIONS} -Dstatic.docs=/"
+> > ```
 
 > Example: from a browser, reach `http://localhost:9999/test`, you should see a page saying "Test is OK".
 
