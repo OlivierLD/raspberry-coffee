@@ -99,7 +99,7 @@ $ ./gradlew clean build -x test -x :RasPISamples:compileScala \
                                 -x :OtherJVMLanguages:compileScala \
                                 -x :http-client-paradigm:compileScala \
                                 -x :http-client-paradigm:compileKotlin \
-                                -x RESTClients:REST-assembler:compileScala \
+                                -x :RESTClients:REST-assembler:compileScala \
                                 -x :Project-Trunk:System-Languages:compileKotlin \
                                 -x :Project-Trunk:System-Languages:compileScala \
                                 -x :Project-Trunk:Weather-Station-Implementation:compileScala \
