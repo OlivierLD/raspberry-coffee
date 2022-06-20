@@ -15,3 +15,13 @@ else
     ../gradlew run -P--minimal -P--no-free-mem
   popd
 fi
+#
+echo -e "-------------------------"
+echo -e "uname -m: $(uname -m)"
+echo -e "-------------------------"
+lscpu
+echo -e "-------------------------"
+echo -e "Architecture: $(getconf LONG_BIT) bits"
+echo -e "-------------------------"
+file /lib/systems/systemd
+echo -e "-------------------------"
