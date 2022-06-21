@@ -140,7 +140,7 @@ public class ThreeViews {
         boolean hideCC = false;
     }
 
-    private VectorUtils.Vector3D centerOfHull = null; // aka Centre de Carene.
+    private VectorUtils.Vector3D centerOfHull = null; // aka Centre de Carène.
 
     private final BoatBox3D box3D;
 
@@ -158,7 +158,7 @@ public class ThreeViews {
     private List<String> comments;
 
     // Parameter form for the whiteboard: generate image, B&W, hide ctrl-points,...)
-    private class WhiteBoardOptionPanel extends JPanel {
+    private static class WhiteBoardOptionPanel extends JPanel {
         JCheckBox generateImage;
         JCheckBox blackAndWhite;
         JCheckBox hideCtrlPoints;
@@ -325,7 +325,6 @@ public class ThreeViews {
         } else {
             System.out.printf("Warning: no %s was found.\n", fName); // Zis is bizarre
         }
-
     }
 
     private void fileEdit_ActionPerformed(ActionEvent ae) {
@@ -493,7 +492,7 @@ public class ThreeViews {
         JOptionPane.showMessageDialog(frame, HelpContent, TITLE, JOptionPane.PLAIN_MESSAGE);
     }
 
-    private AtomicBoolean keepLooping = new AtomicBoolean(true);
+    private final AtomicBoolean keepLooping = new AtomicBoolean(true);
 
     private static XMLElement createTextNode(XMLDocument doc, String name, String value) {
         XMLElement xmlElement = (XMLElement) doc.createElement(name);
@@ -563,7 +562,7 @@ public class ThreeViews {
         XMLElement comments = (XMLElement) doc.createElement("comments");
         boatData.appendChild(comments);
 
-        List<String> mapComments = (List)dataMap.get("comments");
+        List<String> mapComments = (List<String>)dataMap.get("comments");
         mapComments.forEach(mapComment -> {
             comments.appendChild(createTextNode(doc, "comment", mapComment));
         });
@@ -572,8 +571,8 @@ public class ThreeViews {
         XMLElement defaultPoints = (XMLElement) doc.createElement("ctrl-points");
         boatData.appendChild(defaultPoints);
         // The ctrl points
-        Map<String, Object> mapDefaultPoints = (Map)dataMap.get("default-points");
-        List<Object> mapKeelPoints = (List)mapDefaultPoints.get("keel");
+        Map<String, Object> mapDefaultPoints = (Map<String, Object>)dataMap.get("default-points");
+        List<Object> mapKeelPoints = (List<Object>)mapDefaultPoints.get("keel");
         mapKeelPoints.forEach(kp -> {
             double x = ((Map<String, Double>)kp).get("x");
             double y = ((Map<String, Double>)kp).get("y");
@@ -586,7 +585,7 @@ public class ThreeViews {
             keelPoint.appendChild(createTextNode(doc, "z", String.valueOf(z)));
         });
 
-        List<Object> mapRailPoints = (List)mapDefaultPoints.get("rail");
+        List<Object> mapRailPoints = (List<Object>)mapDefaultPoints.get("rail");
         mapRailPoints.forEach(kp -> {
             double x = ((Map<String, Double>)kp).get("x");
             double y = ((Map<String, Double>)kp).get("y");
@@ -866,7 +865,7 @@ public class ThreeViews {
             }, map -> {
                 if (map != null) {
                     if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.FRAME)) {
-                        List<VectorUtils.Vector3D> data = (List)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D ?
+                        List<VectorUtils.Vector3D> data = (List<VectorUtils.Vector3D>)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D ?
                         List<VectorUtils.Vector2D> framePtsYZVectors = new ArrayList<>();
                         // Find x position of the max width. 'data' contains the points. Rail to Keel.
                         data.forEach(pt -> {
@@ -886,7 +885,7 @@ public class ThreeViews {
                         whiteBoardYZ.addSerie(frameYZSerie, ((UserWBParameters)whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
                         whiteBoardYZ.repaint();
                     } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.WATERLINE)) {
-                        List<Bezier.Point3D> data = (List)map.get(BoatBox3D.DATA);
+                        List<Bezier.Point3D> data = (List<Bezier.Point3D>)map.get(BoatBox3D.DATA);
                         List<VectorUtils.Vector2D> waterlinePtsXYVectors = new ArrayList<>();
                         data.forEach(pt -> {
                             waterlinePtsXYVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getY()));
@@ -899,7 +898,7 @@ public class ThreeViews {
                         whiteBoardXY.addSerie(frameXYSerie, ((UserWBParameters)whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
                         whiteBoardXY.repaint();
                     } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.BUTTOCK)) {
-                        List<Bezier.Point3D> data = (List)map.get(BoatBox3D.DATA);
+                        List<Bezier.Point3D> data = (List<Bezier.Point3D>)map.get(BoatBox3D.DATA);
                         List<VectorUtils.Vector2D> buttockPtsXZVectors = new ArrayList<>();
                         data.forEach(pt -> {
                             buttockPtsXZVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getZ()));
@@ -1304,7 +1303,7 @@ public class ThreeViews {
     private void initConfiguration(boolean full) {
         if (initConfig != null) {
 
-            Map<String, Object> dimensions = (Map) initConfig.get("dimensions");
+            Map<String, Object> dimensions = (Map<String, Object>) initConfig.get("dimensions");
             double defaultLht = (double) dimensions.get("default-lht");
             List<Double> boxX = (List<Double>) dimensions.get("box-x");
             List<Double> boxY = (List<Double>) dimensions.get("box-y");
@@ -1319,7 +1318,7 @@ public class ThreeViews {
             this.minZ = boxZ.get(0) * 1e2;
             this.maxZ = boxZ.get(1) * 1e2;
 
-            Map<String, List<Object>> defaultPoints = (Map) initConfig.get("default-points");
+            Map<String, List<Object>> defaultPoints = (Map<String, List<Object>>) initConfig.get("default-points");
 
             if (full) {
                 List railPoints = defaultPoints.get("rail");
@@ -1348,7 +1347,7 @@ public class ThreeViews {
             }
             this.boatName = (String) initConfig.get("boat-name");
             this.description = (String) initConfig.get("description");
-            this.comments = (List) initConfig.get("comments");
+            this.comments = (List<String>) initConfig.get("comments");
         } else {
             // TODO There is a problem when ctrlPoints is empty... Fix it.
             // Initialize [0, 10, 0], [550, 105, 0]

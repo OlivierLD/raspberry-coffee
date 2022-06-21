@@ -373,7 +373,7 @@ public class ThreeDPanelWithWidgets
 							box3D.repaint();
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(nfe.toString());
+						nfe.printStackTrace();
 					}
 				}
 			}
@@ -422,7 +422,7 @@ public class ThreeDPanelWithWidgets
 							box3D.repaint();
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(nfe.toString());
+						nfe.printStackTrace();
 					}
 				}
 			}
@@ -492,7 +492,7 @@ public class ThreeDPanelWithWidgets
 							box3D.repaint();
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(nfe.toString());
+                        nfe.printStackTrace();
 					}
 				}
 			}
@@ -541,7 +541,7 @@ public class ThreeDPanelWithWidgets
 							box3D.repaint();
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(nfe.toString());
+                        nfe.printStackTrace();
 					}
 				}
 			}
@@ -611,7 +611,7 @@ public class ThreeDPanelWithWidgets
 							box3D.repaint();
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(nfe.toString());
+                        nfe.printStackTrace();
 					}
 				}
 			}
@@ -660,7 +660,7 @@ public class ThreeDPanelWithWidgets
 							box3D.repaint();
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(nfe.toString());
+                        nfe.printStackTrace();
 					}
 				}
 			}
@@ -733,7 +733,7 @@ public class ThreeDPanelWithWidgets
 						box3D.setZoom(val);
 						box3D.repaint();
 					} catch (NumberFormatException nfe) {
-						System.err.println(nfe.toString());
+                        nfe.printStackTrace();
 					}
 				}
 			}

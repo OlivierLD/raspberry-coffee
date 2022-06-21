@@ -17,7 +17,7 @@ object ScalaMain {
   }
 
   // Read the sensor in a loop
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
 
     val probe = new STH10Driver
     if (probe.isSimulating) {
