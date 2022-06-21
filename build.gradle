@@ -90,3 +90,7 @@ task printInfo() {
 build.doFirst () {
     tasks.info
 }
+
+build.doLast() {
+    println "Build is finished"
+}
