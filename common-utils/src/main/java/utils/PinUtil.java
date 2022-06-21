@@ -169,11 +169,11 @@ public class PinUtil {
 		String header;
 		String fmt = " %5s |  %s |  %s | %-12s | #%02d || #%02d | %12s | %s  | %s  | %-5s ";
 		if (!prefixBCMWithGPIO) {
-//	String hr =       "       |  04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | 15  |";
+//	 String hr =            "       |  04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | 15  |";
 			hr =            "       +-----+-----+--------------+-----++-----+--------------+-----+-----+";
 			header =        "       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |";
 		} else {
-//	String hr =       "       |  GPIO04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | GPIO15  |";
+//	 String hr =            "       |  GPIO04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | GPIO15  |";
 			hr =            "       +---------+-----+--------------+-----++-----+--------------+-----+---------+";
 			header =        "       |     BCM | wPi | Name         |  Physical  |         Name | wPi | BCM     |";
 		}
@@ -211,14 +211,14 @@ public class PinUtil {
 			System.out.println(String.format("%s is named %s", gpioPin.toString(), gpioPin.pinName()));
 		}
 
-		System.out.println("\nAs for an MCP3008:");
+		System.out.println("\nAs for an MCP3008 (Physical:Label):");
 		print("23:CLK", "21:Dout", "19:Din", "24:CS");
 
-		System.out.println("\nAs for an MCP3008, with GPIO prefix:");
+		System.out.println("\nAs for an MCP3008, with GPIO prefix (Physical:Label):");
 		print(true, "23:CLK", "21:Dout", "19:Din", "24:CS");
 
 		int physical = getPhysicalByWiringPiNumber(RaspiPin.GPIO_29);
-		System.out.println(String.format("GPIO_29 => #%d", physical)); // Should be #40
+		System.out.println(String.format("Physical by WiringPi number: GPIO_29 => #%d", physical)); // Should be #40
 
 		String sdaLabel = String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
 		System.out.println(">> SDA Label example : " + sdaLabel);
