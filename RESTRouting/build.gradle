@@ -27,7 +27,7 @@ dependencies {
   implementation project(':Project-Trunk:PolarSmoother')
 }
 
-compileJava.options.encoding = 'ISO-8859-1'
+//compileJava.options.encoding = 'ISO-8859-1'
 compileJava {
     options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
 }

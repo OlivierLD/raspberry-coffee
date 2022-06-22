@@ -6,7 +6,7 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '6.0.0'  // '5.2.0'
 }
 
-compileJava.options.encoding = 'ISO-8859-1'
+//compileJava.options.encoding = 'ISO-8859-1'
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]
 
 group = 'oliv.raspi.coffee'

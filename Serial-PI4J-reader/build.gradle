@@ -5,7 +5,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
-compileJava.options.encoding = 'ISO-8859-1'
+//compileJava.options.encoding = 'ISO-8859-1'
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
