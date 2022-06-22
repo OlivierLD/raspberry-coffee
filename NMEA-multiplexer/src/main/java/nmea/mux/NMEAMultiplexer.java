@@ -12,7 +12,7 @@ import nmea.consumers.reader.TCPReader;
 /**
  * Note: Just a SAMPLE, for validation of the concept.
  *
- * @deprecated Use {@link GenericNMEAMultiplexer} instead (for production or real implementation).
+ * @Deprecated Use {@link GenericNMEAMultiplexer} instead (for production or real implementation).
  */
 public class NMEAMultiplexer implements Multiplexer {
 	@Override

@@ -17,7 +17,7 @@ public class DampingSample {
 		}
 
 		public double getAngleInDegrees() {
-			double deg = 0;
+			double deg;
 			if (this.cosinus != 0) {
 				deg = Math.toDegrees(Math.acos(this.cosinus));
 				if (this.sinus < 0) {
@@ -34,7 +34,7 @@ public class DampingSample {
 
 	public static class SmoothableDegreeAngle implements DampingService.Smoothable<DegreeAngle> {
 
-		private DegreeAngle degreeAngle;
+		private final DegreeAngle degreeAngle;
 
 		public SmoothableDegreeAngle() {
 			this(new DegreeAngle(0, 0));
@@ -58,9 +58,7 @@ public class DampingSample {
 		@Override
 		public DegreeAngle smooth(List<DegreeAngle> buffer) {
 			final SmoothableDegreeAngle smoothed = new SmoothableDegreeAngle(new DegreeAngle(0, 0));
-			buffer.forEach(elmt -> {
-				smoothed.accumulate(elmt);
-			});
+			buffer.forEach(smoothed::accumulate);
 			DegreeAngle degreeeAngle = smoothed.get();
 			degreeeAngle.sinus /= buffer.size();
 			degreeeAngle.cosinus /= buffer.size();
@@ -73,7 +71,7 @@ public class DampingSample {
 		private Double value;
 
 		public SmoothableDouble() {
-			this(new Double(0));
+			this(0d);
 		}
 		public SmoothableDouble(Double deg) {
 			this.value = deg;
@@ -92,10 +90,8 @@ public class DampingSample {
 
 		@Override
 		public Double smooth(List<Double> buffer) {
-			final SmoothableDouble smoothed = new SmoothableDouble(new Double(0));
-			buffer.forEach(elmt -> {
-				smoothed.accumulate(elmt);
-			});
+			final SmoothableDouble smoothed = new SmoothableDouble(0d);
+			buffer.forEach(smoothed::accumulate);
 			Double newVal = smoothed.get();
 			newVal /= buffer.size();
 			return newVal;
@@ -112,7 +108,7 @@ public class DampingSample {
 				service.append(new SmoothableDouble(deg));
 			}
 			Double smooth = service.smooth(new SmoothableDouble(0d));
-			System.out.println(String.format("Smoothed in doubles %f", smooth.doubleValue()));
+			System.out.printf("Smoothed in doubles %f\n", smooth);
 			System.out.println("If the values are degrees (from 0 to 360), then this value is wrong.");
 		}
 		// Improved average, that works.
@@ -123,7 +119,7 @@ public class DampingSample {
 				service.append(new SmoothableDegreeAngle(degreeAngle));
 			}
 			DegreeAngle smooth = service.smooth(new SmoothableDegreeAngle());
-			System.out.println(String.format("Smoothed in degrees %f", smooth.getAngleInDegrees()));
+			System.out.printf("Smoothed in degrees %f\n", smooth.getAngleInDegrees());
 			System.out.println("This one is correct.");
 		}
 	}

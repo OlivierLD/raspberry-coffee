@@ -40,14 +40,14 @@ import java.util.regex.Pattern;
  */
 public class RESTIoTPublisher implements Forwarder {
 
-	private static String AIR_TEMP   = "air-temperature";
-	private static String ATM_PRESS  = "atm-press";
-	private static String HUMIDITY   = "humidity";
-	private static String TWS        = "tws";
-	private static String TWD        = "twd";
-	private static String PRATE      = "prate";
-	private static String DEWPOINT   = "dewpoint";
-	private static String TIME       = "time";     // Can be used to evaluate lifespan, on battery.
+	private static final String AIR_TEMP   = "air-temperature";
+	private static final String ATM_PRESS  = "atm-press";
+	private static final String HUMIDITY   = "humidity";
+	private static final String TWS        = "tws";
+	private static final String TWD        = "twd";
+	private static final String PRATE      = "prate";
+	private static final String DEWPOINT   = "dewpoint";
+	private static final String TIME       = "time";     // Can be used to evaluate lifespan, on battery.
 
 	private Properties properties;
 
@@ -64,7 +64,7 @@ public class RESTIoTPublisher implements Forwarder {
 	private long previousTWDLog = 0;
 	private long previousTimeLog = 0;
 
-	private List<Pattern> feedPatterns = new ArrayList<>();
+	private final List<Pattern> feedPatterns = new ArrayList<>();
 
 	/*
 	 * @throws Exception
@@ -78,7 +78,7 @@ public class RESTIoTPublisher implements Forwarder {
 			String filters = this.properties.getProperty("feed.filter", ".*");
 			for (String filter : filters.split(",")) {
 				if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-					System.out.println(String.format("- Managing pattern for [%s]", filter.trim()));
+					System.out.printf("- Managing pattern for [%s]\n", filter.trim());
 				}
 				Pattern pattern = Pattern.compile(filter.trim());
 				feedPatterns.add(pattern);
@@ -93,7 +93,7 @@ public class RESTIoTPublisher implements Forwarder {
 	private void setFeedValue(String key, String baseUrl, String userName, String feed, String value) throws Exception {
 		if (goesThroughFilter(feed)) {
 			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-				System.out.println(String.format("\t>>> Feed Name [%s] will be logged", feed));
+				System.out.printf("\t>>> Feed Name [%s] will be logged\n", feed);
 			}
 			String url = String.format("%s/api/v2/%s/feeds/%s/data",
 					baseUrl,
@@ -103,23 +103,23 @@ public class RESTIoTPublisher implements Forwarder {
 			headers.put("X-AIO-Key", key);
 			headers.put(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
 			JSONObject json = new JSONObject();
-			json.put("value", new Double(value));
+			json.put("value", Double.valueOf(value));
 			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-				System.out.println(String.format("URL:%s, key:%s", url, key));
-				System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
+				System.out.printf("URL:%s, key:%s\n", url, key);
+				System.out.printf("->->-> POSTing to feed [%s]: %s to %s\n", feed, json.toString(2), url);
 				System.out.println("Headers:");
 				headers.forEach((a, b) -> {
-					System.out.println(String.format("%s: %s", a, b));
+					System.out.printf("%s: %s\n", a, b);
 				});
 			}
 			if ("true".equals(this.properties.getProperty("aio.push.to.server", "true"))) {
 				HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
 				if (response.getCode() > 299 || "true".equals(this.properties.getProperty("aio.verbose.1"))) {
-					System.out.println(String.format("POST Ret: %d, %s", response.getCode(), response.getPayload()));
+					System.out.printf("POST Ret: %d, %s\n", response.getCode(), response.getPayload());
 				}
 			}
 		} else if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-			System.out.println(String.format("\t>>> Feed Name [%s] is filtered (prevented)", feed));
+			System.out.printf("\t>>> Feed Name [%s] is filtered (prevented)\n", feed);
 		}
 	}
 
@@ -264,7 +264,7 @@ public class RESTIoTPublisher implements Forwarder {
 //		String deviceId = StringParsers.getDeviceID(str);
 			String sentenceId = StringParsers.getSentenceID(str);
 			if ("true".equals(this.properties.getProperty("aio.verbose.2"))) {
-				System.out.println(String.format("\t->->-> From NMEA data [%s]", str.trim()));
+				System.out.printf("\t->->-> From NMEA data [%s]\n", str.trim());
 			}
 			if ("MDA".equals(sentenceId)) {
 				StringParsers.MDA mda = StringParsers.parseMDA(str);
@@ -321,8 +321,8 @@ public class RESTIoTPublisher implements Forwarder {
 	}
 
 	public static class RESTBean {
-		private String cls;
-		private String type = "REST-forwarder";
+		private final String cls;
+		private final String type = "REST-forwarder";
 
 		public RESTBean(RESTIoTPublisher instance) {
 			cls = instance.getClass().getName();

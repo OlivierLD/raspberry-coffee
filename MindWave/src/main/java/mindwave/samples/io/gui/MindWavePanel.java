@@ -13,7 +13,6 @@ import java.awt.GridBagLayout;
 
 import java.awt.Insets;
 
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,37 +34,37 @@ import mindwave.samples.io.gui.widgets.HalfDisplay;
 public class MindWavePanel
   extends JPanel
 {
-  private BorderLayout borderLayout1 = new BorderLayout();
-  private JPanel bottomPanel = new JPanel();
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
-  private JLabel portLabel = new JLabel();
-  private JLabel brLabel = new JLabel();
-  private JPanel centerPanel = new MindWaveCurve();
-  private JComboBox<String> portComboBox = new JComboBox<>();
-  private JButton connectButton = new JButton();
-  private JComboBox<Integer> brComboBox = new JComboBox<>();
-  private JLabel statusLabel = new JLabel();
+  private final BorderLayout borderLayout1 = new BorderLayout();
+  private final JPanel bottomPanel = new JPanel();
+  private final GridBagLayout gridBagLayout1 = new GridBagLayout();
+  private final JLabel portLabel = new JLabel();
+  private final JLabel brLabel = new JLabel();
+  private final JPanel centerPanel = new MindWaveCurve();
+  private final JComboBox<String> portComboBox = new JComboBox<>();
+  private final JButton connectButton = new JButton();
+  private final JComboBox<Integer> brComboBox = new JComboBox<>();
+  private final JLabel statusLabel = new JLabel();
   
   private boolean serialConnected = false;
 
-  private MindWaveFrame parent;
-  private JLabel minLabel = new JLabel();
-  private JLabel minValue = new JLabel();
-  private JLabel maxLabel = new JLabel();
-  private JLabel maxValue = new JLabel();
-  private JLabel attentionLabel = new JLabel();
-  private JLabel meditationLabel = new JLabel();
-  private JLabel attentionValue = new JLabel();
-  private JLabel meditationValue = new JLabel();
-  private JPanel displayPanelHolder = new JPanel(new BorderLayout());
-  private JPanel displayPanel = new JPanel();
-  private GridBagLayout gridBagLayout2 = new GridBagLayout();
-  private HalfDisplay attentionDisplay  = new HalfDisplay(100.0, 25d, 1, true);
-  private HalfDisplay meditationDisplay = new HalfDisplay(100.0, 25d, 1, true);
-  private JLabel serialDataLabel = new JLabel();
-  private JLabel avgLabel = new JLabel();
-  private JLabel avgValue = new JLabel();
-  private JLabel blinkLabel = new JLabel();
+  private final MindWaveFrame parent;
+  private final JLabel minLabel = new JLabel();
+  private final JLabel minValue = new JLabel();
+  private final JLabel maxLabel = new JLabel();
+  private final JLabel maxValue = new JLabel();
+  private final JLabel attentionLabel = new JLabel();
+  private final JLabel meditationLabel = new JLabel();
+  private final JLabel attentionValue = new JLabel();
+  private final JLabel meditationValue = new JLabel();
+  private final JPanel displayPanelHolder = new JPanel(new BorderLayout());
+  private final JPanel displayPanel = new JPanel();
+  private final GridBagLayout gridBagLayout2 = new GridBagLayout();
+  private final HalfDisplay attentionDisplay  = new HalfDisplay(100.0, 25d, 1, true);
+  private final HalfDisplay meditationDisplay = new HalfDisplay(100.0, 25d, 1, true);
+  private final JLabel serialDataLabel = new JLabel();
+  private final JLabel avgLabel = new JLabel();
+  private final JLabel avgValue = new JLabel();
+  private final JLabel blinkLabel = new JLabel();
 
   public MindWavePanel(MindWaveFrame parent)
   {
@@ -134,16 +133,12 @@ public class MindWavePanel
       @Override
       public void eyeBlink()
       {
-        Thread blink = new Thread()
-          {
-            public void run()
-            {
-              System.out.println("Blinking!!");
-              setBlinkLabel("Blink!");
-              try { Thread.sleep(1_000L); } catch (Exception ex) {}
-              setBlinkLabel("");
-            }
-          };
+        Thread blink = new Thread(() -> {
+          System.out.println("Blinking!!");
+          setBlinkLabel("Blink!");
+          try { Thread.sleep(1_000L); } catch (Exception ex) {}
+          setBlinkLabel("");
+        });
         blink.start();
       }
     });
@@ -162,38 +157,32 @@ public class MindWavePanel
     portComboBox.setMinimumSize(new Dimension(100, 21));
     portComboBox.setPreferredSize(new Dimension(100, 21));
     connectButton.setText("Connect");
-    connectButton.addActionListener(new ActionListener()
-    {
-      public void actionPerformed(ActionEvent e)
-      {
-        connectButton_actionPerformed(e);
-      }
-    });
+    connectButton.addActionListener(this::connectButton_actionPerformed);
     brComboBox.setMinimumSize(new Dimension(100, 21));
     brComboBox.setPreferredSize(new Dimension(100, 21));
     statusLabel.setText("Status: None");
     minLabel.setText("Min Value:");
     minValue.setText("0");
-    minValue.setFont(new Font("Tahoma", 1, 11));
+    minValue.setFont(new Font("Tahoma", Font.PLAIN, 11));
     maxLabel.setText("Max Value:");
     maxValue.setText("0");
-    maxValue.setFont(new Font("Tahoma", 1, 11));
+    maxValue.setFont(new Font("Tahoma", Font.PLAIN, 11));
     attentionLabel.setText("Attention:");
     meditationLabel.setText("Meditation:");
     attentionValue.setText("0");
-    attentionValue.setFont(new Font("Tahoma", 1, 11));
+    attentionValue.setFont(new Font("Tahoma", Font.PLAIN, 11));
     meditationValue.setText("0");
-    meditationValue.setFont(new Font("Tahoma", 1, 11));
+    meditationValue.setFont(new Font("Tahoma", Font.PLAIN, 11));
     displayPanel.setLayout(gridBagLayout2);
     brComboBox.removeAllItems();
-    brComboBox.addItem(new Integer(1200));
-    brComboBox.addItem(new Integer(2400));
-    brComboBox.addItem(new Integer(4800));
-    brComboBox.addItem(new Integer(9600));
-    brComboBox.addItem(new Integer(19200));
-    brComboBox.addItem(new Integer(38400));
-    brComboBox.addItem(new Integer(57600));
-    brComboBox.addItem(new Integer(115200));
+    brComboBox.addItem(1200);
+    brComboBox.addItem(2400);
+    brComboBox.addItem(4800);
+    brComboBox.addItem(9600);
+    brComboBox.addItem(19200);
+    brComboBox.addItem(38400);
+    brComboBox.addItem(57600);
+    brComboBox.addItem(115200);
 
     attentionDisplay.setPreferredSize(new Dimension(200, 140));
     attentionDisplay.setLabel("Attention");
@@ -201,12 +190,12 @@ public class MindWavePanel
     meditationDisplay.setLabel("Meditation");
 
     serialDataLabel.setText("Serial Data");
-    serialDataLabel.setFont(new Font("Courier New", 0, 11));
+    serialDataLabel.setFont(new Font("Courier New", Font.PLAIN, 11));
     avgLabel.setText("Average:");
     avgValue.setText("0");
-    avgValue.setFont(new Font("Tahoma", 1, 11));
+    avgValue.setFont(new Font("Tahoma", Font.PLAIN, 11));
     blinkLabel.setText("-");
-    blinkLabel.setFont(new Font("Tahoma", 1, 30));
+    blinkLabel.setFont(new Font("Tahoma", Font.PLAIN, 30));
     blinkLabel.setForeground(Color.red);
     bottomPanel.add(portLabel,
                     new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
@@ -293,7 +282,7 @@ public class MindWavePanel
     if (!serialConnected)
     {
       String port = portComboBox.getSelectedItem().toString();
-      int br      = ((Integer)brComboBox.getSelectedItem()).intValue();
+      int br      = (Integer) brComboBox.getSelectedItem();
       MindWaveContext.getInstance().fireConnect(port, br);
     }
     else

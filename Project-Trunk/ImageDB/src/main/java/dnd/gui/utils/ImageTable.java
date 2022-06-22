@@ -48,7 +48,7 @@ public class ImageTable
 		extends JPanel {
 	private static final long serialVersionUID = -2306956983424909244L;
 	private transient List<ImageDefinition> imageData;
-	private ImageTable instance = this;
+	private final ImageTable instance = this;
 
 	private static final String IMAGE_NAME = "Name";
 
@@ -67,29 +67,29 @@ public class ImageTable
 	private transient TableModel dataModel;
 
 	private JTable table;
-	private BorderLayout borderLayout1 = new BorderLayout();
-	private JPanel centerPanel = new JPanel();
-	private JPanel bottomPanel = new JPanel();
-	private JPanel buttonPanel = new JPanel();
-	private JButton removeButton = new JButton("Remove");
-	private JButton extractButton = new JButton("Extract");
-	private BorderLayout borderLayout2 = new BorderLayout();
+	private final BorderLayout borderLayout1 = new BorderLayout();
+	private final JPanel centerPanel = new JPanel();
+	private final JPanel bottomPanel = new JPanel();
+	private final JPanel buttonPanel = new JPanel();
+	private final JButton removeButton = new JButton("Remove");
+	private final JButton extractButton = new JButton("Extract");
+	private final BorderLayout borderLayout2 = new BorderLayout();
 	private JScrollPane centerScrollPane = null;
-	private JPanel topPanel = new JPanel();
-	private JLabel filterLabel = new JLabel();
-	private JTextField filterTextField = new JTextField();
-	private JRadioButton orCheckBox = new JRadioButton("or");
-	private JRadioButton andCheckBox = new JRadioButton("and");
-	private ButtonGroup buttonGroup = new ButtonGroup();
-	private JProgressBar progressBar = new JProgressBar();
+	private final JPanel topPanel = new JPanel();
+	private final JLabel filterLabel = new JLabel();
+	private final JTextField filterTextField = new JTextField();
+	private final JRadioButton orCheckBox = new JRadioButton("or");
+	private final JRadioButton andCheckBox = new JRadioButton("and");
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private final JProgressBar progressBar = new JProgressBar();
 
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-	private JLabel statusLabel = new JLabel();
-	private BorderLayout borderLayout3 = new BorderLayout();
+	private final GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private final JLabel statusLabel = new JLabel();
+	private final BorderLayout borderLayout3 = new BorderLayout();
 
-	private ImageIcon up = new ImageIcon(getClass().getResource("up.png"));
-	private ImageIcon down = new ImageIcon(getClass().getResource("down.png"));
-	private JCheckBox untaggedCheckBox = new JCheckBox();
+	private final ImageIcon up = new ImageIcon(getClass().getResource("up.png"));
+	private final ImageIcon down = new ImageIcon(getClass().getResource("down.png"));
+	private final JCheckBox untaggedCheckBox = new JCheckBox();
 
 	public ImageTable(List<ImageDefinition> imageData) {
 		try {
@@ -165,19 +165,8 @@ public class ImageTable
 		this.bottomPanel.add(this.buttonPanel, BorderLayout.NORTH);
 		this.extractButton.setEnabled(false);
 		this.removeButton.setEnabled(false);
-		this.extractButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				extractSelectedRows();
-			}
-		});
-		this.removeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				removeSelectedRows();
-			}
-
-		});
+		this.extractButton.addActionListener(e -> extractSelectedRows());
+		this.removeButton.addActionListener(e -> removeSelectedRows());
 		add(this.bottomPanel, BorderLayout.SOUTH);
 		this.topPanel.add(this.filterLabel, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
@@ -190,19 +179,15 @@ public class ImageTable
 		this.topPanel.add(this.untaggedCheckBox, new GridBagConstraints(2, 1, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
 
 		this.untaggedCheckBox.setSelected(false);
-		this.untaggedCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				filterLabel.setEnabled(!untaggedCheckBox.isSelected());
-				filterTextField.setEnabled(!untaggedCheckBox.isSelected());
-				filterTextField.setEditable(!untaggedCheckBox.isSelected());
-				orCheckBox.setEnabled(!untaggedCheckBox.isSelected());
-				andCheckBox.setEnabled(!untaggedCheckBox.isSelected());
-				setSelection();
-			}
-		});
-		this.filterTextField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {}
-		});
+		this.untaggedCheckBox.addActionListener(e -> {
+            filterLabel.setEnabled(!untaggedCheckBox.isSelected());
+            filterTextField.setEnabled(!untaggedCheckBox.isSelected());
+            filterTextField.setEditable(!untaggedCheckBox.isSelected());
+            orCheckBox.setEnabled(!untaggedCheckBox.isSelected());
+            andCheckBox.setEnabled(!untaggedCheckBox.isSelected());
+            setSelection();
+        });
+		this.filterTextField.addActionListener(e -> {});
 		this.filterTextField.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent e)
 			{
@@ -222,18 +207,8 @@ public class ImageTable
 		this.andCheckBox.setSelected(false);
 		this.buttonGroup.add(this.orCheckBox);
 		this.buttonGroup.add(this.andCheckBox);
-		this.orCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				setSelection();
-			}
-		});
-		this.andCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				setSelection();
-			}
-		});
+		this.orCheckBox.addActionListener(e -> setSelection());
+		this.andCheckBox.addActionListener(e -> setSelection());
 		add(this.topPanel, BorderLayout.NORTH);
 		initTable();
 
@@ -286,7 +261,7 @@ public class ImageTable
 				if (vColIndex < 5) {
 					boolean shift = false;
 					boolean ctrl = false;
-					int mask = evt.getModifiers();
+					int mask = evt.getModifiersEx();
 					if ((mask & 0x1) != 0) {
 						shift = true;
 					}
@@ -371,7 +346,7 @@ public class ImageTable
 					data[row][column] = aValue;
 					fireTableCellUpdated(row, column);
 				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(instance, ex.toString() + "\nrow:" + row + ", column:" + column, "setValueAt", 0);
+					JOptionPane.showMessageDialog(instance, ex.toString() + "\nrow:" + row + ", column:" + column, "setValueAt", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		};
@@ -409,8 +384,8 @@ public class ImageTable
 		}
 		newData[len][0] = name;
 		newData[len][1] = type;
-		newData[len][2] = new Integer(w);
-		newData[len][3] = new Integer(h);
+		newData[len][2] = w;
+		newData[len][3] = h;
 		newData[len][4] = created;
 		newData[len][5] = tags;
 		this.data = newData;
@@ -424,7 +399,7 @@ public class ImageTable
 		if (this.andCheckBox.isSelected()) {
 			logicalConnector = ImageDBUtils.AND_CONNECTOR;
 		}
-		List<ImageDefinition> data = null;
+		List<ImageDefinition> data;
 		if (this.untaggedCheckBox.isSelected()) {
 			data = ImageDBUtils.untaggedImageList(AppContext.getInstance().getConn());
 		} else {
@@ -454,13 +429,13 @@ public class ImageTable
 		for (String in : selectedImages) {
 			ImageDBUtils.extractImage(AppContext.getInstance().getConn(), in);
 		}
-		JOptionPane.showMessageDialog(this, "Extracted images are in the directory " + System.getProperty("user.dir"), "Extraction", 1);
+		JOptionPane.showMessageDialog(this, "Extracted images are in the directory " + System.getProperty("user.dir"), "Extraction", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void removeSelectedRows() {
 		int[] selectedRows = this.table.getSelectedRows();
 
-		int resp = JOptionPane.showConfirmDialog(this, "Delete " + selectedRows.length + " image(s) ?", "Delete images", 0, 3);
+		int resp = JOptionPane.showConfirmDialog(this, "Delete " + selectedRows.length + " image(s) ?", "Delete images", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 		if (resp == 0) {
 			List<String> selectedImages = new ArrayList<>(selectedRows.length);
 			for (int i = 0; i < selectedRows.length; i++) {
@@ -506,7 +481,7 @@ public class ImageTable
 		}
 //}
 
-	class CenteredStringCellRenderer
+	static class CenteredStringCellRenderer
 			extends DefaultTableCellRenderer {
 		CenteredStringCellRenderer() {}
 
@@ -518,7 +493,7 @@ public class ImageTable
 		}
 	}
 
-	class TextAndIcon {
+	static class TextAndIcon {
 		String text;
 		Icon icon;
 
@@ -528,7 +503,7 @@ public class ImageTable
 		}
 	}
 
-	class IconHeaderRenderer
+	static class IconHeaderRenderer
 			extends DefaultTableCellRenderer {
 		IconHeaderRenderer() {}
 
@@ -555,7 +530,7 @@ public class ImageTable
 		}
 	}
 
-	class ColumnHeaderToolTips
+	static class ColumnHeaderToolTips
 			extends MouseMotionAdapter {
 		TableColumn curCol;
 

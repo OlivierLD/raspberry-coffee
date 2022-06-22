@@ -41,7 +41,7 @@ import calc.GeomUtil;
  * used at startup. It - for now - cannot be managed from the Web UI.
  * The REST api is not aware of it.
  *
- * @deprecated Use SSD1306Processor instead
+ * @Deprecated Use SSD1306Processor instead
  */
 public class SSD1306Processor_v1 implements Forwarder, PushButtonObserver {
 	private boolean keepWorking = true;

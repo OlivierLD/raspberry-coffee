@@ -2,13 +2,12 @@ package hanoitower.gui.applet;
 
 import hanoitower.gui.PanelHolder;
 
-import javax.swing.JApplet;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+@SuppressWarnings("deprecation")
 public class HanoiApplet extends JApplet {
 
 	private JPanel panelHolder;
@@ -35,7 +34,7 @@ public class HanoiApplet extends JApplet {
 	public static void main(String... args) {
 		HanoiApplet applet = new HanoiApplet();
 		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(3);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getContentPane().add(applet, BorderLayout.CENTER);
 		frame.setTitle("Hanoi Applet Frame");
 		applet.init();
