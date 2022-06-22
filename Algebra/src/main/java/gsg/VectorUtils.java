@@ -529,5 +529,4 @@ public class VectorUtils {
         return graphicRange;
     }
 
-
 }
