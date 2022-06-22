@@ -17,10 +17,11 @@ public class LowPassFilter {
         // Display min & max
         double minValue = data.stream()
                 .min(Comparator.comparing(Double::doubleValue))
-                .get();
+                .orElse(Double.MAX_VALUE);
+
         double maxValue = data.stream()
                 .max(Comparator.comparing(Double::doubleValue))
-                .get();
+                .orElse(Double.MAX_VALUE);
         System.out.printf("Data from %.03f to %.03f\n", minValue, maxValue);
 
         final List<Double> filteredValues = new ArrayList<>();
@@ -46,10 +47,10 @@ public class LowPassFilter {
         double minFData = filteredValues.stream()
                 .map(g -> g > 0 ? g : 0)
                 .min(Comparator.comparing(Double::doubleValue))
-                .get();
+                .orElse(Double.MAX_VALUE);
         double maxFData = filteredValues.stream()
                 .max(Comparator.comparing(Double::doubleValue))
-                .get();
+                .orElse(Double.MIN_VALUE);
         System.out.printf("Filtered Data from %.03f to %.03f\n", minFData, maxFData);
     }
 
