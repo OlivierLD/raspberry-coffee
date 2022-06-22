@@ -12,6 +12,7 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
+compileJava.options.encoding = 'ISO-8859-1'
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 
 repositories {

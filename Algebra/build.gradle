@@ -30,6 +30,7 @@ repositories {
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
+compileJava.options.encoding = 'ISO-8859-1'
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 
 dependencies {
