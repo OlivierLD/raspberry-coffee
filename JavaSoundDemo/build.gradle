@@ -13,19 +13,6 @@ repositories {
     mavenLocal()
 }
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/main/java']
-//        }
-//    }
-//    test {
-//        java {
-//            srcDir 'tests/java'
-//        }
-//    }
-//}
-
 dependencies {
 }
 
@@ -34,7 +21,10 @@ shadowJar {
 }
 
 //compileJava.options.compilerArgs += ["-Xlint:none"]
-compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
+//compileJava.options.compilerArgs += ["-Xlint:unchecked"]
+compileJava {
+    options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+}
 
 task runJuke(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'javasounddemo.Juke'

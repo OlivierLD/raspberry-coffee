@@ -2,7 +2,6 @@ package client;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 import compute.Compute;
@@ -13,12 +12,12 @@ import compute.Compute;
  */
 public class AskToSpeak {
 
-  private static String bindingName = "Compute";
+  private final static String bindingName = "Compute";
 
   public static void main(String... args) {
     if (args.length < 3) {
       System.out.println("Arguments: [RMI Server Name] [Port] [Text to Speak]");
-      System.out.println(String.format("You have provided %d argument(s)", args.length));
+      System.out.printf("You have provided %d argument(s)\n", args.length);
       // Java 7 style
 //      for (String s : args) {
 //        System.out.println("- " + s);
@@ -33,7 +32,7 @@ public class AskToSpeak {
 
     System.out.println("Looking up [" + bindingName + " on " + args[0] + ":" + args[1] + "]");
     try {
-      Registry registry = LocateRegistry.getRegistry(args[0], new Integer(args[1])); // Server name, port
+      Registry registry = LocateRegistry.getRegistry(args[0], Integer.parseInt(args[1])); // Server name, port
       Compute comp = (Compute) registry.lookup(bindingName);   // RMI Name
 
       Speak task = new Speak(tts);

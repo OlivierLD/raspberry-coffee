@@ -23,7 +23,7 @@ object LeastSquares {
     // Read the data generated in Java (see raspisamples.smoothing.LeastSquaresMethod.java)
     var data = List.empty[(Double, Double)]
     try {
-      var br = new BufferedReader(new FileReader("cloud.csv"))
+      val br = new BufferedReader(new FileReader("cloud.csv"))
       var line = ""
       var go = true
       while (go) {
@@ -31,7 +31,7 @@ object LeastSquares {
         if (line == null) {
           go = false
         } else {
-          var tuple = line split ";"
+          val tuple = line split ";"
           data :+= (tuple(0).toDouble, tuple(1).toDouble)
         }
       }
@@ -41,13 +41,13 @@ object LeastSquares {
         ioe.printStackTrace()
     }
 
-    if (!data.isEmpty) { // Then we're good
+    if (data.nonEmpty) { // Then we're good
       println("Data read OK")
       val requiredDegree = 2
       val dimension = requiredDegree + 1
 
-      var sumXArray = Array.ofDim[Double]((requiredDegree * 2) + 1)
-      var sumY      = Array.ofDim[Double](requiredDegree + 1)
+      val sumXArray = Array.ofDim[Double]((requiredDegree * 2) + 1)
+      val sumY      = Array.ofDim[Double](requiredDegree + 1)
       // Init
       for (idx <- 0 until (requiredDegree * 2) + 1) {
         sumXArray(idx) = 0.0
@@ -65,25 +65,25 @@ object LeastSquares {
         }
       })
 
-      var squareMatrix = new SquareMatrix(dimension)
+      val squareMatrix = new SquareMatrix(dimension)
       for (row <- 0 until dimension) {
         for (col <- 0 until dimension) {
-          var powerRnk = (requiredDegree - row) + (requiredDegree - col)
-          squareMatrix setElementAt(sumXArray(powerRnk), row, col)
+          val powerRnk = (requiredDegree - row) + (requiredDegree - col)
+          squareMatrix.setElementAt(sumXArray(powerRnk), row, col)
         }
       }
-      var constants = Array.ofDim[Double](dimension)
+      val constants = Array.ofDim[Double](dimension)
       for (idx <- 0 until dimension) {
         constants(idx) = sumY(requiredDegree - idx)
       }
 
       println("Resolving:")
-      SystemUtils printSystem(squareMatrix, constants)
+      SystemUtils.printSystem(squareMatrix, constants)
       println("")
 
-      var result = SystemUtils solveSystem(squareMatrix, constants)
+      val result = SystemUtils.solveSystem(squareMatrix, constants)
       result.foreach(coef =>
-        println(s"${coef}")
+        println(s"$coef")
       )
 
     } else {

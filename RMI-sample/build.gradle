@@ -10,16 +10,6 @@ repositories {
     mavenLocal()
 }
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }  
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }  
-//}
-
+compileJava {
+    options.compilerArgs << "-Xlint:deprecation"
+}

@@ -44,7 +44,7 @@ public class GribHelper {
 	 */
 	public static GribConditionData smoothGribData(GribConditionData gribData, int smooth) {
 //  System.out.println("Smoothing..., factor " + smooth);
-		GribConditionData newGribData = null;
+		GribConditionData newGribData;
 
 		double _w = gribData.getWLng();
 		double _e = gribData.getELng();
@@ -78,8 +78,8 @@ public class GribHelper {
 				List<Integer> ar = gribData.getDataPointsAround(new GeoPoint(_Lat, _Lng));
 				if (ar != null) {
 					try {
-						int yIdx = ar.get(0).intValue();
-						int xIdx = ar.get(1).intValue();
+						int yIdx = ar.get(0);
+						int xIdx = ar.get(1);
 						DataPoint[] dp = new DataPoint[4];
 						// Wind
 						float u = gribData.getGribPointData()[yIdx][xIdx].getU();
@@ -232,21 +232,21 @@ public class GribHelper {
 						// Smooth
 						List<Double> _ar = Smoothing.calculate(dp, _Lng, _Lat);
 						if (_ar != null) {
-							double _dir = _ar.get(Smoothing.TWD_INDEX).doubleValue();
-							double _speed = _ar.get(Smoothing.TWS_INDEX).doubleValue();
-							double _prmsl = _ar.get(Smoothing.PRMSL_INDEX).doubleValue();
-							double _500hgt = _ar.get(Smoothing.HGT500_INDEX).doubleValue();
-							double _temp = _ar.get(Smoothing.TEMP_INDEX).doubleValue();
-							double _whgt = _ar.get(Smoothing.TEMP_INDEX).doubleValue();
-							double _rain = _ar.get(Smoothing.RAIN_INDEX).doubleValue();
+							double _dir = _ar.get(Smoothing.TWD_INDEX);
+							double _speed = _ar.get(Smoothing.TWS_INDEX);
+							double _prmsl = _ar.get(Smoothing.PRMSL_INDEX);
+							double _500hgt = _ar.get(Smoothing.HGT500_INDEX);
+							double _temp = _ar.get(Smoothing.TEMP_INDEX);
+							double _whgt = _ar.get(Smoothing.TEMP_INDEX);
+							double _rain = _ar.get(Smoothing.RAIN_INDEX);
 
 							int _u = (int) (_ar.get(Smoothing.UWIND_INDEX).doubleValue());
 							int _v = (int) (_ar.get(Smoothing.VWIND_INDEX).doubleValue());
 
 							int _uC = (int) (_ar.get(Smoothing.UCURRENT_INDEX).doubleValue());
 							int _vC = (int) (_ar.get(Smoothing.VCURRENT_INDEX).doubleValue());
-							double _Cdir = _ar.get(Smoothing.CDR_INDEX).doubleValue();
-							double _Cspeed = _ar.get(Smoothing.CSP_INDEX).doubleValue();
+							double _Cdir = _ar.get(Smoothing.CDR_INDEX);
+							double _Cspeed = _ar.get(Smoothing.CSP_INDEX);
 
 							GribPointData gpd = new GribPointData();
 							gpd.setHgt((int) _500hgt);
@@ -358,9 +358,7 @@ public class GribHelper {
 	}
 
 	private static double getIntermediateValue(double a, double b, int nbInterval, int currInterval) {
-		double d = 0;
-		d = a + (currInterval * ((b - a) / nbInterval));
-		return d;
+		return a + (currInterval * ((b - a) / nbInterval));
 	}
 
 	public static void displayGRIBDetails(String gribName) throws Exception {
@@ -585,10 +583,10 @@ public class GribHelper {
 //        System.out.println( windPointData[idxY + 1][idxX].toString() );
 //        System.out.println( windPointData[idxY + 1][idxX + 1].toString() );
 //        System.out.println("------------------");
-				array = new ArrayList<Integer>(2);
+				array = new ArrayList<>(2);
 				// Indexes of the bottom left point.
-				array.add(new Integer(idxY));
-				array.add(new Integer(idxX));
+				array.add(idxY);
+				array.add(idxX);
 			}
 			return array;
 		}

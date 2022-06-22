@@ -162,7 +162,7 @@ enum class unknowns(val charArray: CharArray) {
 val MICRO_SYMBOL = unknowns.GREEK_LOWS.charArray[11]
 
 // Just a test
-fun main(args: Array<String>) {
+fun main( /*args: Array<String> */ ) { // Unused args.
 	println("-- Matrix tests, in Kotlin --")
 	var matrix = SquareMatrix(3)
 	matrix.set(0, 0, 1.0)

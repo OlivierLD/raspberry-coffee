@@ -3,7 +3,9 @@ package client;
 import compute.Task;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
+@SuppressWarnings("deprecation")
 public class Pi implements Task<BigDecimal>, Serializable {
 
 	private static final long serialVersionUID = 227L;

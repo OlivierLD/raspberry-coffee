@@ -10,7 +10,10 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
+//compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
+compileJava {
+    options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+}
 
 repositories {
   mavenCentral()

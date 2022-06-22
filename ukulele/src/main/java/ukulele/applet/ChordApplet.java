@@ -14,6 +14,7 @@ import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+@SuppressWarnings("deprecation")
 public class ChordApplet
 				extends JApplet {
 	private BorderLayout borderLayout1 = new BorderLayout();

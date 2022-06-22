@@ -41,6 +41,7 @@ import javax.swing.JApplet;
  * @author Brian Lichtenwalter
  * @(#)JavaSoundApplet.java 1.2  00/01/31
  */
+@SuppressWarnings("deprecation")
 public class JavaSoundApplet extends JApplet {
 
 	static JavaSoundApplet applet;

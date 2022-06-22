@@ -130,7 +130,7 @@ public class TreePanel
 			dataTree.addTreeSelectionListener(treeMonitor);
 			dataTree.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent e) {
-					boolean right = ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK);
+					boolean right = ((e.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) == InputEvent.BUTTON3_DOWN_MASK);
 					if (dataTree.getPathForLocation(e.getX(), e.getY()) != null) {
 						// fireDefaultAction(e);
 						PolarTreeNode ptn = (PolarTreeNode) dataTree.getLastSelectedPathComponent();
@@ -436,8 +436,8 @@ public class TreePanel
 					// Data
 					Object[][] data = new Object[ptn.getChildCount()][2];
 					for (int i = 0; i < ptn.getChildCount(); i++) {
-						data[i][0] = new Integer(((PolarTreeNode) ptn.getChildAt(i)).getTwa());
-						data[i][1] = new Double(((PolarTreeNode) ptn.getChildAt(i)).getBsp());
+						data[i][0] = (Integer)(((PolarTreeNode) ptn.getChildAt(i)).getTwa());
+						data[i][1] = (Double)(((PolarTreeNode) ptn.getChildAt(i)).getBsp());
 					}
 					etp.setTwaData(data);
 					int resp = JOptionPane.showConfirmDialog(this,

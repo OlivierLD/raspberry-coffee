@@ -45,3 +45,7 @@ dependencies {
   implementation project(':NMEA-multiplexer')
   testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
+
+compileJava {
+    options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+}

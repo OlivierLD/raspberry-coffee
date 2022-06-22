@@ -19,7 +19,7 @@ import section.one.VampChordPanel;
 import ukulele.ChordPanel;
 import static ukulele.ChordPanel.IDENTIFIER_MODE;
 
-
+@SuppressWarnings("deprecation")
 public class ChordAppletTwo
 				extends JApplet {
 	private BorderLayout borderLayout1 = new BorderLayout();

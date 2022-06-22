@@ -649,11 +649,11 @@ public class GUIFrame
 						if (data.equals("TWA"))
 							thisLine.add("NoData");
 						else {
-							Integer ws = new Integer(data);
+							Integer ws = Integer.parseInt(data);
 							thisLine.add(ws);
 						}
 					} else {
-						Double d = new Double(data);
+						Double d = Double.parseDouble(data);
 						thisLine.add(d);
 					}
 				}

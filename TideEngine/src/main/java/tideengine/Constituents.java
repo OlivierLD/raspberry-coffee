@@ -31,11 +31,11 @@ public class Constituents implements Serializable {
 		}
 
 		public void putEquilibrium(int year, double val) {
-			equilibrium.put(new Integer(year), new Double(val));
+			equilibrium.put(year, val);
 		}
 
 		public void putFactor(int year, double val) {
-			factors.put(new Integer(year), new Double(val));
+			factors.put(year, val);
 		}
 
 		public String getCoeffName() {

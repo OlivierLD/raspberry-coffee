@@ -434,6 +434,7 @@ public class Groove extends JPanel implements ActionListener, ControlContext, Me
 		}
 	}
 
+    @SuppressWarnings("deprecation")
 	public static void main(String... args) {
 		final Groove groove = new Groove();
 		JFrame f = new JFrame("Rhythm Groove Box");

@@ -894,6 +894,7 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 		}
 	} // End class SamplingGraph
 
+    @SuppressWarnings("deprecation")
 	public static void main(String s[]) {
 		CapturePlayback capturePlayback = new CapturePlayback();
 		capturePlayback.open();

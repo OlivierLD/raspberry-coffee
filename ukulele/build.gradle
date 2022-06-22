@@ -15,22 +15,6 @@ repositories {
     mavenLocal()
 }
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/java']
-//        }
-//        resources {
-//            srcDir 'src/resources'
-//        }
-//    }
-//    test {
-//        java {
-//            srcDirs = ['tests/java']
-//        }
-//    }
-//}
-
 dependencies {
     // https://mvnrepository.com/artifact/jfugue/jfugue
  // implementation 'jfugue:jfugue:4.0.3'
@@ -45,7 +29,10 @@ task copyResources(type: Copy) {
     include '**/*.xml', '**/*.xsd', '**/*.png', '**/*.gif', '**/*.jpg', '**/*.properties', '**/*.ttf', '**/*.html'
 }
 
-compileJava.options.compilerArgs += ["-Xlint:unchecked"]
+//compileJava.options.compilerArgs += ["-Xlint:unchecked"]
+compileJava {
+    options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+}
 
 jar.dependsOn(copyResources)
 shadowJar.dependsOn(copyResources)

@@ -86,22 +86,22 @@ public class EditSectionPanel extends JPanel {
 	}
 
 	public void setPolarDegree(int d) {
-		polarDegreeSpinner.setValue(new Integer(d));
+		polarDegreeSpinner.setValue(d);
 		polarDegreeSpinner.repaint();
 	}
 
 	public void setCoeffDegree(int d) {
-		coeffDegreeSpinner.setValue(new Integer(d));
+		coeffDegreeSpinner.setValue(d);
 		coeffDegreeSpinner.repaint();
 	}
 
 	public void setFromTWA(int d) {
-		fromTWASpinner.setValue(new Integer(d));
+		fromTWASpinner.setValue(d);
 		fromTWASpinner.repaint();
 	}
 
 	public void setToTWA(int d) {
-		toTWASpinner.setValue(new Integer(d));
+		toTWASpinner.setValue(d);
 		toTWASpinner.repaint();
 	}
 

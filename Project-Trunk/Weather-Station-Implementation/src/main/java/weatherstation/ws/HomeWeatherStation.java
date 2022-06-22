@@ -72,7 +72,7 @@ public class HomeWeatherStation {
 				if (!loggerClassName.trim().isEmpty()) {
 					try {
 						Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
-						loggers.add(logClass.newInstance());
+						loggers.add(logClass.getDeclaredConstructor().newInstance());
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

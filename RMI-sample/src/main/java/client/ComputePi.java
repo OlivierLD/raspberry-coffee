@@ -12,7 +12,7 @@ import compute.Compute;
  */
 public class ComputePi {
 
-	private static String bindingName = "Compute";
+	private final static String bindingName = "Compute";
 
 	public static void main(String... args) {
 		if (args.length != 3) {
@@ -22,9 +22,9 @@ public class ComputePi {
 
 		System.out.println("Looking up [" + bindingName + " on " + args[0] + ":" + args[1] + "]");
 		try {
-			Registry registry = LocateRegistry.getRegistry(args[0], new Integer(args[1])); // Server name, port
+			Registry registry = LocateRegistry.getRegistry(args[0], Integer.parseInt(args[1])); // Server name, port
 			Remote remote = registry.lookup(bindingName);   // RMI Name
-			System.out.println(String.format("Remote is a %s", remote.getClass().getName()));
+			System.out.printf("Remote is a %s\n", remote.getClass().getName());
 			Compute comp = (Compute) remote;
 
 			Pi task = new Pi(Integer.parseInt(args[2]));             // Precision

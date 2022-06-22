@@ -170,7 +170,7 @@ public class TWATable extends JPanel {
 	}
 
 	private void addButton_actionPerformed(ActionEvent e) {
-		addLineInTable(new Integer(0), new Double(0.0));
+		addLineInTable(0, 0.0);
 	}
 
 	private void delButton_actionPerformed(ActionEvent e) {

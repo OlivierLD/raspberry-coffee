@@ -19,7 +19,7 @@ public class Smoothing {
 	 * @return Direction & Speed, as Doubles
 	 */
 	public static List<Double> calculate(DataPoint[] dp, double x, double y) {
-		List<Double> data = null;
+		List<Double> data;
 		double totalcoeff = 0;
 		double totalTWD = 0;
 		double totalTWS = 0;
@@ -101,22 +101,22 @@ public class Smoothing {
 		while (finalTWD > 360) finalTWD -= 360;
 		while (finalCDR > 360) finalCDR -= 360;
 
-		data = new ArrayList<Double>(2);
-		data.add(new Double(finalTWD));
-		data.add(new Double(finalTWS));
-		data.add(new Double(finalprmsl));
-		data.add(new Double(final500htg));
-		data.add(new Double(finaltemp));
-		data.add(new Double(finalwheight));
-		data.add(new Double(finalrain));
+		data = new ArrayList<>(2);
+		data.add(finalTWD);
+		data.add(finalTWS);
+		data.add(finalprmsl);
+		data.add(final500htg);
+		data.add(finaltemp);
+		data.add(finalwheight);
+		data.add(finalrain);
 
-		data.add(new Double(finalu));
-		data.add(new Double(finalv));
+		data.add((double)finalu);
+		data.add((double)finalv);
 
-		data.add(new Double(finaluC));
-		data.add(new Double(finalvC));
-		data.add(new Double(finalCDR));
-		data.add(new Double(finalCSP));
+		data.add((double)finaluC);
+		data.add((double)finalvC);
+		data.add(finalCDR);
+		data.add(finalCSP);
 
 		return data;
 	}

@@ -272,10 +272,10 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 				foundCoeffValue = false;
 			}
 			if ("equilibrium".equals(qName)) {
-				constituent.getEquilibrium().put(new Integer(year), value);
+				constituent.getEquilibrium().put(year, value);
 				foundEquilibrium = false;
 			} else if ("factor".equals(qName)) {
-				constituent.getFactors().put(new Integer(year), value);
+				constituent.getFactors().put(year, value);
 				foundFactor = false;
 			}
 		}
