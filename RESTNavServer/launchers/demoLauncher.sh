@@ -94,7 +94,7 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "| 12. With 2 input serial ports.                                                          |"
 	echo -e "|     - See or modify nmea.mux.2.serial.yaml for details.                                 |"
 	echo -e "| 13. AIS Tests.                                                                          |"
-	echo -e "+------------------------------------+----------------------------------------------------+"
+	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "| 20. Get Data Cache (curl)                                                               |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
