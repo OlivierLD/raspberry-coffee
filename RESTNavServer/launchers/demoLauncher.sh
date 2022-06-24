@@ -354,10 +354,10 @@ while [[ "${GO}" == "true" ]]; do
 	  "20")
 	    COMMAND="curl -X GET localhost:${HTTP_PORT}/mux/cache"
 	    if [[ "$(which jq)" != "" ]]; then
-	      COMMAND="${COMMAND} | jq"
+	      ${COMMAND} | jq
+	    else
+	      ${COMMAND}
 	    fi
-	    echo -e "Executing ${COMMAND}"
-	    ${COMMAND}
       echo -e "\nHit [Return]"
       read resp
 	    ;;	
