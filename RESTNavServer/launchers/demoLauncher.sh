@@ -352,7 +352,11 @@ while [[ "${GO}" == "true" ]]; do
 	    GO=false
 	    ;;
 	  "20")
-	    curl -X GET localhost:${HTTP_PORT}/mux/cache
+	    JQ=
+	    if [[ "$(which jq)" != "" ]]; then
+	      JQ=" | jq"
+	    fi
+	    curl -X GET localhost:${HTTP_PORT}/mux/cache ${JQ}
       echo -e "\nHit [Return]"
       read resp
 	    ;;	
