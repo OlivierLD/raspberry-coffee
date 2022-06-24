@@ -1,8 +1,8 @@
 # PPCM for Python3
 
 def ppcm(n1: int, n2: int) -> int:
-    product = n1 * n2
-    remainder = n1 % n2
+    product: int = n1 * n2
+    remainder: int = n1 % n2
     while remainder != 0:
         n1 = n2
         n2 = remainder
