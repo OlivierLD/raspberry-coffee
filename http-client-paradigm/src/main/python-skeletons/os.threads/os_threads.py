@@ -3,10 +3,10 @@ import os
 import sys
 import traceback
 
-#
-# Starts 3 threads (wasting time)
-# running OS commands
-#
+"""
+ Starts 3 threads (wasting time)
+ running OS commands
+"""
 
 def execOS(cmd: str) -> None:
     print(f"Will execute {cmd}")
