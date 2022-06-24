@@ -366,6 +366,7 @@ while [[ "${GO}" == "true" ]]; do
 			else
 			  echo -e "----------- NavServer HTTP Ports ---------"
         if [[ $(uname -a) == *Linux* ]]; then
+            # Could use sudo below
             netstat -tunap | grep ${HTTP_PORT}
 				else
           for pid in $(cat km); do

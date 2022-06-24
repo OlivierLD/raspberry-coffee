@@ -32,7 +32,7 @@ public class PinsCustomization {
 			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
-			assertTrue(String.format("Unexpected error message [%s]", ex.getMessage()), ex.getMessage().startsWith("keypad.rows should contain 4 elements, comma-separated.")); // ""Please provide both "));
+			assertTrue(String.format("Unexpected error message [%s]", ex.getMessage()), ex.getMessage().startsWith("Please provide both "));
 			System.out.println(String.format("As expected [%s]", ex.toString()));
 		}
 	}
@@ -52,7 +52,7 @@ public class PinsCustomization {
 			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
-			assertTrue(ex.getMessage().equals("keypad.rows should contain 4 elements, comma-separated."));
+            assertTrue(String.format("Unexpected error message [%s]", ex.getMessage()), ex.getMessage().equals("keypad.rows should contain 4 elements, comma-separated."));
 			System.out.println(String.format("As expected [%s]", ex.toString()));
 		}
 	}
