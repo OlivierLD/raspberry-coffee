@@ -2,9 +2,12 @@
 
 #### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets
 
+> Project started in 2015.
+
 --- 
 
-- Sensor interaction
+- Sensors & Actuators interaction
+- Different communication protocols
 - NMEA protocol implementations
 
 Main keywords:

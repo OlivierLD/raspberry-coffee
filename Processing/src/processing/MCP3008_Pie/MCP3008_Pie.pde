@@ -1,4 +1,4 @@
-import analogdigitalconverter.mcp3008.MCP3008Reader;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 /*
@@ -8,7 +8,7 @@ import utils.PinUtil;
 boolean SIMULATION = true;
 int incSign = 1;
 int value = 0;
-int ADC_CHANNEL = MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+int ADC_CHANNEL = MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 void setup() {
   size(400, 400); 
@@ -21,7 +21,9 @@ void setup() {
     Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
     Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
-    MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+    // MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+    MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
+
   }
 }
 
@@ -39,7 +41,8 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
       incSign = 1;
     }
   } else {
-    value = MCP3008Reader.readMCP3008(ADC_CHANNEL); // Real stuff
+    // value = MCP3008Reader.readMCP3008(ADC_CHANNEL); // Real stuff
+    value = MCPReader.readMCP(ADC_CHANNEL);
   }
   fill(128);
   arc(width/2, height/2, 200, 200, (float)-Math.PI/2, (float)(-Math.PI/2) + radians(360 * value / 1023));
@@ -50,6 +53,7 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
 void dispose() {
   println("Bye!");
   if (!SIMULATION) {
-    MCP3008Reader.shutdownMCP3008();
+    // MCP3008Reader.shutdownMCP3008();
+    MCPReader.shutdownMCP();
   }
 }
