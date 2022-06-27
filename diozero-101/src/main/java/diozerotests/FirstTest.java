@@ -26,7 +26,7 @@ public class FirstTest {
         }
 
         System.out.println("Button test... (20s)");
-        try (Button button = new Button(12); LED led = new LED(18)) {
+        try (Button button = new Button(12); LED led = new LED(18)) { // With resources, nice !
             button.whenPressed(nanoTime -> led.on());
             button.whenReleased(nanoTime -> led.off());
             SleepUtil.sleepSeconds(20);

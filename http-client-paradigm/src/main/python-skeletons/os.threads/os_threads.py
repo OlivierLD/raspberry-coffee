@@ -20,7 +20,7 @@ def execOS(cmd: str) -> None:
     output = stream.read()  # return something ?
     # Could also use output.rstrip() to remove trailing NL
     print(f"Thread execution returned: {output}")
-    nbThreadCompleted += 1
+    nbThreadCompleted += 1  # Is there a notify in Python ?
 
 
 try:
