@@ -144,7 +144,7 @@ if [[ "${SERVER_FLAVOR}" != "none" ]]; then
     fi
     python3 -m http.server ${HTTP_PORT} &
     SERVER_PROCESS_ID=$(echo $!)
-    echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+    echo -e "To kill the server, use PID ${SERVER_PROCESS_ID}, like in \"kill -9 ${SERVER_PROCESS_ID}\""
   elif [[ "${SERVER_FLAVOR}" == "node" ]]; then
     echo -e "Starting node server"
     NODE_JS=$(which node)
@@ -154,7 +154,7 @@ if [[ "${SERVER_FLAVOR}" != "none" ]]; then
     fi
     node server.js --verbose:${VERBOSE} --port:${HTTP_PORT} &
     SERVER_PROCESS_ID=$(echo $!)
-    echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+    echo -e "To kill the server, use PID ${SERVER_PROCESS_ID}, like in \"kill -9 ${SERVER_PROCESS_ID}\""
   elif [[ "${SERVER_FLAVOR}" == "java" ]]; then
     echo -e "Starting java server"
     # CP=$(find ~/repos/raspberry-coffee -name http-tiny-server-1.0-all.jar)
@@ -173,7 +173,7 @@ if [[ "${SERVER_FLAVOR}" != "none" ]]; then
     echo -e "Will run: java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &"
     java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &
     SERVER_PROCESS_ID=$(echo $!)
-    echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+    echo -e "To kill the server, use PID ${SERVER_PROCESS_ID}, like in \"kill -9 ${SERVER_PROCESS_ID}\""
   else
     echo -e "-----------------------------------------------------------------"
     echo -e "Unsupported server flavor [${SERVER_FLAVOR}]. Only 'python' (default), 'node', and 'java' are supported."

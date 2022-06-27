@@ -15,13 +15,20 @@ Main keywords:
 - `Java`
 - `PI4J`
 - `Gradle`
+- `git`
 
 ---
 
 It uses the [`PI4J library`](http://pi4j.com) (version **1.x**, version **2.x** brings in some new architecture and paradigm, not dealt with yet), itself relying on [`WiringPi`](http://wiringpi.com/).  
-The project - and its different modules - are built using [`Gradle`](https://gradle.org/).
+The project - and its different modules - are built using [`Gradle`](https://gradle.org/).  
+Some modules also use the `librxtx` library for Serial IO.  
 
 ### Java
+Java can come in two flavors:
+- The Java Runtime Environment (JRE), that allows you to _run_ Java programs
+- The Java Development Kit (JDK), that includes also a JRE, and allows you to _develop_ Java programs.  
+
+Obviously, we need a JDK.    
 Since 2019 or so, Java (JDK 11) comes with the RasPi OS.  
 So you do not need to install it. To check its availability:
 ```
@@ -119,10 +126,20 @@ To know the structure of the full project:
 ```
 $ ./gradlew projects [--info]
 ```
+### git
+If you can read this, you obviously know what `git` is...
 
 ### Integrated Development Environment (IDE)
-IDEs are not mandatory, but they make Java development easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
+IDEs are not mandatory (any editor, like `vi`, which works everywhere Linux or any [BSD](https://en.wikipedia.org/wiki/Berkeley_Software_Distribution) clone runs, would be good enough), but they make Java development easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
 I like IntelliJ, but you can use anyone you want or prefer.
+
+Depending on the IDE you are using, there are two main features you might be interested in
+- Remote development
+  - Your IDE might be too demanding for a Raspberry Pi (depending on the model you are using...). Remote development will allow you to h
+    have the IDE on a laptop (or desktop, of course), and the files it deals with on the Raspberry Pi. It usually uses a protocol like `ssh` and its related technologies (`scp`, `rsync`, etc).
+- Remote debugging
+    - This is implemented through the JPDA (Java Platform Debugging Architecture) protocol, that comes with Java, and 
+      possibly implemented by your IDE. You _run_ the code on the Raspberry Pi, and you _debug_ on your laptop.
 
 ---
 
@@ -225,7 +242,7 @@ $ which wget
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
 - You may also remove unwanted software, just in case you don't need them:
-    - `$ sudo apt-get purge wolfram-engine`
+    - `$ sudo apt-get purge wolfram-engine` (that one's worth keeping, though)
     - `$ sudo apt-get purge minecraft-pi`
     - `$ sudo apt-get purge sonic-pi`
     - `$ sudo apt-get purge libreoffice*`
@@ -456,6 +473,10 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 ```
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
  Prompt> cd raspberry-coffee
+ Prompt> pushd raspberry-coffee
+ Prompt> # git submodule update --init
+ Prompt> git clone https://github.com/OlivierLD/AstroComputer.git
+ Prompt> popd
  Prompt> chmod +x gradlew
  Prompt> ./gradlew [--daemon | --no-daemon] build [--info]
 ```
@@ -525,10 +546,10 @@ The expected archive will be produced in the local `build/libs` directory.
 ```
 
 > _Note:_ If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:
-<pre>
+```
 // ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
 // compileJava.dependsOn(tellMeProxy)
-</pre>
+```
 
 Or you can also set it at runtime:
 ```
