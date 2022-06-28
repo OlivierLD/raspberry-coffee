@@ -24,15 +24,15 @@ def execOS(cmd: str) -> None:
 
 
 try:
-    cmd: str = "sleep 5; echo 'Done - 1'"
+    cmd: str = "sleep 5; echo 'Done - 1'"   # Wait, then print
     thread1: threading.Thread = threading.Thread(name="One", target=execOS, args=(cmd,))
     thread1.daemon = True  # Dies on exit
 
-    cmd = "sleep 3; echo 'Done - 2'"
+    cmd = "sleep 3; echo 'Done - 2'"   # Wait, then print
     thread2: threading.Thread = threading.Thread(name="Two", target=execOS, args=(cmd,))
     thread2.daemon = True  # Dies on exit
 
-    cmd = "sleep 1; echo 'Done - 3'"
+    cmd = "sleep 1; echo 'Done - 3'"   # Wait, then print
     thread3: threading.Thread = threading.Thread(name="Three", target=execOS, args=(cmd,))
     thread3.daemon = True  # Dies on exit
 
