@@ -18,13 +18,13 @@ public class FirstTest {
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
         try (LED led = new LED(ledPin)) { // Pin numbers seem to be BCM numbers?
-            System.out.printf("Turning led %d ON", ledPin);
+            System.out.printf("Turning led %d ON\n", ledPin);
             led.on();
             SleepUtil.sleepSeconds(1);
-            System.out.printf("Turning led %d OFF", ledPin);
+            System.out.printf("Turning led %d OFF\n", ledPin);
             led.off();
             SleepUtil.sleepSeconds(1);
-            System.out.printf("Toggling Led %d", ledPin);
+            System.out.printf("Toggling Led %d\n", ledPin);
             led.toggle();
         }
 
