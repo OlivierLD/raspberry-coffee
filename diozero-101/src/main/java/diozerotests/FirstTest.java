@@ -14,7 +14,7 @@ public class FirstTest {
 
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
-        try (LED led = new LED(18)) { // Pin numbers seem to be BCM numbers.
+        try (LED led = new LED(18)) { // Pin numbers seem to be physical numbers?
             System.out.println("Turning led 18 ON");
             led.on();
             SleepUtil.sleepSeconds(1);

@@ -69,7 +69,7 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 >    implementation 'org.fusesource.jansi:jansi:1.11'
 >    implementation 'oracle:xmlparser:2.0'
 >    implementation 'org.yaml:snakeyaml:1.21'
->    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+>    implementation group: 'org.xerial', name: 'sqlite-jdbcB', version: '3.34.0'
 >    implementation group: 'org.json', name: 'json', version: '20190722'
 >    implementation project(':http-tiny-server')
 >    implementation project(':common-utils')
