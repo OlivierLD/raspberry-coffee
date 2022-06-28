@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Prompt the user to run any diozero sample app
-# requires "implementation 'com.diozero:diozero-sampleapps:1.3.3'" in teh build file.
+# requires "implementation 'com.diozero:diozero-sampleapps:1.3.3'" in the build file.
 #
 JAR=./build/libs/diozero-101-1.0-all.jar
 #
@@ -37,4 +37,3 @@ if [[ "${CLASS_NAME}" != "" ]]; then
 else
   echo -e "Try again, with a valid number..."
 fi
-
