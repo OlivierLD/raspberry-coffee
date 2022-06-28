@@ -12,21 +12,24 @@ import com.diozero.util.SleepUtil;
 
 public class FirstTest {
 
+    final static int ledPin    = 24; // 18 does not work, 24 does.
+    final static int buttonPin = 12; // Seems OK
+
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
-        try (LED led = new LED(18)) { // Pin numbers seem to be physical numbers?
-            System.out.println("Turning led 18 ON");
+        try (LED led = new LED(ledPin)) { // Pin numbers seem to be BCM numbers?
+            System.out.printf("Turning led %d ON", ledPin);
             led.on();
             SleepUtil.sleepSeconds(1);
-            System.out.println("Turning led 18 OFF");
+            System.out.printf("Turning led %d OFF", ledPin);
             led.off();
             SleepUtil.sleepSeconds(1);
-            System.out.println("Toggling Led 18");
+            System.out.printf("Toggling Led %d", ledPin);
             led.toggle();
         }
 
         System.out.println("Button test... (20s)");
-        try (Button button = new Button(12); LED led = new LED(18)) { // With resources, nice !
+        try (Button button = new Button(buttonPin); LED led = new LED(ledPin)) { // With resources, nice !
             button.whenPressed(nanoTime -> led.on());
             button.whenReleased(nanoTime -> led.off());
             SleepUtil.sleepSeconds(20);
