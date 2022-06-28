@@ -12,7 +12,6 @@ for line in $(cat samples.txt); do
   echo -e "${NL} - ${line}"
   NL=$(expr ${NL} + 1)
 done
-#
 echo -en "The number you choose > "
 read LINE_NO
 echo -e "OK, line ${LINE_NO}"
@@ -35,6 +34,6 @@ if [[ "${CLASS_NAME}" != "" ]]; then
   read PRMS
   java -cp ${JAR} com.diozero.sampleapps.${CLASS_NAME} ${PRMS}
 else
-  echo -e "Try again..."
+  echo -e "Try again, with a valid number..."
 fi
 
