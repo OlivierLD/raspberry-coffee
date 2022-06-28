@@ -5,6 +5,8 @@ java -cp ${CP} com.diozero.sampleapps.GpioDetect
 #
 java -cp ${CP} com.diozero.sampleapps.SystemInformation
 #
+java -cp ${CP} com.diozero.sampleapps.GpioReadAll
+#
 # java -cp ${CP} com.diozero.sampleapps.LEDTest 24
 # java -cp ${CP} com.diozero.sampleapps.ButtonTest 12
 

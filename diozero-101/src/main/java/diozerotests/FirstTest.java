@@ -12,12 +12,12 @@ import com.diozero.util.SleepUtil;
 
 public class FirstTest {
 
-    final static int ledPin    = 24; // 18 does not work, 24 does.
+    final static int ledPin    = 24; // 18 does not work (it's an IN pin...), 24 does.
     final static int buttonPin = 12; // Seems OK
 
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
-        try (LED led = new LED(ledPin)) { // Pin numbers seem to be BCM numbers?
+        try (LED led = new LED(ledPin)) { // Pin numbers are BCM numbers.
             System.out.printf("Turning led %d ON\n", ledPin);
             led.on();
             SleepUtil.sleepSeconds(1);

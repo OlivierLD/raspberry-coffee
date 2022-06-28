@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     implementation 'com.diozero:diozero-core:1.3.3'
-    implementation 'com.diozero:diozero-sampleapps:1.3.3' // For SystemInformation & Co
+    implementation 'com.diozero:diozero-sampleapps:1.3.3' // For SystemInformation, GpioDetect & other tests.
 }
 
 mainClassName = "diozerotests.FirstTest" // To generate the manifest
