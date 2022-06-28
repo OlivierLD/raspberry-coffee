@@ -26,6 +26,7 @@ for line in $(cat samples.txt); do
   NL=$(expr ${NL} + 1)
 done
 #
+CLASS_NAME=$(echo "${CLASS_NAME}" | sed 's/\//./g')
 echo -e "You choose ${CLASS_NAME}"
 if [[ "${CLASS_NAME}" != "" ]]; then
   # Then execute
