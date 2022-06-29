@@ -54,4 +54,4 @@ To stop `snap.loop`, type:
 ```
 
 #### More
-You might be interested in [this document](../Monitor.Battery/README.md) too, on the same topic, with more options.
+You might be interested in [this document](../Monitor-Battery/README.md) too, on the same topic, with more options.
