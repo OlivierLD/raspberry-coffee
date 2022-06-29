@@ -6,7 +6,7 @@ import com.diozero.util.SleepUtil;
 
 /*
  * GPIO Pin numbers, see https://www.diozero.com/api/gpio.html
- * Pin numbers seem to be BCM numbers.
+ * PINs are BCM numbers.
  * java -cp ./build/libs/common-utils-1.0-all.jar utils.PinUtil
  */
 

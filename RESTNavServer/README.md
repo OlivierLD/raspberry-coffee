@@ -1,6 +1,8 @@
 # Navigation Server
 #### Prolongation/Extension of the NMEA-multiplexer
 
+> This project was tested and used at sea, in the real world.
+
 An illustration of the way to gather or aggregate several REST Services all in one place.
 This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA-multiplexer/README.md).
 

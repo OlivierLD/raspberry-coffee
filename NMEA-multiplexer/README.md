@@ -1,5 +1,7 @@
 # NMEA Multiplexer
 
+> This project was tested and used at sea, in the real world.
+
 The `main` method is in `nmea.mux.GenericNMEAMultiplexer`.
 
 > For the impatient: [Get started, fast](./getstarted.md). 
