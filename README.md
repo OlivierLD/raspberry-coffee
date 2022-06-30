@@ -23,6 +23,9 @@ It uses the [`PI4J library`](http://pi4j.com) (version **1.x**, version **2.x** 
 The project - and its different modules - are built using [`Gradle`](https://gradle.org/).  
 Some modules also use the `librxtx` library for Serial IO.  
 
+> Note: `WiringPi` is now deprecated (since 2019, apparently), which makes `PI4J v1.*` deprecated too.  
+> ...More to come.
+
 ### Java
 Java can come in two flavors:
 - The Java Runtime Environment (JRE), that allows you to _run_ Java programs
