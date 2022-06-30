@@ -10,6 +10,16 @@ import java.util.List;
 // https://en.wikipedia.org/wiki/Pierre_B%C3%A9zier
 
 public class Bezier {
+
+    public static class BezierException extends RuntimeException {
+        public BezierException() {
+            super();
+        }
+        public BezierException(String message) {
+            super(message);
+        }
+    }
+
     public static class Point3D {
         private double x, y, z;
 
@@ -96,7 +106,10 @@ public class Bezier {
                 .z(from.getZ() + (deltaZ * t));
     }
 
-    public Point3D recurse(List<Point3D> ctrl, double t) {
+    public Point3D recurse(List<Point3D> ctrl, double t) throws BezierException {
+        if (ctrl.size() < 2) {
+            throw new BezierException(String.format("Need at least 2 ctrl points.,. Got only %d", ctrl.size()));
+        }
 //        System.out.printf("\trecurse -> %d ctrl points.\n", ctrl.size());
         if (ctrl.size() > 3) { // Recurse until size = 3
             List<Point3D> inside = new ArrayList<>();
@@ -121,7 +134,7 @@ public class Bezier {
      * @param t in [0..1]
      * @return
      */
-    public Point3D getBezierPoint(double t) {
+    public Point3D getBezierPoint(double t) throws BezierException {
         if (this.controlPoints == null) {
             throw new RuntimeException("There is no control point in this Bezier!");
         }

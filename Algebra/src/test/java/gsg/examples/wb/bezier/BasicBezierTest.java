@@ -18,8 +18,13 @@ public class BasicBezierTest {
     public static void main(String... args) {
         Bezier bezier = new Bezier(ctrlPoints);
         for (double t=0.0; t<=1.0; t+=0.1) {
-            Bezier.Point3D pt = bezier.recurse(ctrlPoints, t);
-            System.out.printf("For t=%.02f => x: %.02f, y: %.02f, z: %.02f\n", t, pt.getX(), pt.getY(), pt.getZ());
+            try {
+                Bezier.Point3D pt = bezier.recurse(ctrlPoints, t);
+                System.out.printf("For t=%.02f => x: %.02f, y: %.02f, z: %.02f\n", t, pt.getX(), pt.getY(), pt.getZ());
+            } catch (Bezier.BezierException be) {
+                be.printStackTrace();
+                break;
+            }
         }
     }
 }

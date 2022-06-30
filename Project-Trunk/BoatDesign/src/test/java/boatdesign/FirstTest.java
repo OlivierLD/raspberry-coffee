@@ -34,7 +34,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.File;
+//import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class FirstTest {
     private final static int WIDTH = 800;
     private final static int HEIGHT = 600;
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
     private static Map<String, Object> initConfig = null;
 
     // All z = 0, 2D bezier.
@@ -77,9 +77,7 @@ public class FirstTest {
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         System.out.println("Ctrl Points:");
-        this.ctrlPoints.forEach(pt -> {
-            System.out.println(String.format("%s", pt));
-        });
+        this.ctrlPoints.forEach(pt -> System.out.printf("%s\n", pt));
     }
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.printf("Exit requested %s\n", ae);
@@ -105,10 +103,10 @@ public class FirstTest {
         // Prepare data for display
         // Ctrl Points
         double[] xCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getX())
+                .mapToDouble(Bezier.Point3D::getX)
                 .toArray();
         double[] yCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getY())
+                .mapToDouble(Bezier.Point3D::getY)
                 .toArray();
         List<VectorUtils.Vector2D> ctrlPtsXYVectors = new ArrayList<>();
         for (int i=0; i<xCtrlPoints.length; i++) {
@@ -117,10 +115,10 @@ public class FirstTest {
 
         // Curve points
         double[] xData = bezierPoints.stream()
-                .mapToDouble(bp -> bp.getX())
+                .mapToDouble(VectorUtils.Vector3D::getX)
                 .toArray();
         double[] yData = bezierPoints.stream()
-                .mapToDouble(bp -> bp.getY())
+                .mapToDouble(VectorUtils.Vector3D::getY)
                 .toArray();
         List<VectorUtils.Vector2D> dataXYVectors = new ArrayList<>();
         for (int i=0; i<xData.length; i++) {
@@ -315,7 +313,7 @@ public class FirstTest {
 //        jScrollPane.setPreferredSize(new Dimension(WIDTH, HEIGHT + 50 + 10));
         whiteBoard.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-        whiteBoardsPanel.add(whiteBoard, // forTest, // ahMerde1, // whiteBoardXY,
+        whiteBoardsPanel.add(whiteBoard, // forTest, // ah merde, // whiteBoardXY,
                 new GridBagConstraints(0,
                         0,
                         1,
@@ -375,8 +373,8 @@ public class FirstTest {
             PopupMenuListener {
         private JMenuItem deleteMenuItem;
 
-        private FirstTest parent;
-        private Bezier.Point3D closePoint;
+        private final FirstTest parent;
+        private final Bezier.Point3D closePoint;
 
         private final static String DELETE_CTRL_POINT = "Delete Ctrl Point";
 
