@@ -165,9 +165,7 @@ public class FirstTest {
             List<Map<String, Double>> railPoints = (List)defaultPoints.get("rail");
             // List<List<Double>> railPoints = (List)defaultPoints.get("rail");
             // Just the rail for now
-            railPoints.stream().forEach(pt -> {
-                ctrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
-            });
+            railPoints.stream().forEach(pt -> ctrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z"))));
         } else {
             ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
             ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
@@ -291,12 +289,12 @@ public class FirstTest {
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
         menuFileSpit.setText("Spit out points");
-        menuFileSpit.addActionListener(ae -> fileSpit_ActionPerformed(ae));
+        menuFileSpit.addActionListener(this::fileSpit_ActionPerformed);
         menuFileExit.setText("Exit");
-        menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
+        menuFileExit.addActionListener(this::fileExit_ActionPerformed);
         menuHelp.setText("Help");
         menuHelpAbout.setText("About");
-        menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
+        menuHelpAbout.addActionListener(this::helpAbout_ActionPerformed);
         menuFile.add(menuFileSpit);
         menuFile.add(menuFileExit);
         menuBar.add(menuFile);
@@ -371,7 +369,7 @@ public class FirstTest {
     static class BezierPopup extends JPopupMenu
             implements ActionListener,
             PopupMenuListener {
-        private JMenuItem deleteMenuItem;
+        private final JMenuItem deleteMenuItem;
 
         private final FirstTest parent;
         private final Bezier.Point3D closePoint;
