@@ -17,7 +17,7 @@ public class FirstTest {
 
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
-        try (LED led = new LED(ledPin)) { // Pin numbers are BCM numbers.
+        try (LED led = new LED(ledPin)) { // PINs are BCM numbers.
             System.out.printf("Turning led %d ON\n", ledPin);
             led.on();
             SleepUtil.sleepSeconds(1);
