@@ -185,6 +185,16 @@ scala>
 ```
 
 ## Groovy on Pi
+> Use `sdkman` if groovy is not on your machine yet
+> ```
+> $ curl -s get.sdkman.io | bash
+> $ source ~/.sdkman/bin/sdkman-init.sh
+> $ sdk install groovy
+> $ groovy -version
+> ```
+> And this also install `groovyConsole`, a Desktop GUI.
+
+
 This is a small Groovy project that shows how to use Java classes written for the `Raspberry Pi`
 from a Groovy script.
 

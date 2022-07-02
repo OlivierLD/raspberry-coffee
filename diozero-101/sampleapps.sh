@@ -30,7 +30,7 @@ CLASS_NAME=$(echo "${CLASS_NAME}" | sed 's/\//./g')
 echo -e "You choose ${CLASS_NAME}"
 if [[ "${CLASS_NAME}" != "" ]]; then
   # Then execute
-  # Ask for extra parameter(s)
+  # Ask for extra parameter(s) ?
   echo -en "Any extra prm(s) ? > "
   read PRMS
   java -cp ${JAR} com.diozero.sampleapps.${CLASS_NAME} ${PRMS}
