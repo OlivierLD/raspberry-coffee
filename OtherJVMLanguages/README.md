@@ -242,8 +242,8 @@ from the project's root directory:
 
 #### Compilation
 ```
-$ cd src/kotlin
-$ kotlinc KotlinSensors.kt -cp ../../../I2C.SPI/build/classes/main/ -include-runtime -d sensors.jar
+$ cd src/main/kotlin
+$ kotlinc KotlinSensors.kt -cp ../../../../I2C.SPI/build/classes/main/ -include-runtime -d sensors.jar
 ```
 
 #### Execution

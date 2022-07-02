@@ -4,4 +4,4 @@
 //val temp = bme280.readTemperature()
 //println("Temp= $temp \u00baC")
 
-println("Gradle and kotlin do not like each other...")
+println("Gradle and kotlin do not like each other?..")
