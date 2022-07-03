@@ -28,8 +28,8 @@ fun main(args: Array<String>) {
     println("Button test... (20s)")
     Button(buttonPin).use { button ->
         LED(ledPin).use { led ->  // With resources, nice !
-            button.whenPressed { nanoTime -> led.on() }
-            button.whenReleased { nanoTime -> led.off() }
+            button.whenPressed { _ -> led.on() }
+            button.whenReleased { _ -> led.off() }
             SleepUtil.sleepSeconds(20)
         }
     }
