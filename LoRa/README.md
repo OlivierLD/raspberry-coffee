@@ -1,7 +1,7 @@
 # LoRa (Long Range)
 Shows how to use an RFM95W Lora Radio module
 
-This board has a SPI interface, the code in this directory could belong to the `I2C.SPI` project, but the intention was to also provide the code for the Arduino Uno.
+This board has a SPI interface, the code in this directory could belong to the `I2C-SPI` project, but the intention was to also provide the code for the Arduino Uno.
 
 I found the code I started from on the [Adafruit](https://www.adafruit.com/product/3072) website.
 

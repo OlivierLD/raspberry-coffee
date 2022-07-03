@@ -13,8 +13,8 @@ import static utils.TimeUtil.delay;
  */
 public class MeArmDemo {
 	// Servo MG90S
-	private static int servoMin = 130; // -90 degrees at 60 Hertz
-	private static int servoMax = 675; //  90 degrees at 60 Hertz
+	private final static int SERVO_MIN = 130; // -90 degrees at 60 Hertz
+	private final static int SERVO_MAX = 675; //  90 degrees at 60 Hertz
 
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		PCA9685 servoBoard = new PCA9685();
@@ -54,13 +54,13 @@ public class MeArmDemo {
 			move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, WAIT); // Open it
 			delay(250);
 			System.out.println("Give me something to grab.");
-			client.SpeechTools.speak("Hey, give me something to grab, hit return when I can catch it.");
+			utils.TextToSpeech.speak("Hey, give me something to grab, hit return when I can catch it.");
 			userInput("Hit return when I can catch it.");
 			System.out.println("Closing the claw");
 			move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, WAIT); // Close it
 			delay(250);
 			System.out.println("Thank you!");
-			client.SpeechTools.speak("Thank you!");
+			utils.TextToSpeech.speak("Thank you!");
 
 			// Turn left and drop it.
 			System.out.println("Turning left");

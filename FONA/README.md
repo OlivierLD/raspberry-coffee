@@ -1,4 +1,5 @@
 ## FONA in Java
+> FONA is using a Serial interface, No SPI, no I2C.
 
 ### An important detail
 Using the PI4J `com.pi4j.io.Serial` package, I was not able to write more than 16 characters to the Serial output.

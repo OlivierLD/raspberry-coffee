@@ -1,3 +1,4 @@
+#!/usr/bin/env groovy
 import com.diozero.devices.Button
 import com.diozero.devices.LED
 import com.diozero.util.SleepUtil

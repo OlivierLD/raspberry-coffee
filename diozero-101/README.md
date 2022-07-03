@@ -11,5 +11,14 @@ Run this first sample, from the `diozero-101` folder:
 $ ../gradlew shadowJar
 $ java -jar build/libs/diozero-101-1.0-all.jar
 ```
+For Kotlin:
+```
+$ kotlin -cp build/libs/diozero-101-1.0-all.jar diozerokt.FirstTestKt 
+```
+For Scala:
+```
+$ scala -cp build/libs/diozero-101-1.0-all.jar DioZero
+```
+For Groovy, use `groovyCOnsole`, and add the `diozero-101-1.0-all.jar` to the classpath.
 
 ---
