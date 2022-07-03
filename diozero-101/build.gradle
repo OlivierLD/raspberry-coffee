@@ -51,9 +51,10 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-//    implementation 'org.codehaus.groovy:groovy-all:2.4.6'
-    implementation 'org.codehaus.groovy:groovy-all:3.0.10'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.10' // 2.4.6'
 //    implementation 'org.codehaus.groovy:http-builder:0.4.0'
+//    implementation 'org.apache.groovy:groovy:4.0.3'
+
     implementation 'org.scala-lang:scala-library:2.13.3'
     implementation "org.scala-lang:scala-compiler:2.13.3"
 
