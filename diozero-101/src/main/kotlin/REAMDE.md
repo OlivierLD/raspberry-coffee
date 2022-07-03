@@ -1,4 +1,4 @@
-
+After installing Kotlin, try this:
 ```
 ../gradlew shadowJar
 cd src/main/kotlin/
