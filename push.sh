@@ -13,26 +13,22 @@ then
 fi
 #
 echo -e "Available atifacts:"
-for ART in `ls $REPO_ROOT` 
-do
+for ART in `ls $REPO_ROOT`; do
   echo -e "- ${ART}"
 done	
 echo -en "Enter the ARTIFACT (default is ${ARTIFACT}) > "
 read a
-if [[ "${a}" != "" ]]
-then
+if [[ "${a}" != "" ]]; then
   ARTIFACT=${a}
 fi
 #
 echo -e "Available versions:"
-for VERS in $(find $REPO_ROOT/$ARTIFACT/* -type d -maxdepth 1 -exec basename {} \;)
-do
+for VERS in $(find $REPO_ROOT/$ARTIFACT/* -type d -maxdepth 1 -exec basename {} \;); do
   echo -e "- ${VERS}"
 done	
 echo -en "Enter the VERSION (default is ${VERSION}) > "
 read a
-if [[ "${a}" != "" ]]
-then
+if [[ "${a}" != "" ]]; then
   VERSION=${a}
 fi
 #
@@ -50,8 +46,7 @@ echo -e "Command is:"
 echo -e "${COMMAND}"
 echo -en "Do we proceed ? > "
 read REPLY
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-then
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo "Canceled."
   exit 0
 else
