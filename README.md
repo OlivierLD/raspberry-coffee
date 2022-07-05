@@ -15,7 +15,8 @@ Main keywords:
 - `Java`
 - `PI4J`
 - `Gradle`
-- `git`
+- `Maven`
+- `github`
 
 ---
 
@@ -475,13 +476,8 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 
 ```
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
- Prompt> cd raspberry-coffee
- Prompt> pushd raspberry-coffee
- Prompt> # git submodule update --init
- Prompt> git clone https://github.com/OlivierLD/AstroComputer.git
- Prompt> popd
- Prompt> chmod +x gradlew
- Prompt> ./gradlew [--daemon | --no-daemon] build [--info]
+ Prompt> chmod +x gradlew  # if needed
+ Prompt> ./gradlew [--daemon | --no-daemon] build [--info] -x test
 ```
 > _Note_: On small-memory boards, use `--no-daemon`, like in:
 > ```
@@ -489,6 +485,8 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 > ```
 
 ---
+
+<!--
 > _Note_: We use git submodules, see <https://www.vogella.com/tutorials/GitSubmodules/article.html>  
 > AstroComputer is a git submodule  
 > Do a `git submodule update --init` from the root after a first clone.
@@ -513,8 +511,9 @@ plugins {
 After pulling `raspberry-coffee` for the first time, do a `git clone https://github.com/OlivierLD/AstroComputer.git` (from the `raspberry-coffee` directory), and you should be good to go.
 You can also do a `git submodule update --init`.
 Then the submodule can be refreshed (pulled) like any other one.
-
 ---
+-->
+
 
 >If you see a message like `VM is only supported on ARMv7+ VFP`, you probably need to downgrade your JDK (and JRE)
 > from 11 to 8.
@@ -545,7 +544,7 @@ The expected archive will be produced in the local `build/libs` directory.
 
 > _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
- Prompt> ../set.gradle.env
+ Prompt> ../set.gradle.env.sh
 ```
 
 > _Note:_ If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:
@@ -569,17 +568,18 @@ All the code provided here can be built from Gradle (all gradle scripts are prov
 The Raspberry Pi is self-sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
 
 But let us be honest, Integrated Development Environments (IDE) are quite cool.
-In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Cloud9 provides amazing features, on line.
+In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Cloud9 provides amazing features, on-line.
 Smaller ones like GreenFoot, BlueJ are also options to consider.
 
+Those two last ones might be able to run on a Raspberry Pi, but forget about the others..., they use way too much RAM. 
+The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion 
+and similar features are here to help. And I'm not even talking about the *remote debugging* features they provide as well.  
+Several IDEs are also providing remote development features, through SSH. That means that you run an IDE on a laptop, powerful enough, and the code you write
+sits on the Raspberry Pi. This could also be _**very**_ appealing.
 
-Those two last ones might be able to run on a Raspberry Pi, but forget about the others..., they use way too much RAM.
- The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion
- and similar features are here to help. And I'm not even talking about the *remote debugging* features they provide as well.
-
- So, as the Raspberry Pi is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry Pi.
- Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry Pi.
- I found it actually faster and more efficient than developing directly on the Raspberry Pi.
+So, as the Raspberry Pi is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry Pi.
+Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry Pi.
+I found it actually faster and more efficient than developing directly on the Raspberry Pi.
 
 ##### Something to keep in mind
 
