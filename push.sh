@@ -6,11 +6,10 @@ VERSION=1.0
 #
 echo -en "Enter the GROUP (default is ${GROUP}) > "
 read a
-if [[ "${a}" != "" ]]
-then
+if [[ "${a}" != "" ]]; then
   GROUP=${a}
-  echo -e "Group is ${GROUP}"
 fi
+echo -e "Group is ${GROUP}"
 #
 REPO_ROOT=${HOME}/.m2/repository/$(echo ${GROUP} | tr "." "/")
 #
@@ -32,13 +31,21 @@ if [[ "${LINE_NO}" != "" ]]; then
   while read -r line; do 
     if [[ "${NL}" == "${LINE_NO}" ]]; then
       ARTIFACT=$(echo ${line} | awk '{ print $1 }')
-      echo -e "Select artifact ${ARTIFACT}"
+      echo -e "Selected artifact ${ARTIFACT}"
       break
     fi
     NL=$(expr ${NL} + 1)
   done < artifacts.txt
 fi
-rm artifacts.txt
+rm artifacts.txt 2>/dev/null
+#
+if [[ "${ARTIFACT}" == "" ]]; then
+  echo -e "Try again, with a valid line number..."
+  echo "Canceled."
+  exit 0
+else
+  echo -e "Artifact will be ${ARTIFACT}, line ${LINE_NO}"
+fi  
 #
 echo -e "Available versions:"
 for VERS in $(find ${REPO_ROOT}/${ARTIFACT}/* -type d -maxdepth 1 -exec basename {} \;); do
