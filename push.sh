@@ -1,5 +1,4 @@
 #!/bin/bash
-REPO_ROOT=${HOME}/.m2/repository/oliv/raspi/coffee
 #
 GROUP=oliv.raspi.coffee
 ARTIFACT=http-tiny-server
@@ -10,10 +9,13 @@ read a
 if [[ "${a}" != "" ]]
 then
   GROUP=${a}
+  echo -e "Group is ${GROUP}"
 fi
 #
+REPO_ROOT=${HOME}/.m2/repository/$(echo ${GROUP} | tr "." "/")
+#
 echo -e "Available atifacts:"
-ls -lish $REPO_ROOT | awk '{ print $11 " (size:" $7 ", created " $8 " " $9 " " $10 ")" }' > artifacts.txt
+ls -lish ${REPO_ROOT} | awk '{ print $11 " (size:" $7 ", created " $8 " " $9 " " $10 ")" }' > artifacts.txt
 NL=0
 while read -r line; do 
   if [[ ${NL} -gt 0 ]]; then
@@ -22,10 +24,10 @@ while read -r line; do
   NL=$(expr ${NL} + 1)
 done < artifacts.txt
 #
-echo -en "Enter the ARTIFACT line number > "
+echo -en "Enter the ARTIFACT line number (default is ${ARTIFACT}) > "
 read LINE_NO
-ARTIFACT=
 if [[ "${LINE_NO}" != "" ]]; then
+  ARTIFACT=
   NL=0
   while read -r line; do 
     if [[ "${NL}" == "${LINE_NO}" ]]; then
@@ -48,7 +50,7 @@ if [[ "${a}" != "" ]]; then
   VERSION=${a}
 fi
 #
-JAR_FILE_NAME=${HOME}/.m2/repository/oliv/raspi/coffee/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar
+JAR_FILE_NAME=${REPO_ROOT}/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar
 DATE_MODIFIED=$(ls -lisah ${JAR_FILE_NAME} | awk '{ print $8 " " $9 " " $10 }')
 echo -e "${ARTIFACT} version ${VERSION}, was modified ${DATE_MODIFIED}"
 echo -en "Do we proceed ? > "
@@ -62,7 +64,7 @@ COMMAND="mvn install:install-file \
 -DgroupId=${GROUP} \
 -DartifactId=${ARTIFACT} \
 -Dversion=${VERSION} \
--Dfile=${HOME}/.m2/repository/oliv/raspi/coffee/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar \
+-Dfile=${REPO_ROOT}/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar \
 -Dpackaging=jar \
 -DgeneratePom=true \
 -DlocalRepositoryPath=. \
