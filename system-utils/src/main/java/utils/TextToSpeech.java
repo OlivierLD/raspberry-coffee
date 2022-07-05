@@ -11,7 +11,7 @@ public class TextToSpeech {
         speechTools.put("Linux", "espeak");
     }
 
-    public static void speak(String text) {
+    private static void speak(String text) {
         String speechTool = speechTools.get(System.getProperty("os.name"));
         if (speechTool == null) {
             throw new RuntimeException("No speech tool found in this os [" + System.getProperty("os.name") + "]");

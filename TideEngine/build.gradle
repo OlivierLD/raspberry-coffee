@@ -2,7 +2,7 @@ plugins {
   id 'java'
 //id 'scala'
   id 'idea'
-  id 'maven'
+  id 'maven' // Includes 'gradle install'. 'maven-publish' would say 'gradle publish'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 //id 'findbugs'
 }
@@ -27,7 +27,7 @@ dependencies {
   implementation 'com.google.code.gson:gson:2.8.0'
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'oracle:xmlparser:2.0'
-  implementation project(':RESTNauticalAlmanac')
+  //implementation project(':RESTNauticalAlmanac')
   implementation project(':AstroComputer')
   implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
   implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'

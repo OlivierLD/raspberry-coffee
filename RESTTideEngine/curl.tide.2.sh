@@ -9,8 +9,7 @@
 # date formats: https://www.cyberciti.biz/faq/linux-unix-formatting-dates-for-display/
 #
 VERBOSE=false
-if [[ "$1" == "--verbose" ]]
-then
+if [[ "$1" == "--verbose" ]]; then
   VERBOSE=true
 fi
 #
@@ -21,7 +20,7 @@ ESC_TIDE_STATION=$(echo ${TIDE_STATION/,/%2C})
 ESC_TIDE_STATION=$(echo ${ESC_TIDE_STATION/ /%20})
 # TIDE_STATION="Port-Tudy%2C%20France"  # Escaped for "Port-Tudy, France"
 # Dates, Duration format.
-NOW=$(date +"%Y-%m-%dT%T")
+NOW=$(date + "%Y-%m-%dT%T")
 SHORT_DATE=$(date +"%a %d-%m-%Y %H:%M")
 #
 REQUEST=$(echo -e "http://localhost:${HTTP_PORT}/tide/tide-stations/${ESC_TIDE_STATION}/wh?from=${NOW}&to=${NOW}")
@@ -31,8 +30,7 @@ CONTENT_TYPE_HEADER="Content-Type: application/json"
 UNIT="meter"
 PAYLOAD="{ \"timezone\": \"America/Los_Angeles\", \"step\": 10, \"unit\": \"${UNIT}\" }"
 #
-if [[ "${VERBOSE}" == "true" ]]
-then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "Request ${REQUEST}"
   echo -e "Headers ${CONTENT_TYPE_HEADER}"
   echo -e "Payload ${PAYLOAD}"
@@ -40,8 +38,7 @@ fi
 #
 COMMAND=$(echo curl --location --request POST "'${REQUEST}'" --header "'Content-Type: ${CONTENT_TYPE_HEADER}'" --data-raw "'${PAYLOAD}'")
 #
-if [[ "${VERBOSE}" == "true" ]]
-then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "--------------------------------------"
   echo -e "Executing :"
   echo ${COMMAND}

@@ -24,21 +24,16 @@ JAVA_OPTS="${JAVA_OPTS} -DdeltaT=AUTO"
 OPEN_BROWSER=false
 OP_LIST=true
 # Process script args
-for ARG in "$@"
-do
+for ARG in "$@"; do
 	echo -e "Managing prm ${ARG}"
-  if [[ ${ARG} == "--flavor:"* ]]
-	then
+  if [[ ${ARG} == "--flavor:"* ]]; then
 	  FLAVOR=${ARG#*:}
     JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=${FLAVOR}"
-  elif [[ ${ARG} == "--oplist:"* ]]
-	then
+  elif [[ ${ARG} == "--oplist:"* ]]; then
 	  OP_LIST=${ARG#*:}
-	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]
-	then
+	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]; then
     JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true"
-	elif [[ "$ARG" == "-b" ]] || [[ "$ARG" == "--browser" ]]
-	then
+	elif [[ "$ARG" == "-b" ]] || [[ "$ARG" == "--browser" ]]; then
 	  OPEN_BROWSER=true
   else
     echo -e "Parameter ${ARG} not managed."
@@ -47,8 +42,7 @@ do
 done
 #
 # Do a curl http://localhost:${HTTP_PORT}/tide/oplist
-if [[ "${OP_LIST}" == "true" ]]
-then
+if [[ "${OP_LIST}" == "true" ]]; then
   # ./oplist.sh &
   sleep 10 && \
       echo Invoking http://localhost:${HTTP_PORT}/tide/oplist && \
@@ -56,11 +50,9 @@ then
 fi
 #
 echo -e "For basic UI, from a browser, reach http://localhost:${HTTP_PORT}/web/index.html"
-if [[ "${OPEN_BROWSER}" == "true" ]]
-then
+if [[ "${OPEN_BROWSER}" == "true" ]]; then
   XDG=$(which xdg-open)
-  if [[ "${XDG}" != "" ]]
-  then
+  if [[ "${XDG}" != "" ]]; then
     sleep 10 && \
       echo -e "Opening 'http://localhost:${HTTP_PORT}/web/index.html' a browser..." && \
       xdg-open http://localhost:${HTTP_PORT}/web/index.html &

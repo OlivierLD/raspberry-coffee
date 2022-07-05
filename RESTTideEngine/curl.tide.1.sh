@@ -11,8 +11,7 @@
 # jq cheatsheet https://lzone.de/cheat-sheet/jq
 #
 VERBOSE=false
-if [[ "$1" == "--verbose" ]]
-then
+if [[ "$1" == "--verbose" ]]; then
   VERBOSE=true
 fi
 #
@@ -31,8 +30,7 @@ HEADER="Content-Type: application/json"
 # Payload is optional
 PAYLOAD="{ \"timezone\": \"America/Los_Angeles\", \"step\": 10, \"unit\": \"feet\" }"
 #
-if [[ "${VERBOSE}" == "true" ]]
-then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "Request ${REQUEST}"
   echo -e "Headers ${HEADER}"
   echo -e "Payload ${PAYLOAD}"
@@ -40,8 +38,7 @@ fi
 #
 COMMAND=$(echo curl --location --request POST "'${REQUEST}'" --header "'${HEADER}'" --data-raw "'${PAYLOAD}'")
 #
-if [[ "${VERBOSE}" == "true" ]]
-then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "--------------------------------------"
   echo -e "Executing :"
   echo ${COMMAND}
