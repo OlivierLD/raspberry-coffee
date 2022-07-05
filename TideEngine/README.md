@@ -1,5 +1,10 @@
-## Tide Engine  🌊
+## 🌊 Tide Engine
 ### In Java
+
+_**To be published as its own artifact on Maven.**_
+> See in the `build.gradle` 
+> - `maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }`
+> - `implementation 'oliv.raspi.coffee:TideEngine:1.0'`
 
 > Several implementations of the data storage (coefficients, tide stations) are
 > available. For now, we have
