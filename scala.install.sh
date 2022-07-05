@@ -1,4 +1,5 @@
 #!/bin/bash
+# Also consider sdkman
 sudo apt-get remove scala-library scala
 sudo wget www.scala-lang.org/files/archive/scala-2.11.8.deb
 sudo dpkg -i scala-2.11.8.deb

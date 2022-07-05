@@ -15,6 +15,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" }
     maven { url "https://www.datanucleus.org/downloads/maven2" }
 //  maven { url "http://lediouris.net/maven2" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 //compileJava.options.compilerArgs += ["-Xlint:none"]
@@ -32,7 +33,8 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20190722'
     implementation project(':common-utils')
     implementation project(':http-tiny-server')
-    implementation project(':AstroComputer')
+//    implementation project(':AstroComputer')
+    implementation 'astro.computer:astro.computer:1.0'
     implementation project(':I2C-SPI')
     implementation project(':Serial-IO')
     implementation project(':LoRa')

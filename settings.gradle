@@ -60,7 +60,7 @@ include "Joystick"
 include "jsonQL"
 include "diozero-101"
 // Git SubModule
-include(':AstroComputer')
+// include(':AstroComputer')
 // NMEA-mux-WebUI sub-projects
 include(':NMEA-mux-WebUI:full-server')
 include(':NMEA-mux-WebUI:minimal-mux')

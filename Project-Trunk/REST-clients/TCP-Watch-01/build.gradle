@@ -17,6 +17,7 @@ repositories {
   mavenCentral()
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -25,6 +26,7 @@ dependencies {
 
   implementation project(':http-tiny-server')
   implementation project(':common-utils')
-  implementation project(':AstroComputer')
+//  implementation project(':AstroComputer')
+  implementation 'astro.computer:astro.computer:1.0'
   implementation project(':I2C-SPI')
 }

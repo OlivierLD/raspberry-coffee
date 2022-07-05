@@ -16,7 +16,7 @@ repositories {
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
   maven { url "https://mvnrepository.com/artifact" }
-  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -26,7 +26,8 @@ dependencies {
   implementation project (':http-tiny-server')
 //  implementation project (':TideEngine')
   implementation 'oliv.raspi.coffee:TideEngine:1.0'
-  implementation project (':AstroComputer')
+//  implementation project (':AstroComputer')
+  implementation 'astro.computer:astro.computer:1.0'
   implementation project (':RESTNauticalAlmanac')
   implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
   //implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
