@@ -11,16 +11,17 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
-  mavenCentral()
   mavenLocal()
+  mavenCentral()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
   implementation 'com.google.code.gson:gson:2.8.0'
   implementation project(':http-tiny-server')
-  implementation project(':I2C-SPI') // For the Servo Board (PCA9685)
+  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0' // For the Servo Board (PCA9685)
 }
 
 shadowJar {

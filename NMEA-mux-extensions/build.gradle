@@ -33,11 +33,11 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20190722'
     implementation project(':common-utils')
     implementation project(':http-tiny-server')
-//    implementation project(':AstroComputer')
     implementation 'astro.computer:astro.computer:1.0'
-    implementation project(':I2C-SPI')
-    implementation project(':Serial-IO')
-    implementation project(':LoRa')
+    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+    implementation 'oliv.raspi.pi4j:Serial-IO:1.0'
+    implementation 'oliv.raspi.pi4j:LoRa:1.0'
+    implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
     implementation project(':NMEA-multiplexer')
     implementation project(':Project-Trunk:SunFlower') // For the Servo Board (PCA9685) and the LSM303
 }

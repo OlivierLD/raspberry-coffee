@@ -26,7 +26,6 @@ dependencies {
 
   implementation project(':http-tiny-server')
   implementation project(':common-utils')
-//  implementation project(':AstroComputer')
   implementation 'astro.computer:astro.computer:1.0'
-  implementation project(':I2C-SPI')
+  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
 }

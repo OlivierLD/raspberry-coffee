@@ -24,7 +24,8 @@ dependencies {
   implementation 'astro.computer:astro.computer:1.0'
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-  implementation project(':NMEA-multiplexer')
+//  implementation project(':NMEA-multiplexer')
+  implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
   implementation project(':Project-Trunk:PolarSmoother')
 }
 

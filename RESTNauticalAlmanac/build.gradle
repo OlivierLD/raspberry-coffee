@@ -28,7 +28,7 @@ dependencies {
 //  implementation project(':common-utils')
   implementation project(':http-tiny-server')
   implementation project(':NMEA-multiplexer')
-//  implementation project(':AstroComputer')  // a git submodule
+  implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
   implementation 'astro.computer:astro.computer:1.0'
   testImplementation 'junit:junit:4.13'
   testImplementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'

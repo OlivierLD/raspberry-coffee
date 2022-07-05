@@ -2,7 +2,7 @@
 
 #### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets
 
-> Project started in 2015.
+> This project was started in 2015.
 
 --- 
 
@@ -10,12 +10,30 @@
 - Different communication protocols
 - NMEA protocol implementations
 
+To make this repo a bit lighter and more flexible, it will depend on some code stored 
+in other git repos, and deployed as artifacts on a maven repo (hosted by Github, as explained [below](#a-maven-repo-in-github)).  
+Those other repos are:
+- <https://github.com/OlivierLD/raspberry-io-pi4j>, for PI4J devices implementations.
+  - This will provide - later - the possibility to also use other IO libraries for the communication required by break-out boards.
+- <https://github.com/OlivierLD/raspberry-sailor>, for navigation and sailing related pieces of code.
+- <https://github.com/OlivierLD/AstroComputer> for all kinds of celestial computations, in several languages.
+
+The maven repo where artifacts are deployed in a branch of this repo, at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See [below](#a-maven-repo-in-github) for more details.
+
+<!--
+ | Publish to Maven: https://dzone.com/articles/publish-your-artifacts-to-maven-central
+ +-->
+
+---
+
 Main keywords:
 - `Raspberry Pi`
-- `Java`
-- `PI4J`
+- `Java and JVM-related languages`
+- `PI4J, Sensors, Actuators`
+- `Navigation, Sailing, NMEA`
 - `Gradle`
-- `git`
+- `Maven`
+- `Github`
 
 ---
 
@@ -24,12 +42,12 @@ The project - and its different modules - are built using [`Gradle`](https://gra
 Some modules also use the `librxtx` library for Serial IO.  
 
 > Note: `WiringPi` is now deprecated (since 2019, apparently), which makes `PI4J v1.*` deprecated too.  
-> ...More to come.
+> ...More to come. Another way would be to use a library like `diozero`.
 
 ### Java
-Java can come in two flavors:
-- The Java Runtime Environment (JRE), that allows you to _run_ Java programs
-- The Java Development Kit (JDK), that also includes a JRE, and allows you to _develop_ Java programs.  
+Java downloads can come in two flavors:
+- The Java Runtime Environment (JRE), that allows you to _run_ Java programs (ie programs compiled to run on a JVM)
+- The Java Development Kit (JDK), a superset ot the JRE, that also allows you to _develop_ Java programs.  
 
 Obviously, we need a JDK.    
 Since 2019 or so, Java (JDK 11) comes with the RasPi OS.  
@@ -76,9 +94,9 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 >    implementation group: 'org.json', name: 'json', version: '20190722'
 >    implementation project(':http-tiny-server')
 >    implementation project(':common-utils')
->    implementation project(':I2C-SPI')
->    implementation project(':AstroComputer')
->    implementation project(':LoRa')    // Needed for a publisher
+>    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+>    implementation 'astro.computer:astro.computer:1.0'
+>    implementation 'oliv.raspi.pi4j:LoRa:1.0'    // Needed for a publisher
 > ```
 > Building the module with a `../gradlew shadowJar` will generate a **_single jar file_** named `./build/libs/NMEA-multiplexer-1.0-all.jar`, 
 > used for example in the script `ais.test.sh`:
@@ -91,7 +109,10 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 > ```
 > java -cp ./NMEA-multiplexer-1.0-all.jar nmea.consumers.client.AISClient
 > ```
-> 
+> _Think about that_: You might not be able to **build** (using the provided Gradle scripts) an application on a small board like a Raspberry Pi Zero,
+> but this small board could very well be big enough to **run** it comfortably.  
+> You build it from a big-enough machine, and you `scp` the jar to the one you want to run it on,
+> and be done with it.
 
 ### Gradle tweaks
 From the root of this project, you can run a full build, that would also tell you if everything is working.
@@ -108,18 +129,18 @@ $ ./gradlew clean build -x test
 ```
 To skip the Scala and Kotlin compilations, and the tests:
 ```
-$ ./gradlew clean build -x test -x :RasPISamples:compileScala \
-                                -x :OtherJVMLanguages:compileScala \
-                                -x :http-client-paradigm:compileScala \
-                                -x :http-client-paradigm:compileKotlin \
-                                -x :RESTClients:REST-assembler:compileScala \
-                                -x :Project-Trunk:System-Languages:compileKotlin \
-                                -x :Project-Trunk:System-Languages:compileScala \
-                                -x :Project-Trunk:Weather-Station-Implementation:compileScala \
-                                -x :Project-Trunk:REST-clients:REST-assembler:compileKotlin \
-                                -x :Project-Trunk:REST-clients:REST-assembler:compileScala
+$ ./gradlew clean build -x test \
+                        -x :RasPISamples:compileScala \
+                        -x :OtherJVMLanguages:compileScala \
+                        -x :http-client-paradigm:compileScala \
+                        -x :http-client-paradigm:compileKotlin \
+                        -x :Project-Trunk:System-Languages:compileKotlin \
+                        -x :Project-Trunk:System-Languages:compileScala \
+                        -x :Project-Trunk:Weather-Station-Implementation:compileScala \
+                        -x :Project-Trunk:REST-clients:REST-assembler:compileKotlin \
+                        -x :Project-Trunk:REST-clients:REST-assembler:compileScala
 ```
-Some parts of this project use `OpenCV`, that need to be installed separately. If you've not installed it,
+_**Warning**_: Some parts of this project use `OpenCV`, that need to be installed separately. If you've not installed it,
 or wish to skip those steps, use
 ```
 $ ./gradlew clean build -x :opencv:compileJava -x :Project-Trunk:WebcamTemplate:compileJava
@@ -130,7 +151,7 @@ To know the structure of the full project:
 $ ./gradlew projects [--info]
 ```
 ### git
-If you can read this, you obviously know what `git` is...
+If you can read this, you obviously know what `git` is... And just in case, Google is your friend (for that part).
 
 ### Integrated Development Environment (IDE)
 IDEs are not mandatory (any editor, like `vi`, which works everywhere Linux or any [BSD](https://en.wikipedia.org/wiki/Berkeley_Software_Distribution) clone runs, would be good enough), but they make Java development _much_ easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
@@ -475,13 +496,8 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 
 ```
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
- Prompt> cd raspberry-coffee
- Prompt> pushd raspberry-coffee
- Prompt> # git submodule update --init
- Prompt> git clone https://github.com/OlivierLD/AstroComputer.git
- Prompt> popd
- Prompt> chmod +x gradlew
- Prompt> ./gradlew [--daemon | --no-daemon] build [--info]
+ Prompt> chmod +x gradlew  # if needed
+ Prompt> ./gradlew [--daemon | --no-daemon] build [--info] -x test
 ```
 > _Note_: On small-memory boards, use `--no-daemon`, like in:
 > ```
@@ -489,9 +505,11 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 > ```
 
 ---
-> _Note_: We use git submodules, see <https://www.vogella.com/tutorials/GitSubmodules/article.html>  
-> AstroComputer is a git submodule  
-> Do a `git submodule update --init` from the root after a first clone.
+
+<!--
+_Note_: We use git submodules, see https://www.vogella.com/tutorials/GitSubmodules/article.html  
+AstroComputer is a git submodule  
+Do a `git submodule update --init` from the root after a first clone.
 ```
 From the root of the repo (raspberry-coffee)
 $ git submodule add https://github.com/OlivierLD/AstroComputer.git
@@ -513,8 +531,8 @@ plugins {
 After pulling `raspberry-coffee` for the first time, do a `git clone https://github.com/OlivierLD/AstroComputer.git` (from the `raspberry-coffee` directory), and you should be good to go.
 You can also do a `git submodule update --init`.
 Then the submodule can be refreshed (pulled) like any other one.
-
 ---
+-->
 
 >If you see a message like `VM is only supported on ARMv7+ VFP`, you probably need to downgrade your JDK (and JRE)
 > from 11 to 8.
@@ -545,7 +563,7 @@ The expected archive will be produced in the local `build/libs` directory.
 
 > _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
- Prompt> ../set.gradle.env
+ Prompt> ../set.gradle.env.sh
 ```
 
 > _Note:_ If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:
@@ -558,7 +576,6 @@ Or you can also set it at runtime:
 ```
  Prompt> ../gradlew clean shadowJar -Dhttp.proxyHost=www-proxy.domain.com -Dhttp.proxyPost=80 -Dhttps.proxyHost=www-proxy.domain.com -Dhttps.proxyPost=80
 ```
-
 ---
 ### Developing _on_ the Raspberry Pi, or Developing _for_ the Raspberry Pi ?
 
@@ -569,31 +586,32 @@ All the code provided here can be built from Gradle (all gradle scripts are prov
 The Raspberry Pi is self-sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
 
 But let us be honest, Integrated Development Environments (IDE) are quite cool.
-In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Cloud9 provides amazing features, on line.
+In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Cloud9 provides amazing features, on-line.
 Smaller ones like GreenFoot, BlueJ are also options to consider.
 
+Those two last ones might be able to run on a Raspberry Pi, but forget about the others..., they use way too much RAM. 
+The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion 
+and similar features are here to help. And I'm not even talking about the *remote debugging* features they provide as well.  
+Several IDEs are also providing remote development features, through SSH. That means that you run an IDE on a laptop, powerful enough, and the code you write
+sits on the Raspberry Pi. This could also be _**very**_ appealing.
 
-Those two last ones might be able to run on a Raspberry Pi, but forget about the others..., they use way too much RAM.
- The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion
- and similar features are here to help. And I'm not even talking about the *remote debugging* features they provide as well.
-
- So, as the Raspberry Pi is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry Pi.
- Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry Pi.
- I found it actually faster and more efficient than developing directly on the Raspberry Pi.
+So, as the Raspberry Pi is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry Pi.
+Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry Pi.
+I found it actually faster and more efficient than developing directly on the Raspberry Pi.
 
 ##### Something to keep in mind
 
- The Java Virtual Machine (JVM) implements the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**.
- In other words, you run the code on the Raspberry Pi,
- but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
- This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
- This will make your life considerably easier than if you used another language missing it (like Python, C, and many others).
- It uses TCP between the debugger and the debuggee.
+The Java Virtual Machine (JVM) implements the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**.
+In other words, you run the code on the Raspberry Pi,
+but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
+This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
+This will make your life considerably easier than if you used another language missing it (like Python, C, and many others).
+It uses TCP between the debugger and the debuggee.
 
 ---
 
 ### Raspberry Pi, a possible thing of the Internet of Things...
-  * The Raspberry Pi is a fully featured Linux computer, which can - as such - connect to the Internet.
+  * The Raspberry Pi is a _fully featured_ Linux computer, which can - as such - connect to the Internet.
   * The Raspberry Pi has a General Purpose Input Output (GPIO) interface that allows it to drive all kind of electronic components, from a simple LED to a complex robot, and including all kind of sensors (GPS, light resistors, pressure sensors, temperature sensors, all kinds!).
 None of the above is new. Connecting to the Internet does not impress anyone anymore. Driving a robot, modern kitchens are full of robots, cars are loaded with electronic components...
 **But** what if we put those two together, with the Raspberry Pi sitting in between.
@@ -609,7 +627,7 @@ The snippets provided in this project are here to help in this kind of context. 
 
 Several projects are featured here:
   * Basic GPIO interaction
-  * Two Leds
+  * Two Light Emitting Diodes (LEDs)
   * Use the Raspberry Pi to turn LEDs on and off, **through email** ([with doc](http://www.lediouris.net/RaspberryPI/email/readme.html))
   * Read Serial Port ([with doc](http://www.lediouris.net/RaspberryPI/serial/readme.html))
   * Read _and parse_ NMEA Data from a GPS ([with doc](http://www.lediouris.net/RaspberryPI/GPS/readme.html))
@@ -675,13 +693,14 @@ HTTP/REST sounds much nicer. We **will** provide examples, Java pinging a Python
 
 Same works also for Scala (JVM based language), NodeJS, ... whatever understands HTTP.
 
-It does indeed open **a lot** of possibilities.
+It does indeed open **_a lot_** of possibilities.
 
 The common protocol is REST over HTTP (JSON - or XML - is also nice to have, to format the conveyed data).
 
 Then it becomes what latin was in Europe in the middle-age: a _common communication media_.
 
-> The same must have happened in Arabic, Asian, and more communities, please don't get me wrong.
+> Latin is not the only example of communication between people speaking different languages. The same must have happened in Arabic, Asian, and more communities, please don't get me wrong.  
+> And if you do not know it yet, take a listen to what people speak in places like California: 95% of the people have an accent!
 
 I like Java and related technologies.
 

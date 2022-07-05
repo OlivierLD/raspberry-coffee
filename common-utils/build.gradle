@@ -21,7 +21,7 @@ repositories {
 // sourceCompatibility = 1.8
 
 dependencies {
-    // TODO Make version without PI4J (used in PinUtils)
+    // TODO Make version without PI4J (used in PinUtil)
 //    implementation 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
 //    implementation 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
 //    implementation 'com.pi4j:pi4j-parent:1.2'
