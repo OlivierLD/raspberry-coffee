@@ -17,7 +17,7 @@ Those other repos are:
 - <https://github.com/OlivierLD/raspberry-sailor>, for navigation and sailing related pieces of code.
 - <https://github.com/OlivierLD/AstroComputer> for all kinds of celestial computations, in several languages.
 
-The maven repo where artifacts are deployed is at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See below for more details.
+The maven repo where artifacts are deployed in a branch of this repo, at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See [below](#a-maven-repo-in-github) for more details.
 
 ---
 
