@@ -23,11 +23,12 @@ The maven repo where artifacts are deployed in a branch of this repo, at <https:
 
 Main keywords:
 - `Raspberry Pi`
-- `Java`
-- `PI4J`
+- `Java and JVM-related languages`
+- `PI4J, Sensors, Actuators`
+- `Navigation, Sailing, NMEA`
 - `Gradle`
 - `Maven`
-- `github`
+- `Github`
 
 ---
 
