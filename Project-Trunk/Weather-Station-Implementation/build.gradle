@@ -29,6 +29,7 @@ repositories {
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -38,10 +39,11 @@ dependencies {
   implementation 'com.sun.mail:javax.mail:1.6.2'
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-//  implementation project(':I2C-SPI')
-//  implementation project(':ADC')
+  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+  implementation 'oliv.raspi.pi4j:ADC:1.0'
   implementation project(':WeatherStation')
-//  implementation project(':Adafruit-IO')
+  implementation project(':Adafruit-IO')
+  implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
   implementation project(':NMEA-multiplexer')
   testImplementation 'junit:junit:4.13'
 }

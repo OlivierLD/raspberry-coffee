@@ -17,12 +17,13 @@ repositories {
   mavenLocal()
   maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
 }
 
 dependencies {
   //  implementation 'com.pi4j:pi4j-core:1.2'
   implementation 'org.rxtx:rxtx:2.1.7'
   implementation project(':common-utils')
-//  implementation project(":Serial-IO")
+  implementation "oliv.raspi.pi4j:Serial-IO:1.0"
   implementation project(':NMEA-multiplexer')
 }

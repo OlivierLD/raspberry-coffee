@@ -30,6 +30,7 @@ repositories {
     mavenCentral()
     mavenLocal()
 //    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
 }
 
 dependencies {
@@ -41,7 +42,7 @@ dependencies {
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation project(":common-utils")
     implementation project(':http-tiny-server')
-//    implementation project(':ADC')
+    implementation 'oliv.raspi.pi4j:ADC:1.0'
 }
 
 shadowJar {

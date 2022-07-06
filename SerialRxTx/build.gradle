@@ -9,9 +9,10 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
-    mavenCentral()
     mavenLocal()
+    mavenCentral()
     maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
 }
 
 //sourceSets {
@@ -30,7 +31,7 @@ repositories {
 dependencies {
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation project(':common-utils')
-//    implementation project(':Serial-IO')
+    implementation 'oliv.raspi.pi4j:Serial-IO:1.0'
 }
 
 shadowJar {

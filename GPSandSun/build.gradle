@@ -23,4 +23,5 @@ dependencies {
     implementation project (':common-utils')
     implementation 'astro.computer:astro.computer:1.0'      // In raspberry-maven
     implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
+    implementation project (':NMEA-multiplexer')
 }

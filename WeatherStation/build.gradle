@@ -13,12 +13,13 @@ repositories {
   mavenCentral()
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
   implementation project(':common-utils')
-//  implementation project(':I2C-SPI')
+  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
 }
 
 shadowJar {

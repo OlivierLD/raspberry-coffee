@@ -23,8 +23,10 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -47,9 +49,9 @@ dependencies {
 
     implementation 'com.pi4j:pi4j-core:1.2'
 
-//    implementation project(':I2C-SPI')
-//    implementation project(':MindWave')
-//    implementation project(':SevenSegDisplay')
+    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+    implementation 'oliv.raspi.pi4j:MindWave:1.0'
+    implementation 'oliv.raspi.pi4j:SevenSegDisplay:1.0'
 }
 
 //sourceSets {

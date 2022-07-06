@@ -18,6 +18,7 @@ repositories {
   mavenCentral()
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
 }
 
 dependencies {
@@ -25,8 +26,8 @@ dependencies {
   implementation 'org.json:json:20141113'
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-//  implementation project(':I2C-SPI')
-//  implementation project(':Arduino-RaspberryPI')
-//  implementation project(':PhoneKeyboard3x4')
-//  implementation project(':SevenSegDisplay')
+  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+  implementation 'oliv.raspi.pi4j:Arduino-RaspberryPI:1.0'
+  implementation 'oliv.raspi.pi4j:PhoneKeyboard3x4:1.0'
+  implementation 'oliv.raspi.pi4j:SevenSegDisplay:1.0'
 }
