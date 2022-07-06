@@ -38,12 +38,12 @@ The project - and its different modules - are built using [`Gradle`](https://gra
 Some modules also use the `librxtx` library for Serial IO.  
 
 > Note: `WiringPi` is now deprecated (since 2019, apparently), which makes `PI4J v1.*` deprecated too.  
-> ...More to come. Another way would be tu use a library like `diozero`.
+> ...More to come. Another way would be to use a library like `diozero`.
 
 ### Java
-Java can come in two flavors:
-- The Java Runtime Environment (JRE), that allows you to _run_ Java programs
-- The Java Development Kit (JDK), that also includes a JRE, and allows you to _develop_ Java programs.  
+Java downloads can come in two flavors:
+- The Java Runtime Environment (JRE), that allows you to _run_ Java programs (ie programs compiled to run on a JVM)
+- The Java Development Kit (JDK), a superset ot the JRE, that also allows you to _develop_ Java programs.  
 
 Obviously, we need a JDK.    
 Since 2019 or so, Java (JDK 11) comes with the RasPi OS.  
@@ -105,7 +105,10 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 > ```
 > java -cp ./NMEA-multiplexer-1.0-all.jar nmea.consumers.client.AISClient
 > ```
-> 
+> _Think about that_: You might not be able to **build** (using the provided Gradle scripts) an application on a small board like a Raspberry Pi Zero,
+> but this small board could very well be big enough to **run** it comfortably.  
+> You build it from a big-enough machine, and you `scp` the jar to the one you want to run it on,
+> and be done with it.
 
 ### Gradle tweaks
 From the root of this project, you can run a full build, that would also tell you if everything is working.
@@ -122,17 +125,18 @@ $ ./gradlew clean build -x test
 ```
 To skip the Scala and Kotlin compilations, and the tests:
 ```
-$ ./gradlew clean build -x test -x :RasPISamples:compileScala \
-                                -x :OtherJVMLanguages:compileScala \
-                                -x :http-client-paradigm:compileScala \
-                                -x :http-client-paradigm:compileKotlin \
-                                -x :Project-Trunk:System-Languages:compileKotlin \
-                                -x :Project-Trunk:System-Languages:compileScala \
-                                -x :Project-Trunk:Weather-Station-Implementation:compileScala \
-                                -x :Project-Trunk:REST-clients:REST-assembler:compileKotlin \
-                                -x :Project-Trunk:REST-clients:REST-assembler:compileScala
+$ ./gradlew clean build -x test \
+                        -x :RasPISamples:compileScala \
+                        -x :OtherJVMLanguages:compileScala \
+                        -x :http-client-paradigm:compileScala \
+                        -x :http-client-paradigm:compileKotlin \
+                        -x :Project-Trunk:System-Languages:compileKotlin \
+                        -x :Project-Trunk:System-Languages:compileScala \
+                        -x :Project-Trunk:Weather-Station-Implementation:compileScala \
+                        -x :Project-Trunk:REST-clients:REST-assembler:compileKotlin \
+                        -x :Project-Trunk:REST-clients:REST-assembler:compileScala
 ```
-Some parts of this project use `OpenCV`, that need to be installed separately. If you've not installed it,
+_**Warning**_: Some parts of this project use `OpenCV`, that need to be installed separately. If you've not installed it,
 or wish to skip those steps, use
 ```
 $ ./gradlew clean build -x :opencv:compileJava -x :Project-Trunk:WebcamTemplate:compileJava
@@ -143,7 +147,7 @@ To know the structure of the full project:
 $ ./gradlew projects [--info]
 ```
 ### git
-If you can read this, you obviously know what `git` is...
+If you can read this, you obviously know what `git` is... And just in case, Google is your friend (for that part).
 
 ### Integrated Development Environment (IDE)
 IDEs are not mandatory (any editor, like `vi`, which works everywhere Linux or any [BSD](https://en.wikipedia.org/wiki/Berkeley_Software_Distribution) clone runs, would be good enough), but they make Java development _much_ easier. Several are available for free (NetBeans, Eclipse, IntelliJ, BlueJ, VisualCode...).
