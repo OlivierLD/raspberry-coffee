@@ -10,6 +10,17 @@
 - Different communication protocols
 - NMEA protocol implementations
 
+To make this repo a bit lighter and more flexible, it will depend on some code stored 
+in other git repos, and deployed as artifacts on a maven repo (hosted by github, as explained below).  
+Those other repos are:
+- <https://github.com/OlivierLD/raspberry-io-pi4j>, for PI4J devices implementations.
+- <https://github.com/OlivierLD/raspberry-sailor>, for navigation and sailing related pieces of code.
+- <https://github.com/OlivierLD/AstroComputer> for all kinds of celestial computations, in several languages.
+
+The maven repo where artifacts are deployed is at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See below for more details.
+
+---
+
 Main keywords:
 - `Raspberry Pi`
 - `Java`
@@ -25,7 +36,7 @@ The project - and its different modules - are built using [`Gradle`](https://gra
 Some modules also use the `librxtx` library for Serial IO.  
 
 > Note: `WiringPi` is now deprecated (since 2019, apparently), which makes `PI4J v1.*` deprecated too.  
-> ...More to come.
+> ...More to come. Another way would be tu use a library like `diozero`.
 
 ### Java
 Java can come in two flavors:
@@ -77,9 +88,9 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 >    implementation group: 'org.json', name: 'json', version: '20190722'
 >    implementation project(':http-tiny-server')
 >    implementation project(':common-utils')
->    implementation project(':I2C-SPI')
->    implementation project(':AstroComputer')
->    implementation project(':LoRa')    // Needed for a publisher
+>    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+>    implementation 'astro.computer:astro.computer:1.0'
+>    implementation 'oliv.raspi.pi4j:LoRa:1.0'    // Needed for a publisher
 > ```
 > Building the module with a `../gradlew shadowJar` will generate a **_single jar file_** named `./build/libs/NMEA-multiplexer-1.0-all.jar`, 
 > used for example in the script `ais.test.sh`:
@@ -113,7 +124,6 @@ $ ./gradlew clean build -x test -x :RasPISamples:compileScala \
                                 -x :OtherJVMLanguages:compileScala \
                                 -x :http-client-paradigm:compileScala \
                                 -x :http-client-paradigm:compileKotlin \
-                                -x :RESTClients:REST-assembler:compileScala \
                                 -x :Project-Trunk:System-Languages:compileKotlin \
                                 -x :Project-Trunk:System-Languages:compileScala \
                                 -x :Project-Trunk:Weather-Station-Implementation:compileScala \

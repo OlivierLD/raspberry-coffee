@@ -62,10 +62,10 @@ tasks.register('info') {
                 "-x :OtherJVMLanguages:compileScala " +
                 "-x :http-client-paradigm:compileScala " +
                 "-x :http-client-paradigm:compileKotlin " +
-                "-x :RESTClients:REST-assembler:compileScala " +
                 "-x :Project-Trunk:System-Languages:compileKotlin " +
                 "-x :Project-Trunk:System-Languages:compileScala " +
                 "-x :Project-Trunk:Weather-Station-Implementation:compileScala " +
+                "-x :Project-Trunk:REST-clients:REST-assembler:compileScala " +
                 "-x :Project-Trunk:REST-clients:REST-assembler:compileKotlin " +
                 "-x :Project-Trunk:REST-clients:REST-assembler:compileScala"
     println "| On low-RAM boards, use --no-daemon, like in ./gradlew --no-daemon clean build "
