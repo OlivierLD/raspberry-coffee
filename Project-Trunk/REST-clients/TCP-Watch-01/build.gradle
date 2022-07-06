@@ -28,5 +28,5 @@ dependencies {
   implementation project(':common-utils')
 //  implementation project(':AstroComputer')
   implementation 'astro.computer:astro.computer:1.0'
-  implementation project(':I2C-SPI')
+//  implementation project(':I2C-SPI')
 }

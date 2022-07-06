@@ -29,6 +29,6 @@ dependencies {
   implementation 'org.java-websocket:Java-WebSocket:1.5.2'
   implementation project(':common-utils')
   implementation project(':HanoiTower')
-  implementation project(':ADC')
-  implementation project(':I2C-SPI')
+//  implementation project(':ADC')
+//  implementation project(':I2C-SPI')
 }

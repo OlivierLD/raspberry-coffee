@@ -27,8 +27,8 @@ dependencies {
 //  implementation project(':AstroComputer')
   implementation 'astro.computer:astro.computer:1.0'
   implementation project(':RESTNauticalAlmanac')   // For the astronomical calculus
-  implementation project(':I2C-SPI')               // For the Servo Board (PCA9685)
-  implementation project(':ADC')                   // For the MCP3008
+//  implementation project(':I2C-SPI')               // For the Servo Board (PCA9685)
+//  implementation project(':ADC')                   // For the MCP3008
 }
 
 shadowJar {

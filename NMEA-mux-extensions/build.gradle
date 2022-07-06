@@ -35,9 +35,9 @@ dependencies {
     implementation project(':http-tiny-server')
 //    implementation project(':AstroComputer')
     implementation 'astro.computer:astro.computer:1.0'
-    implementation project(':I2C-SPI')
-    implementation project(':Serial-IO')
-    implementation project(':LoRa')
+//    implementation project(':I2C-SPI')
+//    implementation project(':Serial-IO')
+//    implementation project(':LoRa')
     implementation project(':NMEA-multiplexer')
     implementation project(':Project-Trunk:SunFlower') // For the Servo Board (PCA9685) and the LSM303
 }

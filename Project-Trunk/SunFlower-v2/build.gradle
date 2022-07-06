@@ -28,12 +28,11 @@ dependencies {
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'oracle:xmlparser:2.0'
   implementation 'org.rxtx:rxtx:2.1.7'
-  implementation project(':Serial-IO')
+//  implementation project(':Serial-IO')
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-  implementation project(':I2C-SPI')        // For the Motor Hat , includes common-utils (AstroComputer). gradlew dependencies is your friend.
+//  implementation project(':I2C-SPI')        // For the Motor Hat , includes common-utils (AstroComputer). gradlew dependencies is your friend.
   implementation project(':NMEA-multiplexer')
-//  implementation project(':AstroComputer')
   implementation 'astro.computer:astro.computer:1.0'
 }
 

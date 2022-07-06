@@ -30,7 +30,7 @@ repositories {
 dependencies {
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation project(':common-utils')
-    implementation project(':Serial-IO')
+//    implementation project(':Serial-IO')
 }
 
 shadowJar {

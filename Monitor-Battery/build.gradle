@@ -26,9 +26,9 @@ dependencies {
     implementation 'org.fusesource.jansi:jansi:1.11'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
     implementation project(':common-utils')
-    implementation project(':ADC')
-    implementation project(':I2C-SPI')
-    implementation project(':FONA')
+//    implementation project(':ADC')
+//    implementation project(':I2C-SPI')
+//    implementation project(':FONA')
     implementation project(':Adafruit-IO')
 }
 

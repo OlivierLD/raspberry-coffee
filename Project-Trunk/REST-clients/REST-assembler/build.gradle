@@ -64,7 +64,7 @@ dependencies {
 
     implementation project(':common-utils')
     implementation project(':http-tiny-server')
-    implementation project(':ADC')
+//    implementation project(':ADC')
 }
 
 //task swaggerClj(type: JavaExec, description: "Generate Clojure server code for the ligth and relay example") {

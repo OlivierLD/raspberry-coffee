@@ -2,11 +2,9 @@ rootProject.name = 'raspberry-coffee'
 //
 include 'Adafruit-IO'
 include 'Algebra'
-include 'Relay'
 include 'Relay.by.email'
 include 'RasPISamples'
 include 'SerialRxTx'
-include 'SevenSegDisplay'
 include 'system-utils'
 include 'WeatherStation'
 include 'OtherJVMLanguages'
@@ -26,8 +24,9 @@ include "http-client-paradigm"
 include "http-client-samples"
 include "polo-shirt"
 include "ReadSerialPort"
+include "GPSandSun"
 include "RESTNavServer"
-include "TideEngine"
+//include "TideEngine"
 include "RESTTideEngine"
 include "RESTNauticalAlmanac"
 include 'RESTImageProcessor'

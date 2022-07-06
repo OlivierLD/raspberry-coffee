@@ -38,12 +38,12 @@ dependencies {
   implementation 'com.sun.mail:javax.mail:1.6.2'
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-  implementation project(':I2C-SPI')
-  implementation project(':ADC')
+//  implementation project(':I2C-SPI')
+//  implementation project(':ADC')
   implementation project(':WeatherStation')
-  implementation project(':Adafruit-IO')
+//  implementation project(':Adafruit-IO')
   implementation project(':NMEA-multiplexer')
-  testImplementation group: 'junit', name: 'junit', version: '4.13'
+  testImplementation 'junit:junit:4.13'
 }
 
 compileJava {

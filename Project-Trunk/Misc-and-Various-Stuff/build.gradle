@@ -25,8 +25,8 @@ dependencies {
   implementation 'org.json:json:20141113'
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-  implementation project(':I2C-SPI')
-  implementation project(':Arduino-RaspberryPI')
-  implementation project(':PhoneKeyboard3x4')
-  implementation project(':SevenSegDisplay')
+//  implementation project(':I2C-SPI')
+//  implementation project(':Arduino-RaspberryPI')
+//  implementation project(':PhoneKeyboard3x4')
+//  implementation project(':SevenSegDisplay')
 }

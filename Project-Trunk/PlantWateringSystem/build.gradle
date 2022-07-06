@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation project(":common-utils")
     implementation project(':http-tiny-server')
-    implementation project(':ADC')
+//    implementation project(':ADC')
 }
 
 shadowJar {

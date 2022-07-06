@@ -47,9 +47,9 @@ dependencies {
 
     implementation 'com.pi4j:pi4j-core:1.2'
 
-    implementation project(':I2C-SPI')
-    implementation project(':MindWave')
-    implementation project(':SevenSegDisplay')
+//    implementation project(':I2C-SPI')
+//    implementation project(':MindWave')
+//    implementation project(':SevenSegDisplay')
 }
 
 //sourceSets {
