@@ -1,4 +1,4 @@
-# Maven repo in GitHub for RaspberryCoffee
+# A Maven repo on GitHub for RaspberryCoffee and related projects
 See good article at <https://gist.github.com/fernandezpablo85/03cf8b0cd2e7d8527063>
 
 > Another possibility: <https://repsy.io/>
@@ -36,7 +36,7 @@ $ mvn install:install-file \
       -DlocalRepositoryPath=. \
       -DcreateChecksum=true
 ```
-> The script `push.sh` will help you with that.
+> The script `push.sh` will help you with that, prompting you for the required data.
 
 then `git add <whatever-you-added>`, `git commit`, and `git push` on the `repository` branch.
 
@@ -58,15 +58,14 @@ Example: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repositor
 ```
 
 - From Gradle
-```groovy
-dependencies {
+```groovygit
     . . .
     implementation 'oliv.raspi.coffee:common-utils:1.0'
     . . .
 }    
 ```
 
-> Note, for Java
-> - Make sure the artifacts are compiled with the right Java version before committing and pushing them
+> **Note, for Java**
+> - Make sure the artifacts are compiled with the right Java version before committing and pushing them, some Raspberry Pi Zero might not like Java above version 8...
 
 ---
