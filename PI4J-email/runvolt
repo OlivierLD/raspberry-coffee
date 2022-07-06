@@ -1,9 +1,0 @@
-#!/bin/bash
-CP=
-CP=$CP:./build/libs/PI4J-email-1.0-all.jar
-#
-OPT=
-# OPT=-Dverbose=true
-#
-sudo java $OPT -classpath $CP samples.ADCReader $*
-

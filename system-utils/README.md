@@ -1,2 +1,2 @@
 # Misc utilities and Samples
-... For the Raspberry Pi.
+...Scripts and code snippets for the Raspberry Pi.

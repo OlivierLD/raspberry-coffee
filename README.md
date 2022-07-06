@@ -583,17 +583,17 @@ I found it actually faster and more efficient than developing directly on the Ra
 
 ##### Something to keep in mind
 
- The Java Virtual Machine (JVM) implements the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**.
- In other words, you run the code on the Raspberry Pi,
- but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
- This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
- This will make your life considerably easier than if you used another language missing it (like Python, C, and many others).
- It uses TCP between the debugger and the debuggee.
+The Java Virtual Machine (JVM) implements the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**.
+In other words, you run the code on the Raspberry Pi,
+but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
+This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
+This will make your life considerably easier than if you used another language missing it (like Python, C, and many others).
+It uses TCP between the debugger and the debuggee.
 
 ---
 
 ### Raspberry Pi, a possible thing of the Internet of Things...
-  * The Raspberry Pi is a fully featured Linux computer, which can - as such - connect to the Internet.
+  * The Raspberry Pi is a _fully featured_ Linux computer, which can - as such - connect to the Internet.
   * The Raspberry Pi has a General Purpose Input Output (GPIO) interface that allows it to drive all kind of electronic components, from a simple LED to a complex robot, and including all kind of sensors (GPS, light resistors, pressure sensors, temperature sensors, all kinds!).
 None of the above is new. Connecting to the Internet does not impress anyone anymore. Driving a robot, modern kitchens are full of robots, cars are loaded with electronic components...
 **But** what if we put those two together, with the Raspberry Pi sitting in between.
@@ -609,7 +609,7 @@ The snippets provided in this project are here to help in this kind of context. 
 
 Several projects are featured here:
   * Basic GPIO interaction
-  * Two Leds
+  * Two Light Emitting Diodes (LEDs)
   * Use the Raspberry Pi to turn LEDs on and off, **through email** ([with doc](http://www.lediouris.net/RaspberryPI/email/readme.html))
   * Read Serial Port ([with doc](http://www.lediouris.net/RaspberryPI/serial/readme.html))
   * Read _and parse_ NMEA Data from a GPS ([with doc](http://www.lediouris.net/RaspberryPI/GPS/readme.html))
@@ -675,13 +675,14 @@ HTTP/REST sounds much nicer. We **will** provide examples, Java pinging a Python
 
 Same works also for Scala (JVM based language), NodeJS, ... whatever understands HTTP.
 
-It does indeed open **a lot** of possibilities.
+It does indeed open **_a lot_** of possibilities.
 
 The common protocol is REST over HTTP (JSON - or XML - is also nice to have, to format the conveyed data).
 
 Then it becomes what latin was in Europe in the middle-age: a _common communication media_.
 
-> The same must have happened in Arabic, Asian, and more communities, please don't get me wrong.
+> Latin is not the only example of communication between people speaking different languages. The same must have happened in Arabic, Asian, and more communities, please don't get me wrong.  
+> And if you do not know it yet, take a listen to what people speak in places like California: 95% of the people have an accent!
 
 I like Java and related technologies.
 

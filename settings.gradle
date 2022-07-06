@@ -1,27 +1,11 @@
 rootProject.name = 'raspberry-coffee'
 //
 include 'Adafruit-IO'
-include 'ADC'
-include 'ADC-benchmark'
-include 'AlaMode.101'
 include 'Algebra'
-include 'Arduino-RaspberryPI'
-include 'DAC'
-include 'FONA'
-include 'GPIO.01'
-include 'GPSandSun'
-include 'I2C-SPI'
-include 'MindWave'
-include 'PhoneKeyboard3x4'
-include 'PI4J-email'
-include 'PIR'
-include 'HC-SR04'
 include 'Relay'
 include 'Relay.by.email'
 include 'RasPISamples'
-include 'Serial-IO'
 include 'SerialRxTx'
-include 'Serial-PI4J-reader'
 include 'SevenSegDisplay'
 include 'system-utils'
 include 'WeatherStation'
@@ -34,7 +18,6 @@ include "Monitor-Battery"
 include "JavaSoundDemo"
 include "ukulele"
 include "opencv"
-include "LoRa"
 include "common-utils"
 include "common-utils-swing"
 include "common-image-utils"
