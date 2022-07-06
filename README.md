@@ -2,7 +2,7 @@
 
 #### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets
 
-> Project started in 2015.
+> This project was started in 2015.
 
 --- 
 
@@ -14,6 +14,7 @@ To make this repo a bit lighter and more flexible, it will depend on some code s
 in other git repos, and deployed as artifacts on a maven repo (hosted by Github, as explained [below](#a-maven-repo-in-github)).  
 Those other repos are:
 - <https://github.com/OlivierLD/raspberry-io-pi4j>, for PI4J devices implementations.
+  - This will provide - later - the possibility to also use other IO libraries for the communication required by break-out boards.
 - <https://github.com/OlivierLD/raspberry-sailor>, for navigation and sailing related pieces of code.
 - <https://github.com/OlivierLD/AstroComputer> for all kinds of celestial computations, in several languages.
 
