@@ -11,7 +11,7 @@
 - NMEA protocol implementations
 
 To make this repo a bit lighter and more flexible, it will depend on some code stored 
-in other git repos, and deployed as artifacts on a maven repo (hosted by github, as explained [below](#a-maven-repo-in-github)).  
+in other git repos, and deployed as artifacts on a maven repo (hosted by Github, as explained [below](#a-maven-repo-in-github)).  
 Those other repos are:
 - <https://github.com/OlivierLD/raspberry-io-pi4j>, for PI4J devices implementations.
 - <https://github.com/OlivierLD/raspberry-sailor>, for navigation and sailing related pieces of code.
@@ -497,9 +497,9 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 ---
 
 <!--
-> _Note_: We use git submodules, see <https://www.vogella.com/tutorials/GitSubmodules/article.html>  
-> AstroComputer is a git submodule  
-> Do a `git submodule update --init` from the root after a first clone.
+_Note_: We use git submodules, see https://www.vogella.com/tutorials/GitSubmodules/article.html  
+AstroComputer is a git submodule  
+Do a `git submodule update --init` from the root after a first clone.
 ```
 From the root of the repo (raspberry-coffee)
 $ git submodule add https://github.com/OlivierLD/AstroComputer.git
