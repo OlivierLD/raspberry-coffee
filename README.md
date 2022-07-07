@@ -41,7 +41,7 @@ $ mvn install:install-file \
       -DlocalRepositoryPath=. \
       -DcreateChecksum=true
 ```
-> The script `push.sh` will help you with that, prompting you for the required data.
+**_Shortcut_**: The script `push.sh` will help you with the streps above, prompting you for the required data.
 
 then `git add <whatever-you-added>`, `git commit`, and `git push` on the `repository` branch.
 
