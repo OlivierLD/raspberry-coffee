@@ -1,4 +1,6 @@
 # A Maven repo on GitHub for RaspberryCoffee and related projects
+This `repository` branch on the [Raspberry Coffee](https://github.com/OlivierLD/raspberry-coffee) project will be hosting a Maven repo, used to store artifacts generated from other ones, and used for the build.
+
 See good article at <https://gist.github.com/fernandezpablo85/03cf8b0cd2e7d8527063>
 
 > Another possibility: <https://repsy.io/>
@@ -9,6 +11,9 @@ From `raspberry-coffee/common-utils` (`master` branch, or whatever branch you wo
 ```
 $ ../gradlew install
 ```
+This command will push the generated jar-file in your _local_ maven repository, usually under `~/.m2/repository`.  
+Then, from this local repository, you can get the required generated artifacts, and copy them in _this_ `repository` branch, so it can be reached as any maven artifact. See in the [Examples](#examples) section how to refer to it.
+
 From the root of the `repository` branch:
 ```
 $ mvn install:install-file \
@@ -59,10 +64,15 @@ Example: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repositor
 
 - From Gradle
 ```groovygit
+dependencies {
     . . .
     implementation 'oliv.raspi.coffee:common-utils:1.0'
     . . .
 }    
+```
+In both cases (Maven, or Gradle), you need to add the Maven repository URL: 
+```
+url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository"
 ```
 
 > **Note, for Java**
