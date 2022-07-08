@@ -10,6 +10,9 @@
 - Different communication protocols
 - NMEA protocol implementations
 
+
+- Some modules will also use [`OpenCV`](https://opencv.org/) (an OpenSource Project for Computer Vision). See below how _not_ to use them, if needed. It's worth a look, though. 
+
 To make this repo a bit lighter and more flexible, it will depend on some code stored 
 in other git repos, and deployed as artifacts on a maven repo (hosted by Github, as explained [below](#a-maven-repo-in-github)).  
 Those other repos are:
@@ -18,7 +21,7 @@ Those other repos are:
 - <https://github.com/OlivierLD/raspberry-sailor>, for navigation and sailing related pieces of code.
 - <https://github.com/OlivierLD/AstroComputer> for all kinds of celestial computations, in several languages.
 
-The maven repo where artifacts are deployed in a branch of this repo, at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See [below](#a-maven-repo-in-github) for more details.
+The maven repo where artifacts are deployed is actually a branch of this repo, at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See [below](#a-maven-repo-in-github) for more details.
 
 ---
 
@@ -33,7 +36,7 @@ Main keywords:
 
 ---
 
-It uses the [`PI4J library`](http://pi4j.com) (version **1.x**, version **2.x** brings in some new architecture and paradigm, not dealt with yet), itself relying on [`WiringPi`](http://wiringpi.com/).  
+It uses the [`PI4J library`](http://pi4j.com) (Version **1.x**. Version **2.x** brings in some new architecture and paradigm, not dealt with yet), itself relying on [`WiringPi`](http://wiringpi.com/).  
 The project - and its different modules - are built using [`Gradle`](https://gradle.org/).  
 Some modules also use the `librxtx` library for Serial IO.  
 
