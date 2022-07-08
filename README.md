@@ -529,10 +529,6 @@ You can also do a `git submodule update --init`.
 Then the submodule can be refreshed (pulled) like any other one.
 ---
 -->
-<<<<<<< HEAD
-=======
-
->>>>>>> 0a1c76f204ab8cda663388ae4e371be96d6d6f4b
 
 >If you see a message like `VM is only supported on ARMv7+ VFP`, you probably need to downgrade your JDK (and JRE)
 > from 11 to 8.
