@@ -44,6 +44,7 @@ $ mvn install:install-file \
 **_Shortcut_**: The script `push.sh` will help you with the streps above, prompting you for the required data.
 
 then `git add <whatever-you-added>`, `git commit`, and `git push` on the `repository` branch.
+> Note: Do make sure you've committed the jar files!! Use `git add -f` if needed.
 
 Repo URL: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository>
 
