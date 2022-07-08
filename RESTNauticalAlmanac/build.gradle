@@ -19,7 +19,7 @@ repositories {
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
   maven { url "https://mvnrepository.com/artifact" }
-  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
+  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -29,7 +29,8 @@ dependencies {
   implementation project(':http-tiny-server')
   implementation project(':NMEA-multiplexer')
   implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
-  implementation 'astro.computer:astro.computer:1.0'
+//  implementation 'astro.computer:astro.computer:1.0'
+  implementation project(':astro-computer:AstroComputer')
   testImplementation 'junit:junit:4.13'
   testImplementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
 }

@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+//compileJava.options.encoding = 'ISO-8859-1'
+
+group = 'oliv.raspi.pi4j'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+//    maven { url "https://oss.sonatype.org/content/groups/public" } // For PI4J
+}
+
+dependencies {
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation project(':common-utils')
+}
+
+shadowJar {
+    zip64 true
+}

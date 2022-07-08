@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!--
+    Basic test. Stations list.
+    Requires a Web Server to avoid CORS errors.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic03</title>
+    <style type="text/css">
+        * {
+            font-family:'Courier New', Courier, monospace;
+        }
+
+        .title-icon {
+            height: 38px; 
+            width: auto; 
+            vertical-align: middle;
+            padding-left: 20px;
+        }
+
+        div#station-list {
+            width: 90%; 
+            min-height: 100px; 
+            max-height: 300px; 
+            overflow-y: scroll; 
+            margin: auto; 
+            margin-bottom: 20px;
+            border: 1px solid cyan; 
+            border-radius: 5px;
+        }
+    </style>
+    <link rel="icon" type="image/ico" href="./wave.02.jpeg">
+    <script type="module">
+    import * as tideEngine from './tideEngine.js';
+    
+    // Adding features to the Date object.
+    import * as dateFmt from './date.proto.js';
+    
+    const THE_YEAR = new Date().getYear() + 1900;
+    const VERBOSE = false;
+
+    let before = 0.0;
+    let after = 0.0;
+
+    let tideStations = tideEngine.default.getStations(); // ["stations"];
+    let mess = `We have ${Object.keys(tideStations).length} stations. ${ VERBOSE ? `retrieved in ${after - before} ms.)` : '' }`;
+    console.log(mess);
+    document.getElementById('nb-stats').innerHTML = mess;    
+
+    // Spit out station list, sorted
+    let listContent = "<pre>";
+    Object.keys(tideStations).sort().forEach(station => {
+        listContent += `${decodeURIComponent(station)}, ${tideEngine.decToSex(tideStations[station].latitude, 'NS')  + '/' +
+                           tideEngine.decToSex(tideStations[station].longitude, 'EW')} \n`; 
+    });
+    listContent += "</pre>";
+    document.getElementById('station-list').innerHTML = listContent;
+
+    console.log("Done");
+    
+    </script>
+</head>
+<body>
+    <h1>ES6 TideEngine - Basic test - 3. Station List<img src="./wave.02.jpeg" class="title-icon"></h1>
+    <small style="margin: 10px;">All in JavaScript, all computing done on the client side.</small>
+    <div id="nb-stats" style="margin: 10px;"></div>
+    <hr/>
+    <i>Check the console for errors...</i>
+    <hr/>
+    <h2>Station List</h2>
+    <div id="station-list">
+    </div>
+    <hr/>
+    <div id="messages"></div>
+    <small style="font-style: italic;">ES6 Tide Engine</small>
+</body>
+<script>
+window.onload = () => {
+    console.log("Ready.");
+};
+</script>
+</html>

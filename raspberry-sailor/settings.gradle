@@ -1,0 +1,4 @@
+rootProject.name = 'raspberry-sailor'
+//
+include "NMEA-Parser"
+include "TideEngine"

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shapes and Stuff</title>
+    <style>canvas { width: 100%; height: 100% }</style>
+</head>
+<body>
+<script src="js/three.js"></script>
+<script>
+    // create scene and camera
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+
+    // create a renderer, set its size, append it to the document.
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // create the cube with dimensions 1x1x1 with MeshBasicMaterial (one of many materials available in three.js.
+    // we also set wireframe to true, this enables us to see the outlines of the 3d shape/structure, I just like it for no reason C:
+    var cubegeometry = new THREE.CubeGeometry(1,1,1);
+    var cubematerial = new THREE.MeshBasicMaterial({wireframe: true, color: 0x000000});
+
+    // The mesh basically takes the geometry and material specified above and uses them to create the actual cube.
+    var cube = new THREE.Mesh(cubegeometry, cubematerial);
+
+    // The cube is then added to the scene.
+    scene.add(cube);
+
+    // At this point, both the camera and the cube are at co-ordinates (0,0,0) or the origin.
+    // So the cube isn't visible yet. Hence, we move the camera towards 5 units along the +ve direction in z-axis.
+    camera.position.z = 5;
+
+    // Similar to the cube, here we create a sphere.
+    // The THREE.SphereGeometry method takes 4 arguments.
+    // 1. radius - sets the radius of the sphere.
+    // 2. segmentsWidth - increasing this will result in a smoother sphere at the cost of performance.
+    // 3. segmentsHeight - same as segmentsWidth
+    var spheregeometry = new THREE.SphereGeometry(0.8, 16, 16);
+    var spherematerial = new THREE.MeshBasicMaterial({ wireframe: true, color: 0xff0000 });
+    var sphere = new THREE.Mesh(spheregeometry, spherematerial);
+
+    // As earlier, at this point, the creates sphere will be at (0,0,0), which is where the cube lies.
+    // While that might look cool, let's just move the sphere to the left of the cube using the given method.
+    sphere.position.set(-2.0, 0, 0);
+
+    // Now, we add the sphere to the scene.
+    scene.add(sphere);
+
+    // The cylinder is created in this section.
+    // The THREE.CylinderGeometry method takes 5 arguments.
+    // The first is for the upper radius, the second is for the lower radius.
+    // For a cylinder, we want the top and bottom radius to have the same set of values.
+    // The third and fourth arguments are height and segments respectively.
+    // Increasing these lead to a smoother cylinder at the cost of performance. Lowering
+    // these values is useful for giving "sides" to the cylinder. We'll use this idea in creating a pyramid later.
+    // The fifth and final argument is take is for open-ends (true) or closed-ends (false).
+
+    var cylindergeometry = new THREE.CylinderGeometry(0.6, 0.6, 2, 50, false);
+
+    // I just thought of using another type of material just for fun although no difference is visible.
+    var cylindermaterial = new THREE.MeshLambertMaterial({wireframe: true, color: 0x000000});
+    var cylinder = new THREE.Mesh(cylindergeometry, cylindermaterial);
+
+    // Now, we set the cylinder 2 units to the right of the cube (which is at 0,0,0).
+    cylinder.position.set(2.0,0,0);
+    scene.add(cylinder);
+
+
+    // Alright, so here we create a cone. But we'll again be using the methods used to create a cylinder.
+    // That's because a cone is essentially a cylinder with it's top radius set to 0.
+    // So, just as before we make the cone (but with top radius = 0) and position it 4 units to the right of the cube.
+    var conegeometry = new THREE.CylinderGeometry(0, 0.6, 2, 50, false);
+    var conematerial = new THREE.MeshLambertMaterial({wireframe: true, color: 0x000000});
+    var cone = new THREE.Mesh(conegeometry, conematerial);
+    cone.position.set(4.0,0,0);
+    scene.add(cone);
+
+    // Here we create the pyramid. The pyramid is essentially a cone with 4 sides (a square pyramid).
+    // We make use of the segments parameter to set the sides to 4.
+    var pyramidgeometry = new THREE.CylinderGeometry(0, 0.8, 2, 4, false);
+    var pyramidmaterial = new THREE.MeshBasicMaterial({wireframe: true, color: 0x000000});
+    var pyramid = new THREE.Mesh(pyramidgeometry, pyramidmaterial);
+    pyramid.position.set(-4.0,0,0);
+    scene.add(pyramid);
+
+
+    // The render loop that makes things visible and also contains the code for the rotational motion of the shapes.
+    var render = function () {
+        requestAnimationFrame(render);
+
+        // rotating the cube along the x, y and z axes by 0.01 radians. The value can be changed for faster rotations.
+        cube.rotation.y += 0.01;
+        cube.rotation.x += 0.01;
+        cube.rotation.z += 0.01;
+
+        sphere.rotation.y += 0.01;
+
+        cylinder.rotation.y += 0.01;
+        cylinder.rotation.x += 0.01;
+        cylinder.rotation.z += 0.01;
+
+        cone.rotation.y += 0.01;
+        cone.rotation.x += 0.01;
+
+        pyramid.rotation.y += 0.01;
+        //pyramid.rotation.x += 0.01;
+
+        renderer.render(scene, camera);
+    };
+
+    // Calling the render function
+    render();
+</script>
+</body>
+</html>

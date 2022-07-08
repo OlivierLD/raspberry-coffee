@@ -19,7 +19,7 @@ import static junit.framework.TestCase.fail;
 public class ExecutionTests {
 
     /**
-     * Basic execution test
+     * Basic execution test. Fails in case of failure...
      */
     @Test
     public void testTideForOneMonth() {

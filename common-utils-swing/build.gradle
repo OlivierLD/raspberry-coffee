@@ -11,7 +11,7 @@ version = '1.0'
 repositories {
     mavenCentral()
     mavenLocal()
-//  maven { url "http://lediouris.net/maven2" }
+//  // maven { url "http://lediouris.net/maven2" }
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 

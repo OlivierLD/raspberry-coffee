@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+    Basic test.
+    Reads the backend data (constituents and stations)
+    Display the number of stations, and list them.
+    Requires a Web Server to avoid CORS errors.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic01</title>
+    <style>
+        * {
+            font-family:'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>ES6 TideEngine - Basic test.</h1>
+    <div id="one"></div>
+    <div id="two">
+        <textarea id="station-list" style="width: 600px; height: 150px; max-height: 500px; overflow-y: scroll;">
+        </textarea>
+    </div>
+    <hr/>
+    <i>Check the console for messages and errors...</i>
+</body>
+<script type="module">
+import * as constituents from './json/constituents.js';
+import * as stations     from './json/stations.js';
+
+console.log("First tests");
+
+window.onload = () => {
+    if (false) {
+        let keys = Object.keys(constituents.default);
+        console.log(`Constituents: ${keys.length} keys.`);
+        keys.forEach(k => {
+           console.log(`1 - ${k}`);
+        });
+
+        // First key
+        let firstObj = constituents.default[keys[0]];
+        let secondLevelKeys = Object.keys(firstObj);
+        secondLevelKeys.forEach(k => {
+           console.log(`2 - ${k}`);
+        });
+    }
+
+    let tideStations = stations.default["stations"];
+    let mess = `We have ${Object.keys(tideStations).length} stations.`;
+    console.log(mess);
+    document.getElementById('one').innerHTML = mess;
+
+    let stationList = "";
+    Object.keys(tideStations).forEach(ts => {
+        let decoded = decodeURIComponent(ts); // decodeURI(ts);
+        stationList += (decoded + "\n");
+    });
+    document.getElementById('station-list').innerHTML = stationList;
+};
+</script>
+</html>

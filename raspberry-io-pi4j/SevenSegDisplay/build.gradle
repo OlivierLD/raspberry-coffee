@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+
+group = 'oliv.raspi.pi4j'
+version = '1.0'
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+//  maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+dependencies {
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':common-utils')
+}

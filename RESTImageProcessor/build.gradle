@@ -12,8 +12,8 @@ compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 
 repositories {
   mavenCentral()
-  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
-  maven { url "http://lediouris.net/maven2" }
+  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+  // maven { url "http://lediouris.net/maven2" }
   maven { url "https://oss.sonatype.org/content/groups/public" }
   mavenLocal()
 }

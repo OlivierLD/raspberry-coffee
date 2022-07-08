@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+//  id 'scala'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.pi4j'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+//    maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+dependencies {
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation 'org.rxtx:rxtx:2.1.7'
+    implementation project(':common-utils')
+    implementation project(':raspberry-io-pi4j:Serial-IO')
+}
+
+shadowJar {
+    zip64 true
+}
+
+// Warning: Must be run as root
+task runFONAArduinoPi(type: JavaExec, dependsOn: build, description: "Run the FONA Sample, RPi + Arduino") {
+    main = 'fona.arduino.sample.SampleClient'
+    systemProperty 'verbose', 'true'
+    systemProperty 'baud.rate', '115200'
+    systemProperty 'serial.port', '/dev/ttyACM0'
+//  classpath project.configurations.default
+    classpath sourceSets.main.runtimeClasspath
+//  classpath sourceSets.main.output.classesDir
+}
+
+task runFONAJavaPi(type: JavaExec, dependsOn: build, description: "Run the FONA Sample, RPi + Java") {
+    main = 'fona.pi4jmanager.sample.InteractiveFona'
+//  classpath project.configurations.default
+    classpath sourceSets.main.runtimeClasspath
+//  classpath sourceSets.main.output.classesDir
+}

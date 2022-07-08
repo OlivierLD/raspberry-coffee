@@ -19,7 +19,7 @@ repositories {
   mavenCentral()
   maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
-  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
+  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -34,6 +34,7 @@ dependencies {
   implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'        // For the Motor Hat , includes common-utils (AstroComputer). gradlew dependencies is your friend.
   implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
 //  implementation project(':NMEA-multiplexer')
-  implementation 'astro.computer:astro.computer:1.0'
+//  implementation 'astro.computer:astro.computer:1.0'
+  implementation project(':astro-computer:AstroComputer')
 }
 

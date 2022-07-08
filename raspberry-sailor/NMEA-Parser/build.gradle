@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.sailor'
+version = '1.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://www.datanucleus.org/downloads/maven2" }
+    maven { url "https://mvnrepository.com/artifact" }
+//    // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
+}
+
+//compileJava.options.compilerArgs += ["-Xlint:none"]
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+dependencies {
+    implementation project(':common-utils')
+    implementation project(':astro-computer:AstroComputer')
+}
+
+shadowJar {
+    zip64 true
+}

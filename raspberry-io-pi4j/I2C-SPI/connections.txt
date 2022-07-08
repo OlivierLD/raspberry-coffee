@@ -1,0 +1,21 @@
+LSM303  | R-PI
+--------+-----------------
+Vin     | 2. 5.0 VDC Power
+GND     | 6. 0V (Ground)
+SDA     | 3. SDA0 (I2C)
+SCL     | 5. SCL0 (I2C)
+--------+-----------------
+PCA9685 | R-PI
+--------+-----------------
+VCC     | 1. 3.3 VDC Power
+GND     | 6. 0V (Ground)
+SDA     | 3. SDA0 (I2C)
+SCL     | 5. SCL0 (I2C)
+--------+-----------------
+BMP180  | R-PI
+--------+-----------------
+Vin     | 2. 5.0 VDC Power
+GND     | 6. 0V (Ground)
+SDA     | 3. SDA0 (I2C)
+SCL     | 5. SCL0 (I2C)
+--------+-----------------

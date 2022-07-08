@@ -15,8 +15,8 @@ repositories {
   mavenCentral()
   maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
-//  maven { url "http://lediouris.net/maven2" }
-  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+//  // maven { url "http://lediouris.net/maven2" }
+  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
 }
 
 dependencies {
@@ -26,8 +26,8 @@ dependencies {
   implementation 'com.sun.mail:javax.mail:1.6.2'
   implementation project (':common-utils')
   implementation project (':http-tiny-server')
-//  implementation project (':AstroComputer')
-  implementation 'astro.computer:astro.computer:1.0'
+//  implementation 'astro.computer:astro.computer:1.0'
+  implementation project(':astro-computer:AstroComputer')
   implementation project (':RESTNauticalAlmanac')
   implementation project (':RESTTideEngine')
   implementation project (':RESTImageProcessor')

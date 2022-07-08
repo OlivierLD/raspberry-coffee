@@ -1,0 +1,26 @@
+plugins {
+  id 'java'
+//id 'scala'
+  id 'maven'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.pi4j'
+version = '1.0'
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+//  maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+dependencies {
+  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation project(':common-utils')
+  testImplementation 'junit:junit:4.13'
+}
+
+shadowJar {
+  zip64 true
+}

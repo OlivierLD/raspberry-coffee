@@ -13,6 +13,7 @@
 
 - Some modules will also use [`OpenCV`](https://opencv.org/) (an OpenSource Project for Computer Vision). See below how _not_ to use them, if needed. It's worth a look, though. 
 
+<!--
 To make this repo a bit lighter and more flexible, it will depend on some code stored 
 in other git repos, and deployed as artifacts on a maven repo (hosted by Github, as explained [below](#a-maven-repo-in-github)).  
 Those other repos are:
@@ -22,6 +23,7 @@ Those other repos are:
 - <https://github.com/OlivierLD/AstroComputer> for all kinds of celestial computations, in several languages.
 
 The maven repo where artifacts are deployed is actually a branch of this repo, at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See [below](#a-maven-repo-in-github) for more details.
+-->
 
 ---
 

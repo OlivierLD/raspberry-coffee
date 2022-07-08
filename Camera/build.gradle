@@ -8,22 +8,9 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
-  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
   maven { url "http://lediouris.net/maven2" }
   maven { url "https://oss.sonatype.org/content/groups/public" }
   mavenLocal()

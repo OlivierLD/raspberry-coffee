@@ -18,7 +18,7 @@ repositories {
   mavenLocal()
   maven { url "https://oss.sonatype.org/content/groups/public" }
 //  maven { url "https://mvnrepository.com/artifact" }
-  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
 }
 
 dependencies {

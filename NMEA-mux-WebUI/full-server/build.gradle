@@ -14,8 +14,8 @@ repositories {
     mavenLocal()
     maven { url "https://oss.sonatype.org/content/groups/public" }
     maven { url "https://www.datanucleus.org/downloads/maven2" }
-    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
-    maven { url "http://lediouris.net/maven2" }
+    // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+    // maven { url "http://lediouris.net/maven2" }
 }
 
 // sourceCompatibility = 1.8

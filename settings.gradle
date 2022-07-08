@@ -41,8 +41,32 @@ include "Bluetooth"
 include "Joystick"
 include "jsonQL"
 include "diozero-101"
-// Git SubModule
-// include(':AstroComputer')
+// Astro Computer
+include('astro-computer:AstroComputer')
+// Raspberry IO Pi4J
+include('raspberry-io-pi4j:ADC')
+include('raspberry-io-pi4j:ADC-benchmark')
+include('raspberry-io-pi4j:AlaMode.101')
+include('raspberry-io-pi4j:Arduino-RaspberryPI')
+include('raspberry-io-pi4j:Bluetooth')
+include('raspberry-io-pi4j:DAC')
+include('raspberry-io-pi4j:FONA')
+include('raspberry-io-pi4j:GPIO.01')
+include('raspberry-io-pi4j:HC-SR04')
+include('raspberry-io-pi4j:I2C-SPI')
+include('raspberry-io-pi4j:LoRa')
+include('raspberry-io-pi4j:MindWave')
+include('raspberry-io-pi4j:PhoneKeyboard3x4')
+include('raspberry-io-pi4j:PI4J-email')
+include('raspberry-io-pi4j:PIR')
+include('raspberry-io-pi4j:Relay')
+include('raspberry-io-pi4j:Serial-IO')
+include('raspberry-io-pi4j:Serial-PI4J-reader')
+include('raspberry-io-pi4j:SevenSegDisplay')
+// Raspberry Sailor
+include('raspberry-sailor:NMEA-Parser')
+include('raspberry-sailor:TideEngine')
+
 // NMEA-mux-WebUI sub-projects
 include(':NMEA-mux-WebUI:full-server')
 include(':NMEA-mux-WebUI:minimal-mux')

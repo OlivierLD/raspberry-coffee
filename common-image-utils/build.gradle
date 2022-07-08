@@ -9,8 +9,8 @@ version = '1.0'
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
-    maven { url "http://lediouris.net/maven2" }
+    // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+    // maven { url "http://lediouris.net/maven2" }
 }
 
 //sourceSets {
