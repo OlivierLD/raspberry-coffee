@@ -24,8 +24,8 @@ dependencies {
   implementation 'org.json:json:20141113'
   implementation 'org.java-websocket:Java-WebSocket:1.3.7'
   implementation project(':common-utils')
-  implementation 'oliv.raspi.coffee:http-tiny-server:1.0'   // In raspberry-maven
-  implementation 'astro.computer:astro.computer:1.0'        // In raspberry-maven
+  implementation project(':http-tiny-server')
+  implementation project(':astro-computer:AstroComputer')
 }
 
 // Warning: Must be run as root
