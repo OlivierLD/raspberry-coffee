@@ -27,7 +27,7 @@ public class ExecutionTests {
             mainTide("-year", "2022", "-month", "1");
         } catch (Exception ex) {
             ex.printStackTrace();
-            fail();
+            fail(ex.getMessage());
         }
     }
 
