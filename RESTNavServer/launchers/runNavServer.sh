@@ -199,7 +199,7 @@ fi
 # JAVA_OPTS="${JAVA_OPTS} -Dyaml.tx.verbose=yes"
 # JAVA_OPTS="${JAVA_OPTS} -Dmux.data.verbose=false"
 # JAVA_OPTS="${JAVA_OPTS} -tide.verbose=false"
-JAVA_OPTS="${JAVA_OPTS} -Ddata.verbose=true"
+# JAVA_OPTS="${JAVA_OPTS} -Ddata.verbose=true"
 #
 if [[ "${HTTP_PORT}" != "" ]]; then
   JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=${HTTP_PORT}"
