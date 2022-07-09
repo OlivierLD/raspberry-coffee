@@ -204,7 +204,9 @@ if [[ "${HTTP_PORT}" != "" ]]; then
 fi
 #
 COMMAND="${SUDO}java -cp ${CP} ${JAVA_OPTS} navrest.NavServer"
-echo -e "Running ${COMMAND}"
+if [[ "${CMD_VERBOSE}" == "Y" || 1 -eq 1 ]]; then    # Always true...
+  echo -e "Running ${COMMAND}"
+fi
 #
 ${COMMAND}
 #

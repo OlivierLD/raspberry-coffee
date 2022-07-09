@@ -28,7 +28,7 @@ for ARG in "$@"; do
 	echo -e "Managing prm ${ARG}"
   if [[ ${ARG} == "--flavor:"* ]]; then
 	  FLAVOR=${ARG#*:}
-    JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=${FLAVOR}"
+    JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=${FLAVOR}"  # XML is the default
   elif [[ ${ARG} == "--oplist:"* ]]; then
 	  OP_LIST=${ARG#*:}
 	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]; then

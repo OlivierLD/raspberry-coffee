@@ -10,6 +10,7 @@ LAUNCH_BROWSER=N
 WITH_PROXY=N
 USER_OPTION=
 WITH_NOHUP=
+export CMD_VERBOSE=N
 # Program parameters
 NAV_SERVER_EXTRA_OPTIONS=
 #
@@ -22,6 +23,8 @@ if [[ $# -gt 0 ]]; then
 	    HTTP_PORT=${prm#*:}
 	  elif [[ ${prm} == "--nohup:"* ]]; then
 	    WITH_NOHUP=${prm#*:}
+	  elif [[ ${prm} == "--cmd-verbose:"* ]]; then
+	    export CMD_VERBOSE=${prm#*:}
 	  elif [[ ${prm} == "--proxy:"* ]]; then
 	    WITH_PROXY=${prm#*:}
 	    if [[ "${WITH_PROXY}" == "Y" ]] || [[ "${WITH_PROXY}" == "y" ]]; then
@@ -55,7 +58,7 @@ NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --http-port:${HTTP_PORT}"
 while [[ "${GO}" == "true" ]]; do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
-	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y --http-port:9999"
+	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y --http-port:9999 --cmd-verbose:[N]|Y"
 	echo -e "    --option:X will not prompt the user for his choice, it will go directly for it."
 	echo -e "    --nohup:Y will launch some commands with nohup (see the script for details)"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -164,6 +167,9 @@ while [[ "${GO}" == "true" ]]; do
 	    # echo -e "A screen session 'navserver' was started"
 	    #
 	    # bash -c "exec -a ProcessName Command"
+	    if [[ "${CMD_VERBOSE}" == "Y" ]]; then
+	      echo -e "Running command: [${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &]"
+	    fi
 	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
