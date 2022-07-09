@@ -36,13 +36,18 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 	}
 
 	@Override
-	public Constituents buildConstituents() throws Exception {
+	public Constituents buildConstituents(boolean verbose) throws Exception {
 		SpeedConstituentFinder scf = new SpeedConstituentFinder();
+		if (verbose) {
+			System.out.printf("Reaching %s, %s, from %s\n", ARCHIVE_STREAM, CONSTITUENTS_ENTRY, System.getProperty("user.dir"));
+		}
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			InputSource is = ZipUtils.getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
 			saxParser.parse(is, scf);
+		} catch (NullPointerException npe) {
+			System.err.printf("NPE when reaching %s, %s, from %s\n", ARCHIVE_STREAM, CONSTITUENTS_ENTRY, System.getProperty("user.dir"));
 		} catch (Exception ex) {
 			throw ex;
 		}
@@ -50,7 +55,7 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 	}
 
 	@Override
-	public Stations getTideStations() throws Exception {
+	public Stations getTideStations(boolean verbose) throws Exception {
 		return new Stations(getStationData());
 	}
 

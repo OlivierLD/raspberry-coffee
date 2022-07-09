@@ -75,7 +75,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 	}
 
 	@Override
-	public Constituents buildConstituents() throws Exception {
+	public Constituents buildConstituents(boolean verbose) throws Exception {
 		Constituents constituents = null;
 		if (conn != null) {
 
@@ -145,7 +145,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 	}
 
 	@Override
-	public Stations getTideStations() throws Exception {
+	public Stations getTideStations(boolean verbose) throws Exception {
 		return new Stations(getStationData());
 	}
 

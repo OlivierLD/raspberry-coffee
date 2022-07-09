@@ -83,8 +83,8 @@ public class BackEndTideComputer {
 			before = System.currentTimeMillis();
 		}
 
-		constituentsObject = this.dataComputer.buildConstituents();
-		stationsObject = this.dataComputer.getTideStations();
+		constituentsObject = this.dataComputer.buildConstituents(dataVerbose);
+		stationsObject = this.dataComputer.getTideStations(dataVerbose);
 
 		if (verbose) {
 			after = System.currentTimeMillis();

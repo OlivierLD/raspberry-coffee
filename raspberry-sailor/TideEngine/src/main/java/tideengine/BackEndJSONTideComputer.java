@@ -33,7 +33,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Constituents buildConstituents() throws Exception {
+	public Constituents buildConstituents(boolean verbose) throws Exception {
 		Constituents constituents;
 		try {
 			InputStream is = ZipUtils.getZipInputStream(BackEndJSONTideComputer.class, ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
@@ -62,7 +62,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 	}
 
 	@Override
-	public Stations getTideStations() throws Exception {
+	public Stations getTideStations(boolean verbose) throws Exception {
 		return new Stations(getStationData());
 	}
 

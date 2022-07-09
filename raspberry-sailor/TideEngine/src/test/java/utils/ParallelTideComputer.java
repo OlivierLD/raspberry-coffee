@@ -31,11 +31,11 @@ public class ParallelTideComputer {
         xmlDataComputer.connect();
         jsonDataComputer.connect();
 
-        xmlConstituentsObject = xmlDataComputer.buildConstituents();
-        xmlStationsObject = xmlDataComputer.getTideStations();
+        xmlConstituentsObject = xmlDataComputer.buildConstituents(false);
+        xmlStationsObject = xmlDataComputer.getTideStations(false);
 
-        jsonConstituentsObject = jsonDataComputer.buildConstituents();
-        jsonStationsObject = jsonDataComputer.getTideStations();
+        jsonConstituentsObject = jsonDataComputer.buildConstituents(false);
+        jsonStationsObject = jsonDataComputer.getTideStations(false);
 
         // Compare
         System.out.println("Comparing?");

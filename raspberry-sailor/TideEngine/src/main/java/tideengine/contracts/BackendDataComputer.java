@@ -15,8 +15,8 @@ public interface BackendDataComputer {
     void connect() throws Exception;
     void disconnect() throws Exception;
     Map<String, TideStation> getStationData() throws Exception;
-    Stations getTideStations() throws Exception;
-    Constituents buildConstituents() throws Exception;
+    Stations getTideStations(boolean verbose) throws Exception;
+    Constituents buildConstituents(boolean verbose) throws Exception;
     TideStation reloadOneStation(String stationName) throws Exception;
     void setVerbose(boolean b);
 
