@@ -15,6 +15,12 @@ compileJava {
     options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
 }
 
+jar {
+  from('src/main/resources') {
+    include '**/*.*'
+  }
+}
+
 repositories {
   mavenCentral()
   mavenLocal()
