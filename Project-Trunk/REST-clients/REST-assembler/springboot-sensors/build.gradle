@@ -43,8 +43,8 @@ repositories {
 // targetCompatibility = 1.8
 
 dependencies {
-//    implementation 'oliv.raspi.coffee:I2C-SPI:1.0' // Might require a gradle install from those 2
-//    implementation 'oliv.raspi.coffee:ADC:1.0'
+//    implementation project(':raspberry-io-pi4j:I2C-SPI') // Might require a gradle install from those 2
+//    implementation project(':raspberry-io-pi4j:ADC')
 
 //    implementation project (':I2C-SPI')
 //    implementation project (':ADC')

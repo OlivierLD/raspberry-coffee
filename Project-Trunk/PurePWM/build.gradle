@@ -24,5 +24,6 @@ repositories {
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
   implementation project(':common-utils')
-  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+  implementation project(':raspberry-io-pi4j:Utils')
+  implementation project(':raspberry-io-pi4j:I2C-SPI')
 }

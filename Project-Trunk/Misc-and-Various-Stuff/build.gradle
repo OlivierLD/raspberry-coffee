@@ -26,8 +26,8 @@ dependencies {
   implementation 'org.json:json:20141113'
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
-  implementation 'oliv.raspi.pi4j:Arduino-RaspberryPI:1.0'
-  implementation 'oliv.raspi.pi4j:PhoneKeyboard3x4:1.0'
-  implementation 'oliv.raspi.pi4j:SevenSegDisplay:1.0'
+  implementation project(':raspberry-io-pi4j:I2C-SPI')
+  implementation project(':raspberry-io-pi4j:Arduino-RaspberryPI')
+  implementation project(':raspberry-io-pi4j:PhoneKeyboard3x4')
+  implementation project(':raspberry-io-pi4j:SevenSegDisplay')
 }

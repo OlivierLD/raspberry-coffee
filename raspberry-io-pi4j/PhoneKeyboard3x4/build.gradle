@@ -18,6 +18,7 @@ repositories {
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
   implementation project(':common-utils')
+  implementation project(":raspberry-io-pi4j:Utils")
   testImplementation 'junit:junit:4.13'
 }
 

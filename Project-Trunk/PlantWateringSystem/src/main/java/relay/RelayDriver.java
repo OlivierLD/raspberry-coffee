@@ -37,7 +37,7 @@ public class RelayDriver {
 
 	public RelayDriver(Pin _signalPin) {
 		if ("true".equals(System.getProperty("gpio.verbose"))) {
-			System.out.println(String.format("GPIO> Provisioning pin BCM #%d", PinUtil.findByPin(signalPin).gpio()));
+			System.out.println(String.format("GPIO> Provisioning pin BCM #%d", PinUtil.findByPin(signalPin.getName()).gpio()));
 		}
 		// Trap stderr output
 		PrintStream console = System.err;
@@ -55,7 +55,7 @@ public class RelayDriver {
 			} catch (UnsatisfiedLinkError ule) {
 				System.out.println(ule.toString());
 				if ("true".equals(System.getProperty("gpio.verbose"))) {
-					System.out.println(String.format("GPIO> Will simulate pin BCM #%d (for %s)", PinUtil.findByPin(signalPin).gpio(), this.getClass().getName()));
+					System.out.println(String.format("GPIO> Will simulate pin BCM #%d (for %s)", PinUtil.findByPin(signalPin.getName()).gpio(), this.getClass().getName()));
 				}
 				this.simulating = true;
 			}

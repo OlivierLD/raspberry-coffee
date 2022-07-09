@@ -1,12 +1,12 @@
 package scalahttp
 
 import java.util
-
 import com.pi4j.io.gpio.Pin
 import http.{HTTPServer, RESTRequestManager}
 import relay.RelayManager
 import sensors.ADCChannel
 import utils.PinUtil
+import utils.gpio.StringToGPIOPin
 
 class ScalaHttpRequestManager extends RESTRequestManager {
   private val httpVerbose = "true" == System.getProperty("http.verbose", "false")
@@ -76,7 +76,7 @@ class ScalaHttpRequestManager extends RESTRequestManager {
         if (physicalNumber == null) {
           throw new RuntimeException(s"In [$strMap], element [$relayPrm], pin #$pinNum does not exist")
         }
-        pinMap.put(relayNum, physicalNumber)
+        pinMap.put(relayNum, StringToGPIOPin.stringToGPIOPin(physicalNumber))
       } catch {
         case nfe: NumberFormatException =>
           throw new RuntimeException(s"In [$strMap], element [$relayPrm], bad numbers")

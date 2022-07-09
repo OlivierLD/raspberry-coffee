@@ -6,6 +6,7 @@ import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.PinUtil;
 import utils.TimeUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -179,7 +180,9 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 			if (echo == null && trig == null) {
 				rpr = new RasPiRadar(true, servoPort);
 			} else {
-				rpr = new RasPiRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+				rpr = new RasPiRadar(true, servoPort,
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(trig)),
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(echo)));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
@@ -188,8 +191,8 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 		if (verbose && rpr != null && rpr.getHcSR04() != null) {
 			System.out.println("HC-SR04 & Serial wiring:");
 			String[] map = new String[4];
-			map[0] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getTrigPin()).pinNumber()) + ":" + "Trigger";
-			map[1] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getEchoPin()).pinNumber()) + ":" + "Echo";
+			map[0] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getTrigPin().getName()).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getEchoPin().getName()).pinNumber()) + ":" + "Echo";
 
 			map[2] = String.valueOf(8) + ":" + "TX, white";
 			map[3] = String.valueOf(10) + ":" + "RX, green";

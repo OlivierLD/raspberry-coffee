@@ -25,7 +25,7 @@ dependencies {
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
 //  implementation project(':NMEA-multiplexer')
-  implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
+  implementation project(':raspberry-sailor:NMEA-Parser')
   implementation project(':Project-Trunk:PolarSmoother')
 }
 

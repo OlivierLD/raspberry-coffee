@@ -49,9 +49,9 @@ dependencies {
 
     implementation 'com.pi4j:pi4j-core:1.2'
 
-    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
-    implementation 'oliv.raspi.pi4j:MindWave:1.0'
-    implementation 'oliv.raspi.pi4j:SevenSegDisplay:1.0'
+    implementation project(':raspberry-io-pi4j:I2C-SPI')
+    implementation project(':raspberry-io-pi4j:MindWave')
+    implementation project(':raspberry-io-pi4j:SevenSegDisplay')
 }
 
 //sourceSets {

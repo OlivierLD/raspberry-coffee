@@ -1,8 +1,7 @@
-package utils.samples.gpio;
+package utils.gpio;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
-import utils.gpio.PushButtonController;
 
 public class PushButtonControllerSample {
 

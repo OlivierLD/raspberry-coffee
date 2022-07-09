@@ -29,6 +29,7 @@ dependencies {
 //  implementation 'astro.computer:astro.computer:1.0'
   implementation project(':astro-computer:AstroComputer')
   implementation project (':RESTNauticalAlmanac')
+  implementation project (':raspberry-sailor:TideEngine')  // Should not be necessary...
   implementation project (':RESTTideEngine')
   implementation project (':RESTImageProcessor')
   implementation project (':RESTRouting')

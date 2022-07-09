@@ -38,7 +38,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     implementation fileTree(dir: '../../build/libs', include: ['*.jar'])
-    // implementation 'oliv.raspi.coffee:common-utils:1.0' // Java Celestial Almanac
+    // implementation project(':common-utils')
 
 }
 

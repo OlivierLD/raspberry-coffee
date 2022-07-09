@@ -11,6 +11,7 @@ import utils.StaticUtil;
 import utils.SystemUtils;
 import utils.TimeUtil;
 import utils.gpio.PushButtonController;
+import utils.gpio.StringToGPIOPin;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -187,15 +188,15 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 			// Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
-				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
+				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin.getName()))); // GPIO_28
+				buttonOnePin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr)));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 
 			// Pin mapping display for info
 			String[] map = new String[]{
-					String.valueOf(PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button Hot Wire",
+					String.valueOf(PinUtil.findByPin(buttonOnePin.getName()).pinNumber()) + ":Button Hot Wire",
 
 					String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":3v3",
 					String.valueOf(PinUtil.GPIOPin.PWR_2.pinNumber()) + ":5v0",

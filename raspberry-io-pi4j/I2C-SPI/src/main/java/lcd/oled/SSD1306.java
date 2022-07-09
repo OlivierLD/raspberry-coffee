@@ -225,11 +225,11 @@ public class  SSD1306 {
 
 			if (verbose) {
 				String[] map = new String[]{
-						String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI",
-						String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK",
-						String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS",
-						String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST",
-						String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC"
+						String.valueOf(PinUtil.findByPin(spiMosi.getName()).pinNumber()) + ":" + "MOSI",
+						String.valueOf(PinUtil.findByPin(spiClk.getName()).pinNumber()) + ":" + "CLK",
+						String.valueOf(PinUtil.findByPin(spiCs.getName()).pinNumber()) + ":" + "CS",
+						String.valueOf(PinUtil.findByPin(spiRst.getName()).pinNumber()) + ":" + "RST",
+						String.valueOf(PinUtil.findByPin(spiDc.getName()).pinNumber()) + ":" + "DC"
 				};
 				PinUtil.print(map);
 			}

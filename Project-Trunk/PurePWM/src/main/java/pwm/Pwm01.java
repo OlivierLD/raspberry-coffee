@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.GpioPinPwmOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
+import utils.gpio.StringToGPIOPin;
 
 import static utils.TimeUtil.delay;
 
@@ -27,14 +28,14 @@ public class Pwm01 {
 		if (servoPinSysVar != null) {
 			try {
 				int servoPinValue = Integer.parseInt(servoPinSysVar);
-				servoPin = PinUtil.getPinByPhysicalNumber(servoPinValue);
+				servoPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(servoPinValue));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 		}
 
-		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin).pinName()));
-		PinUtil.print(String.format("%d:Servo", PinUtil.findByPin(servoPin).pinNumber()));
+		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin.getName()).pinName()));
+		PinUtil.print(String.format("%d:Servo", PinUtil.findByPin(servoPin.getName()).pinNumber()));
 
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();

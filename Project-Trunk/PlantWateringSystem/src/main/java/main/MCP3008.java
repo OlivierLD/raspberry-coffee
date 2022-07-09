@@ -13,6 +13,7 @@ import utils.StaticUtil;
 import utils.StringUtils;
 import utils.TimeUtil;
 import utils.WeatherUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -582,7 +583,7 @@ public class MCP3008 implements Probe {
 			System.exit(1);
 		}
 		try {
-			relay = new RelayDriver(PinUtil.getPinByGPIONumber(relayPin));
+			relay = new RelayDriver(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(relayPin)));
 			if (relay.isSimulating()) {
 				// Provide simulator here
 				System.out.println(">> Will simulate Relay");

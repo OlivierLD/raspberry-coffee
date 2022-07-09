@@ -16,6 +16,7 @@ import navrest.NavServer;
 import nmea.forwarders.SSD1306Processor;
 import utils.PinUtil;
 import utils.TimeUtil;
+import utils.gpio.StringToGPIOPin;
 
 public class ServerWithButtons extends NavServer {
 
@@ -43,8 +44,8 @@ public class ServerWithButtons extends NavServer {
 				String buttonOnePinStr = System.getProperty("buttonOne", "12"); // GPIO_01
 				String buttonTwoPinStr = System.getProperty("buttonTwo", "13"); // GPIO_02
 
-				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
-				buttonTwoPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
+				buttonOnePin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr)));
+				buttonTwoPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr)));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}

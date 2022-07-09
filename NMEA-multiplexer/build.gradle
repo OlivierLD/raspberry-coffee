@@ -38,10 +38,10 @@ dependencies {
     implementation 'org.yaml:snakeyaml:1.21'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
     implementation group: 'org.json', name: 'json', version: '20190722'
-    implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
+    implementation project(':raspberry-sailor:NMEA-Parser')
     implementation project(':http-tiny-server')
     implementation project(':common-utils')
-    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
+    implementation project(':raspberry-io-pi4j:I2C-SPI')
 //    implementation 'astro.computer:astro.computer:1.0'
     implementation project(':astro-computer:AstroComputer')
 //    implementation project(':SunFlower')

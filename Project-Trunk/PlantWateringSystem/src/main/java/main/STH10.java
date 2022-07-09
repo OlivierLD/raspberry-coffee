@@ -10,6 +10,7 @@ import sensors.sth10.STH10Driver;
 import utils.PinUtil;
 import utils.StaticUtil;
 import utils.WeatherUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -436,7 +437,9 @@ public class STH10 implements Probe {
 
 		STH10 instance = new STH10();
 		try {
-			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
+			probe = new STH10Driver(
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(dataPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(clockPin)));
 			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
 				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? " (enforced)" : "")));
@@ -455,7 +458,7 @@ public class STH10 implements Probe {
 			System.exit(1);
 		}
 		try {
-			relay = new RelayDriver(PinUtil.getPinByGPIONumber(relayPin));
+			relay = new RelayDriver(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(relayPin)));
 			if (relay.isSimulating()) {
 				// Provide simulator here
 				System.out.println(">> Will simulate Relay");

@@ -35,10 +35,11 @@ dependencies {
     implementation project(':http-tiny-server')
 //    implementation 'astro.computer:astro.computer:1.0'
     implementation project(':astro-computer:AstroComputer')
-    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
-    implementation 'oliv.raspi.pi4j:Serial-IO:1.0'
-    implementation 'oliv.raspi.pi4j:LoRa:1.0'
-    implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
+    implementation project(':raspberry-io-pi4j:Utils')
+    implementation project(':raspberry-io-pi4j:I2C-SPI')
+    implementation project(':raspberry-io-pi4j:Serial-IO')
+    implementation project(':raspberry-io-pi4j:LoRa')
+    implementation project(':raspberry-sailor:NMEA-Parser')
     implementation project(':NMEA-multiplexer')
     implementation project(':Project-Trunk:SunFlower') // For the Servo Board (PCA9685) and the LSM303
 }

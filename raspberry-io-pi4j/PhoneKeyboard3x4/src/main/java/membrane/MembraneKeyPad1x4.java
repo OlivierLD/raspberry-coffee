@@ -1,13 +1,8 @@
 package membrane;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinMode;
-import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.*;
 import utils.PinUtil;
-import utils.TimeUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.security.InvalidParameterException;
 
@@ -28,12 +23,12 @@ public class MembraneKeyPad1x4 {
 	 * https://www.adafruit.com/products/1332
    */
 	private Pin[] kpCol = new Pin[]{
-			PinUtil.GPIOPin.GPIO_1.pin(),
-			PinUtil.GPIOPin.GPIO_4.pin(),
-			PinUtil.GPIOPin.GPIO_5.pin(),
-			PinUtil.GPIOPin.GPIO_6.pin()
+			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_1.pin()),
+			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_4.pin()),
+			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_5.pin()),
+			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_6.pin())
 	};
-	private Pin common = PinUtil.GPIOPin.GPIO_7.pin();
+	private Pin common = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_7.pin());
 
 	public MembraneKeyPad1x4() {
 		this(false);
@@ -73,20 +68,20 @@ public class MembraneKeyPad1x4 {
 				if (pin == null) {
 					throw new InvalidParameterException(String.format("Unknown row pin name [%s]", col));
 				} else {
-					kpCol[i] = pin.pin();
+					kpCol[i] = StringToGPIOPin.stringToGPIOPin(pin.pin());
 				}
 			}
 
 			PinUtil.GPIOPin pin = PinUtil.findEnumName(userProvidedCommon.trim());
-			common = pin.pin();
+			common = StringToGPIOPin.stringToGPIOPin(pin.pin());
 		}
 
 		if (print) {
-			System.out.println("       Common, " + PinUtil.findByPin(common).toString() + ", " + PinUtil.findByPin(common).pinName());
-			System.out.println("       |  " + PinUtil.findByPin(kpCol[0]).toString() + ", " + PinUtil.findByPin(kpCol[0]).pinName());
-			System.out.println("       |  |  " + PinUtil.findByPin(kpCol[1]).toString() + ", " + PinUtil.findByPin(kpCol[1]).pinName());
-			System.out.println("       |  |  |  " + PinUtil.findByPin(kpCol[2]).toString() + ", " + PinUtil.findByPin(kpCol[2]).pinName());
-			System.out.println("       |  |  |  |  " + PinUtil.findByPin(kpCol[3]).toString() + ", " + PinUtil.findByPin(kpCol[3]).pinName());
+			System.out.println("       Common, " + PinUtil.findByPin(common.getName()).toString() + ", " + PinUtil.findByPin(common.getName()).pinName());
+			System.out.println("       |  " + PinUtil.findByPin(kpCol[0].getName()).toString() + ", " + PinUtil.findByPin(kpCol[0].getName()).pinName());
+			System.out.println("       |  |  " + PinUtil.findByPin(kpCol[1].getName()).toString() + ", " + PinUtil.findByPin(kpCol[1].getName()).pinName());
+			System.out.println("       |  |  |  " + PinUtil.findByPin(kpCol[2].getName()).toString() + ", " + PinUtil.findByPin(kpCol[2].getName()).pinName());
+			System.out.println("       |  |  |  |  " + PinUtil.findByPin(kpCol[3].getName()).toString() + ", " + PinUtil.findByPin(kpCol[3].getName()).pinName());
 			System.out.println("       |  |  |  |  | ");
 			System.out.println("       x  C  C  C  C ");
 			System.out.println("       |  1  2  3  4 ");
@@ -100,10 +95,10 @@ public class MembraneKeyPad1x4 {
 			System.out.println(" +----------------------+");
 			System.out.println();
 			String[] map = new String[]{
-					String.valueOf(PinUtil.findByPin(kpCol[0]).pinNumber()) + ":" + "C1",
-					String.valueOf(PinUtil.findByPin(kpCol[1]).pinNumber()) + ":" + "C2",
-					String.valueOf(PinUtil.findByPin(kpCol[2]).pinNumber()) + ":" + "C3",
-					String.valueOf(PinUtil.findByPin(kpCol[3]).pinNumber()) + ":" + "C4"
+					String.valueOf(PinUtil.findByPin(kpCol[0].getName()).pinNumber()) + ":" + "C1",
+					String.valueOf(PinUtil.findByPin(kpCol[1].getName()).pinNumber()) + ":" + "C2",
+					String.valueOf(PinUtil.findByPin(kpCol[2].getName()).pinNumber()) + ":" + "C3",
+					String.valueOf(PinUtil.findByPin(kpCol[3].getName()).pinNumber()) + ":" + "C4"
 			};
 			PinUtil.print(map);
 		}

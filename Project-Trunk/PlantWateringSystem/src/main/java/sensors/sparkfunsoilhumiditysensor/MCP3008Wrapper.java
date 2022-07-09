@@ -3,6 +3,7 @@ package sensors.sparkfunsoilhumiditysensor;
 import analogdigitalconverter.mcp.MCPReader;
 import main.MCP3008;
 import utils.PinUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -31,10 +32,10 @@ public class MCP3008Wrapper {
 		instance.debug = debug;
 		try {
 			MCPReader.initMCP(
-					PinUtil.getPinByGPIONumber(misoPin),
-					PinUtil.getPinByGPIONumber(mosiPin),
-					PinUtil.getPinByGPIONumber(clkPin),
-					PinUtil.getPinByGPIONumber(csPin));
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(misoPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(mosiPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(clkPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(csPin)));
 		} catch (UnsatisfiedLinkError ule) {
 			// Not on a Pi?
 			instance.simulating = true;
@@ -73,10 +74,10 @@ public class MCP3008Wrapper {
 					" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 					", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 		}
-		System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V",
+		System.out.printf("Volume: %03d%% (%04d) => %.03f V\n",
 				volume,
 				adc,
-				(3.3 * (adc / 1023.0))));  // Volts
+				(3.3 * (adc / 1023.0)));  // Volts
 		return volume;
 	}
 

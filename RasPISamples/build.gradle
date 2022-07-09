@@ -50,13 +50,13 @@ dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
 //implementation 'org.java-websocket:Java-WebSocket:1.3.7' // Already in ADC
   implementation project(':common-utils')
-  implementation 'oliv.raspi.pi4j:HC-SR04:1.0'
-  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
-  implementation 'oliv.raspi.pi4j:PhoneKeyboard3x4:1.0'
-  implementation 'oliv.raspi.pi4j:ADC:1.0'
-  implementation 'oliv.raspi.pi4j:Arduino-RaspberryPI:1.0'
+  implementation project(':raspberry-io-pi4j:HC-SR04')
+  implementation project(':raspberry-io-pi4j:I2C-SPI')
+  implementation project(':raspberry-io-pi4j:PhoneKeyboard3x4')
+  implementation project(':raspberry-io-pi4j:ADC')
+  implementation project(':raspberry-io-pi4j:Arduino-RaspberryPI')
   implementation project(':WeatherStation')
-  implementation 'oliv.raspi.pi4j:SevenSegDisplay:1.0'
+  implementation project(':raspberry-io-pi4j:SevenSegDisplay')
   implementation project(':Adafruit-IO')
   implementation project(':NMEA-multiplexer')
   implementation project(':HanoiTower')

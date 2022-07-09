@@ -33,7 +33,7 @@ repositories {
 dep
 endencies {
 
-    implementation 'oliv.raspi.coffee:I2C.SPI:1.0'
+    implementation project(':raspberry-io-pi4j:I2C-SPI')
 
     implementation group: 'io.helidon.microprofile.bundles', name: 'helidon-microprofile-1.2', version:'0.11.0'
     implementation group: 'org.glassfish.jersey.media', name: 'jersey-media-json-binding', version:'2.26'

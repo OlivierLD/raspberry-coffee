@@ -22,6 +22,6 @@ repositories {
 }
 
 dependencies {
-  implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
+  implementation project(':raspberry-sailor:NMEA-Parser')
 //  implementation project(':NMEA-multiplexer')
 }

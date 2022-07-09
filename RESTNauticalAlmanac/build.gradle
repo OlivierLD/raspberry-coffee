@@ -28,7 +28,7 @@ dependencies {
 //  implementation project(':common-utils')
   implementation project(':http-tiny-server')
   implementation project(':NMEA-multiplexer')
-  implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
+  implementation project(':raspberry-sailor:NMEA-Parser')
 //  implementation 'astro.computer:astro.computer:1.0'
   implementation project(':astro-computer:AstroComputer')
   testImplementation 'junit:junit:4.13'

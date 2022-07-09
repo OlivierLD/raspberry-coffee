@@ -1,36 +1,24 @@
 package nmea.forwarders;
 
+import calc.GeomUtil;
 import context.ApplicationContext;
 import context.NMEADataCache;
+import lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
+import lcd.substitute.SwingLedPanel;
+import nmea.mux.context.Context;
+import nmea.parser.*;
+import utils.PinUtil;
+import utils.gpio.StringToGPIOPin;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
-
-import lcd.ScreenBuffer;
-import lcd.oled.SSD1306;
-import nmea.mux.context.Context;
-import nmea.parser.Angle180;
-import nmea.parser.Angle180EW;
-import nmea.parser.Angle180LR;
-import nmea.parser.Angle360;
-import nmea.parser.Current;
-import nmea.parser.Depth;
-import nmea.parser.Distance;
-import nmea.parser.GeoPos;
-import nmea.parser.Pressure;
-import nmea.parser.SolarDate;
-import nmea.parser.Speed;
-import nmea.parser.Temperature;
-import nmea.parser.UTCDate;
-import nmea.parser.UTCTime;
-import calc.GeomUtil;
-import lcd.substitute.SwingLedPanel;
-import utils.PinUtil;
 
 /**
  * This is an example of a <b>transformer</b>.
@@ -336,11 +324,11 @@ public class SSD1306Processor implements Forwarder {
 							ssd1306DC);
 				}
 				oled = new SSD1306(
-						PinUtil.getPinByWiringPiNumber(ssd1306CLK),
-						PinUtil.getPinByWiringPiNumber(ssd1306MOSI),
-						PinUtil.getPinByWiringPiNumber(ssd1306CS),
-						PinUtil.getPinByWiringPiNumber(ssd1306RST),
-						PinUtil.getPinByWiringPiNumber(ssd1306DC),
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306CLK)),
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306MOSI)),
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306CS)),
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306RST)),
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306DC)),
 						width,
 						height); // See Default pins in SSD1306.
 			}

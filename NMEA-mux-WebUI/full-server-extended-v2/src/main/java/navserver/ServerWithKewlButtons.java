@@ -14,6 +14,7 @@ import utils.PinUtil;
 import utils.StaticUtil;
 import utils.SystemUtils;
 import utils.TimeUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -660,19 +661,19 @@ public class ServerWithKewlButtons extends NavServer {
 			// Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
-				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin))); // GPIO_29
+				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin.getName()))); // GPIO_28
+				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin.getName()))); // GPIO_29
 
-				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
-				buttonTwoPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
+				buttonOnePin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr)));
+				buttonTwoPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr)));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 
 			// Pin mapping display for info
 			String[] map = new String[13];
-			map[0]  = String.valueOf(PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button 1 Hot Wire";
-			map[1]  = String.valueOf(PinUtil.findByPin(buttonTwoPin).pinNumber()) + ":Button 2 Hot Wire";
+			map[0]  = String.valueOf(PinUtil.findByPin(buttonOnePin.getName()).pinNumber()) + ":Button 1 Hot Wire";
+			map[1]  = String.valueOf(PinUtil.findByPin(buttonTwoPin.getName()).pinNumber()) + ":Button 2 Hot Wire";
 
 			map[2]  = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber())   + ":3v3";
 			map[3]  = String.valueOf(PinUtil.GPIOPin.PWR_2.pinNumber())   + ":5v0";

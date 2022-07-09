@@ -41,8 +41,9 @@ dependencies {
     implementation 'com.pi4j:pi4j-core:1.2'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation project(":common-utils")
+    implementation project(":raspberry-io-pi4j:Utils")
     implementation project(':http-tiny-server')
-    implementation 'oliv.raspi.pi4j:ADC:1.0'
+    implementation project(':raspberry-io-pi4j:ADC')
 }
 
 shadowJar {

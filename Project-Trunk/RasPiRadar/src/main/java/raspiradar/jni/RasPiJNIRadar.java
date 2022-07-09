@@ -6,6 +6,7 @@ import i2c.servo.PCA9685;
 import rangesensor.JNI_HC_SR04;
 import utils.PinUtil;
 import utils.TimeUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -110,7 +111,7 @@ public class RasPiJNIRadar {
 		try {
 			this.hcSR04 = new JNI_HC_SR04();
 			if (trig != null && echo != null) {
-				this.hcSR04.init(PinUtil.getWiringPiNumber(trig), PinUtil.getWiringPiNumber(echo));
+				this.hcSR04.init(PinUtil.getWiringPiNumber(trig.getName()), PinUtil.getWiringPiNumber(echo.getName()));
 			} else {
 				this.hcSR04.init();
 			}
@@ -125,8 +126,8 @@ public class RasPiJNIRadar {
 		if (verbose) {
 			System.out.println("HC-SR04 wiring:");
 			String[] map = new String[2];
-			map[0] = String.valueOf(trig != null ? PinUtil.findByPin(trig).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(4)).pinNumber()) + ":" + "Trigger";
-			map[1] = String.valueOf(echo != null ? PinUtil.findByPin(echo).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(5)).pinNumber()) + ":" + "Echo";
+			map[0] = String.valueOf(trig != null ? PinUtil.findByPin(trig.getName()).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(4)).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(echo != null ? PinUtil.findByPin(echo.getName()).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(5)).pinNumber()) + ":" + "Echo";
 
 			PinUtil.print(map);
 		}
@@ -262,7 +263,9 @@ public class RasPiJNIRadar {
 			if (echo == null && trig == null) {
 				rpr = new RasPiJNIRadar(true, servoPort);
 			} else {
-				rpr = new RasPiJNIRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+				rpr = new RasPiJNIRadar(true, servoPort,
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(trig)),
+						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(echo)));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");

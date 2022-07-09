@@ -65,7 +65,8 @@ dependencies {
 
     implementation project(':common-utils')
     implementation project(':http-tiny-server')
-    implementation 'oliv.raspi.pi4j:ADC:1.0'
+    implementation project(':raspberry-io-pi4j:Utils')
+    implementation project(':raspberry-io-pi4j:ADC')
 }
 
 //task swaggerClj(type: JavaExec, description: "Generate Clojure server code for the ligth and relay example") {

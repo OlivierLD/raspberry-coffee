@@ -19,6 +19,7 @@ repositories {
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2' // 2.1.1
   implementation project (':common-utils')
+  implementation project(':raspberry-io-pi4j:Utils')
   implementation project(':raspberry-io-pi4j:ADC')
   implementation project(':raspberry-io-pi4j:I2C-SPI')
 }

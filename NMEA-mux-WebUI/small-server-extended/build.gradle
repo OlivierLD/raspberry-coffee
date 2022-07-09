@@ -24,6 +24,7 @@ dependencies {
     implementation 'com.pi4j:pi4j-core:1.2'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation project(':common-utils')
+    implementation project(":raspberry-io-pi4j:Utils")
     implementation project(':http-tiny-server')
     implementation project(':NMEA-mux-extensions')
     implementation project(':NMEA-multiplexer') // RESTNavServer contains NMEA-multiplexer

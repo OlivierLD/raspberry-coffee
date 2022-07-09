@@ -20,23 +20,16 @@ import lcd.substitute.SwingLedPanel;
 import utils.PinUtil;
 import utils.SystemUtils;
 import utils.TimeUtil;
+import utils.gpio.StringToGPIOPin;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -583,9 +576,9 @@ public class TCPWatch {
 			gpio = GpioFactory.getInstance();
 
 			// User-parameters for those 2 pins, in case you want to invert them
-			key1Pin = gpio.provisionDigitalInputPin(PinUtil.getPinByWiringPiNumber(k1Pin), "K-1", PinPullResistance.PULL_DOWN);
+			key1Pin = gpio.provisionDigitalInputPin(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(k1Pin)), "K-1", PinPullResistance.PULL_DOWN);
 			key1Pin.setShutdownOptions(true);
-			key2Pin = gpio.provisionDigitalInputPin(PinUtil.getPinByWiringPiNumber(k2Pin), "K-2", PinPullResistance.PULL_DOWN);
+			key2Pin = gpio.provisionDigitalInputPin(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(k2Pin)), "K-2", PinPullResistance.PULL_DOWN);
 			key2Pin.setShutdownOptions(true);
 
 			LOGGER.log(Level.FINE, "Initializing button listeners");
@@ -771,11 +764,11 @@ public class TCPWatch {
 			//                          Clock             MOSI              CS                RST               DC
 //    oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16, WIDTH, HEIGHT);
 			oled = new SSD1306(
-					PinUtil.getPinByWiringPiNumber(clkPin),
-					PinUtil.getPinByWiringPiNumber(mosiPin),
-					PinUtil.getPinByWiringPiNumber(csPin),
-					PinUtil.getPinByWiringPiNumber(rstPin),
-					PinUtil.getPinByWiringPiNumber(dcPin),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(clkPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(mosiPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(csPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(rstPin)),
+					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(dcPin)),
 					WIDTH, HEIGHT);
 			oled.begin();
 			oled.clear();

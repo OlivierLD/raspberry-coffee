@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import utils.PinUtil;
 import utils.StaticUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,7 +108,7 @@ public class RelayManager {
 			try {
 				int relayNum = Integer.parseInt(tuple[0]);
 				int pinNum = Integer.parseInt(tuple[1]);
-				Pin physicalNumber = PinUtil.getPinByPhysicalNumber(pinNum);
+				Pin physicalNumber = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(pinNum));
 				if (physicalNumber == null) {
 					throw new RuntimeException(String.format("In [%s], element [%s], pin #%d does not exist", strMap, relayPrm, pinNum));
 				}
@@ -132,7 +133,10 @@ public class RelayManager {
 			relayMap = buildRelayMap(mapStr);
 			if ("true".equals(System.getProperty("relay.verbose", "false"))) {
 				relayMap.entrySet().forEach(entry -> {
-					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ", entry.getKey(), PinUtil.findByPin(entry.getValue()).pinNumber(), PinUtil.findByPin(entry.getValue()).pinName() ));
+					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ",
+							entry.getKey(),
+							PinUtil.findByPin(entry.getValue().getName()).pinNumber(),
+							PinUtil.findByPin(entry.getValue().getName()).pinName() ));
 				});
 			}
 		} catch (Exception ex) {

@@ -7,6 +7,7 @@ import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 import utils.StringUtils;
+import utils.gpio.StringToGPIOPin;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -204,10 +205,10 @@ public class BatteryMonitor {
 	private static boolean tuning = false;
 
 	// Defaults
-	private static Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
-	private static Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
-	private static Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-	private static Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+	private static Pin miso = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_13.pin());
+	private static Pin mosi = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_12.pin());
+	private static Pin clk  = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_14.pin());
+	private static Pin cs   = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_10.pin());
 
 	public static void main(String... args) throws Exception {
 		System.out.println("Parameters are:");
@@ -261,7 +262,7 @@ public class BatteryMonitor {
 				String pinValue = prm.substring(MISO_PRM.length());
 				try {
 					int pin = Integer.parseInt(pinValue);
-					miso = PinUtil.getPinByGPIONumber(pin);
+					miso = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 				} catch (NumberFormatException nfe) {
 					System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 				}
@@ -269,7 +270,7 @@ public class BatteryMonitor {
 				String pinValue = prm.substring(MOSI_PRM.length());
 				try {
 					int pin = Integer.parseInt(pinValue);
-					mosi = PinUtil.getPinByGPIONumber(pin);
+					mosi = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 				} catch (NumberFormatException nfe) {
 					System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 				}
@@ -277,7 +278,7 @@ public class BatteryMonitor {
 				String pinValue = prm.substring(CLK_PRM.length());
 				try {
 					int pin = Integer.parseInt(pinValue);
-					clk = PinUtil.getPinByGPIONumber(pin);
+					clk = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 				} catch (NumberFormatException nfe) {
 					System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 				}
@@ -285,7 +286,7 @@ public class BatteryMonitor {
 				String pinValue = prm.substring(CS_PRM.length());
 				try {
 					int pin = Integer.parseInt(pinValue);
-					cs = PinUtil.getPinByGPIONumber(pin);
+					cs = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 				} catch (NumberFormatException nfe) {
 					System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 				}
@@ -333,25 +334,25 @@ public class BatteryMonitor {
 						" |         ||      |              |      | /BCM    | /PI4J    |\n" +
 						" +---------++------+--------------+------+---------+----------+");
 		System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(clk).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 12, " "),
-				PinUtil.findByPin(clk).gpio(),
-				PinUtil.findByPin(clk).wiringPi()));
+				PinUtil.findByPin(clk.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(clk.getName()).pinName(), 12, " "),
+				PinUtil.findByPin(clk.getName()).gpio(),
+				PinUtil.findByPin(clk.getName()).wiringPi()));
 		System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(mosi).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 12, " "),
-				PinUtil.findByPin(mosi).gpio(),
-				PinUtil.findByPin(mosi).wiringPi()));
+				PinUtil.findByPin(mosi.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(mosi.getName()).pinName(), 12, " "),
+				PinUtil.findByPin(mosi.getName()).gpio(),
+				PinUtil.findByPin(mosi.getName()).wiringPi()));
 		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(miso).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 12, " "),
-				PinUtil.findByPin(miso).gpio(),
-				PinUtil.findByPin(miso).wiringPi()));
+				PinUtil.findByPin(miso.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(miso.getName()).pinName(), 12, " "),
+				PinUtil.findByPin(miso.getName()).gpio(),
+				PinUtil.findByPin(miso.getName()).wiringPi()));
 		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(cs).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 12, " "),
-				PinUtil.findByPin(cs).gpio(),
-				PinUtil.findByPin(cs).wiringPi()));
+				PinUtil.findByPin(cs.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(cs.getName()).pinName(), 12, " "),
+				PinUtil.findByPin(cs.getName()).gpio(),
+				PinUtil.findByPin(cs.getName()).wiringPi()));
 		System.out.println(" +---------++------+--------------+-----+----------+----------+");
 		System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 		System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
@@ -370,10 +371,10 @@ public class BatteryMonitor {
 
 		// Compose mapping for PinUtil
 		String[] map = new String[]{
-				String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "CLK",
-				String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "Dout",
-				String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "Din",
-				String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "CS"
+				String.valueOf(PinUtil.findByPin(clk.getName()).pinNumber()) + ":" + "CLK",
+				String.valueOf(PinUtil.findByPin(miso.getName()).pinNumber()) + ":" + "Dout",
+				String.valueOf(PinUtil.findByPin(mosi.getName()).pinNumber()) + ":" + "Din",
+				String.valueOf(PinUtil.findByPin(cs.getName()).pinNumber()) + ":" + "CS"
 		};
 		PinUtil.print(map);
 

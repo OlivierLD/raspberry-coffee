@@ -25,7 +25,7 @@ dependencies {
   //implementation 'oracle:xmlparser:2.0'
   implementation project (':http-tiny-server')
 //  implementation project (':TideEngine')
-  implementation 'oliv.raspi.sailor:TideEngine:1.0'
+  implementation project(':raspberry-sailor:TideEngine')
   implementation project(':astro-computer:AstroComputer')
 //  implementation 'astro.computer:astro.computer:1.0'
   implementation project (':RESTNauticalAlmanac')

@@ -39,11 +39,11 @@ dependencies {
   implementation 'com.sun.mail:javax.mail:1.6.2'
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
-  implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
-  implementation 'oliv.raspi.pi4j:ADC:1.0'
+  implementation project(':raspberry-io-pi4j:I2C-SPI')
+  implementation project(':raspberry-io-pi4j:ADC')
   implementation project(':WeatherStation')
   implementation project(':Adafruit-IO')
-  implementation 'oliv.raspi.sailor:NMEA-Parser:1.0'
+  implementation project(':raspberry-sailor:NMEA-Parser')
   implementation project(':NMEA-multiplexer')
   testImplementation 'junit:junit:4.13'
 }

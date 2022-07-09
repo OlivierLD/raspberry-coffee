@@ -4,6 +4,7 @@ import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 import utils.StringUtils;
+import utils.gpio.StringToGPIOPin;
 
 import static utils.StringUtils.lpad;
 
@@ -28,17 +29,17 @@ public class MainMCP3008Sampler33 {
 	public static void main(String... args) {
 
 		// Default pins
-		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
-		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
-		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+		Pin miso = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_13.pin());
+		Pin mosi = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_12.pin());
+		Pin clk  = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_14.pin());
+		Pin cs   = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_10.pin());
 
 		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
 				MainMCP3008Sampler33.class.getName(),
-				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
-				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
-				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
-				CS_PRM_PREFIX,    PinUtil.findByPin(cs).gpio(),
+				MISO_PRM_PREFIX,  PinUtil.findByPin(miso.getName()).gpio(),
+				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi.getName()).gpio(),
+				CLK_PRM_PREFIX,   PinUtil.findByPin(clk.getName()).gpio(),
+				CS_PRM_PREFIX,    PinUtil.findByPin(cs.getName()).gpio(),
 				CHANNEL_PREFIX,   adcChannel));
 		System.out.println("Values above are default values (GPIO/BCM numbers).");
 		System.out.println();
@@ -51,7 +52,7 @@ public class MainMCP3008Sampler33 {
 					pinValue = prm.substring(MISO_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						miso = PinUtil.getPinByGPIONumber(pin);
+						miso = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -59,7 +60,7 @@ public class MainMCP3008Sampler33 {
 					pinValue = prm.substring(MOSI_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						mosi = PinUtil.getPinByGPIONumber(pin);
+						mosi = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -67,7 +68,7 @@ public class MainMCP3008Sampler33 {
 					pinValue = prm.substring(CLK_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						clk = PinUtil.getPinByGPIONumber(pin);
+						clk = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -75,7 +76,7 @@ public class MainMCP3008Sampler33 {
 					pinValue = prm.substring(CS_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						cs = PinUtil.getPinByGPIONumber(pin);
+						cs = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -106,25 +107,25 @@ public class MainMCP3008Sampler33 {
 						" |         ||      |            |      | /BCM    | /PI4J    |\n" +
 						" +---------++------+------------+------+---------+----------+");
 		System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(clk).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
-				PinUtil.findByPin(clk).gpio(),
-				PinUtil.findByPin(clk).wiringPi()));
+				PinUtil.findByPin(clk.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(clk.getName()).pinName(), 10, " "),
+				PinUtil.findByPin(clk.getName()).gpio(),
+				PinUtil.findByPin(clk.getName()).wiringPi()));
 		System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(mosi).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
-				PinUtil.findByPin(mosi).gpio(),
-				PinUtil.findByPin(mosi).wiringPi()));
+				PinUtil.findByPin(mosi.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(mosi.getName()).pinName(), 10, " "),
+				PinUtil.findByPin(mosi.getName()).gpio(),
+				PinUtil.findByPin(mosi.getName()).wiringPi()));
 		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(miso).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
-				PinUtil.findByPin(miso).gpio(),
-				PinUtil.findByPin(miso).wiringPi()));
+				PinUtil.findByPin(miso.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(miso.getName()).pinName(), 10, " "),
+				PinUtil.findByPin(miso.getName()).gpio(),
+				PinUtil.findByPin(miso.getName()).wiringPi()));
 		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(cs).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
-				PinUtil.findByPin(cs).gpio(),
-				PinUtil.findByPin(cs).wiringPi()));
+				PinUtil.findByPin(cs.getName()).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(cs.getName()).pinName(), 10, " "),
+				PinUtil.findByPin(cs.getName()).gpio(),
+				PinUtil.findByPin(cs.getName()).wiringPi()));
 		System.out.println(" +---------++------+------------+-----+----------+----------+");
 		System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 		System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
@@ -143,10 +144,10 @@ public class MainMCP3008Sampler33 {
 
 		// Compose mapping for PinUtil
 		String[] map = new String[4];
-		map[0] = String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "CLK";
-		map[1] = String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "Dout";
-		map[2] = String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "Din";
-		map[3] = String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "CS";
+		map[0] = String.valueOf(PinUtil.findByPin(clk.getName()).pinNumber()) + ":" + "CLK";
+		map[1] = String.valueOf(PinUtil.findByPin(miso.getName()).pinNumber()) + ":" + "Dout";
+		map[2] = String.valueOf(PinUtil.findByPin(mosi.getName()).pinNumber()) + ":" + "Din";
+		map[3] = String.valueOf(PinUtil.findByPin(cs.getName()).pinNumber()) + ":" + "CS";
 
 		PinUtil.print(map);
 

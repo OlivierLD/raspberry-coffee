@@ -3,6 +3,7 @@ package breadboard.button.v2;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
+import utils.gpio.StringToGPIOPin;
 
 import java.util.Arrays;
 
@@ -52,7 +53,7 @@ public class SampleMainTwoButtons {
 					String bStrPin = arg.substring(BUTTON_PREFIX.length());
 					try {
 						int bPin = Integer.parseInt(bStrPin);
-						appPin = PinUtil.getPinByPhysicalNumber(bPin);
+						appPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(bPin));
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 					}
@@ -60,7 +61,7 @@ public class SampleMainTwoButtons {
 					String shStrPin = arg.substring(SHIFT_PREFIX.length());
 					try {
 						int shPin = Integer.parseInt(shStrPin);
-						shiftPin = PinUtil.getPinByPhysicalNumber(shPin);
+						shiftPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(shPin));
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 					}
@@ -69,9 +70,9 @@ public class SampleMainTwoButtons {
 		}
 
 		String[] map = new String[3];
-		map[0] = String.valueOf(PinUtil.findByPin(appPin).pinNumber()) + ":" + "BUTTON Hot Wire";
+		map[0] = String.valueOf(PinUtil.findByPin(appPin.getName()).pinNumber()) + ":" + "BUTTON Hot Wire";
 		map[1] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "3v3";
-		map[2] = String.valueOf(PinUtil.findByPin(shiftPin).pinNumber()) + ":" + "Shift";
+		map[2] = String.valueOf(PinUtil.findByPin(shiftPin.getName()).pinNumber()) + ":" + "Shift";
 
 		PinUtil.print(map);
 
