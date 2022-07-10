@@ -99,15 +99,15 @@ JFR_FLAGS=
 # JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
 # For remote debugging
 REMOTE_DEBUG_FLAGS=
-# REMOTE_DEBUG_FLAGS="$REMOTE_DEBUG_FLAGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+# REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
 #
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry Pi, specially if reading serial port(s)
-# sudo java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
-COMMAND="${SUDO}java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer ${CLI_PRMS}"
+# sudo java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS ${REMOTE_DEBUG_FLAGS} -cp ${CP} nmea.mux.GenericNMEAMultiplexer
+COMMAND="${SUDO}java ${JAVA_OPTIONS} ${LOGGING_FLAG} ${JFR_FLAGS} ${REMOTE_DEBUG_FLAGS} -cp ${CP} nmea.mux.GenericNMEAMultiplexer ${CLI_PRMS}"
 echo -e "Running ${COMMAND}"
 ${COMMAND}
 #

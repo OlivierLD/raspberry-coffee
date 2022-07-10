@@ -92,7 +92,12 @@ public class MCPReader {
 		spiClk = clk;
 		spiCs = cs;
 
-		gpio = GpioFactory.getInstance();
+		try {
+			gpio = GpioFactory.getInstance();
+		} catch (UnsatisfiedLinkError ule) {
+			System.err.printf("Not on a Raspberry, or Wiring PI was not installed: %s\n", ule.getMessage());
+			ule.printStackTrace();
+		}
 		// Out
 		mosiOutput       = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
 		clockOutput      = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
