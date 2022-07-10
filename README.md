@@ -166,6 +166,28 @@ Depending on the IDE you are using, there are two main features you might be int
     - This is implemented through the JPDA (Java Platform Debugging Architecture) protocol, that comes with Java, and 
       possibly implemented by your IDE. You _run_ the code on the Raspberry Pi, and you _debug_ (breakpoints, variable inspections, etc) on your laptop.
 
+> _**Remote Debugging example**_:  
+> We want to run and debug the class `analogdigitalconverter.sample.MainMCP3008Sample`.  
+> Here is a script to run on the Raspberry Pi (the remote debuggee), notice the `REMOTE_DEBUG_FLAGS` variable below, and the port `5005`.
+> ```
+> #!/bin/bash
+> echo Read an ADC
+> #
+> JAVA_OPTS=
+> JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
+> JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
+> CP=./build/libs/ADC-1.0-all.jar
+> #
+> REMOTE_DEBUG_FLAGS=
+> REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+> #
+> # Channel [0..1] can be passed as prm. Default is 0
+> sudo java -cp ${CP} ${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS} analogdigitalconverter.sample.MainMCP3008Sample $*
+> ```
+> Now, from your IDE on the debugger machine, create a profile:
+> ![Remote debug profile](./remote.debug.profile.png)  
+> Notice the `Command line arguments for remote JVM`, and the port, `5005`.
+> 
 ---
 
 This being said, let's go.

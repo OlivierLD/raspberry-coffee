@@ -29,14 +29,19 @@ public class MainMCP3008Sample {
 		Pin clk  = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_14.pin());
 		Pin cs   = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_10.pin());
 
-		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
+		System.out.printf("Usage is java %s %s%d %s%d %s%d %s%d %s%d\n",
 				MainMCP3008Sample.class.getName(),
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso.getName()).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi.getName()).gpio(),
 				CLK_PRM_PREFIX,   PinUtil.findByPin(clk.getName()).gpio(),
 				CS_PRM_PREFIX,    PinUtil.findByPin(cs.getName()).gpio(),
-				CHANNEL_PREFIX,   adcChannel));
+				CHANNEL_PREFIX,   adcChannel);
 		System.out.println("Values above are default values (GPIO/BCM numbers).");
+		System.out.printf("Pins: %s (%s) %s (%s) %s (%s) %s (%s)\n",
+				PinUtil.findByPin(miso.getName()).gpio(), miso.getName(),
+				PinUtil.findByPin(mosi.getName()).gpio(), mosi.getName(),
+				PinUtil.findByPin(clk.getName()).gpio(), clk.getName(),
+				PinUtil.findByPin(cs.getName()).gpio(), cs.getName());
 		System.out.println();
 
 		if (args.length > 0) {
