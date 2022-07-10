@@ -5,10 +5,13 @@ plugins {
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
-//compileJava.options.encoding = 'ISO-8859-1'
-
 group = 'oliv.raspi.pi4j'
 version = '1.0'
+
+// compileJava.options.encoding = 'UTF-8' // 'ISO-8859-1'
+compileJava {
+  options.compilerArgs << '-g' // Debug? Comment if needed.
+}
 
 repositories {
   mavenCentral()
