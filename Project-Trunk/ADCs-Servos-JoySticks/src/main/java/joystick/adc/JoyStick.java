@@ -6,7 +6,6 @@ import adc.ADCObserver;
 import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
-import utils.gpio.StringToGPIOPin;
 
 /**
  * A two-channel listener. Uses an MCP3008 to get the values of the 2 joystick's channels.
@@ -16,16 +15,16 @@ import utils.gpio.StringToGPIOPin;
  */
 public class JoyStick {
 	// Default wiring for MCP3008
-	private static Pin defaultMiso = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_13.pin());
-	private static Pin defaultMosi = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_12.pin());
-	private static Pin defaultClk  = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_14.pin());
-	private static Pin defaultCs   = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_10.pin());
+	private final static Pin defaultMiso = PinUtil.GPIOPin.GPIO_13.pin();
+	private final static Pin defaultMosi = PinUtil.GPIOPin.GPIO_12.pin();
+	private final static Pin defaultClk  = PinUtil.GPIOPin.GPIO_14.pin();
+	private final static Pin defaultCs   = PinUtil.GPIOPin.GPIO_10.pin();
 
-	private static MCPReader.MCP3008InputChannels channel[] = null;
+	private static MCPReader.MCP3008InputChannels[] channel = null;
 	private final int[] channelValues = new int[]{0, 0}; // (0..100)
 
 	private JoyStickClient joyStickClient = null;
-	private int prevUDValue = 0, prevLRValue = 0;
+	private final int prevUDValue = 0, prevLRValue = 0;
 
 	public JoyStick(JoyStickClient jsc) throws Exception {
 		this(jsc, true);
@@ -58,8 +57,8 @@ public class JoyStick {
 	                Pin mosi,
 	                Pin cs,
 	                boolean withHook) throws Exception {
-		System.out.println(String.format(">> Channel MCP3008 #%s: Up-Down", ud.toString()));
-		System.out.println(String.format(">> Channel MCP3008 #%s: Left-Right", lr.toString()));
+		System.out.printf(">> Channel MCP3008 #%s: Up-Down\n", ud.toString());
+		System.out.printf(">> Channel MCP3008 #%s: Left-Right\n", lr.toString());
 
 		joyStickClient = jsc;
 		channel = new MCPReader.MCP3008InputChannels[] { ud, lr };

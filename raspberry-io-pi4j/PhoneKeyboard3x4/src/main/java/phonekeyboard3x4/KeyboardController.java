@@ -2,7 +2,6 @@ package phonekeyboard3x4;
 
 import com.pi4j.io.gpio.*;
 import utils.PinUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.security.InvalidParameterException;
 
@@ -49,16 +48,16 @@ public class KeyboardController {
 	 */
 
 	// 2 arrays, customizable through system properties
-	private Pin[] kpRow = new Pin[]{
-			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_1.pin()),
-			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_4.pin()),
-			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_5.pin()),
-			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_6.pin())
+	private final Pin[] kpRow = new Pin[] {
+			PinUtil.GPIOPin.GPIO_1.pin(),
+			PinUtil.GPIOPin.GPIO_4.pin(),
+			PinUtil.GPIOPin.GPIO_5.pin(),
+			PinUtil.GPIOPin.GPIO_6.pin()
 	};
-	private Pin[] kpCol = new Pin[]{
-			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_7.pin()),
-			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_0.pin()),
-			StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_3.pin())
+	private final Pin[] kpCol = new Pin[] {
+			PinUtil.GPIOPin.GPIO_7.pin(),
+			PinUtil.GPIOPin.GPIO_0.pin(),
+			PinUtil.GPIOPin.GPIO_3.pin()
 	};
 
 	public KeyboardController() {
@@ -111,7 +110,7 @@ public class KeyboardController {
 					if (pin == null) {
 						throw new InvalidParameterException(String.format("Unknown row pin name [%s]", row));
 					} else {
-						kpRow[i] = StringToGPIOPin.stringToGPIOPin(pin.pin());
+						kpRow[i] = pin.pin();
 					}
 				}
 				for (int i=0; i<userCols.length; i++) {
@@ -120,7 +119,7 @@ public class KeyboardController {
 					if (pin == null) {
 						throw new InvalidParameterException(String.format("Unknown col pin name [%s]", col));
 					} else {
-						kpCol[i] = StringToGPIOPin.stringToGPIOPin(pin.pin());
+						kpCol[i] = pin.pin();
 					}
 				}
 			}
@@ -136,23 +135,23 @@ public class KeyboardController {
 			System.out.println("     x  R  R  R  R  C  C  C");
 			System.out.println("        1  2  3  4  1  2  3");
 			System.out.println("        |  |  |  |  |  |  |");
-			System.out.println("        |  |  |  |  |  |  Col [1,4,7,*] " + PinUtil.findByPin(kpCol[2].getName()).toString() + ", " + PinUtil.findByPin(kpCol[2].getName()).pinName());
-			System.out.println("        |  |  |  |  |  Col [2,5,8,0] " + PinUtil.findByPin(kpCol[1].getName()).toString() + ", " + PinUtil.findByPin(kpCol[1].getName()).pinName());
-			System.out.println("        |  |  |  |  Col [3,6,9,#] " + PinUtil.findByPin(kpCol[0].getName()).toString() + ", " + PinUtil.findByPin(kpCol[0].getName()).pinName());
-			System.out.println("        |  |  |  Row [1,2,3] " + PinUtil.findByPin(kpRow[3].getName()).toString() + ", " + PinUtil.findByPin(kpRow[3].getName()).pinName());
-			System.out.println("        |  |  Row [4,5,6] " + PinUtil.findByPin(kpRow[2].getName()).toString() + ", " + PinUtil.findByPin(kpRow[2].getName()).pinName());
-			System.out.println("        |  Row [7,8,9] " + PinUtil.findByPin(kpRow[1].getName()).toString() + ", " + PinUtil.findByPin(kpRow[1].getName()).pinName());
-			System.out.println("        Row [*,0,#] " + PinUtil.findByPin(kpRow[0].getName()).toString() + ", " + PinUtil.findByPin(kpRow[0].getName()).pinName());
+			System.out.println("        |  |  |  |  |  |  Col [1,4,7,*] " + PinUtil.findByPin(kpCol[2]).toString() + ", " + PinUtil.findByPin(kpCol[2]).pinName());
+			System.out.println("        |  |  |  |  |  Col [2,5,8,0] " + PinUtil.findByPin(kpCol[1]).toString() + ", " + PinUtil.findByPin(kpCol[1]).pinName());
+			System.out.println("        |  |  |  |  Col [3,6,9,#] " + PinUtil.findByPin(kpCol[0]).toString() + ", " + PinUtil.findByPin(kpCol[0]).pinName());
+			System.out.println("        |  |  |  Row [1,2,3] " + PinUtil.findByPin(kpRow[3]).toString() + ", " + PinUtil.findByPin(kpRow[3]).pinName());
+			System.out.println("        |  |  Row [4,5,6] " + PinUtil.findByPin(kpRow[2]).toString() + ", " + PinUtil.findByPin(kpRow[2]).pinName());
+			System.out.println("        |  Row [7,8,9] " + PinUtil.findByPin(kpRow[1]).toString() + ", " + PinUtil.findByPin(kpRow[1]).pinName());
+			System.out.println("        Row [*,0,#] " + PinUtil.findByPin(kpRow[0]).toString() + ", " + PinUtil.findByPin(kpRow[0]).pinName());
 			System.out.println();
 
 			String[] map = new String[]{
-					String.valueOf(PinUtil.findByPin(kpRow[0].getName()).pinNumber()) + ":" + "R1",
-					String.valueOf(PinUtil.findByPin(kpRow[1].getName()).pinNumber()) + ":" + "R2",
-					String.valueOf(PinUtil.findByPin(kpRow[2].getName()).pinNumber()) + ":" + "R3",
-					String.valueOf(PinUtil.findByPin(kpRow[3].getName()).pinNumber()) + ":" + "R4",
-					String.valueOf(PinUtil.findByPin(kpCol[0].getName()).pinNumber()) + ":" + "C1",
-					String.valueOf(PinUtil.findByPin(kpCol[1].getName()).pinNumber()) + ":" + "C2",
-					String.valueOf(PinUtil.findByPin(kpCol[2].getName()).pinNumber()) + ":" + "C3"
+					PinUtil.findByPin(kpRow[0]).pinNumber() + ":" + "R1",
+					PinUtil.findByPin(kpRow[1]).pinNumber() + ":" + "R2",
+					PinUtil.findByPin(kpRow[2]).pinNumber() + ":" + "R3",
+					PinUtil.findByPin(kpRow[3]).pinNumber() + ":" + "R4",
+					PinUtil.findByPin(kpCol[0]).pinNumber() + ":" + "C1",
+					PinUtil.findByPin(kpCol[1]).pinNumber() + ":" + "C2",
+					PinUtil.findByPin(kpCol[2]).pinNumber() + ":" + "C3"
 			};
 
 			PinUtil.print(map);
@@ -166,7 +165,7 @@ public class KeyboardController {
 		rowButton = new GpioPinDigitalMultipurpose[kpRow.length];
 		for (int i = 0; i < kpRow.length; i++) {
 			if (this.verbose) {
-				System.out.println(String.format("Provisioning %s", kpRow[i].toString()));
+				System.out.printf("Provisioning %s\n", kpRow[i].toString());
 			}
 			if (this.gpio != null) {
 				try {
@@ -179,7 +178,7 @@ public class KeyboardController {
 		colButton = new GpioPinDigitalMultipurpose[kpCol.length];
 		for (int i = 0; i < kpCol.length; i++) {
 			if (this.verbose) {
-				System.out.println(String.format("Provisioning %s", kpCol[i].toString()));
+				System.out.printf("Provisioning %s\n", kpCol[i].toString());
 			}
 			if (this.gpio != null) {
 				try {

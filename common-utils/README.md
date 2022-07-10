@@ -25,7 +25,7 @@ See [Controlling invisible machines with emails, from Java](http://hocus-blogus.
 
 ## Pins
 ```
- $ java -cp ./build/libs/common-utils-1.0-all.jar utils.PinUtil
+ $ java -cp ./build/libs/common-utils-1.0-all.jar utils.GenericPinUtil
  +-----+-----+--------------+-----++-----+--------------+-----+-----+
  | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
  +-----+-----+--------------+-----++-----+--------------+-----+-----+

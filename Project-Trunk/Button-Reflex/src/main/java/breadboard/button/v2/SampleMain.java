@@ -23,10 +23,10 @@ public class SampleMain {
 		Pin pin = RaspiPin.GPIO_01; // The hot pin for this button. The other is 3v3.
 
 		String[] map = new String[2];
-		map[0] = String.valueOf(PinUtil.findByPin(pin.getName()).pinNumber()) + ":" + "BUTTON Hot Wire";
-		map[1] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "3v3";
+		map[0] = PinUtil.findByPin(pin).pinNumber() + ":" + "BUTTON Hot Wire";
+		map[1] = PinUtil.GPIOPin.PWR_1.pinNumber() + ":" + "3v3";
 
-		utils.PinUtil.print(map);
+		PinUtil.print(map);
 
 		PushButtonMaster pbm = new PushButtonMaster(
 				"ForTest",

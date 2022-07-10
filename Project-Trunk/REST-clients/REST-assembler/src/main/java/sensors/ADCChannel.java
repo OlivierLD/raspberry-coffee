@@ -3,7 +3,6 @@ package sensors;
 import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
-import utils.gpio.StringToGPIOPin;
 
 /**
  * ADC (MCP3008) reading
@@ -24,19 +23,19 @@ public class ADCChannel {
 	}
 
 	public ADCChannel(int miso, int mosi, int clk, int cs) {
-		Pin misoPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(miso));
-		Pin mosiPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(mosi));
-		Pin clkPin  = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(clk));
-		Pin csPin   = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(cs));
+		Pin misoPin = PinUtil.getPinByGPIONumber(miso);
+		Pin mosiPin = PinUtil.getPinByGPIONumber(mosi);
+		Pin clkPin  = PinUtil.getPinByGPIONumber(clk);
+		Pin csPin   = PinUtil.getPinByGPIONumber(cs);
 
 		MCPReader.initMCP(misoPin, mosiPin, clkPin, csPin);
 	}
 
 	public ADCChannel(int miso, int mosi, int clk, int cs, int channel) {
-		Pin misoPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(miso));
-		Pin mosiPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(mosi));
-		Pin clkPin  = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(clk));
-		Pin csPin   = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(cs));
+		Pin misoPin = PinUtil.getPinByGPIONumber(miso);
+		Pin mosiPin = PinUtil.getPinByGPIONumber(mosi);
+		Pin clkPin  = PinUtil.getPinByGPIONumber(clk);
+		Pin csPin   = PinUtil.getPinByGPIONumber(cs);
 
 		try {
 			MCPReader.initMCP(misoPin, mosiPin, clkPin, csPin);

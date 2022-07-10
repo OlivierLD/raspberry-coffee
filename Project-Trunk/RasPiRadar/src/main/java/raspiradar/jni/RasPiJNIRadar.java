@@ -6,7 +6,6 @@ import i2c.servo.PCA9685;
 import rangesensor.JNI_HC_SR04;
 import utils.PinUtil;
 import utils.TimeUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -17,7 +16,7 @@ import java.util.function.Supplier;
  */
 public class RasPiJNIRadar {
 
-	private boolean verbose = "true".equals(System.getProperty("radar.verbose"));
+	private final boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 	private int servo = -1;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -75,9 +74,7 @@ public class RasPiJNIRadar {
 	 * When data are read, they're sent to this Consumer.
 	 * Can be used for user interface. REST, Serial, etc.
 	 */
-	private Consumer<DirectionAndRange> dataConsumer = data -> {
-		System.out.println(String.format("Default ObjectDataConsumer -> Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
-	};
+	private Consumer<DirectionAndRange> dataConsumer = data -> System.out.printf("Default ObjectDataConsumer -> Bearing %s%02d, distance %.02f m\n", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range);
 
 	private Supplier<Double> rangeSimulator = null;
 	public void setRangeSimulator(Supplier<Double> rangeSimulator) {
@@ -111,7 +108,7 @@ public class RasPiJNIRadar {
 		try {
 			this.hcSR04 = new JNI_HC_SR04();
 			if (trig != null && echo != null) {
-				this.hcSR04.init(PinUtil.getWiringPiNumber(trig.getName()), PinUtil.getWiringPiNumber(echo.getName()));
+				this.hcSR04.init(PinUtil.getWiringPiNumber(trig), PinUtil.getWiringPiNumber(echo));
 			} else {
 				this.hcSR04.init();
 			}
@@ -126,8 +123,8 @@ public class RasPiJNIRadar {
 		if (verbose) {
 			System.out.println("HC-SR04 wiring:");
 			String[] map = new String[2];
-			map[0] = String.valueOf(trig != null ? PinUtil.findByPin(trig.getName()).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(4)).pinNumber()) + ":" + "Trigger";
-			map[1] = String.valueOf(echo != null ? PinUtil.findByPin(echo.getName()).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(5)).pinNumber()) + ":" + "Echo";
+			map[0] = String.valueOf(trig != null ? PinUtil.findByPin(trig).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(4)).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(echo != null ? PinUtil.findByPin(echo).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(5)).pinNumber()) + ":" + "Echo";
 
 			PinUtil.print(map);
 		}
@@ -217,9 +214,7 @@ public class RasPiJNIRadar {
 
 	public static void main(String... args) {
 
-		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
-			System.out.println(String.format("Default (static) RasPiRadar Consumer >> Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
-		};
+		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> System.out.printf("Default (static) RasPiRadar Consumer >> Bearing %s%02d, distance %.02f m\n", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range);
 
 		int servoPort  = 0;
 
@@ -255,8 +250,8 @@ public class RasPiJNIRadar {
 			throw new RuntimeException("Echo & Trigger pin numbers must be provided together, or not at all.");
 		}
 
-		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
-		System.out.println(String.format("Wait when scanning %d ms", delay));
+		System.out.printf("Driving Servo on Channel %d\n", servoPort);
+		System.out.printf("Wait when scanning %d ms\n", delay);
 
 		RasPiJNIRadar rpr = null;
 		try {
@@ -264,8 +259,8 @@ public class RasPiJNIRadar {
 				rpr = new RasPiJNIRadar(true, servoPort);
 			} else {
 				rpr = new RasPiJNIRadar(true, servoPort,
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(trig)),
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(echo)));
+						PinUtil.getPinByPhysicalNumber(trig),
+						PinUtil.getPinByPhysicalNumber(echo));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
@@ -275,7 +270,7 @@ public class RasPiJNIRadar {
 
 		rpr.setDataConsumer(data -> {
 			// TODO Damping?
-			System.out.println(String.format("Injected Data Consumer >> Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+			System.out.printf("Injected Data Consumer >> Bearing %s%02d, distance %.02f m\n", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range);
 		});
 		// For simulation, override if needed
 //	rpr.setRangeSimulator(RasPiRadar::simulateUserRange);

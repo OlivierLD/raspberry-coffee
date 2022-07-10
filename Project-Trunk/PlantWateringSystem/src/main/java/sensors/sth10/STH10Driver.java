@@ -119,8 +119,8 @@ public class STH10Driver {
 					this.clock.setShutdownOptions(true, PinState.LOW);
 					if ("true".equals(System.getProperty("gpio.verbose"))) {
 						System.out.println(String.format("GPIO> Pins BCM #%d and #%d provisioned.",
-								PinUtil.findByPin(this.dataPin.getName()).gpio(),
-								PinUtil.findByPin(this.clockPin.getName()).gpio()));
+								PinUtil.findByPin(this.dataPin).gpio(),
+								PinUtil.findByPin(this.clockPin).gpio()));
 					}
 					ok = true;
 				} catch (Exception ex) {
@@ -152,7 +152,7 @@ public class STH10Driver {
 	}
 	private String pinDisplay(GpioPinDigital pin, String defaultDisplay) {
 		if (pin != null) {
-			return (String.format("%d [%s]", PinUtil.findByPin(pin.getPin().getName()).gpio(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "!UNKNOWN!")));
+			return (String.format("%d [%s]", PinUtil.findByPin(pin.getPin()).gpio(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "!UNKNOWN!")));
 		} else {
 			return defaultDisplay;
 		}

@@ -8,12 +8,7 @@ import loggers.LogData;
 import org.fusesource.jansi.AnsiConsole;
 import relay.RelayDriver;
 import sensors.sparkfunsoilhumiditysensor.MCP3008Wrapper;
-import utils.PinUtil;
-import utils.StaticUtil;
-import utils.StringUtils;
-import utils.TimeUtil;
-import utils.WeatherUtil;
-import utils.gpio.StringToGPIOPin;
+import utils.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -69,7 +64,7 @@ public class MCP3008 implements Probe {
 	private static Long lastWatering = null;
 	private static boolean wateringWasStopped = false;
 	private static EmailSender emailSender = null;
-	private static boolean emailVerbose = "true".equals(System.getProperty("email.verbose"));
+	private final static boolean emailVerbose = "true".equals(System.getProperty("email.verbose"));
 
 	// Program arguments
 	private enum ProgramArguments {
@@ -110,7 +105,7 @@ public class MCP3008 implements Probe {
 				String.format("Long, in milliseconds. The interval between each log entry. Default is %d.", DEFAULT_LOGGING_PACE)),
 		HELP("--help", "Display the help and exit.");
 
-		private String prefix, help;
+		private final String prefix, help;
 
 		ProgramArguments(String prefix, String help) {
 			this.prefix = prefix;
@@ -139,7 +134,7 @@ public class MCP3008 implements Probe {
 
 	// Simulators, to run on non-Raspberry Pis - for development and tests.
 	// User manual entry (also suitable for REST)
-	private static Supplier<Double> temperatureSimulator = MCP3008::simulateUserTemp; // Not used with MCP3008
+	private final static Supplier<Double> temperatureSimulator = MCP3008::simulateUserTemp; // Not used with MCP3008
 	private static Supplier<Double> humiditySimulator = MCP3008::simulateUserHum;
 	// Random values
 //	private static Supplier<Double> temperatureSimulator = MCP3008::simulateTemp;
@@ -151,24 +146,24 @@ public class MCP3008 implements Probe {
 	private static String message = "";
 
 	private final static int DATA_BUFFER_MAX_SIZE = 1_000;
-	private static List<Double> dataBuffer = new ArrayList<>();
+	private final static List<Double> dataBuffer = new ArrayList<>();
 
 	private static double minSimTemp = temperature, maxSimTemp = temperature;
 	private static double minSimHum = humidity, maxSimHum = humidity;
 
 	private static PinState simulatedPinState = PinState.HIGH;
 	private static PinState actualPinState = PinState.HIGH;
-	private static Supplier<PinState> relaySignalSimulator = () -> simulatedPinState;
-	private static Consumer<PinState> relayObserver = state -> {
+	private final static Supplier<PinState> relaySignalSimulator = () -> simulatedPinState;
+	private final static Consumer<PinState> relayObserver = state -> {
 		System.out.println(">> Relay is now " + state);
 		simulatedPinState = state;
 	};
-	private static Consumer<PinState> relayListener = state -> actualPinState = state;
+	private final static Consumer<PinState> relayListener = state -> actualPinState = state;
 
 	private static HTTPServer httpServer = null;
 
 	// Loggers
-	private static List<DataLoggerInterface> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
+	private final static List<DataLoggerInterface> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
 	private static long lastLog = -1;
 
 	public static Logger getLogger() {
@@ -428,7 +423,7 @@ public class MCP3008 implements Probe {
 					humidityThreshold = Integer.parseInt(val);
 					if (humidityThreshold < 0 || humidityThreshold > 100) {
 						humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
-						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Resetting to %d ", DEFAULT_HUMIDITY_THRESHOLD));
+						System.err.printf(">> Humidity Threshold must be in [0..100]. Resetting to %d \n", DEFAULT_HUMIDITY_THRESHOLD);
 					}
 					humidity = humidityThreshold * 1.2; // Initialize low pass filter
 				} catch (NumberFormatException nfe) {
@@ -490,11 +485,11 @@ public class MCP3008 implements Probe {
 			displayANSIConsole();
 		} else {
 			System.out.println("+------- P L A N T   W A T E R I N G   S Y S T E M --------");
-			System.out.println(String.format("| Start watering under %d%% of humidity.", humidityThreshold));
-			System.out.println(String.format("| Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))));
-			System.out.println(String.format("| Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))));
+			System.out.printf("| Start watering under %d%% of humidity.\n", humidityThreshold);
+			System.out.printf("| Water during %s\n", fmtDHMS(msToHMS(wateringDuration * 1_000)));
+			System.out.printf("| Resume sensor watch %s after watering.\n", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000)));
 			if (withRESTServer) {
-				System.out.println(String.format("| REST Server running on port %d.", restServerPort));
+				System.out.printf("| REST Server running on port %d.\n", restServerPort);
 			}
 			System.out.println("+----------------------------------------------------------");
 		}
@@ -503,15 +498,15 @@ public class MCP3008 implements Probe {
 			System.out.println("Wiring:");
 			// Compose mapping for PinUtil, physical numbers.
 			String[] map = new String[5];
-			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinNumber()) + ":" + "MISO";
-			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinNumber()) + ":" + "MOSI";
-			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinNumber()) + ":" + "CLK";
-			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber()) + ":" + "CS";
+			map[0] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinNumber()) + ":" + "MISO";
+			map[1] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinNumber()) + ":" + "MOSI";
+			map[2] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinNumber()) + ":" + "CLK";
+			map[3] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber()) + ":" + "CS";
 
-			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
+			map[4] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
 			PinUtil.print(true, map);
 
-			System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
+			System.out.printf("Reading MCP3008 on channel %d\n", adcChannel);
 			System.out.println(
 					" Wiring of the MCP3008-SPI (without power supply):\n" +
 							" +---------++-------------------------------------------------+\n" +
@@ -520,40 +515,40 @@ public class MCP3008 implements Probe {
 							" |         || Pin# | Name         | Role | GPIO    | wiringPI |\n" +
 							" |         ||      |              |      | /BCM    | /PI4J    |\n" +
 							" +---------++------+--------------+------+---------+----------+");
-			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
+			System.out.printf(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |\n",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).gpio(),
-					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).wiringPi()));
-			System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).wiringPi());
+			System.out.printf(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |\n",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).gpio(),
-					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).wiringPi()));
-			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).wiringPi());
+			System.out.printf(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |\n",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).gpio(),
-					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).wiringPi()));
-			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).wiringPi());
+			System.out.printf(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |\n",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).gpio(),
-					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).wiringPi()));
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).wiringPi());
 			System.out.println(" +---------++------+--------------+-----+----------+----------+");
 			System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 			System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 			System.out.println("       +--------+ ");
-			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ", (adcChannel == 0 ? "*" : " ")));
-			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
-			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
-			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ", (adcChannel == 3 ? "*" : " ")));
-			System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4 ? "*" : " ")));
-			System.out.println(String.format("%s CH5 -+  6  11 +- Din ", (adcChannel == 5 ? "*" : " ")));
-			System.out.println(String.format("%s CH6 -+  7  10 +- CS ", (adcChannel == 6 ? "*" : " ")));
-			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
+			System.out.printf("%s CH0 -+  1  16 +- Vdd \n", (adcChannel == 0 ? "*" : " "));
+			System.out.printf("%s CH1 -+  2  15 +- Vref \n", (adcChannel == 1 ? "*" : " "));
+			System.out.printf("%s CH2 -+  3  14 +- aGnd \n", (adcChannel == 2 ? "*" : " "));
+			System.out.printf("%s CH3 -+  4  13 +- CLK \n", (adcChannel == 3 ? "*" : " "));
+			System.out.printf("%s CH4 -+  5  12 +- Dout \n", (adcChannel == 4 ? "*" : " "));
+			System.out.printf("%s CH5 -+  6  11 +- Din \n", (adcChannel == 5 ? "*" : " "));
+			System.out.printf("%s CH6 -+  7  10 +- CS \n", (adcChannel == 6 ? "*" : " "));
+			System.out.printf("%s CH7 -+  8   9 +- dGnd \n", (adcChannel == 7 ? "*" : " "));
 			System.out.println("       +--------+ ");
 		}
 
@@ -567,7 +562,7 @@ public class MCP3008 implements Probe {
 			probe = MCP3008Wrapper.init(misoPin, mosiPin, clkPin, csPin, adcChannel);
 			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
-				System.out.println(String.format(">> Will simulate MCP3008%s", (enforceSensorSimulation ? " (enforced)" : "")));
+				System.out.printf(">> Will simulate MCP3008%s\n", (enforceSensorSimulation ? " (enforced)" : ""));
 				if ("true".equals(System.getProperty("random.simulator"))) {
 //					temperatureSimulator = MCP3008::simulateTemp;
 					humiditySimulator = MCP3008::simulateHum;
@@ -583,7 +578,7 @@ public class MCP3008 implements Probe {
 			System.exit(1);
 		}
 		try {
-			relay = new RelayDriver(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(relayPin)));
+			relay = new RelayDriver(PinUtil.getPinByGPIONumber(relayPin));
 			if (relay.isSimulating()) {
 				// Provide simulator here
 				System.out.println(">> Will simulate Relay");
@@ -780,7 +775,7 @@ public class MCP3008 implements Probe {
 						}
 					}
 				} catch (Exception ex) {
-					System.err.println(String.format("At %s :", new Date().toString()));
+					System.err.printf("At %s :\n", new Date().toString());
 					ex.printStackTrace();
 //					probe.softReset();
 					System.err.println("Device was reset");
@@ -797,7 +792,7 @@ public class MCP3008 implements Probe {
 									.feed(LogData.FEEDS.AIR)
 									.numValue(temperature));
 						} catch (Exception ex) {
-							System.err.println(String.format("At %s :", new Date().toString()));
+							System.err.printf("At %s :\n", new Date().toString());
 							System.err.println(ex.toString());
 							//	ex.printStackTrace();
 							LOGGER.log(Level.WARNING, "Air Temp logging", ex);
@@ -807,7 +802,7 @@ public class MCP3008 implements Probe {
 									.feed(humFeed)
 									.numValue(humidity));
 						} catch (Exception ex) {
-							System.err.println(String.format("At %s :", new Date().toString()));
+							System.err.printf("At %s :\n", new Date().toString());
 							System.err.println(ex.toString());
 							//	ex.printStackTrace();
 							LOGGER.log(Level.WARNING, "Humidity logging", ex);
@@ -818,12 +813,12 @@ public class MCP3008 implements Probe {
 			}
 
 			if (verbose == VERBOSE.STDOUT) { // Can be used for logging
-				System.out.println(String.format("%d;%s;%.02f;%.02f;%.02f",
+				System.out.printf("%d;%s;%.02f;%.02f;%.02f\n",
 						System.currentTimeMillis(),
 						new Date().toString(),
 						temperature,
 						humidity,
-						WeatherUtil.dewPointTemperature(humidity, temperature)));
+						WeatherUtil.dewPointTemperature(humidity, temperature));
 			} else if (verbose == VERBOSE.ANSI) {
 				displayANSIConsole();
 			}
@@ -1003,7 +998,7 @@ public class MCP3008 implements Probe {
 		}
 		synchronized (relay) {
 			if (verbose != VERBOSE.NONE) {
-				System.out.println(String.format("%d. Setting the relay on Off, in any case", step));
+				System.out.printf("%d. Setting the relay on Off, in any case\n", step);
 			}
 			relay.off();
 		}
@@ -1017,7 +1012,7 @@ public class MCP3008 implements Probe {
 		if (withRESTServer) {
 			if (httpServer.isRunning()) {
 				if (verbose != VERBOSE.NONE) {
-					System.out.println(String.format("%d. Shutting down HTTP Server", step));
+					System.out.printf("%d. Shutting down HTTP Server\n", step);
 				}
 				if ("true".equals(System.getProperty("slowdown.for.debug"))) {
 					System.out.println("-- Waiting a bit before shutting down http server");
@@ -1033,8 +1028,8 @@ public class MCP3008 implements Probe {
 		}
 
 		if (probe.isSimulating()) {
-			System.out.println(String.format("Simulated temperature between %.02f and %.02f", minSimTemp, maxSimTemp));
-			System.out.println(String.format("Simulated humidity between %.02f and %.02f", minSimHum, maxSimHum));
+			System.out.printf("Simulated temperature between %.02f and %.02f\n", minSimTemp, maxSimTemp);
+			System.out.printf("Simulated humidity between %.02f and %.02f\n", minSimHum, maxSimHum);
 		}
 
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
@@ -1042,7 +1037,7 @@ public class MCP3008 implements Probe {
 			TimeUtil.delay(2_000L);
 		}
 		if (verbose != VERBOSE.NONE) {
-			System.out.println(String.format("%d. Shutting down the probe", step));
+			System.out.printf("%d. Shutting down the probe\n", step);
 		}
 		step += 1;
 		probe.shutdown();
@@ -1052,7 +1047,7 @@ public class MCP3008 implements Probe {
 			TimeUtil.delay(2_000L);
 		}
 		if (verbose != VERBOSE.NONE) {
-			System.out.println(String.format("%d. Shutting down the GPIO", step));
+			System.out.printf("%d. Shutting down the GPIO\n", step);
 		}
 		step += 1;
 		relay.shutdownGPIO(); // Should be off already, SIGINT killed it.

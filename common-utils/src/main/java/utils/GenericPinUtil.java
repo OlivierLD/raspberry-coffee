@@ -7,7 +7,7 @@ import java.util.Map;
  * Utility, to display the Raspberry Pi's header 40 pins
  * in their (many) different lingos...
  */
-public class PinUtil {
+public class GenericPinUtil {
 	// Disposed as on the board
 	public enum GPIOPin {
 		// IO: BCM, JOB, gpio, onoff.js
@@ -217,7 +217,7 @@ public class PinUtil {
 		int physical = getPhysicalByWiringPiNumber("GPIO_29");
 		System.out.println(String.format("Physical by WiringPi number: GPIO_29 => #%d", physical)); // Should be #40
 
-		String sdaLabel = String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
+		String sdaLabel = String.valueOf(GenericPinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
 		System.out.println(">> SDA Label example : " + sdaLabel);
 	}
 }

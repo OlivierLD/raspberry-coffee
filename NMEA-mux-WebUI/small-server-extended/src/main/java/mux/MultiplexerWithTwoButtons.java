@@ -5,14 +5,10 @@ import com.google.gson.JsonParser;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
+import utils.*;
 import utils.gpio.PushButtonController;
 import nmea.forwarders.SSD1306Processor;
 import nmea.mux.GenericNMEAMultiplexer;
-import utils.PinUtil;
-import utils.StaticUtil;
-import utils.SystemUtils;
-import utils.TimeUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -43,12 +39,12 @@ import java.util.function.Consumer;
  */
 public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 
-	private static boolean buttonVerbose = "true".equals(System.getProperty("button.verbose"));
+	private final static boolean buttonVerbose = "true".equals(System.getProperty("button.verbose"));
 
 	private SSD1306Processor oledForwarder = null;
 
 	// ----- Local Menu Operations, one Runnable for each operation -----
-	private Runnable muxConfig = () -> {
+	private final Runnable muxConfig = () -> {
 
 		Properties muxProperties = this.getMuxProperties();
 		List<String> config = new ArrayList<>();
@@ -81,10 +77,10 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable getUserDir = () -> {
+	private final Runnable getUserDir = () -> {
 		try {
 			String userDir = System.getProperty("user.dir");
-			System.out.println(String.format("UserDir: %s", userDir));
+			System.out.printf("UserDir: %s\n", userDir);
 			if (userDir.indexOf(File.separator) > -1) {
 				userDir = "..." + userDir.substring(userDir.lastIndexOf(File.separatorChar));
 			}
@@ -109,7 +105,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable loggingStatus = () -> {
+	private final Runnable loggingStatus = () -> {
 		try {
 			String loggingStatus = HTTPClient.doGet(this.getLoggingStatusURL, new HashMap<>());
 			/*
@@ -130,7 +126,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable pauseLogging = () -> {
+	private final Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
 		} catch (Exception ex) {
@@ -139,7 +135,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable resumeLogging = () -> {
+	private final Runnable resumeLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOnURL, new HashMap<>(), null);
 		} catch (Exception ex) {
@@ -148,7 +144,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable terminateMux = () -> {
+	private final Runnable terminateMux = () -> {
 		try {
 			HTTPClient.doPost(this.terminateMuxURL, new HashMap<>(), null);
 		} catch (Exception ex) {
@@ -159,7 +155,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable sayHello = () -> {
+	private final Runnable sayHello = () -> {
 		try {
 			if (oledForwarder != null) {
 				oledForwarder.displayLines(new String[]{ "Hello !" });
@@ -171,7 +167,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable showImage = () -> {
+	private final Runnable showImage = () -> {
 		try {
 			if (oledForwarder != null) {
 				// Read ./img/image.dat
@@ -179,7 +175,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 					int width = imageStream.readInt();
 					int height = imageStream.readInt();
 					if (width != 128 || height != 64) {
-						System.out.println(String.format("Bad size %dx%d, expecting 128x64", width, height));
+						System.out.printf("Bad size %dx%d, expecting 128x64\n", width, height);
 					} else {
 						long[][] bitmap = new long[64][2];
 						for (int line = 0; line < bitmap.length; line++) {
@@ -199,7 +195,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable displayNetworkParameters = () -> {
+	private final Runnable displayNetworkParameters = () -> {
 		List<String> display = new ArrayList<>();
 		try {
 			String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";
@@ -208,13 +204,13 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
 			if (buttonVerbose) {
-				System.out.println(String.format("Reading %s output", command));
+				System.out.printf("Reading %s output\n", command);
 			}
 			while (line != null) {
 				line = reader.readLine();
 				if (line != null) {
 					final String essid = "ESSID:";
-					if (line.indexOf(essid) > -1) {
+					if (line.contains(essid)) {
 						display.add(line.substring(line.indexOf(essid) + essid.length()));
 						if (buttonVerbose) {
 							System.out.println(line);
@@ -223,7 +219,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 				}
 			}
 			if (buttonVerbose) {
-				System.out.println(String.format("Done with %s", command));
+				System.out.printf("Done with %s\n", command);
 			}
 			reader.close();
 		} catch (Exception ex) {
@@ -270,7 +266,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable shutdown = () -> {
+	private final Runnable shutdown = () -> {
 		try {
 			StaticUtil.shutdown();
 		} catch (Exception ex) {
@@ -279,7 +275,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable reboot = () -> {
+	private final Runnable reboot = () -> {
 		try {
 			StaticUtil.reboot();
 		} catch (Exception ex) {
@@ -294,7 +290,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	 * Used to store the label and action of each item
 	 * of the local menu.
 	 */
-	private class MenuItem {
+	private static class MenuItem {
 		private String title;
 		private Runnable action;
 
@@ -311,7 +307,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		public Runnable getAction() { return this.action; }
 	}
 
-	private MenuItem[] localMenuItems = new MenuItem[] {
+	private final MenuItem[] localMenuItems = new MenuItem[] {
 //			new MenuItem().title("Logging status").action(loggingStatus),
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
@@ -375,11 +371,11 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	}
 
 	/* ----- Buttons Runnables (actions) ----- */
-	private Runnable onClickOne = () -> {
+	private final Runnable onClickOne = () -> {
 		// Timestamp. Go to screen saver mode after a given threshold
 		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
-			System.out.println(String.format(">> %sSingle click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
+			System.out.printf(">> %sSingle click on button 1\n", (buttonTwo.isPushed() ? "[Shft] + " : ""));
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
@@ -398,11 +394,11 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable onDoubleClickOne = () -> {
+	private final Runnable onDoubleClickOne = () -> {
 		// Timestamp. Go to screen saver mode after a given threshold
 		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
-			System.out.println(String.format(">> %sDouble click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
+			System.out.printf(">> %sDouble click on button 1\n", (buttonTwo.isPushed() ? "[Shft] + " : ""));
 		}
 		if (shutdownRequested) {
 			// Shutting down the server AND the machine.
@@ -453,11 +449,11 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable onLongClickOne = () -> {
+	private final Runnable onLongClickOne = () -> {
 		// Timestamp. Go to screen saver mode after a given threshold
 		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
-			System.out.println(String.format(">> %sLong click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
+			System.out.printf(">> %sLong click on button 1\n", (buttonTwo.isPushed() ? "[Shft] + " : ""));
 		}
 		if (buttonTwo.isPushed()) { // Shift + LongClick on button one
 			if (oledForwarder != null) {
@@ -484,11 +480,11 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable onClickTwo = () -> {
+	private final Runnable onClickTwo = () -> {
 		// Timestamp. Go to screen saver mode after a given threshold
 		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
-			System.out.println(String.format(">> %sSingle click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
+			System.out.printf(">> %sSingle click on button 2\n", (buttonOne.isPushed() ? "[Shft] + " : ""));
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
@@ -507,11 +503,11 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable onDoubleClickTwo = () -> {
+	private final Runnable onDoubleClickTwo = () -> {
 		// Timestamp. Go to screen saver mode after a given threshold
 		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
-			System.out.println(String.format(">> %sDouble click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
+			System.out.printf(">> %sDouble click on button 2\n", (buttonOne.isPushed() ? "[Shft] + " : ""));
 		}
 		if (displayingLocalMenu) {
 			// Cancel
@@ -529,11 +525,11 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable onLongClickTwo = () -> {
+	private final Runnable onLongClickTwo = () -> {
 		// Timestamp. Go to screen saver mode after a given threshold
 		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
-			System.out.println(String.format(">> %sLong click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
+			System.out.printf(">> %sLong click on button 2\n", (buttonOne.isPushed() ? "[Shft] + " : ""));
 		}
 	};
 	/* ---- End of Buttons Runnables ---- */
@@ -587,11 +583,11 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
 		this.terminateMuxURL = String.format("http://localhost:%d/mux/terminate", serverPort);
 
-		System.out.println(String.format("To turn logging ON, use PUT %s", this.turnLoggingOnURL));
-		System.out.println(String.format("To turn logging OFF, use PUT %s", this.turnLoggingOffURL));
-		System.out.println(String.format("To terminate the multiplexer, use POST %s", this.terminateMuxURL));
+		System.out.printf("To turn logging ON, use PUT %s\n", this.turnLoggingOnURL);
+		System.out.printf("To turn logging OFF, use PUT %s\n", this.turnLoggingOffURL);
+		System.out.printf("To terminate the multiplexer, use POST %s\n", this.terminateMuxURL);
 
-		System.out.println(String.format("\nREST Operations: GET http://localhost:%d/mux/oplist\n", serverPort));
+		System.out.printf("\nREST Operations: GET http://localhost:%d/mux/oplist\n\n", serverPort);
 
 		List<String[]> addresses = SystemUtils.getIPAddresses(true);
 		String machineName = "localhost";
@@ -601,7 +597,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		StringBuffer sb = new StringBuffer();
 		System.out.println("IP addresses for localhost:");
 		addresses.forEach(pair -> {
-			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
+			System.out.printf("%s -> %s\n", pair[0], pair[1]);
 			// for tests
 			if (pair[1].startsWith("192.168.")) { // ...a bit tough. I know.
 				sb.append(pair[1]);
@@ -610,7 +606,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		if (sb.length() > 0) {
 			machineName = sb.toString();
 		}
-		System.out.println(String.format("Also try http://%s:%d/web/index.html from a browser", machineName, serverPort));
+		System.out.printf("Also try http://%s:%d/web/index.html from a browser\n", machineName, serverPort);
 
 		// Help display here
 		System.out.println("+-----------------------------------------------------------------------------------------+");
@@ -628,34 +624,34 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			// Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin.getName()))); // GPIO_28
-				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin.getName()))); // GPIO_29
+				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
+				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin))); // GPIO_29
 
-				buttonOnePin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr)));
-				buttonTwoPin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr)));
+				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
+				buttonTwoPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 
 			// Pin mapping display for info
 			String[] map = new String[13];
-			map[0]  = String.valueOf(PinUtil.findByPin(buttonOnePin.getName()).pinNumber()) + ":Button 1 Hot Wire";
-			map[1]  = String.valueOf(PinUtil.findByPin(buttonTwoPin.getName()).pinNumber()) + ":Button 2 Hot Wire";
+			map[0]  = (PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button 1 Hot Wire";
+			map[1]  = (PinUtil.findByPin(buttonTwoPin).pinNumber()) + ":Button 2 Hot Wire";
 
-			map[2]  = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber())   + ":3v3";
-			map[3]  = String.valueOf(PinUtil.GPIOPin.PWR_2.pinNumber())   + ":5v0";
+			map[2]  = (PinUtil.GPIOPin.PWR_1.pinNumber())   + ":3v3";
+			map[3]  = (PinUtil.GPIOPin.PWR_2.pinNumber())   + ":5v0";
 
-			map[4]  = String.valueOf(PinUtil.GPIOPin.GPIO_15.pinNumber()) + ":Tx";
-			map[5]  = String.valueOf(PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":Rx";
+			map[4]  = (PinUtil.GPIOPin.GPIO_15.pinNumber()) + ":Tx";
+			map[5]  = (PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":Rx";
 
-			map[6]  = String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":Clock";
-			map[7]  = String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":Data"; // Aka MOSI. Slave is the Screen, Master the RPi
-			map[8]  = String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":CS";
-			map[9]  = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber())  + ":Rst";
-			map[10] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber())  + ":DC";
+			map[6]  = (PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":Clock";
+			map[7]  = (PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":Data"; // Aka MOSI. Slave is the Screen, Master the RPi
+			map[8]  = (PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":CS";
+			map[9]  = (PinUtil.GPIOPin.GPIO_5.pinNumber())  + ":Rst";
+			map[10] = (PinUtil.GPIOPin.GPIO_4.pinNumber())  + ":DC";
 
-			map[11] = String.valueOf(PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":SDA";
-			map[12] = String.valueOf(PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":SLC";
+			map[11] = (PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":SDA";
+			map[12] = (PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":SLC";
 
 			System.out.println("---------------------------- P I N   M A P P I N G ------------------------------------------");
 			PinUtil.print(map);
@@ -695,7 +691,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			final int SHFT_KEY = 16,
 								CTRL_KEY = 17;
 
-			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
+			System.out.printf("SSD1306 was loaded! (%s)\n", simulating ? "simulating" : "for real");
 			if (simulating) {
 				oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift");
 				// Simulator led color
@@ -798,11 +794,9 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			System.err.println("Ooops");
 			nfe.printStackTrace();
 		}
-		System.out.println(String.format(">>> Server port is %d", serverPort));
+		System.out.printf(">>> Server port is %d\n", serverPort);
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			freeResources();
-		}, "Shutdown Hook"));
+		Runtime.getRuntime().addShutdownHook(new Thread(MultiplexerWithTwoButtons::freeResources, "Shutdown Hook"));
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 
 		boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));

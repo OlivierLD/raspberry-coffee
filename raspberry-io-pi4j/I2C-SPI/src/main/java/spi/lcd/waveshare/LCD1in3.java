@@ -89,7 +89,7 @@ public class LCD1in3 {
 
 
 	private final static int SPI_DEVICE = Spi.CHANNEL_0;
-	private int clockHertz = 8_000_000; // 8 MHz TODO Check this??
+	private final int clockHertz = 8_000_000; // 8 MHz TODO Check this??
 
 	public final static int LCD_HEIGHT = 240;
 	public final static int LCD_WIDTH  = 240;

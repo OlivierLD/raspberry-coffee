@@ -7,7 +7,6 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import utils.PinUtil;
 import utils.StaticUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +25,7 @@ public class RelayManager {
 	private GpioController gpio = null;
 	private final List<GpioPinDigitalOutput> relays = new ArrayList<>();
 
-	private Map<Integer, Pin> relayMap;
+	private final Map<Integer, Pin> relayMap;
 
 	public RelayManager(String strMap) {
 		this(buildRelayMap(strMap));
@@ -59,7 +58,7 @@ public class RelayManager {
 			if (oPin.isPresent()) {
 				GpioPinDigitalOutput pin = oPin.get();
 				if ("true".equals(System.getProperty("relay.verbose", "false"))) {
-					System.out.println(String.format("Setting Relay#%d %s", device, status));
+					System.out.printf("Setting Relay#%d %s\n", device, status);
 				}
 				if ("on".equals(status)) {
 					pin.low();
@@ -67,10 +66,10 @@ public class RelayManager {
 					pin.high();
 				}
 			} else {
-				System.out.println(String.format("Relay %d not found...", device));
+				System.out.printf("Relay %d not found...\n", device);
 			}
 		} else {
-			System.out.println(String.format("Setting relay #%d %s", device, status));
+			System.out.printf("Setting relay #%d %s\n", device, status);
 		}
 	}
 
@@ -82,11 +81,11 @@ public class RelayManager {
 				GpioPinDigitalOutput pin = oPin.get();
 				status = pin.isLow();
 			} else {
-				System.out.println(String.format("Relay %d not found...", device));
+				System.out.printf("Relay %d not found...\n", device);
 			}
 		} else {
 			status = (System.currentTimeMillis() % 2) == 0;
-			System.out.println(String.format("Getting status for relay #%d: %s", device, status));
+			System.out.printf("Getting status for relay #%d: %s\n", device, status);
 		}
 		return status;
 	}
@@ -108,7 +107,7 @@ public class RelayManager {
 			try {
 				int relayNum = Integer.parseInt(tuple[0]);
 				int pinNum = Integer.parseInt(tuple[1]);
-				Pin physicalNumber = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(pinNum));
+				Pin physicalNumber = PinUtil.getPinByPhysicalNumber(pinNum);
 				if (physicalNumber == null) {
 					throw new RuntimeException(String.format("In [%s], element [%s], pin #%d does not exist", strMap, relayPrm, pinNum));
 				}
@@ -132,12 +131,10 @@ public class RelayManager {
 		try {
 			relayMap = buildRelayMap(mapStr);
 			if ("true".equals(System.getProperty("relay.verbose", "false"))) {
-				relayMap.entrySet().forEach(entry -> {
-					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ",
-							entry.getKey(),
-							PinUtil.findByPin(entry.getValue().getName()).pinNumber(),
-							PinUtil.findByPin(entry.getValue().getName()).pinName() ));
-				});
+				relayMap.entrySet().forEach(entry -> System.out.printf("Relay #%d mapped to pin %d (%s) \n",
+						entry.getKey(),
+						PinUtil.findByPin(entry.getValue()).pinNumber(),
+						PinUtil.findByPin(entry.getValue()).pinName() ));
 			}
 		} catch (Exception ex) {
 			throw ex;
@@ -158,7 +155,7 @@ public class RelayManager {
 						relayManager.set(1, "off");
 						break;
 					default:
-						System.out.println(String.format("Unknown Command [%s]", input));
+						System.out.printf("Unknown Command [%s]\n", input);
 						break;
 				}
 			}

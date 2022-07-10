@@ -20,7 +20,6 @@ import lcd.substitute.SwingLedPanel;
 import utils.PinUtil;
 import utils.SystemUtils;
 import utils.TimeUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -103,7 +102,7 @@ public class TCPWatch {
 		}
 	}
 
-	private static String[] MONTH = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+	private final static String[] MONTH = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
 	// The data to display
 	private static double latitude = 0;
@@ -112,14 +111,14 @@ public class TCPWatch {
 	private static double cog = 0;
 	private static boolean rmcStatus = false;
 	private static final int POS_BUFFER_MAX_LEN = 500; // Tune it at will
-	private static List<GeoPoint> posBuffer = new ArrayList<>();
+	private final static List<GeoPoint> posBuffer = new ArrayList<>();
 	private static GPSDate gpsDate = null;
 	private static GPSDate solarDate = null;
 	private static boolean connected = false;
 
-	private static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
-	private static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
-	private static String BASE_URL = System.getProperty("base.url", "http://192.168.50.10:9999"); // GPS Logger
+	private final static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
+	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
+	private final static String BASE_URL = System.getProperty("base.url", "http://192.168.50.10:9999"); // GPS Logger
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
 	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
@@ -141,14 +140,14 @@ public class TCPWatch {
 
 	// TODO Implement the breadboard.button.v2.PushButtonMaster
 	private static boolean k1 = false, k2 = false;
-	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
+	private final static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
 		k1 = event.getState().isLow(); // low: down
 		LOGGER.log(Level.INFO, String.format("K1 was %s", k1 ? "pushed" : "released"));
 		if (k1) { // K1 is pushed down
 			currentIndex++;
 		}
 	};
-	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> {
+	private final static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> {
 		k2 = event.getState().isLow(); // low: down
 		LOGGER.log(Level.INFO, String.format("K2 was %s", k2 ? "pushed" : "released"));
 		if (k2) { // K2 is pushed down
@@ -157,7 +156,7 @@ public class TCPWatch {
 	};
 
 	// Add your pages to the list below
-	private static List<Consumer<ScreenBuffer>> pageManagers = Arrays.asList(
+	private final static List<Consumer<ScreenBuffer>> pageManagers = Arrays.asList(
 			TCPWatch::displayPage_Welcome,
 			TCPWatch::displayPage_PositionSystemDate,
 			TCPWatch::displayPage_PositionSogCog,
@@ -170,7 +169,7 @@ public class TCPWatch {
 
 	/** This is the REST request
 	 * @param baseUrl like "http://localhost:8080"
-	 * @return
+	 * @return the JsonObject
 	 */
 	private static JsonObject handleRequest(String baseUrl) {
 
@@ -232,7 +231,7 @@ public class TCPWatch {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
 			if (SCREEN_00_VERBOSE) {
-				System.out.println(String.format("Reading %s output", command));
+				System.out.printf("Reading %s output\n", command);
 			}
 			y -= 8;
 			while (line != null) {
@@ -249,7 +248,7 @@ public class TCPWatch {
 				}
 			}
 			if (SCREEN_00_VERBOSE) {
-				System.out.println(String.format("Done with %s", command));
+				System.out.printf("Done with %s\n", command);
 			}
 			reader.close();
 		} catch (Exception ex) {
@@ -576,9 +575,9 @@ public class TCPWatch {
 			gpio = GpioFactory.getInstance();
 
 			// User-parameters for those 2 pins, in case you want to invert them
-			key1Pin = gpio.provisionDigitalInputPin(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(k1Pin)), "K-1", PinPullResistance.PULL_DOWN);
+			key1Pin = gpio.provisionDigitalInputPin(PinUtil.getPinByWiringPiNumber(k1Pin), "K-1", PinPullResistance.PULL_DOWN);
 			key1Pin.setShutdownOptions(true);
-			key2Pin = gpio.provisionDigitalInputPin(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(k2Pin)), "K-2", PinPullResistance.PULL_DOWN);
+			key2Pin = gpio.provisionDigitalInputPin(PinUtil.getPinByWiringPiNumber(k2Pin), "K-2", PinPullResistance.PULL_DOWN);
 			key2Pin.setShutdownOptions(true);
 
 			LOGGER.log(Level.FINE, "Initializing button listeners");
@@ -668,7 +667,7 @@ public class TCPWatch {
 								}
 							}
 							if (DEBUG) {
-								System.out.println(String.format("%d entry(ies) in the position buffer", posBuffer.size()));
+								System.out.printf("%d entry(ies) in the position buffer\n", posBuffer.size());
 							}
 						}
 					}
@@ -687,7 +686,7 @@ public class TCPWatch {
 							gpsDate = new GPSDate()
 									.date(substituteDate);
 							if (DEBUG) {
-								System.out.println(String.format("Generated substitute date %s", gpsDate.toString()));
+								System.out.printf("Generated substitute date %s\n", gpsDate.toString());
 							}
 						}
 					} catch (NullPointerException npe) {
@@ -710,7 +709,7 @@ public class TCPWatch {
 							solarDate = new GPSDate()
 									.date(substituteDate);
 							if (DEBUG) {
-								System.out.println(String.format("Generated substitute Solar date %s", solarDate.toString()));
+								System.out.printf("Generated substitute Solar date %s\n", solarDate.toString());
 							}
 						}
 					} catch (NullPointerException npe) {
@@ -764,11 +763,11 @@ public class TCPWatch {
 			//                          Clock             MOSI              CS                RST               DC
 //    oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16, WIDTH, HEIGHT);
 			oled = new SSD1306(
-					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(clkPin)),
-					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(mosiPin)),
-					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(csPin)),
-					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(rstPin)),
-					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(dcPin)),
+					PinUtil.getPinByWiringPiNumber(clkPin),
+					PinUtil.getPinByWiringPiNumber(mosiPin),
+					PinUtil.getPinByWiringPiNumber(csPin),
+					PinUtil.getPinByWiringPiNumber(rstPin),
+					PinUtil.getPinByWiringPiNumber(dcPin),
 					WIDTH, HEIGHT);
 			oled.begin();
 			oled.clear();

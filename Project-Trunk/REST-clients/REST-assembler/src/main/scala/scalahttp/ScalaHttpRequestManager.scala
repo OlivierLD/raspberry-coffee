@@ -6,7 +6,6 @@ import http.{HTTPServer, RESTRequestManager}
 import relay.RelayManager
 import sensors.ADCChannel
 import utils.PinUtil
-import utils.gpio.StringToGPIOPin
 
 class ScalaHttpRequestManager extends RESTRequestManager {
   private val httpVerbose = "true" == System.getProperty("http.verbose", "false")
@@ -76,7 +75,7 @@ class ScalaHttpRequestManager extends RESTRequestManager {
         if (physicalNumber == null) {
           throw new RuntimeException(s"In [$strMap], element [$relayPrm], pin #$pinNum does not exist")
         }
-        pinMap.put(relayNum, StringToGPIOPin.stringToGPIOPin(physicalNumber))
+        pinMap.put(relayNum, physicalNumber)
       } catch {
         case nfe: NumberFormatException =>
           throw new RuntimeException(s"In [$strMap], element [$relayPrm], bad numbers")
@@ -102,7 +101,7 @@ class ScalaHttpRequestManager extends RESTRequestManager {
     *
     * @param request incoming request
     * @return response as defined in the { @link RESTImplementation}
-    * @throws UnsupportedOperationException
+    * @throws UnsupportedOperationException when not registered
     */
   @throws[UnsupportedOperationException]
   override def onRequest(request: HTTPServer.Request): HTTPServer.Response = {

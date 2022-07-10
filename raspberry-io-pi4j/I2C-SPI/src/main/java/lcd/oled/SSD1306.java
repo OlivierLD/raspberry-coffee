@@ -73,7 +73,7 @@ public class  SSD1306 {
 
 	private int width = DEFAULT_WIDTH,
 							height = DEFAULT_HEIGHT;
-	private int clockHertz = 8_000_000; // 8 MHz
+	private final int clockHertz = 8_000_000; // 8 MHz
 	private int vccstate = 0; // or SSD1306_EXTERNALVCC
 	private int pages = 0;
 	private int[] buffer = null;
@@ -98,7 +98,7 @@ public class  SSD1306 {
 	private I2CBus bus;
 	private I2CDevice ssd1306;
 
-	private boolean verbose = "true".equals(System.getProperty("ssd1306.verbose", "false"));
+	private final boolean verbose = "true".equals(System.getProperty("ssd1306.verbose", "false"));
 
 	public SSD1306() {
 		initSSD1306(this.width, this.height);
@@ -164,9 +164,9 @@ public class  SSD1306 {
 	/**
 	 * I2C Interface
 	 *
-	 * @param i2cAddr
-	 * @throws I2CFactory.UnsupportedBusNumberException
-	 * @throws IOException
+	 * @param i2cAddr I2C address
+	 * @throws I2CFactory.UnsupportedBusNumberException Oops
+	 * @throws IOException Oops
 	 */
 	public SSD1306(int i2cAddr, int w, int h) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		this.width = w;
@@ -225,11 +225,11 @@ public class  SSD1306 {
 
 			if (verbose) {
 				String[] map = new String[]{
-						String.valueOf(PinUtil.findByPin(spiMosi.getName()).pinNumber()) + ":" + "MOSI",
-						String.valueOf(PinUtil.findByPin(spiClk.getName()).pinNumber()) + ":" + "CLK",
-						String.valueOf(PinUtil.findByPin(spiCs.getName()).pinNumber()) + ":" + "CS",
-						String.valueOf(PinUtil.findByPin(spiRst.getName()).pinNumber()) + ":" + "RST",
-						String.valueOf(PinUtil.findByPin(spiDc.getName()).pinNumber()) + ":" + "DC"
+						PinUtil.findByPin(spiMosi).pinNumber() + ":" + "MOSI",
+						PinUtil.findByPin(spiClk).pinNumber() + ":" + "CLK",
+						PinUtil.findByPin(spiCs).pinNumber() + ":" + "CS",
+						PinUtil.findByPin(spiRst).pinNumber() + ":" + "RST",
+						PinUtil.findByPin(spiDc).pinNumber() + ":" + "DC"
 				};
 				PinUtil.print(map);
 			}
@@ -379,7 +379,7 @@ public class  SSD1306 {
 		this.command(SSD1306_SETMULTIPLEX);        // 0xA8
 		this.command(height == 32 ? 0x1F : 0x3F); // Height - 1 : 1F = 31 = 32 - 1, 3F = 63 = 64 - 1
 		if (verbose) {
-			System.out.println(String.format(">>> Initialize: screen height: %d", height));
+			System.out.printf(">>> Initialize: screen height: %d\n", height);
 		}
 
 		this.command(SSD1306_SETDISPLAYOFFSET);    // 0xD3

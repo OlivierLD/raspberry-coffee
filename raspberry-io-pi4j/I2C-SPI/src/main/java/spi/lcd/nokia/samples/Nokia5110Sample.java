@@ -57,13 +57,13 @@ public class Nokia5110Sample {
 		System.out.println();
 
 		String[] map = new String[]{
-				String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "VCC",
-				String.valueOf(PinUtil.GPIOPin.GRND_1.pinNumber()) + ":" + "GND",
-				String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber()) + ":" + "D/C",
-				String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber()) + ":" + "RST",
-				String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":" + "CS",
-				String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":" + "CLK",
-				String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":" + "DIN" // ,
+				PinUtil.GPIOPin.PWR_1.pinNumber() + ":" + "VCC",
+				PinUtil.GPIOPin.GRND_1.pinNumber() + ":" + "GND",
+				PinUtil.GPIOPin.GPIO_4.pinNumber() + ":" + "D/C",
+				PinUtil.GPIOPin.GPIO_5.pinNumber() + ":" + "RST",
+				PinUtil.GPIOPin.GPIO_10.pinNumber() + ":" + "CS",
+				PinUtil.GPIOPin.GPIO_14.pinNumber() + ":" + "CLK",
+				PinUtil.GPIOPin.GPIO_12.pinNumber() + ":" + "DIN" // ,
 //	    String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "LED and VCC"
 		};
 		PinUtil.print(map);

@@ -37,7 +37,7 @@ public class RelayDriver {
 
 	public RelayDriver(Pin _signalPin) {
 		if ("true".equals(System.getProperty("gpio.verbose"))) {
-			System.out.println(String.format("GPIO> Provisioning pin BCM #%d", PinUtil.findByPin(signalPin.getName()).gpio()));
+			System.out.printf("GPIO> Provisioning pin BCM #%d\n", PinUtil.findByPin(signalPin).gpio());
 		}
 		// Trap stderr output
 		PrintStream console = System.err;
@@ -55,13 +55,13 @@ public class RelayDriver {
 			} catch (UnsatisfiedLinkError ule) {
 				System.out.println(ule.toString());
 				if ("true".equals(System.getProperty("gpio.verbose"))) {
-					System.out.println(String.format("GPIO> Will simulate pin BCM #%d (for %s)", PinUtil.findByPin(signalPin.getName()).gpio(), this.getClass().getName()));
+					System.out.printf("GPIO> Will simulate pin BCM #%d (for %s)\n", PinUtil.findByPin(signalPin).gpio(), this.getClass().getName());
 				}
 				this.simulating = true;
 			}
 			System.setErr(console);
 		} catch (IOException ioe) {
-			System.err.println(String.format("At %s :", new Date().toString()));
+			System.err.printf("At %s :\n", new Date().toString());
 			ioe.printStackTrace();
 		}
 	}
@@ -83,7 +83,7 @@ public class RelayDriver {
 		if ("true".equals(System.getProperty("gpio.verbose"))) {
 			System.out.println(">> Relay goes ON, from:");
 			List<String> st = DumpUtil.whoCalledMe();
-			st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
+			st.stream().forEach(el -> System.out.printf("\t%s\n", el));
 		}
 		if (this.listener != null) {
 			this.listener.accept(PinState.LOW);
@@ -99,7 +99,7 @@ public class RelayDriver {
 		if ("true".equals(System.getProperty("gpio.verbose"))) {
 			System.out.println(">> Relay goes OFF, from:");
 			List<String> st = DumpUtil.whoCalledMe();
-			st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
+			st.stream().forEach(el -> System.out.printf("\t%s\n", el));
 		}
 		if (this.listener != null) {
 			this.listener.accept(PinState.HIGH);
@@ -124,12 +124,12 @@ public class RelayDriver {
 	public void shutdownGPIO() {
 		if (this.gpio != null && !gpio.isShutdown()) {
 			if ("true".equals(System.getProperty("gpio.verbose"))) {
-				System.out.println(String.format("GPIO> Shutting down GPIO from %s", this.getClass().getName()));
+				System.out.printf("GPIO> Shutting down GPIO from %s\n", this.getClass().getName());
 			}
 			gpio.shutdown();
 		} else {
 			if ("true".equals(System.getProperty("gpio.verbose"))) {
-				System.out.println(String.format("GPIO> Shutting down GPIO from %s: was down already", this.getClass().getName()));
+				System.out.printf("GPIO> Shutting down GPIO from %s: was down already\n", this.getClass().getName());
 			}
 		}
 	}

@@ -45,7 +45,7 @@ public class RealPWMServo {
 			}
 		}
 
-		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin).pinName()));
+		System.out.printf("PWM Control - pin %s ... started.\n", PinUtil.findByPin(servoPin).pinName());
 		PinUtil.print(
 				String.format("%d:Servo", PinUtil.findByPin(servoPin).pinNumber()), // Yellow
 				"6:brown", // Can also be black
@@ -60,14 +60,14 @@ public class RealPWMServo {
 		}
 
 		float cycleWidth = (1_000f / 50f); // In ms. 50 Hertz: 20ms. 60 Hz: 16.6666 ms.
-		System.out.println(String.format("Cycle width: %f ms", cycleWidth));
+		System.out.printf("Cycle width: %f ms\n", cycleWidth);
 		PWMPin pin = new PWMPin(servoPin, "OneServo", PinState.LOW, cycleWidth);
 		// pin.low(); // Useless
 
 		System.out.println("PWM, [0.5, 1.0, 1.5, 2.0, 2.5]");
 		float[] values = { 0.5f, 1.0f, 1.5f, 2.0f, 2.5f };
 		for (float pulse : values) {
-			System.out.println(String.format("\t=> Pulse %f ms", pulse));
+			System.out.printf("\t=> Pulse %f ms\n", pulse);
 			pin.emitPWM(pulse);
 			Thread.sleep(250);
 			pin.stopPWM();
@@ -77,7 +77,7 @@ public class RealPWMServo {
 		System.out.println("PWM, by pulse length");
 //		pin.emitPWM(1.5f); // PWM, center servo.
 //  Thread.sleep(1_000);
-		System.out.println(String.format("Enter \"S\", \"Q\" or \"quit\" to stop, or a pulse in ms [0..%.02f]", cycleWidth));
+		System.out.printf("Enter \"S\", \"Q\" or \"quit\" to stop, or a pulse in ms [0..%.02f]\n", cycleWidth);
 		boolean go = true;
 		while (go) {
 			String userInput = userInput("Pulse in ms > ");

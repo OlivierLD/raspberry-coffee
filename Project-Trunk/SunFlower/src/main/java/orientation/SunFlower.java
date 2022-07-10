@@ -13,7 +13,6 @@ import org.fusesource.jansi.AnsiConsole;
 import utils.PinUtil;
 import utils.StringUtils;
 import utils.TimeUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -122,7 +121,7 @@ public class SunFlower implements RESTRequestManager {
 		NONE
 	}
 
-	private boolean httpVerbose = false;
+	private final boolean httpVerbose = false;
 	private HTTPServer httpServer = null;
 	private int httpPort = -1;
 
@@ -191,24 +190,24 @@ public class SunFlower implements RESTRequestManager {
 	}
 
 	public static void setMISO(int pin) {
-		miso = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
+		miso = PinUtil.getPinByGPIONumber(pin);
 	}
 	public static void setMOSI(int pin) {
-		mosi = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
+		mosi = PinUtil.getPinByGPIONumber(pin);
 	}
 	public static void setCLK(int pin) {
-		clk = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
+		clk = PinUtil.getPinByGPIONumber(pin);
 	}
 	public static void setCS(int pin) {
-		cs = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(pin));
+		cs = PinUtil.getPinByGPIONumber(pin);
 	}
 
 	/**
 	 * Does not take the EoT in account, just longitude
 	 * See {@link #getSolarDate(Date)} for an accurate version.
-	 * @param longitude
-	 * @param utc
-	 * @return
+	 * @param longitude Longitude
+	 * @param utc UTC time
+	 * @return Solar Date
 	 */
 	private static Date getSolarDateFromLongitude(double longitude, Date utc) {
 		double toHours = longitude / 15d;
@@ -221,8 +220,8 @@ public class SunFlower implements RESTRequestManager {
 	 * This one is accurate, it uses EoT (Meridian passage).
 	 * Noon corresponds to EoT. EoT is calculated with the Longitude
 	 * The EoT is updated in the Timer loop.
-	 * @param utc
-	 * @return
+	 * @param utc UTC Dat
+	 * @return Solar Date
 	 */
 	private static Date getSolarDate(Date utc) {
 		long ms = utc.getTime();
@@ -283,7 +282,7 @@ public class SunFlower implements RESTRequestManager {
 		} else {
 	//	Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
 			if (astroVerbose && !ansiConsole) {
-				System.out.println(String.format(">>> Sun Calculation for %s", SDF.format(current.getTime())));
+				System.out.printf(">>> Sun Calculation for %s\n", SDF.format(current.getTime()));
 			}
 			AstroComputerV2 acv2 = new AstroComputerV2();
 			acv2.setDateTime(current.get(Calendar.YEAR),
@@ -321,9 +320,9 @@ public class SunFlower implements RESTRequestManager {
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
 
-	private int servoMin = DEFAULT_SERVO_MIN;
-	private int servoMax = DEFAULT_SERVO_MAX;
-	private static int freq = 60;
+	private final int servoMin = DEFAULT_SERVO_MIN;
+	private final int servoMax = DEFAULT_SERVO_MAX;
+	private final static int freq = 60;
 
 	private PCA9685 servoBoard = null;
 	private boolean calibrating = false;
@@ -471,7 +470,7 @@ public class SunFlower implements RESTRequestManager {
 		String httpPortStr = System.getProperty("http.port");
 		if (httpPortStr != null) {
 			if (orientationVerbose) {
-				System.out.println(String.format("SunFlower HTTP Port %s", httpPortStr));
+				System.out.printf("SunFlower HTTP Port %s\n", httpPortStr);
 			}
 			try {
 				httpPort = Integer.parseInt(httpPortStr);
@@ -524,7 +523,7 @@ public class SunFlower implements RESTRequestManager {
 	}
 	public void setHeadingServoAngle(final float f) {
 		if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
-			System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving ? "yes" : "no")));
+			System.out.printf("H> Servo heading set required to %.02f (previous %d), moving:%s\n", f, previousHeadingAngle, (headingServoMoving ? "yes" : "no"));
 		}
 		float startFrom = previousHeadingAngle;
 
@@ -532,17 +531,17 @@ public class SunFlower implements RESTRequestManager {
 			headingServoMoving = true;
 			// Smooth move for steps > 1
 			if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
-				System.out.println(String.format("H>> Start a smooth move from heading %.02f to %.02f", startFrom, f));
+				System.out.printf("H>> Start a smooth move from heading %.02f to %.02f\n", startFrom, f);
 			}
 			Thread smoothy = new Thread(() -> {
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
-					System.out.println(String.format("H>> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
+					System.out.printf("H>> Starting smooth thread for heading %.02f to %.02f\n", startFrom, f);
 				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) >= SMOOTH_STEP) {
 					if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
-						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f (target %.02f)", pos, Math.abs(pos - f), f));
+						System.out.printf("H> Setting heading to %.02f, delta=%.02f (target %.02f)\n", pos, Math.abs(pos - f), f);
 					}
 					if (headingServoID != null) {
 						for (int id : headingServoID) {
@@ -554,7 +553,7 @@ public class SunFlower implements RESTRequestManager {
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
-					System.out.println(String.format("H>...Heading thread done, delta=%.02f", Math.abs(pos - f)));
+					System.out.printf("H>...Heading thread done, delta=%.02f\n", Math.abs(pos - f));
 				}
 				setHeadingServoMoving(false);
 			});
@@ -562,7 +561,7 @@ public class SunFlower implements RESTRequestManager {
 		} else {
 			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
-					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
+					System.out.printf("H> Abrupt heading set to %.02f\n", f);
 				}
 				if (headingServoID != null) {
 					Arrays.stream(headingServoID).forEach(id -> setAngle(id, f));
@@ -577,7 +576,7 @@ public class SunFlower implements RESTRequestManager {
 	}
 	public void setTiltServoAngle(final float f) {
 		if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
-			System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no")));
+			System.out.printf("T> Servo tilt set required to %.02f (previous %d), moving:%s\n", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no"));
 		}
 		float startFrom = applyLimitAndOffset(previousTiltAngle);
 		float goToAngle = applyLimitAndOffset(f);
@@ -585,17 +584,17 @@ public class SunFlower implements RESTRequestManager {
 			tiltServoMoving = true;
 			// Smooth move for steps > 1
 			if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
-				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
+				System.out.printf("T> Start a smooth move from tilt %.02f to %.02f (%.02f)\n", startFrom, f, goToAngle);
 			}
 			Thread smoothy = new Thread(() -> {
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
-					System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
+					System.out.printf("T> Starting smooth thread for tilt %.02f to %.02f (%.02f)\n", startFrom, f, goToAngle);
 				}
 				int sign = (startFrom > goToAngle) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - goToAngle) >= SMOOTH_STEP) {
 					if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
-						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
+						System.out.printf("T> Setting tilt to %.02f, delta=%.02f\n", pos, Math.abs(pos - f));
 					}
 //				setAngle(tiltServoID, pos);
 					for (int id : tiltServoID) {
@@ -605,7 +604,7 @@ public class SunFlower implements RESTRequestManager {
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
-					System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - goToAngle)));
+					System.out.printf("T>...Tilt thread done, delta=%.02f\n", Math.abs(pos - goToAngle));
 				}
 				setTiltServoMoving(false);
 			});
@@ -613,7 +612,7 @@ public class SunFlower implements RESTRequestManager {
 		} else {
 			if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
-					System.out.println(String.format("T> Abrupt tilt set to %.02f (%.02f)", f, goToAngle));
+					System.out.printf("T> Abrupt tilt set to %.02f (%.02f)\n", f, goToAngle);
 				}
 				if (tiltServoID !=  null) {
 //			setAngle(tiltServoID, goToAngle);
@@ -640,7 +639,7 @@ public class SunFlower implements RESTRequestManager {
 				servoBoard.setPWM(servo, 0, pwm);
 			}
 		} catch (IllegalArgumentException iae) {
-			System.err.println(String.format("Cannot set servo %d to PWM %d", servo, pwm));
+			System.err.printf("Cannot set servo %d to PWM %d\n", servo, pwm);
 			iae.printStackTrace();
 		}
 	}
@@ -852,7 +851,7 @@ public class SunFlower implements RESTRequestManager {
 		}
 		if (adcVerbose) {
 			if (foundMCP3008) {
-				System.out.println(String.format("Read from MCP3008 channel %d: %d", adcChannel, adc));
+				System.out.printf("Read from MCP3008 channel %d: %d\n", adcChannel, adc);
 			} else {
 				System.out.println("No MCP3008 found.");
 			}
@@ -890,7 +889,7 @@ public class SunFlower implements RESTRequestManager {
 		}
 		if (adcVerbose) {
 			if (foundMCP3008) {
-				System.out.println(String.format("Read from MCP3008 channel %d: %d", photocellChannel, adc));
+				System.out.printf("Read from MCP3008 channel %d: %d\n", photocellChannel, adc);
 			} else {
 				System.out.println("No MCP3008 found.");
 			}
@@ -1025,7 +1024,7 @@ public class SunFlower implements RESTRequestManager {
 					}
 					if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
 						if (angle != previousTiltAngle) {
-//						System.out.println(String.format("??? Setting tilt angle from %d to %d", previousTiltAngle, angle));
+//						System.out.printf("??? Setting tilt angle from %d to %d", previousTiltAngle, angle));
 							this.setTiltServoAngle((float) angle);
 							previousTiltAngle = angle;
 						}
@@ -1100,7 +1099,7 @@ public class SunFlower implements RESTRequestManager {
 					current = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
 					current.setTime(fromDate);
 				} catch (Exception ex) {
-					System.err.println(String.format("Bad date format, expecting %s", SDF_INPUT));
+					System.err.printf("Bad date format, expecting %s\n", SDF_INPUT);
 					ex.printStackTrace();
 					System.exit(1);
 				}
@@ -1118,13 +1117,13 @@ public class SunFlower implements RESTRequestManager {
 				if (demo) {
 					getSunDataForDate(latitude, longitude, current);
 					current.add(Calendar.MINUTE, 1);
-//				System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
+//				System.out.printf(">>> %s", SDF.format(current.getTime())));
 					if (current.getTime().after(toDate)) {
 						keepWorking = false;
 					}
 				} else if (timeProvided) {
 					getSunDataForDate(latitude, longitude, current);
-					System.out.println(String.format(">>> Time Provided: %s", SDF.format(current.getTime())));
+					System.out.printf(">>> Time Provided: %s\n", SDF.format(current.getTime()));
 				} else {
 					getSunData(latitude, longitude);
 				}
@@ -1199,8 +1198,8 @@ public class SunFlower implements RESTRequestManager {
 
 		float[] angles = { 90f, 89f, 85f, 80f, 79f };
 		for (float angle : angles) {
-			System.out.println(String.format("For %.02f => corrected to %.02f", angle, applyLimitAndOffset(angle)));
-			System.out.println(String.format("For %.02f => corrected to %.02f", -angle, applyLimitAndOffset(-angle)));
+			System.out.printf("For %.02f => corrected to %.02f\n", angle, applyLimitAndOffset(angle));
+			System.out.printf("For %.02f => corrected to %.02f\n", -angle, applyLimitAndOffset(-angle));
 		}
 	}
 
@@ -1219,7 +1218,7 @@ public class SunFlower implements RESTRequestManager {
 			boolean keepWorking = true;
 			while (keepWorking) {
 				current.add(Calendar.MINUTE, 1);
-				System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
+				System.out.printf(">>> %s\n", SDF.format(current.getTime()));
 				if (current.getTime().after(toDate)) {
 					keepWorking = false;
 				}
@@ -1229,7 +1228,7 @@ public class SunFlower implements RESTRequestManager {
 				}
 			}
 			long after = System.currentTimeMillis();
-			System.out.println(String.format("Completed in %s ms", NumberFormat.getInstance().format(after - before)));
+			System.out.printf("Completed in %s ms\n", NumberFormat.getInstance().format(after - before));
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1237,10 +1236,10 @@ public class SunFlower implements RESTRequestManager {
 	}
 
 	// Default ADC pins
-	private static Pin miso = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_12.pin());
-	private static Pin mosi = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_13.pin());
-	private static Pin clk  = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_14.pin());
-	private static Pin cs   = StringToGPIOPin.stringToGPIOPin(PinUtil.GPIOPin.GPIO_10.pin());
+	private static Pin miso = PinUtil.GPIOPin.GPIO_12.pin();
+	private static Pin mosi = PinUtil.GPIOPin.GPIO_13.pin();
+	private static Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+	private static Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
 	public static void initADC() {
 		try {
@@ -1258,21 +1257,21 @@ public class SunFlower implements RESTRequestManager {
 		tiltServoID = new int[] { 15 };
 
 		System.out.println("---------------------------------------------------");
-		System.out.println(String.format("Usage is java %s %s%s %s%s %s%d %s%d %s%d %s%d %s%d %s%d %s%s %s%s",
+		System.out.printf("Usage is java %s %s%s %s%s %s%d %s%d %s%d %s%d %s%d %s%d %s%s %s%s\n",
 				SunFlower.class.getName(),
 				WITH_ADC_PREFIX, "true",
 				WITH_PHOTOCELL_PREFIX, "false",
-				MISO_PRM_PREFIX, PinUtil.findByPin(miso.getName()).gpio(),
-				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi.getName()).gpio(),
-				CLK_PRM_PREFIX, PinUtil.findByPin(clk.getName()).gpio(),
-				CS_PRM_PREFIX, PinUtil.findByPin(cs.getName()).gpio(),
+				MISO_PRM_PREFIX, PinUtil.findByPin(miso).gpio(),
+				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
+				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
+				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio(),
 				BATTERY_CHANNEL_PREFIX, adcChannel,
 				PHOTO_CELL_CHANNEL_PREFIX, photocellChannel,
 				HEADING_PREFIX, Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(", ")),
-				TILT_PREFIX, Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(", "))));
+				TILT_PREFIX, Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(", ")));
 		System.out.println("Values above are default values.");
-		System.out.println(String.format("%s and %s take comma-separated lists of ints as parameters", HEADING_PREFIX, TILT_PREFIX));
-		System.out.println(String.format("Values for %s, %s, %s, and %s are GPIO/BCM values", MISO_PRM_PREFIX, MOSI_PRM_PREFIX, CLK_PRM_PREFIX, CS_PRM_PREFIX));
+		System.out.printf("%s and %s take comma-separated lists of ints as parameters\n", HEADING_PREFIX, TILT_PREFIX);
+		System.out.printf("Values for %s, %s, %s, and %s are GPIO/BCM values\n", MISO_PRM_PREFIX, MOSI_PRM_PREFIX, CLK_PRM_PREFIX, CS_PRM_PREFIX);
 
 		System.out.println("---------------------------------------------------");
 		System.out.println();
@@ -1312,7 +1311,7 @@ public class SunFlower implements RESTRequestManager {
 						pin = Integer.parseInt(pinValue);
 						setMISO(pin);
 					} catch (NumberFormatException nfe) {
-						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+						System.err.printf("Bad pin value for %s, must be an integer [%s]\n", prm, pinValue);
 					}
 				} else if (prm.startsWith(MOSI_PRM_PREFIX)) {
 					pinValue = prm.substring(MOSI_PRM_PREFIX.length());
@@ -1320,7 +1319,7 @@ public class SunFlower implements RESTRequestManager {
 						pin = Integer.parseInt(pinValue);
 						setMOSI(pin);
 					} catch (NumberFormatException nfe) {
-						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+						System.err.printf("Bad pin value for %s, must be an integer [%s]\n", prm, pinValue);
 					}
 				} else if (prm.startsWith(CLK_PRM_PREFIX)) {
 					pinValue = prm.substring(CLK_PRM_PREFIX.length());
@@ -1328,7 +1327,7 @@ public class SunFlower implements RESTRequestManager {
 						pin = Integer.parseInt(pinValue);
 						setCLK(pin);
 					} catch (NumberFormatException nfe) {
-						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+						System.err.printf("Bad pin value for %s, must be an integer [%s]\n", prm, pinValue);
 					}
 				} else if (prm.startsWith(CS_PRM_PREFIX)) {
 					pinValue = prm.substring(CS_PRM_PREFIX.length());
@@ -1336,7 +1335,7 @@ public class SunFlower implements RESTRequestManager {
 						pin = Integer.parseInt(pinValue);
 						setCS(pin);
 					} catch (NumberFormatException nfe) {
-						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+						System.err.printf("Bad pin value for %s, must be an integer [%s]\n", prm, pinValue);
 					}
 				} else if (prm.startsWith(BATTERY_CHANNEL_PREFIX)) {
 					String chValue = prm.substring(BATTERY_CHANNEL_PREFIX.length());
@@ -1346,7 +1345,7 @@ public class SunFlower implements RESTRequestManager {
 							throw new RuntimeException("Channel in [0..7] please");
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
+						System.err.printf("Bad value for %s, must be an integer [%s]\n", prm, pinValue);
 					}
 				} else if (prm.startsWith(PHOTO_CELL_CHANNEL_PREFIX)) {
 					String chValue = prm.substring(PHOTO_CELL_CHANNEL_PREFIX.length());
@@ -1356,25 +1355,25 @@ public class SunFlower implements RESTRequestManager {
 							throw new RuntimeException("Channel in [0..7] please");
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
+						System.err.printf("Bad value for %s, must be an integer [%s]\n", prm, pinValue);
 					}
 				} else if (prm.startsWith(WITH_ADC_PREFIX)) {
 					String adcValue = prm.substring(WITH_ADC_PREFIX.length());
 					try {
 						withAdc = Boolean.valueOf(adcValue);
 					} catch (Exception nfe) {
-						System.err.println(String.format("Bad value for %s, must be a boolean [%s]", prm, adcValue));
+						System.err.printf("Bad value for %s, must be a boolean [%s]\n", prm, adcValue);
 					}
 				} else if (prm.startsWith(WITH_PHOTOCELL_PREFIX)) {
 					String pcValue = prm.substring(WITH_PHOTOCELL_PREFIX.length());
 					try {
 						withPhotocell = Boolean.valueOf(pcValue);
 					} catch (Exception nfe) {
-						System.err.println(String.format("Bad value for %s, must be a boolean [%s]", prm, pcValue));
+						System.err.printf("Bad value for %s, must be a boolean [%s]\n", prm, pcValue);
 					}
 				} else {
 					// What?
-					System.err.println(String.format("Warning >>> Un-managed prm: %s", prm));
+					System.err.printf("Warning >>> Un-managed prm: %s\n", prm);
 				}
 			}
 		}
@@ -1386,9 +1385,9 @@ public class SunFlower implements RESTRequestManager {
 		}
 
 		if (withAdc || withPhotocell) {
-			System.out.println(String.format("Reading MCP3008 on channel%s %s",
+			System.out.printf("Reading MCP3008 on channel%s %s\n",
 					(withAdc && withPhotocell ? "s" : ""),
-					(withAdc && withPhotocell ? String.valueOf(adcChannel) + " and " + String.valueOf(photocellChannel) : (withAdc ? String.valueOf(adcChannel) : String.valueOf(photocellChannel)))) );
+					(withAdc && withPhotocell ? (adcChannel) + " and " + (photocellChannel) : (withAdc ? String.valueOf(adcChannel) : String.valueOf(photocellChannel))));
 			System.out.println(
 					" Wiring of the MCP3008-SPI (without power supply):\n" +
 							" +---------++-----------------------------------------------+\n" +
@@ -1397,40 +1396,40 @@ public class SunFlower implements RESTRequestManager {
 							" |         || Pin# | Name       | Role | GPIO    | wiringPI |\n" +
 							" |         ||      |            |      | /BCM    | /PI4J    |\n" +
 							" +---------++------+------------+------+---------+----------+");
-			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
-					PinUtil.findByPin(clk.getName()).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(clk.getName()).pinName(), 10, " "),
-					PinUtil.findByPin(clk.getName()).gpio(),
-					PinUtil.findByPin(clk.getName()).wiringPi()));
-			System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
-					PinUtil.findByPin(mosi.getName()).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(mosi.getName()).pinName(), 10, " "),
-					PinUtil.findByPin(mosi.getName()).gpio(),
-					PinUtil.findByPin(mosi.getName()).wiringPi()));
-			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
-					PinUtil.findByPin(miso.getName()).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(miso.getName()).pinName(), 10, " "),
-					PinUtil.findByPin(miso.getName()).gpio(),
-					PinUtil.findByPin(miso.getName()).wiringPi()));
-			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
-					PinUtil.findByPin(cs.getName()).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(cs.getName()).pinName(), 10, " "),
-					PinUtil.findByPin(cs.getName()).gpio(),
-					PinUtil.findByPin(cs.getName()).wiringPi()));
+			System.out.printf(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |\n",
+					PinUtil.findByPin(clk).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
+					PinUtil.findByPin(clk).gpio(),
+					PinUtil.findByPin(clk).wiringPi());
+			System.out.printf(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |\n",
+					PinUtil.findByPin(mosi).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
+					PinUtil.findByPin(mosi).gpio(),
+					PinUtil.findByPin(mosi).wiringPi());
+			System.out.printf(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |\n",
+					PinUtil.findByPin(miso).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
+					PinUtil.findByPin(miso).gpio(),
+					PinUtil.findByPin(miso).wiringPi());
+			System.out.printf(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |\n",
+					PinUtil.findByPin(cs).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
+					PinUtil.findByPin(cs).gpio(),
+					PinUtil.findByPin(cs).wiringPi());
 			System.out.println(" +---------++------+------------+-----+----------+----------+");
 			System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 			System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 			System.out.println(               "       +--------+ ");
-			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 || photocellChannel == 0 ? "*" : " ")));
-			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 || photocellChannel == 1 ? "*" : " ")));
-			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 || photocellChannel == 2 ? "*" : " ")));
-			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (adcChannel == 3 || photocellChannel == 3 ? "*" : " ")));
-			System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4 || photocellChannel == 4 ? "*" : " ")));
-			System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 || photocellChannel == 5 ? "*" : " ")));
-			System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 || photocellChannel == 6 ? "*" : " ")));
-			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 || photocellChannel == 7 ? "*" : " ")));
+			System.out.printf("%s CH0 -+  1  16 +- Vdd \n",  (adcChannel == 0 || photocellChannel == 0 ? "*" : " "));
+			System.out.printf("%s CH1 -+  2  15 +- Vref \n", (adcChannel == 1 || photocellChannel == 1 ? "*" : " "));
+			System.out.printf("%s CH2 -+  3  14 +- aGnd \n", (adcChannel == 2 || photocellChannel == 2 ? "*" : " "));
+			System.out.printf("%s CH3 -+  4  13 +- CLK \n",  (adcChannel == 3 || photocellChannel == 3 ? "*" : " "));
+			System.out.printf("%s CH4 -+  5  12 +- Dout \n", (adcChannel == 4 || photocellChannel == 4 ? "*" : " "));
+			System.out.printf("%s CH5 -+  6  11 +- Din \n",  (adcChannel == 5 || photocellChannel == 5 ? "*" : " "));
+			System.out.printf("%s CH6 -+  7  10 +- CS \n",   (adcChannel == 6 || photocellChannel == 6 ? "*" : " "));
+			System.out.printf("%s CH7 -+  8   9 +- dGnd \n", (adcChannel == 7 || photocellChannel == 7 ? "*" : " "));
 			System.out.println(               "       +--------+ ");
 
 			initADC();
@@ -1442,7 +1441,7 @@ public class SunFlower implements RESTRequestManager {
 				Thread batteryLogger = new Thread(() -> {
 					while (true) {
 						BatteryData batteryData = instance.getBatteryData();
-						System.out.println(String.format(">> BAT: %s %.02f V", SDF.format(new Date()), batteryData.volt));
+						System.out.printf(">> BAT: %s %.02f V\n", SDF.format(new Date()), batteryData.volt);
 						try {
 							Thread.sleep(1_000);
 						} catch (Exception ex) {
@@ -1459,7 +1458,7 @@ public class SunFlower implements RESTRequestManager {
 					while (true) {
 						PhotocellData photocellData = instance.getPhotocellData();
 						// TODO Lux
-						System.out.println(String.format(">> LDR: %s, val: %d, %.02f V", SDF.format(new Date()), photocellData.adc, photocellData.volt));
+						System.out.printf(">> LDR: %s, val: %d, %.02f V\n", SDF.format(new Date()), photocellData.adc, photocellData.volt);
 						try {
 							Thread.sleep(1_000);
 						} catch (Exception ex) {

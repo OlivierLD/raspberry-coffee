@@ -9,7 +9,6 @@ import lcd.substitute.SwingLedPanel;
 import nmea.mux.context.Context;
 import nmea.parser.*;
 import utils.PinUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -142,7 +141,7 @@ public class SSD1306Processor implements Forwarder {
 
 	private enum OLED_INTERFACE {
 		SPI, I2C
-	};
+	}
 	private OLED_INTERFACE oledInterface = OLED_INTERFACE.I2C; // Default
 
 	protected SSD1306 oled;
@@ -172,7 +171,7 @@ public class SSD1306Processor implements Forwarder {
 	private final static int SOL_OPTION = 17;
 	// etc...
 
-	private static List<Integer> optionList = new ArrayList<>();
+	private static final List<Integer> optionList = new ArrayList<>();
 //	{
 //					TWD_OPTION, // True Wind Direction
 //					BSP_OPTION, // Boat Speed
@@ -200,7 +199,7 @@ public class SSD1306Processor implements Forwarder {
 
 	enum SpeedUnit {
 		KNOTS, KMH, MPH, MS
-	};
+	}
 
 	SpeedUnit speedUnit = SpeedUnit.KNOTS;
 
@@ -324,11 +323,11 @@ public class SSD1306Processor implements Forwarder {
 							ssd1306DC);
 				}
 				oled = new SSD1306(
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306CLK)),
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306MOSI)),
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306CS)),
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306RST)),
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByWiringPiNumber(ssd1306DC)),
+						PinUtil.getPinByWiringPiNumber(ssd1306CLK),
+						PinUtil.getPinByWiringPiNumber(ssd1306MOSI),
+						PinUtil.getPinByWiringPiNumber(ssd1306CS),
+						PinUtil.getPinByWiringPiNumber(ssd1306RST),
+						PinUtil.getPinByWiringPiNumber(ssd1306DC),
 						width,
 						height); // See Default pins in SSD1306.
 			}
@@ -1049,7 +1048,7 @@ public class SSD1306Processor implements Forwarder {
 					case "PCH": // Pitch
 					case "ROL": // Roll
 					default:
-						System.out.println(String.format("[%s] not implemented yet.", id));
+						System.out.printf("[%s] not implemented yet.\n", id);
 						break;
 				}
 			});

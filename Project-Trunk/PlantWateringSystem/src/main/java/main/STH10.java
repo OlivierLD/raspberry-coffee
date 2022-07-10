@@ -10,7 +10,6 @@ import sensors.sth10.STH10Driver;
 import utils.PinUtil;
 import utils.StaticUtil;
 import utils.WeatherUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,7 +82,7 @@ public class STH10 implements Probe {
 				String.format("Long, in milliseconds. The interval between each log entry. Default is %d.", DEFAULT_LOGGING_PACE)),
 		HELP("--help", "Display the help and exit.");
 
-		private String prefix, help;
+		private final String prefix, help;
 
 		ARGUMENTS(String prefix, String help) {
 			this.prefix = prefix;
@@ -125,17 +124,17 @@ public class STH10 implements Probe {
 
 	private static PinState simulatedPinState = PinState.HIGH;
 	private static PinState actualPinState = PinState.HIGH;
-	private static Supplier<PinState> relaySignalSimulator = () -> simulatedPinState;
-	private static Consumer<PinState> relayObserver = state -> {
+	private final static Supplier<PinState> relaySignalSimulator = () -> simulatedPinState;
+	private final static Consumer<PinState> relayObserver = state -> {
 		System.out.println(">> Relay is now " + state);
 		simulatedPinState = state;
 	};
-	private static Consumer<PinState> relayListener = state -> actualPinState = state;
+	private final static Consumer<PinState> relayListener = state -> actualPinState = state;
 
 	private static HTTPServer httpServer = null;
 
 	// Loggers
-	private static List<DataLoggerInterface> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
+	private final static List<DataLoggerInterface> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
 	private static long lastLog = -1;
 
 	// Sensor data Getters and Setters, for (optional) REST
@@ -355,7 +354,7 @@ public class STH10 implements Probe {
 					humidityThreshold = Integer.parseInt(val);
 					if (humidityThreshold < 0 || humidityThreshold > 100) {
 						humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
-						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Reseting to %d ", DEFAULT_HUMIDITY_THRESHOLD));
+						System.err.printf(">> Humidity Threshold must be in [0..100]. Reseting to %d \n", DEFAULT_HUMIDITY_THRESHOLD);
 					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
@@ -416,11 +415,11 @@ public class STH10 implements Probe {
 			displayANSIConsole();
 		} else {
 			System.out.println("+------- P L A N T   W A T E R I N G   S Y S T E M --------");
-			System.out.println(String.format("| Start watering under %d%% of humidity.", humidityThreshold));
-			System.out.println(String.format("| Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))));
-			System.out.println(String.format("| Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))));
+			System.out.printf("| Start watering under %d%% of humidity.\n", humidityThreshold);
+			System.out.printf("| Water during %s\n", fmtDHMS(msToHMS(wateringDuration * 1_000)));
+			System.out.printf("| Resume sensor watch %s after watering.\n", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000)));
 			if (withRESTServer) {
-				System.out.println(String.format("| REST Server running on port %d.", restServerPort));
+				System.out.printf("| REST Server running on port %d.\n", restServerPort);
 			}
 			System.out.println("+----------------------------------------------------------");
 		}
@@ -429,20 +428,20 @@ public class STH10 implements Probe {
 			System.out.println("Wiring:");
 			// Compose mapping for PinUtil, physical numbers.
 			String[] map = new String[3];
-			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(dataPin)).pinNumber()) + ":" + "DATA";
-			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clockPin)).pinNumber()) + ":" + "CLOCK";
-			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
+			map[0] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(dataPin)).pinNumber()) + ":" + "DATA";
+			map[1] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(clockPin)).pinNumber()) + ":" + "CLOCK";
+			map[2] = (PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
 			PinUtil.print(map);
 		}
 
 		STH10 instance = new STH10();
 		try {
 			probe = new STH10Driver(
-					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(dataPin)),
-					StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(clockPin)));
+					PinUtil.getPinByGPIONumber(dataPin),
+					PinUtil.getPinByGPIONumber(clockPin));
 			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
-				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? " (enforced)" : "")));
+				System.out.printf(">> Will simulate STH10%s\n", (enforceSensorSimulation ? " (enforced)" : ""));
 				if ("true".equals(System.getProperty("random.simulator"))) {
 					temperatureSimulator = STH10::simulateTemp;
 					humiditySimulator = STH10::simulateHum;
@@ -458,7 +457,7 @@ public class STH10 implements Probe {
 			System.exit(1);
 		}
 		try {
-			relay = new RelayDriver(StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByGPIONumber(relayPin)));
+			relay = new RelayDriver(PinUtil.getPinByGPIONumber(relayPin));
 			if (relay.isSimulating()) {
 				// Provide simulator here
 				System.out.println(">> Will simulate Relay");
@@ -532,7 +531,7 @@ public class STH10 implements Probe {
 				try {
 					temperature = probe.readTemperature();
 				} catch (Exception ex) {
-					System.err.println(String.format("At %s :", new Date().toString()));
+					System.err.printf("At %s :\n", new Date().toString());
 					ex.printStackTrace();
 					probe.softReset();
 					System.err.println("Device was reset");
@@ -540,7 +539,7 @@ public class STH10 implements Probe {
 				try {
 					humidity = probe.readHumidity(temperature);
 				} catch (Exception ex) {
-					System.err.println(String.format("At %s :", new Date().toString()));
+					System.err.printf("At %s :\n", new Date().toString());
 					ex.printStackTrace();
 					probe.softReset();
 					System.err.println("Device was reset");
@@ -557,7 +556,7 @@ public class STH10 implements Probe {
 									.feed(LogData.FEEDS.AIR)
 									.numValue(temperature));
 						} catch (Exception ex) {
-							System.err.println(String.format("At %s :", new Date().toString()));
+							System.err.printf("At %s :\n", new Date().toString());
 							System.err.println(ex.toString());
 							//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
 						}
@@ -566,7 +565,7 @@ public class STH10 implements Probe {
 									.feed(LogData.FEEDS.HUM)
 									.numValue(humidity));
 						} catch (Exception ex) {
-							System.err.println(String.format("At %s :", new Date().toString()));
+							System.err.printf("At %s :\n", new Date().toString());
 							System.err.println(ex.toString());
 							//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
 						}
@@ -576,12 +575,12 @@ public class STH10 implements Probe {
 			}
 
 			if (verbose == VERBOSE.STDOUT) { // Can be used for logging
-				System.out.println(String.format("%d;%s;%.02f;%.02f;%.02f",
+				System.out.printf("%d;%s;%.02f;%.02f;%.02f\n",
 						System.currentTimeMillis(),
 						new Date().toString(),
 						temperature,
 						humidity,
-						WeatherUtil.dewPointTemperature(humidity, temperature)));
+						WeatherUtil.dewPointTemperature(humidity, temperature));
 			} else if (verbose == VERBOSE.ANSI) {
 				displayANSIConsole();
 			}
@@ -752,8 +751,8 @@ public class STH10 implements Probe {
 		}
 
 		if (probe.isSimulating()) {
-			System.out.println(String.format("Simulated temperature between %.02f and %.02f", minSimTemp, maxSimTemp));
-			System.out.println(String.format("Simulated humidity between %.02f and %.02f", minSimHum, maxSimHum));
+			System.out.printf("Simulated temperature between %.02f and %.02f\n", minSimTemp, maxSimTemp);
+			System.out.printf("Simulated humidity between %.02f and %.02f\n", minSimHum, maxSimHum);
 		}
 
 		probe.shutdownGPIO();

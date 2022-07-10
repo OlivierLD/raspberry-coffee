@@ -11,7 +11,6 @@ import utils.StaticUtil;
 import utils.SystemUtils;
 import utils.TimeUtil;
 import utils.gpio.PushButtonController;
-import utils.gpio.StringToGPIOPin;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 	}
 
 	/* ----- Buttons Runnables (actions) ----- */
-	private Runnable onClick = () -> {
+	private final Runnable onClick = () -> {
 		System.out.println("Simple click detected");
 		if (shutdownPending) {
 			// Actual shutdown here
@@ -115,7 +114,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		}
 	};
 
-	private Runnable onDoubleClick = () -> {
+	private final Runnable onDoubleClick = () -> {
 
 		shutdownThread = new Thread(() -> {
 			shutdownPending = true;
@@ -155,11 +154,11 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
 		this.terminateMuxURL = String.format("http://localhost:%d/mux/terminate", serverPort);
 
-		System.out.println(String.format("To turn logging ON, use PUT %s", this.turnLoggingOnURL));
-		System.out.println(String.format("To turn logging OFF, use PUT %s", this.turnLoggingOffURL));
-		System.out.println(String.format("To terminate the multiplexer, use POST %s", this.terminateMuxURL));
+		System.out.printf("To turn logging ON, use PUT %s\n", this.turnLoggingOnURL);
+		System.out.printf("To turn logging OFF, use PUT %s\n", this.turnLoggingOffURL);
+		System.out.printf("To terminate the multiplexer, use POST %s\n", this.terminateMuxURL);
 
-		System.out.println(String.format("\nREST Operations: GET http://localhost:%d/mux/oplist\n", serverPort));
+		System.out.printf("\nREST Operations: GET http://localhost:%d/mux/oplist\n\n", serverPort);
 
 		List<String[]> addresses = SystemUtils.getIPAddresses(true);
 		String machineName = "localhost";
@@ -169,7 +168,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		StringBuffer sb = new StringBuffer();
 		System.out.println("IP addresses for localhost:");
 		addresses.forEach(pair -> {
-			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
+			System.out.printf("%s -> %s\n", pair[0], pair[1]);
 			// for tests
 			if (pair[1].startsWith("192.168.")) { // ...a bit tough. I know.
 				sb.append(pair[1]);
@@ -178,7 +177,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		if (sb.length() > 0) {
 			machineName = sb.toString();
 		}
-		System.out.println(String.format("Also try http://%s:%d/web/index.html from a browser", machineName, serverPort));
+		System.out.printf("Also try http://%s:%d/web/index.html from a browser\n", machineName, serverPort);
 
 		try {
 			// Provision buttons here
@@ -188,15 +187,15 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 			// Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin.getName()))); // GPIO_28
-				buttonOnePin = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr)));
+				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
+				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 
 			// Pin mapping display for info
 			String[] map = new String[]{
-					String.valueOf(PinUtil.findByPin(buttonOnePin.getName()).pinNumber()) + ":Button Hot Wire",
+					String.valueOf(PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button Hot Wire",
 
 					String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":3v3",
 					String.valueOf(PinUtil.GPIOPin.PWR_2.pinNumber()) + ":5v0",
@@ -243,7 +242,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 			final int SHFT_KEY = 16,
 								CTRL_KEY = 17;
 
-			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
+			System.out.printf("SSD1306 was loaded! (%s)\n", simulating ? "simulating" : "for real");
 			if (simulating) {
 				// Simulator led color
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
@@ -285,11 +284,9 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 			System.err.println("Ooops");
 			nfe.printStackTrace();
 		}
-		System.out.println(String.format(">>> Server port is %d", serverPort));
+		System.out.printf(">>> Server port is %d\n", serverPort);
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			freeResources();
-		}, "Shutdown Hook"));
+		Runtime.getRuntime().addShutdownHook(new Thread(MultiplexerWithOneButton::freeResources, "Shutdown Hook"));
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 
 		boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));

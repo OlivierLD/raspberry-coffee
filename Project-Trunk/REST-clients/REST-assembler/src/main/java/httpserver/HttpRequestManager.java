@@ -6,7 +6,6 @@ import http.RESTRequestManager;
 import relay.RelayManager;
 import sensors.ADCChannel;
 import utils.PinUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,8 +14,8 @@ import java.util.Map;
 
 public class HttpRequestManager implements RESTRequestManager {
 
-	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
-	private RESTImplementation restImplementation;
+	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private final RESTImplementation restImplementation;
 
 	private HttpRequestServer httpRequestServer = null;
 	// Physical
@@ -52,12 +51,10 @@ public class HttpRequestManager implements RESTRequestManager {
 		try {
 			relayMap = buildRelayMap(mapStr);
 			if ("true".equals(System.getProperty("server.verbose", "false"))) {
-				relayMap.entrySet().forEach(entry -> {
-					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ",
-							entry.getKey(),
-							PinUtil.findByPin(entry.getValue().getName()).pinNumber(),
-							PinUtil.findByPin(entry.getValue().getName()).pinName() ));
-				});
+				relayMap.entrySet().forEach(entry -> System.out.printf("Relay #%d mapped to pin %d (%s) \n",
+						entry.getKey(),
+						PinUtil.findByPin(entry.getValue()).pinNumber(),
+						PinUtil.findByPin(entry.getValue()).pinName() ));
 			}
 		} catch (Exception ex) {
 			throw ex;
@@ -72,7 +69,7 @@ public class HttpRequestManager implements RESTRequestManager {
 			nfe.printStackTrace();
 		}
 		if ("true".equals(System.getProperty("server.verbose", "false"))) {
-			System.out.println(String.format("MISO:%d MOSI:%d CLK:%d CS:%d, Channel:%d", miso, mosi, clk, cs, channel));
+			System.out.printf("MISO:%d MOSI:%d CLK:%d CS:%d, Channel:%d\n", miso, mosi, clk, cs, channel);
 		}
 		this.relayManager = new RelayManager(relayMap);
 		this.adcChannel = new ADCChannel(miso, mosi, clk, cs, channel);
@@ -102,7 +99,7 @@ public class HttpRequestManager implements RESTRequestManager {
 			try {
 				int relayNum = Integer.parseInt(tuple[0]);
 				int pinNum = Integer.parseInt(tuple[1]);
-				Pin physicalNumber = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(pinNum));
+				Pin physicalNumber = PinUtil.getPinByPhysicalNumber(pinNum);
 				if (physicalNumber == null) {
 					throw new RuntimeException(String.format("In [%s], element [%s], pin #%d does not exist", strMap, relayPrm, pinNum));
 				}
@@ -119,7 +116,7 @@ public class HttpRequestManager implements RESTRequestManager {
 	 *
 	 * @param request incoming request
 	 * @return response as defined in the {@link RESTImplementation}
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException When op is not registered
 	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {

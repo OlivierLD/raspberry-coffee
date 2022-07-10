@@ -6,7 +6,6 @@ import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.PinUtil;
 import utils.TimeUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,10 +31,10 @@ import java.util.function.Consumer;
  */
 public class RasPiSerialRadar implements SerialIOCallbacks {
 
-	private static boolean verbose = "true".equals(System.getProperty("radar.verbose"));
+	private final static boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 
 	private static final int BUFFER_LENGTH = 10;
-	private static List<Double> buffer = new ArrayList<>(BUFFER_LENGTH);
+	private final static List<Double> buffer = new ArrayList<>(BUFFER_LENGTH);
 
 
 	@Override
@@ -67,10 +66,10 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 
 		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
 		String baudRateStr = System.getProperty("baud.rate", "9600");
-		System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
+		System.out.printf("Opening port %s:%s\n", serialPortName, baudRateStr);
 		CommPortIdentifier serialOutPort = pm.get(serialPortName);
 		if (serialOutPort == null) {
-			System.out.println(String.format("Port %s not found, aborting", serialPortName));
+			System.out.printf("Port %s not found, aborting\n", serialPortName);
 			System.exit(1);
 		}
 		try {
@@ -111,13 +110,13 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 
 	private static void displayHelp() {
 		System.out.println("Program parameters are:");
-		System.out.println(String.format("\t%sXX, default is %s, values are in [0..15]", PCA9685_SERVO_PORT, "0"));
-		System.out.println(String.format("\t%sXX, default is %s ms, wait time between measurements", DELAY, "100"));
-		System.out.println(String.format("\t%sXX, default is 16, PHYSICAL number of the trigger pin, range is [1..40]", TRIGGER_PIN));
-		System.out.println(String.format("\t%sXX, default is 18, PHYSICAL number of the echo pin, range is [1..40]", ECHO_PIN));
-		System.out.println(String.format("\t%s, just reset the servo and exit", JUST_RESET));
-		System.out.println(String.format("\t%s, does just one loop (0, -90, +90, 0) and exits", JUST_ONE_LOOP));
-		System.out.println(String.format("\t%s, you're on it. Exiting.", HELP));
+		System.out.printf("\t%sXX, default is %s, values are in [0..15]\n", PCA9685_SERVO_PORT, "0");
+		System.out.printf("\t%sXX, default is %s ms, wait time between measurements\n", DELAY, "100");
+		System.out.printf("\t%sXX, default is 16, PHYSICAL number of the trigger pin, range is [1..40]\n", TRIGGER_PIN);
+		System.out.printf("\t%sXX, default is 18, PHYSICAL number of the echo pin, range is [1..40]\n", ECHO_PIN);
+		System.out.printf("\t%s, just reset the servo and exit\n", JUST_RESET);
+		System.out.printf("\t%s, does just one loop (0, -90, +90, 0) and exits\n", JUST_ONE_LOOP);
+		System.out.printf("\t%s, you're on it. Exiting.\n", HELP);
 	}
 
 	public static void main(String... args) {
@@ -133,7 +132,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 				buffer.remove(0);
 			}
 			double avg = buffer.stream().mapToDouble(d -> d).average().getAsDouble();
-			System.out.println(String.format("Default (static) RasPiRadar Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg));
+			System.out.printf("Default (static) RasPiRadar Consumer >> Bearing %s%02d, distance %.02f cm\n", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg);
 		};
 
 		int servoPort  = 0;
@@ -170,8 +169,8 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 			throw new RuntimeException("Echo & Trigger pin numbers must be provided together, or not at all.");
 		}
 
-		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
-		System.out.println(String.format("Wait when scanning %d ms", delay));
+		System.out.printf("Driving Servo on Channel %d\n", servoPort);
+		System.out.printf("Wait when scanning %d ms\n", delay);
 
 		RasPiSerialRadar serialRadar = new RasPiSerialRadar();
 		serialRadar.initSerialComm();
@@ -181,8 +180,8 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 				rpr = new RasPiRadar(true, servoPort);
 			} else {
 				rpr = new RasPiRadar(true, servoPort,
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(trig)),
-						StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(echo)));
+						PinUtil.getPinByPhysicalNumber(trig),
+						PinUtil.getPinByPhysicalNumber(echo));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
@@ -191,8 +190,8 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 		if (verbose && rpr != null && rpr.getHcSR04() != null) {
 			System.out.println("HC-SR04 & Serial wiring:");
 			String[] map = new String[4];
-			map[0] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getTrigPin().getName()).pinNumber()) + ":" + "Trigger";
-			map[1] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getEchoPin().getName()).pinNumber()) + ":" + "Echo";
+			map[0] = PinUtil.findByPin(rpr.getHcSR04().getTrigPin()).pinNumber() + ":" + "Trigger";
+			map[1] = PinUtil.findByPin(rpr.getHcSR04().getEchoPin()).pinNumber() + ":" + "Echo";
 
 			map[2] = String.valueOf(8) + ":" + "TX, white";
 			map[3] = String.valueOf(10) + ":" + "RX, green";
@@ -212,7 +211,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 			double avg = buffer.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
 			String serialSentence = String.format("%s%02d;%.02f", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg);
 			if (verbose) {
-				System.out.println(String.format("Emitting [%s]", serialSentence));
+				System.out.printf("Emitting [%s]\n", serialSentence);
 			}
 			try {
 				serialRadar.serialOutput(serialSentence);

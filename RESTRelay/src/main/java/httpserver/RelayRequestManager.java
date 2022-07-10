@@ -5,7 +5,6 @@ import http.HTTPServer;
 import http.RESTRequestManager;
 import relay.RelayManager;
 import utils.PinUtil;
-import utils.gpio.StringToGPIOPin;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,8 +13,8 @@ import java.util.Map;
 
 public class RelayRequestManager implements RESTRequestManager {
 
-	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
-	private RESTImplementation restImplementation;
+	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private final RESTImplementation restImplementation;
 
 	private RelayServer relayServer = null;
 	private RelayManager relayManager = null; // Physical
@@ -41,10 +40,10 @@ public class RelayRequestManager implements RESTRequestManager {
 			relayMap = buildRelayMap(mapStr);
 			if ("true".equals(System.getProperty("relay.verbose", "false"))) {
 				relayMap.entrySet().forEach(entry -> {
-					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ",
+					System.out.printf("Relay #%d mapped to pin %d (%s) \n",
 							entry.getKey(),
-							PinUtil.findByPin(entry.getValue().getName()).pinNumber(),
-							PinUtil.findByPin(entry.getValue().getName()).pinName() ));
+							PinUtil.findByPin(entry.getValue()).pinNumber(),
+							PinUtil.findByPin(entry.getValue()).pinName());
 				});
 			}
 		} catch (Exception ex) {
@@ -67,7 +66,7 @@ public class RelayRequestManager implements RESTRequestManager {
 			try {
 				int relayNum = Integer.parseInt(tuple[0]);
 				int pinNum = Integer.parseInt(tuple[1]);
-				Pin physicalNumber = StringToGPIOPin.stringToGPIOPin(PinUtil.getPinByPhysicalNumber(pinNum));
+				Pin physicalNumber = PinUtil.getPinByPhysicalNumber(pinNum);
 				if (physicalNumber == null) {
 					throw new RuntimeException(String.format("In [%s], element [%s], pin #%d does not exist", strMap, relayPrm, pinNum));
 				}
@@ -84,7 +83,7 @@ public class RelayRequestManager implements RESTRequestManager {
 	 *
 	 * @param request incoming request
 	 * @return as defined in the {@link RESTImplementation}
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException Oops
 	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
