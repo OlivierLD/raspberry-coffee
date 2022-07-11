@@ -170,7 +170,16 @@ public class MainMCP3008Sample {
 		};
 		PinUtil.print(map);
 
-		MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
+		try {
+			MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
+		} catch (Throwable bam) {
+			if (bam.getMessage().startsWith("Unable to open GPIO direction interface")) {
+				System.err.println("This board does not support the pins you've mentioned.");
+				System.err.println("Try changing them...");
+			}
+			bam.printStackTrace();
+			System.exit(1);
+		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Shutting down.");
