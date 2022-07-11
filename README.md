@@ -179,14 +179,20 @@ Depending on the IDE you are using, there are two main features you might be int
 > CP=./build/libs/ADC-1.0-all.jar
 > #
 > REMOTE_DEBUG_FLAGS=
-> REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+> REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
 > #
 > # Channel [0..1] can be passed as prm. Default is 0
 > sudo java -cp ${CP} ${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS} analogdigitalconverter.sample.MainMCP3008Sample $*
 > ```
-> Now, from your IDE on the debugger machine, create a profile:
+> Now, from your IDE (IntelliJ here) on the debugger machine, create a profile:
 > ![Remote debug profile](./remote.debug.profile.png)  
-> Notice the `Command line arguments for remote JVM`, and the port, `5005`.  
+> Notice the `Command line arguments for remote JVM`, and the port, `5005`.    
+> Depending on the kind of app you want to debug, you might need to set `suspend=y` in the `-agentlib` directive. This
+> will wait for the remote debugger to connect.
+> - In the IDE, in the code you want to debug, set breakpoint(s).
+> - Start the app (as per the script above) on the debuggee (The Raspberry here)
+> - Then start the debugger in the IDE, using the remote-debug profile you created
+> 
 > More [here](https://www.jetbrains.com/help/idea/tutorial-remote-debug.html)
 ---
 
