@@ -29,7 +29,7 @@ public class GenericPinUtil {
 		GPIO_13("SPI0_MISO",   21,  9, 13, "GPIO 13"), GPIO_6("GPIO_6",       22, 25,  6, "GPIO 6"),
 		GPIO_14("SPI0_CLK",    23, 11, 14, "GPIO 14"), GPIO_10("SPI0_CS0_N",  24,  8, 10, "GPIO 10"),
 		GRND_5("GND",          25, -1, -1, null),             GPIO_11("SPI0_CS1_N",  26,  7, 11, "GPIO 11"),
-		SDA0("SDA0",           27, -1, 30, "GPIO 30"), SCL0("SCL0",           28, -1, 31, "GPIO 1"),
+		SDA0("SDA0",           27, 0, 30, "GPIO 30"), SCL0("SCL0",           28, -1, 31, "GPIO 1"),
 		GPIO_21("GPCLK1",      29,  5, 21, "GPIO 21"), GRND_6("GND",          30, -1, -1, null),
 		GPIO_22("GPCLK2",      31,  6, 22, "GPIO 22"), GPIO_26("PWM0",        32, 12, 26, "GPIO 26"),
 		GPIO_23("PWM1",        33, 13, 23, "GPIO 23"), GRND_7("GND",          34, -1, -1, null),

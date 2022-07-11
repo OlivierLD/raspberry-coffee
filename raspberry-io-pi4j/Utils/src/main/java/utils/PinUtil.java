@@ -30,7 +30,7 @@ public class PinUtil {
         GPIO_13("SPI0_MISO",   21,  9, 13, RaspiPin.GPIO_13), GPIO_6("GPIO_6",       22, 25,  6, RaspiPin.GPIO_06),
         GPIO_14("SPI0_CLK",    23, 11, 14, RaspiPin.GPIO_14), GPIO_10("SPI0_CS0_N",  24,  8, 10, RaspiPin.GPIO_10),
         GRND_5("GND",          25, -1, -1, null),             GPIO_11("SPI0_CS1_N",  26,  7, 11, RaspiPin.GPIO_11),
-        SDA0("SDA0",           27, -1, 30, RaspiPin.GPIO_30), SCL0("SCL0",           28, 1, 31, RaspiPin.GPIO_31), // gpio was -1...
+        SDA0("SDA0",           27, 0, 30, RaspiPin.GPIO_30), SCL0("SCL0",           28, 1, 31, RaspiPin.GPIO_31), // gpio was -1...
         GPIO_21("GPCLK1",      29,  5, 21, RaspiPin.GPIO_21), GRND_6("GND",          30, -1, -1, null),
         GPIO_22("GPCLK2",      31,  6, 22, RaspiPin.GPIO_22), GPIO_26("PWM0",        32, 12, 26, RaspiPin.GPIO_26),
         GPIO_23("PWM1",        33, 13, 23, RaspiPin.GPIO_23), GRND_7("GND",          34, -1, -1, null),
