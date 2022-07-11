@@ -24,6 +24,6 @@ dependencies {
   //  implementation 'com.pi4j:pi4j-core:1.2'
   implementation 'org.rxtx:rxtx:2.1.7'
   implementation project(':common-utils')
-  implementation "oliv.raspi.pi4j:Serial-IO:1.0"
+  implementation project(":raspberry-io-pi4j:Serial-IO")
   implementation project(':NMEA-multiplexer')
 }
