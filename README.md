@@ -179,15 +179,15 @@ Depending on the IDE you are using, there are two main features you might be int
 > CP=./build/libs/ADC-1.0-all.jar
 > #
 > REMOTE_DEBUG_FLAGS=
-> REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+> REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 > #
 > # Channel [0..1] can be passed as prm. Default is 0
 > sudo java -cp ${CP} ${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS} analogdigitalconverter.sample.MainMCP3008Sample $*
 > ```
 > Now, from your IDE on the debugger machine, create a profile:
 > ![Remote debug profile](./remote.debug.profile.png)  
-> Notice the `Command line arguments for remote JVM`, and the port, `5005`.
-> 
+> Notice the `Command line arguments for remote JVM`, and the port, `5005`.  
+> More [here](https://www.jetbrains.com/help/idea/tutorial-remote-debug.html)
 ---
 
 This being said, let's go.
