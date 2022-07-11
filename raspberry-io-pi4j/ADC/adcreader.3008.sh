@@ -1,5 +1,5 @@
 #!/bin/bash
-echo Read an ADC
+echo -e "Read an ADC, MCP3008"
 #
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
@@ -10,6 +10,7 @@ REMOTE_DEBUG_FLAGS=
 # REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 #
 # Show in and out pins:
+echo -e "Output of gpio readall:"
 gpio readall
 # Channel [0..1] can be passed as prm. Default is 0
 COMMAND="sudo java -cp ${CP} ${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS} analogdigitalconverter.sample.MainMCP3008Sample $*"
