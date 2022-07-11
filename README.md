@@ -81,6 +81,7 @@ $ javac -version
 [Processing](https://processing.org/) is a _**very cool**_ framework, initially developed for Java, that considerably simplify code development, with great results,
 implementing the concept of sketchbooks, used and reused many times since its introduction.  
 Some examples in this repo will indeed use Processing.  
+It is - at least! - a great way to get started with Java.   
 Processing is now also available for other languages than Java. 
 
 ### PI4J
