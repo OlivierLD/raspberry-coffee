@@ -190,7 +190,7 @@ Depending on the IDE you are using, there are two main features you might be int
 > Depending on the kind of app you want to debug, you might need to set `suspend=y` in the `-agentlib` directive. This
 > will wait for the remote debugger to connect.
 > - In the IDE, in the code you want to debug, set breakpoint(s).
-> - Start the app (as per the script above) on the debuggee (The Raspberry here)
+> - Start the app (as per the script above) on the debuggee (the Raspberry here)
 > - Then start the debugger in the IDE, using the remote-debug profile you created
 > 
 > More [here](https://www.jetbrains.com/help/idea/tutorial-remote-debug.html)
