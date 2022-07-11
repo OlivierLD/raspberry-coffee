@@ -175,7 +175,7 @@ public class MainMCP3008Sample {
 		} catch (Throwable bam) {
 			if (bam.getMessage().startsWith("Unable to open GPIO direction interface")) {
 				System.err.println("This board does not support the pins you've mentioned.");
-				System.err.println("Try changing them...");
+				System.err.println("Try changing them... (numbers in error message are WiringPi numbers)");
 			}
 			bam.printStackTrace();
 			System.exit(1);
