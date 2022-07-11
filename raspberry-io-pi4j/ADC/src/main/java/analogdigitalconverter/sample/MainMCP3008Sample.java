@@ -4,6 +4,7 @@ import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 import utils.StringUtils;
+import utils.SystemUtils;
 
 import static utils.StringUtils.lpad;
 
@@ -22,6 +23,18 @@ public class MainMCP3008Sample {
 
 	public static void main(String... args) {
 
+		try {
+			String[] hardwareData = SystemUtils.getRPiHardwareRevision();
+			if (hardwareData != null) {
+				System.out.printf("Running on: Model: %s, PCB Rev: %s, Memory: %s, Manufactured by: %s\n",
+						hardwareData[SystemUtils.MODEL_IDX],
+						hardwareData[SystemUtils.PCB_REV_IDX],
+						hardwareData[SystemUtils.MEMORY_IDX],
+						hardwareData[SystemUtils.NOTES_IDX]);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		// Default pins
 		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
 		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();

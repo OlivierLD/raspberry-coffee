@@ -6,6 +6,8 @@ import java.util.Map;
 /**
  * Utility, to display the Raspberry Pi's header 40 pins
  * in their (many) different lingos...
+ *
+ * WiP...
  */
 public class GenericPinUtil {
 	// Disposed as on the board
@@ -19,27 +21,27 @@ public class GenericPinUtil {
 		GPIO_9("SCL1",          5,  3,  9, "GPIO 9"), GRND_1("GND",           6, -1, -1, null),
 		GPIO_7("GPCLK0",        7,  4,  7, "GPIO 7"), GPIO_15("UART0_TXD",    8, 14, 15, "GPIO 15"),
 		GRND_2("GND",           9, -1, -1, null),             GPIO_16("UART0_RXD",   10, 15, 16, "GPIO 16"),
-		GPIO_0("GPIO ",       11, 17,  0, "GPIO 0"), GPIO_1("PCM_CLK/PWM0", 12, 18,  1, "GPIO 1"),
-		GPIO_2("GPIO 2",       13, 27,  2, "GPIO 2"), GRND_3("GND",          14, -1, -1, null),
-		GPIO_3("GPIO 3",       15, 22,  3, "GPIO 3"), GPIO_4("GPIO 4",       16, 23,  4, "GPIO 4"),
-		PWR_4("3v3",           17, -1, -1, null),             GPIO_5("GPIO 5",       18, 24,  5, "GPIO 5"),
+		GPIO_0("GPIO_0",       11, 17,  0, "GPIO 0"), GPIO_1("PCM_CLK/PWM0", 12, 18,  1, "GPIO 1"),
+		GPIO_2("GPIO_2",       13, 27,  2, "GPIO 2"), GRND_3("GND",          14, -1, -1, null),
+		GPIO_3("GPIO-3",       15, 22,  3, "GPIO 3"), GPIO_4("GPIO_4",       16, 23,  4, "GPIO 4"),
+		PWR_4("3v3",           17, -1, -1, null),             GPIO_5("GPIO_5",       18, 24,  5, "GPIO 5"),
 		GPIO_12("SPI0_MOSI",   19, 10, 12, "GPIO 12"), GRND_4("GND",          20, -1, -1, null),
-		GPIO_13("SPI0_MISO",   21,  9, 13, "GPIO 13"), GPIO_6("GPIO 6",       22, 25,  6, "GPIO 6"),
+		GPIO_13("SPI0_MISO",   21,  9, 13, "GPIO 13"), GPIO_6("GPIO_6",       22, 25,  6, "GPIO 6"),
 		GPIO_14("SPI0_CLK",    23, 11, 14, "GPIO 14"), GPIO_10("SPI0_CS0_N",  24,  8, 10, "GPIO 10"),
 		GRND_5("GND",          25, -1, -1, null),             GPIO_11("SPI0_CS1_N",  26,  7, 11, "GPIO 11"),
 		SDA0("SDA0",           27, -1, 30, "GPIO 30"), SCL0("SCL0",           28, -1, 31, "GPIO 31"),
 		GPIO_21("GPCLK1",      29,  5, 21, "GPIO 21"), GRND_6("GND",          30, -1, -1, null),
 		GPIO_22("GPCLK2",      31,  6, 22, "GPIO 22"), GPIO_26("PWM0",        32, 12, 26, "GPIO 26"),
 		GPIO_23("PWM1",        33, 13, 23, "GPIO 23"), GRND_7("GND",          34, -1, -1, null),
-		GPIO_24("PCM_FS/PWM1", 35, 19, 24, "GPIO 24"), GPIO_27("GPIO 27",     36, 16, 27, "GPIO 27"),
-		GPIO_25("GPIO 25",     37, 26, 25, "GPIO 25"), GPIO_28("PCM_DIN",     38, 20, 28, "GPIO 28"),
+		GPIO_24("PCM_FS/PWM1", 35, 19, 24, "GPIO 24"), GPIO_27("GPIO_27",     36, 16, 27, "GPIO 27"),
+		GPIO_25("GPIO_25",     37, 26, 25, "GPIO 25"), GPIO_28("PCM_DIN",     38, 20, 28, "GPIO 28"),
 		GRND_8("GND",          39, -1, -1, null),             GPIO_29("PCM_DOUT",    40, 21, 29, "GPIO 29");
 
-		private String pinName; // Pin name
-		private int pinNumber;  // Physical, [1..40]
-		private int gpio;       // Used by onoff (nodejs), BCM in 'gpio readall', and Javah-io
-		private int wiringPi;   // Also used by PI4J
-		private String pin;
+		private final String pinName; // Pin name
+		private final int pinNumber;  // Physical, [1..40]
+		private final int gpio;       // Used by onoff (nodejs), BCM in 'gpio readall', and Javah-io
+		private final int wiringPi;   // Also used by PI4J
+		private final String pin;
 
 		GPIOPin(String name, int pinNumber, int gpio, int wiring, String pin) {
 			this.pinName = name;
@@ -54,7 +56,7 @@ public class GenericPinUtil {
 		public int gpio() { return this.gpio; }
 		public int wiringPi() { return this.wiringPi; }
 		public String pin() { return this.pin; }
-	};
+	}
 
 	public static String getPinByPhysicalNumber(int n) {
 		String pin = null;
@@ -205,7 +207,7 @@ public class GenericPinUtil {
 
 		// List pins
 		for (GPIOPin gpioPin : GPIOPin.values()) {
-			System.out.println(String.format("%s is named %s", gpioPin.toString(), gpioPin.pinName()));
+			System.out.printf("%s is named %s\n", gpioPin.toString(), gpioPin.pinName());
 		}
 
 		System.out.println("\nAs for an MCP3008 (Physical:Label):");
@@ -215,7 +217,7 @@ public class GenericPinUtil {
 		print(true, "23:CLK", "21:Dout", "19:Din", "24:CS");
 
 		int physical = getPhysicalByWiringPiNumber("GPIO_29");
-		System.out.println(String.format("Physical by WiringPi number: GPIO_29 => #%d", physical)); // Should be #40
+		System.out.printf("Physical by WiringPi number: GPIO_29 => #%d\n", physical); // Should be #40
 
 		String sdaLabel = String.valueOf(GenericPinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
 		System.out.println(">> SDA Label example : " + sdaLabel);

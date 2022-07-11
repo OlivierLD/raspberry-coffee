@@ -38,11 +38,11 @@ public class PinUtil {
         GPIO_25("GPIO_25",     37, 26, 25, RaspiPin.GPIO_25), GPIO_28("PCM_DIN",     38, 20, 28, RaspiPin.GPIO_28),
         GRND_8("GND",          39, -1, -1, null),             GPIO_29("PCM_DOUT",    40, 21, 29, RaspiPin.GPIO_29);
 
-        private String pinName; // Pin name
-        private int pinNumber;  // Physical, [1..40]
-        private int gpio;       // Used by onoff (nodejs), BCM in 'gpio readall', and Javah-io
-        private int wiringPi;   // Also used by PI4J
-        private Pin pin;
+        private final String pinName; // Pin name
+        private final int pinNumber;  // Physical, [1..40]
+        private final int gpio;       // Used by onoff (nodejs), BCM in 'gpio readall', and Javah-io
+        private final int wiringPi;   // Also used by PI4J
+        private final Pin pin;
 
         GPIOPin(String name, int pinNumber, int gpio, int wiring, Pin pin) {
             this.pinName = name;
@@ -57,7 +57,7 @@ public class PinUtil {
         public int gpio() { return this.gpio; }
         public int wiringPi() { return this.wiringPi; }
         public Pin pin() { return this.pin; }
-    };
+    }
 
     public static Pin getPinByPhysicalNumber(int n) {
         Pin pin = null;
@@ -208,7 +208,7 @@ public class PinUtil {
 
         // List pins
         for (GPIOPin gpioPin : GPIOPin.values()) {
-            System.out.println(String.format("%s is named %s", gpioPin.toString(), gpioPin.pinName()));
+            System.out.printf("%s is named %s\n", gpioPin.toString(), gpioPin.pinName());
         }
 
         System.out.println("\nAs for an MCP3008 (Physical:Label):");
@@ -218,7 +218,7 @@ public class PinUtil {
         print(true, "23:CLK", "21:Dout", "19:Din", "24:CS");
 
         int physical = getPhysicalByWiringPiNumber(RaspiPin.GPIO_29);
-        System.out.println(String.format("Physical by WiringPi number: GPIO_29 => #%d", physical)); // Should be #40
+        System.out.printf("Physical by WiringPi number: GPIO_29 => #%d\n", physical); // Should be #40
 
         String sdaLabel = String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
         System.out.println(">> SDA Label example : " + sdaLabel);

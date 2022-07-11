@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class SystemUtils {
 
@@ -67,7 +66,7 @@ public class SystemUtils {
      * On Raspberry Pi, also try SystemInfo methods.
      *
      * @return the list of networks in sight
-     * @throws Exception when iwconfig is not available for examnple
+     * @throws Exception when iwconfig is not available for example
      */
     public static List<String> getNetworkName() throws Exception {
         final String ESSID_LABEL = "ESSID:";
@@ -204,7 +203,7 @@ public class SystemUtils {
 
     // Find official info at https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
     // Also https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#new-style-revision-codes-in-use
-    private final static Map<String, String[]> matrix = new HashMap<>();
+    private final static Map<String, String[]> matrix = new HashMap<>(); // Too big for a Map.of
     static { // Revision, Release Date, Model, PCB Revision, Memory, Notes
         matrix.put("Beta", new String[]{"Q1 2012", "B (Beta)", "?", "256 MB", "Beta Board"});
         matrix.put("0002", new String[]{"Q1 2012", "B", "1.0", "256 MB", ""});
@@ -249,7 +248,7 @@ public class SystemUtils {
         matrix.put("c03130", new String[]{"-------", "Pi 400", "1.0", "4 GB", "(Mfg by Sony UK)"});
     }
 
-    private final static Map<String, String[]> matrix2022 = new HashMap<>();
+    private final static Map<String, String[]> matrix2022 = new HashMap<>(); // Too big for a Map.of
     static { // Revision, Release Date, Model, PCB Revision, Memory, Notes
         matrix2022.put("900021", new String[] { "-------", "A+", "1.1", "512MB", "Sony UK" });
         matrix2022.put("900032", new String[] { "-------", "B+", "1.2", "512MB", "Sony UK" });
@@ -313,7 +312,7 @@ public class SystemUtils {
 
     public static void main(String... args) throws Exception {
 
-        System.out.println(String.format(">> (This is class %s)", SystemUtils.class.getName()));
+        System.out.printf(">> (This is class %s)\n", SystemUtils.class.getName());
 
         AtomicBoolean minimal = new AtomicBoolean(false);
         AtomicBoolean freeMem = new AtomicBoolean(true);
@@ -329,26 +328,26 @@ public class SystemUtils {
             String[] hardwareData = getRPiHardwareRevision();
             if (hardwareData != null) {
                 if (USE_2022_DATA) {
-                    System.out.println(String.format("Running on:\n" +
+                    System.out.printf("Running on:\n" +
                                     "          Model: %s\n" +
                                     "        PCB Rev: %s\n" +
                                     "         Memory: %s\n" +
-                                    "Manufactured by: %s",
+                                    "Manufactured by: %s\n",
                             hardwareData[MODEL_IDX],
                             hardwareData[PCB_REV_IDX],
                             hardwareData[MEMORY_IDX],
-                            hardwareData[NOTES_IDX]));
+                            hardwareData[NOTES_IDX]);
                 } else {
-                    System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
+                    System.out.printf("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s\n",
                             hardwareData[MODEL_IDX],
                             hardwareData[RELEASE_IDX],
                             hardwareData[PCB_REV_IDX],
                             hardwareData[MEMORY_IDX],
-                            hardwareData[NOTES_IDX]));
+                            hardwareData[NOTES_IDX]);
                 }
                 System.out.println();
             } else {
-                System.out.println(String.format(">> No data for this platform. See source of %s", SystemUtils.class.getName()));
+                System.out.printf(">> No data for this platform. See source of %s\n", SystemUtils.class.getName());
             }
         } catch (IndexOutOfBoundsException iobe) {
             System.out.println("- Unknown - Is that a Raspberry Pi?");
@@ -358,7 +357,7 @@ public class SystemUtils {
         }
 
         try {
-            System.out.println(String.format("OS Details:\n%s", String.join("\n", getOSDetails())));
+            System.out.printf("OS Details:\n%s\n", String.join("\n", getOSDetails()));
         } catch (Exception ex) {
             System.err.println(ex);
         }
@@ -366,35 +365,33 @@ public class SystemUtils {
         try {
             List<String> networkName = getNetworkName();
             try {
-                networkName.forEach(network -> System.out.println(String.format("Network: %s", network)));
+                networkName.forEach(network -> System.out.printf("Network: %s\n", network));
             } catch (Exception ex) {
                 System.err.println(ex);
             }
             System.out.println();
             System.out.println("All IP Addresses:");
             List<String[]> addresses = getIPAddresses();
-            addresses.stream().forEach(pair -> {
-                System.out.println(String.format("%s -> %s", pair[0], pair[1]));
-            });
+            addresses.stream().forEach(pair -> System.out.printf("%s -> %s\n", pair[0], pair[1]));
             // Filtered
             System.out.println("\nFiltered (en0):");
             addresses = getIPAddresses("en0");
-            addresses.stream().forEach(pair -> System.out.println(String.format("%s -> %s", pair[0], pair[1])));
+            addresses.stream().forEach(pair -> System.out.printf("%s -> %s\n", pair[0], pair[1]));
             // IPv4 only
             System.out.println("\nFiltered (IPv4):");
             addresses = getIPAddresses(true);
-            addresses.stream().forEach(pair -> System.out.println(String.format("%s -> %s", pair[0], pair[1])));
+            addresses.stream().forEach(pair -> System.out.printf("%s -> %s\n", pair[0], pair[1]));
         } catch (Exception ex) {
             System.err.println(ex);
         }
 
         try {
             System.out.println();
-            System.out.println(String.format("DiskUsage: %s", getDiskUsage()));
-            System.out.println(String.format("uname: %s", getUname()));
+            System.out.printf("DiskUsage: %s\n", getDiskUsage());
+            System.out.printf("uname: %s\n", getUname());
             if (!minimal.get()) {
                 System.out.println();
-                System.out.println(String.format("Directory listing:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
+                System.out.printf("Directory listing:\n%s\n", String.join("\n", getDirectoryListing()));
             }
         } catch (Exception ex) {
             System.err.println(ex);
@@ -403,10 +400,10 @@ public class SystemUtils {
         // Temperature & voltage
         try {
             System.out.println();
-            System.out.println(String.format("CPU Temperature %s", getCPUTemperature2()));
-            System.out.println(String.format("Core Voltage %s", getCoreVoltage()));
+            System.out.printf("CPU Temperature %s\n", getCPUTemperature2());
+            System.out.printf("Core Voltage %s\n", getCoreVoltage());
         } catch (Exception ex) {
-            System.err.println(String.format("Maybe not on a Raspberry PI ? Temp & Volt %s", ex.toString()));
+            System.err.printf("Maybe not on a Raspberry PI ? Temp & Volt %s\n", ex.toString());
         }
 
         // Memory
@@ -414,15 +411,15 @@ public class SystemUtils {
             try {
                 System.out.println();
                 List<String> memStatus = getMemoryStatus();
-                System.out.println(String.format("Total:     %s MB", memStatus.get(MEM_TOTAL)));
-                System.out.println(String.format("Free:      %s MB", memStatus.get(MEM_FREE)));
-                System.out.println(String.format("Available: %s MB", memStatus.get(MEM_AVAILABLE)));
+                System.out.printf("Total:     %s MB\n", memStatus.get(MEM_TOTAL));
+                System.out.printf("Free:      %s MB\n", memStatus.get(MEM_FREE));
+                System.out.printf("Available: %s MB\n", memStatus.get(MEM_AVAILABLE));
 
                 System.out.println();
                 String memoryUsage = getMemoryUsage();
-                System.out.println(String.format("Usage: %s", memoryUsage));
+                System.out.printf("Usage: %s\n", memoryUsage);
             } catch (Exception ex) {
-                System.err.println(String.format("MemStat: %s", ex.toString()));
+                System.err.printf("MemStat: %s\n", ex.toString());
             }
         }
     }
