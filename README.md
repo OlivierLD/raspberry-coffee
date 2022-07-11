@@ -3,14 +3,20 @@
 #### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets
 
 > This project was started in 2015.
-
---- 
-
-- Sensors & Actuators interaction
-- Different communication protocols
-- NMEA protocol implementations
-
-
+---
+Main keywords:
+- `Raspberry Pi`
+- `Java and JVM-related languages`
+- `PI4J, Sensors, Actuators`
+- `Navigation, Sailing, NMEA`
+- `Gradle`
+- `Maven`
+- `Github`
+---
+- Sensors & Actuators interaction (through Raspberry Pi's GPIO header)
+- Different communication protocols (HTTP, TCP, WebSockets, ...) 
+- NMEA protocol implementations (and related utilities)
+---
 - Some modules will also use [`OpenCV`](https://opencv.org/) (an OpenSource Project for Computer Vision). See below how _not_ to use them, if needed. It's worth a look, though. 
 
 <!--
@@ -26,27 +32,41 @@ The maven repo where artifacts are deployed is actually a branch of this repo, a
 -->
 
 ---
+The project - and its different modules - are built using [`Gradle`](https://gradle.org/).  
+Some modules also use the `librxtx` library for Serial IO (details given below)
 
-Main keywords:
-- `Raspberry Pi`
-- `Java and JVM-related languages`
-- `PI4J, Sensors, Actuators`
-- `Navigation, Sailing, NMEA`
-- `Gradle`
-- `Maven`
-- `Github`
+---
+This project is divided in several modules (Gradle modules, not git sub-modules).  
+Some noticeable ones are
+- `astro-computer`
+  - Some astronomical routines used to get the positions of celestial bodies at a given time,
+    used for real-time calculation, or almanacs publication.
+- `raspberry-io-pi4j`
+  - Contains implementation modules for various break-out boards and various communication protocols (I2C, SPI, UART, GPIO) through
+    the Raspberry Pi's GPIO header, and the `PI4J` library
+  - Other libraries (like `diozero`) might show up later.
+- `raspberry-sailor`
+  - Contains navigation-related modules, like `TideEngine`, and NMEA-related routines (parsers, generators, etc)
+
+Other modules - at the root level - can reuse the modules mentioned above.
+For example, the `NMEA-multiplexer` will use:
+- `raspberry-sailor`, for NMEA Parsing (like GPS or NMEA station)
+- `raspberry-io-pi4j`, for extra sensors (like pressure, humidity, temperature, magnetometer, etc)
+
+The `RESTNavServer` uses all the above, and `astro-computer` as well, and `http-tiny-server` to implement a REST interface.  
+And so on!
+
+The point of truth, telling you what module uses what modules, is the `build.gradle` of the module you are interested in.
 
 ---
 
-It uses the [`PI4J library`](http://pi4j.com) (Version **1.x**. Version **2.x** brings in some new architecture and paradigm, not dealt with yet), itself relying on [`WiringPi`](http://wiringpi.com/).  
-The project - and its different modules - are built using [`Gradle`](https://gradle.org/).  
-Some modules also use the `librxtx` library for Serial IO.  
+The modules under `raspberry-io-pi4j` use the [`PI4J library`](http://pi4j.com) (Version **1.x**. Version **2.x** brings in some new architecture and paradigm, not dealt with yet), itself relying on [`WiringPi`](http://wiringpi.com/).  
 
 > Note: `WiringPi` is now deprecated (since 2019, apparently), which makes `PI4J v1.*` deprecated too.  
 > ...More to come. Another way would be to use a library like `diozero`.
 
 ### Java
-Java downloads can come in two flavors:
+Java downloads can come in two main flavors:
 - The Java Runtime Environment (JRE), that allows you to _run_ Java programs (ie programs compiled to run on a JVM)
 - The Java Development Kit (JDK), a superset ot the JRE, that also allows you to _develop_ Java programs.  
 
@@ -57,6 +77,11 @@ So you do not need to install it. To check its availability:
 $ java -version
 $ javac -version
 ```
+#### Processing
+[Processing](https://processing.org/) is a _**very cool**_ framework, initially developed for Java, that considerably simplify code development, with great results,
+implementing the concept of sketchbooks, used and reused many times since its introduction.  
+Some examples in this repo will indeed use Processing.  
+Processing is now also available for other languages than Java. 
 
 ### PI4J
 PI4J is a Java library that will help you access `GPIO`, `I2C`, `SPI`, `PWM`, and other hardware protocols.
@@ -163,7 +188,7 @@ Depending on the IDE you are using, there are two main features you might be int
   - Your IDE might be too demanding for a Raspberry Pi (depending on the model you are using...). Remote development will allow you to
     have the IDE on a laptop (or desktop, of course), and the files it deals with on the Raspberry Pi. It usually uses a protocol like `ssh` and its related technologies (`scp`, `rsync`, etc).
 - Remote debugging
-    - This is implemented through the JPDA (Java Platform Debugging Architecture) protocol, that comes with Java, and 
+  - This is implemented through the JPDA (Java Platform Debugging Architecture) protocol, that comes with Java, and 
       possibly implemented by your IDE. You _run_ the code on the Raspberry Pi, and you _debug_ (breakpoints, variable inspections, etc) on your laptop.
 
 > _**Remote Debugging example**_:  
