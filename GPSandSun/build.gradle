@@ -21,7 +21,7 @@ repositories {
 dependencies {
     implementation 'com.pi4j:pi4j-core:1.2'
     implementation project (':common-utils')
-    implementation ':astro-computer:AstroComputer'
+    implementation project(':astro-computer:AstroComputer')
 //    implementation project(':raspberry-io-pi4j:Serial-PI4J-reader')
     implementation project(':raspberry-sailor:NMEA-Parser')
     implementation project (':NMEA-multiplexer')
