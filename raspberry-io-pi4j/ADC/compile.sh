@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# @deprecated
+# @deprecated Use gradle
 # and the lib directory is not there anymore.
 #
 mkdir classes
@@ -12,7 +12,7 @@ CP=${CP}:${PI4J_HOME}/lib/pi4j-core.jar
 CP=${CP}:./lib/jansi-1.9.jar
 CP=${CP}:./lib/Java-WebSocket-1.3.0.jar
 # JAVAC_OPTIONS="-verbose ${JAVAC_OPTIONS}"
-JAVAC_OPTIONS="${JAVAC_OPTIONS} -cp ${CP} -encoding ISO-8859-1"
+JAVAC_OPTIONS="${JAVAC_OPTIONS} -cp ${CP} -encoding UTF-8"
 COMMAND="javac ${JAVAC_OPTIONS} `find ./src -name '*.java' -print`"
 echo Compiling: ${COMMAND}
 ${COMMAND}
