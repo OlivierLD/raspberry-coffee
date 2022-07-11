@@ -9,9 +9,11 @@ CP=./build/libs/ADC-1.0-all.jar
 REMOTE_DEBUG_FLAGS=
 # REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 #
-# Show in and out pins:
-echo -e "Output of gpio readall:"
-gpio readall
+if [[ "$(which gpio)" != "" ]]; then
+  # Show in and out pins:
+  echo -e "Output of gpio readall:"
+  gpio readall
+fi
 # Channel [0..1] can be passed as prm. Default is 0
 COMMAND="sudo java -cp ${CP} ${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS} analogdigitalconverter.sample.MainMCP3008Sample $*"
 echo -e "------------------------------------------------------------------------------"
