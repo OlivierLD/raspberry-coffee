@@ -19,7 +19,7 @@ import java.util.Map;
 public class FirstTest {
 
     // PINs are BCM numbers.
-    final static int ledPin    = 24; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 24 does. TODO Check if this is an OUT pin...
+    final static int ledPin    = 18; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 24 does. TODO Check if this is an OUT pin...
     final static int buttonPin = 12; // Seems OK. TODO Same as above, IN.
 
     public static void main(String... args) {
@@ -29,7 +29,7 @@ public class FirstTest {
         try (NativeDeviceFactoryInterface deviceFactory = DeviceFactoryHelper.getNativeDeviceFactory()) {
             final Map<String, Map<Integer, PinInfo>> headers = deviceFactory.getBoardInfo().getHeaders();
 
-            // TODO Find pins ledPin and buttonPin.
+            // TODO Find pins ledPin and buttonPin better than with a full scan
             // We want DeviceMode.DIGITAL_OUTPUT for the led, and DeviceMode.DIGITAL_INPUT for the button
 
             headers.entrySet().forEach(headerEntry -> {
@@ -40,12 +40,12 @@ public class FirstTest {
                     final int gpio = pinInfo.getDeviceNumber();
                     final DeviceMode gpioMode = deviceFactory.getGpioMode(gpio);
                     // We want DIGITAL_OUTPUT for the led
-                    if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
-                        // Honk !
+                    if (gpio == ledPin && !gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
+                        System.err.printf("Led pin (%d) not suitable for output.", ledPin);
                     }
                     // We want DIGITAL_INPUT for the button
-                    if (!gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
-                        // Honk !
+                    if (gpio == buttonPin && !gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
+                        System.err.printf("Button pin (%d) not suitable for input.", buttonPin);
                     }
                 });
             });
