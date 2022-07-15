@@ -32,6 +32,7 @@ public class FirstTest {
             // TODO Find pins ledPin and buttonPin better than with a full scan
             // We want DeviceMode.DIGITAL_OUTPUT for the led, and DeviceMode.DIGITAL_INPUT for the button
 
+            System.out.println("----- Checking pins... ------");
             headers.entrySet().forEach(headerEntry -> {
                 final Map<Integer, PinInfo> headerEntryValue = headerEntry.getValue();
                 headerEntryValue.forEach((num, pinInfo) -> {
@@ -42,7 +43,7 @@ public class FirstTest {
                     // We want DIGITAL_OUTPUT for the led
                     if (gpio == ledPin) {
                         if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
-                            System.err.printf("Led pin (%d) not suitable for output.\n", ledPin);
+                            System.err.printf("Led pin (%d) NOT suitable for output.\n", ledPin);
                         } else {
                             System.out.printf("Led pin (%d) is good to go.\n", ledPin);
                         }
@@ -50,13 +51,14 @@ public class FirstTest {
                     // We want DIGITAL_INPUT for the button
                     if (gpio == buttonPin) {
                         if (!gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
-                            System.err.printf("Button pin (%d) not suitable for input.\n", buttonPin);
+                            System.err.printf("Button pin (%d) NOT suitable for input.\n", buttonPin);
                         } else {
                             System.out.printf("Button pin (%d) is good to go.\n", buttonPin);
                         }
                     }
                 });
             });
+            System.out.println("--- Done checking pins... ---");
         }
 
         try (LED led = new LED(ledPin)) { // With Resource ;)
