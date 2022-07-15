@@ -19,8 +19,8 @@ import java.util.Map;
 public class FirstTest {
 
     // PINs are BCM numbers.
-    final static int ledPin    = 24; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 24 does. TODO Check if this is an OUT pin...
-    final static int buttonPin = 12; // Seems OK. TODO Same as above, IN.
+    final static int ledPin    = 24; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 24 does.
+    final static int buttonPin = 12; // Seems OK.
 
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
@@ -61,6 +61,7 @@ public class FirstTest {
             System.out.println("--- Done checking pins... ---");
         }
 
+        // TODO See what happens if check above is not done.
         try (LED led = new LED(ledPin)) { // With Resource ;)
             System.out.printf("Turning led %d ON\n", ledPin);
             led.on();
