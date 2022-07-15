@@ -11,7 +11,7 @@ REMOTE_DEBUG_FLAGS=
 # suspend=y ill wait for the debugger to connect before moving on.
 REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
 if [[ "${REMOTE_DEBUG_FLAGS}" != "" ]]; then
-  echo -e "Will use remote denug ith prms ${REMOTE_DEBUG_FLAGS}"
+  echo -e "Will use remote debug this prms ${REMOTE_DEBUG_FLAGS}"
 fi
 #
 if [[ "$(which gpio)" != "" ]]; then
