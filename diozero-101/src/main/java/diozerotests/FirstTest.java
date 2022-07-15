@@ -22,43 +22,47 @@ public class FirstTest {
     final static int ledPin    =  8; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 8 does.
     final static int buttonPin = 12; // Seems OK.
 
+    private final static boolean CHECK_PINS = false;
+
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
 
         // Check pins validity
-        try (NativeDeviceFactoryInterface deviceFactory = DeviceFactoryHelper.getNativeDeviceFactory()) {
-            final Map<String, Map<Integer, PinInfo>> headers = deviceFactory.getBoardInfo().getHeaders();
+        if (CHECK_PINS) {
+            try (NativeDeviceFactoryInterface deviceFactory = DeviceFactoryHelper.getNativeDeviceFactory()) {
+                final Map<String, Map<Integer, PinInfo>> headers = deviceFactory.getBoardInfo().getHeaders();
 
-            // TODO Find pins ledPin and buttonPin better than with a full scan
-            // We want DeviceMode.DIGITAL_OUTPUT for the led, and DeviceMode.DIGITAL_INPUT for the button
+                // TODO Find pins ledPin and buttonPin better than with a full scan
+                // We want DeviceMode.DIGITAL_OUTPUT for the led, and DeviceMode.DIGITAL_INPUT for the button
 
-            System.out.println("----- Checking pins... ------");
-            headers.entrySet().forEach(headerEntry -> {
-                final Map<Integer, PinInfo> headerEntryValue = headerEntry.getValue();
-                headerEntryValue.forEach((num, pinInfo) -> {
-                    // final String modeString = ConsoleUtil.getModeString(deviceFactory, pinInfo);
-                    // Do something
-                    final int gpio = pinInfo.getDeviceNumber();
-                    final DeviceMode gpioMode = deviceFactory.getGpioMode(gpio);
-                    // We want DIGITAL_OUTPUT for the led
-                    if (gpio == ledPin) {
-                        if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
-                            System.err.printf("Led pin (%d) NOT suitable for output.\n", ledPin);
-                        } else {
-                            System.out.printf("Led pin (%d) is good to go.\n", ledPin);
+                System.out.println("----- Checking pins... ------");
+                headers.entrySet().forEach(headerEntry -> {
+                    final Map<Integer, PinInfo> headerEntryValue = headerEntry.getValue();
+                    headerEntryValue.forEach((num, pinInfo) -> {
+                        // final String modeString = ConsoleUtil.getModeString(deviceFactory, pinInfo);
+                        // Do something
+                        final int gpio = pinInfo.getDeviceNumber();
+                        final DeviceMode gpioMode = deviceFactory.getGpioMode(gpio);
+                        // We want DIGITAL_OUTPUT for the led
+                        if (gpio == ledPin) {
+                            if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
+                                System.err.printf("Led pin (%d) NOT suitable for output.\n", ledPin);
+                            } else {
+                                System.out.printf("Led pin (%d) is good to go.\n", ledPin);
+                            }
                         }
-                    }
-                    // We want DIGITAL_INPUT for the button
-                    if (gpio == buttonPin) {
-                        if (!gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
-                            System.err.printf("Button pin (%d) NOT suitable for input.\n", buttonPin);
-                        } else {
-                            System.out.printf("Button pin (%d) is good to go.\n", buttonPin);
+                        // We want DIGITAL_INPUT for the button
+                        if (gpio == buttonPin) {
+                            if (!gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
+                                System.err.printf("Button pin (%d) NOT suitable for input.\n", buttonPin);
+                            } else {
+                                System.out.printf("Button pin (%d) is good to go.\n", buttonPin);
+                            }
                         }
-                    }
+                    });
                 });
-            });
-            System.out.println("--- Done checking pins... ---");
+                System.out.println("--- Done checking pins... ---");
+            }
         }
 
         // TODO See what happens if check above is not done.
