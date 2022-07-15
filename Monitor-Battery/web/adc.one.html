@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<!--
+ ! Requires the nodeJS server wsbattery.js to be running.
+ | To do once:
+ | - npm install
+ | Then to start the server:
+ | - npm start
+ | or
+ | - node wsbattery.js
+ +-->
 <html>
     <head>
         <meta charset="utf-8">
@@ -43,7 +52,7 @@
 
         let graphBatteryData = [];
         for (let i=0; i<20; i++) {
-            graphBatteryData.push(new Tuple(i++, 0.0));
+            graphBatteryData.push(new Tuple(i++, 0.0)); // Tuple defined in Graph.js
         }
 
         window.onload = () => {
@@ -64,8 +73,8 @@
           </td>
           <td>
             <input type="checkbox" id="raw-data">Raw
-            &nbsp;<input type="checkbox" id="smooth-data" checked="true">Smoothed
-            &nbsp;<input type="checkbox" id="tooltip" checked="true">Tooltip
+            &nbsp;<input type="checkbox" id="smooth-data" checked>Smoothed
+            &nbsp;<input type="checkbox" id="tooltip" checked>Tooltip
             <br>
             <canvas id="graphCanvas" width="600" height="220" title="Tension History"></canvas>
           </td>

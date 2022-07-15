@@ -7,11 +7,15 @@ echo -e "All Raspberry Pi Models' description available at https://www.raspberry
 echo -e ""
 FOLDER_NAME=~/raspberry-coffee/common-utils
 ARCHIVE_NAME=${FOLDER_NAME}/build/libs/common-utils-1.0-all.jar
-if [[ -f ${ARCHIVE_NAME} ]]
-then
+if [[ ! -f ${ARCHIVE_NAME} ]]; then
+  ARCHIVE_NAME=${FOLDER_NAME}/build/libs/common-utils-1.0.jar
+fi
+if [[ -f ${ARCHIVE_NAME} ]]; then
+  echo -e "(Using jar ${ARCHIVE_NAME})"
   java -cp ${ARCHIVE_NAME} utils.SystemUtils --minimal --no-free-mem
 else
   pushd ${FOLDER_NAME}
+    # Will run a build before a run
     ../gradlew run -P--minimal -P--no-free-mem
   popd
 fi
