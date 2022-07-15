@@ -7,6 +7,9 @@ REMOTE_DEBUG_FLAGS=
 REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
 if [[ "${REMOTE_DEBUG_FLAGS}" != "" ]]; then
   echo -e "Will use remote debug this prms ${REMOTE_DEBUG_FLAGS}"
+  # java -jar ${CP} ${REMOTE_DEBUG_FLAGS}
+  sudo java -cp ${CP} ${REMOTE_DEBUG_FLAGS} diozerotests.FirstTest
+else
+  # java -jar ${CP} ${REMOTE_DEBUG_FLAGS}
+  sudo java -jar ${CP} ${REMOTE_DEBUG_FLAGS}
 fi
-# java -jar ${CP} ${REMOTE_DEBUG_FLAGS}
-sudo java -jar ${CP} ${REMOTE_DEBUG_FLAGS}
