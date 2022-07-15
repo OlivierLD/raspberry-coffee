@@ -19,7 +19,7 @@ import java.util.Map;
 public class FirstTest {
 
     // PINs are BCM numbers.
-    final static int ledPin    = 18; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 24 does. TODO Check if this is an OUT pin...
+    final static int ledPin    = 24; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 24 does. TODO Check if this is an OUT pin...
     final static int buttonPin = 12; // Seems OK. TODO Same as above, IN.
 
     public static void main(String... args) {
