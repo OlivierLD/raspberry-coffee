@@ -75,3 +75,4 @@ NMEA-mux-WebUI/**/web/20*
 **/package-lock.json
 **/__pycache__/
 polo-shirt/generated/
+.vscode
