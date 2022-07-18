@@ -3,6 +3,9 @@ package utils.gpio;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
+/**
+ * Just test, not Unit Test
+ */
 public class PushButtonControllerSample {
 
 	private Pin buttonOnePin;

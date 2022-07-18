@@ -15,17 +15,6 @@ buildscript {
     }
 }
 
-//plugins {
-//    id 'kotlin'
-//    id 'java'
-//    id 'groovy'
-//    id 'scala'
-//    id 'maven'
-//    id 'idea'
-//    id 'com.github.johnrengelman.shadow'
-//    id "application"
-//}
-
 apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -58,7 +47,6 @@ dependencies {
 
     implementation "org.scala-lang:scala-library:$scala_version"
     implementation "org.scala-lang:scala-compiler:$scala_version"
-
 }
 
 mainClassName = "diozerotests.FirstTest" // To generate the manifest
