@@ -116,6 +116,8 @@ public class FirstTest {
 //            led.off();
 //            SleepUtil.sleepSeconds(2);
 
+            // FIXME weird stuff here, pressed says off, released on...
+
             button.whenPressed(nanoTime -> {
                 if (BUTTON_VERBOSE && !buttonPressed.get()) {
                     System.out.printf("Button pressed, turning led on (at nanoTime: %s)\n", NumberFormat.getInstance().format(nanoTime));
