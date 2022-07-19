@@ -21,7 +21,7 @@ import java.util.Map;
 public class FirstTest {
 
     // PINs are BCM numbers.
-    static int ledPin    =  8; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 8 does.
+    static int ledPin    = 18; // 8 does not work on RPi 4B (4gb RAM) (even if it is an OUT pin...), 18, 22 do.
     static int buttonPin = 12; // Seems OK.
 
     private final static boolean CHECK_PINS = "true".equals(System.getProperty("check-pins"));
