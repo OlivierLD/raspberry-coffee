@@ -86,7 +86,6 @@ public class FirstTest {
             }
         }
 
-        // TODO See what happens if check above is not done.
         try (LED led = new LED(ledPin)) { // With Resource ;)
             System.out.printf("Turning led %d ON\n", ledPin);
             led.on();
@@ -96,6 +95,9 @@ public class FirstTest {
             SleepUtil.sleepSeconds(1);
             System.out.printf("Toggling Led %d\n", ledPin);
             led.toggle();
+        } catch (Exception ex) {
+            System.err.printf("Exception using ledPin %d\n", ledPin);
+            ex.printStackTrace();
         }
 
         System.out.println("Button test... (20s)");
@@ -103,6 +105,9 @@ public class FirstTest {
             button.whenPressed(nanoTime -> led.on());
             button.whenReleased(nanoTime -> led.off());
             SleepUtil.sleepSeconds(20);
+        } catch (Exception ex) {
+            System.err.printf("Exception using ledPin %d, buttonPin %d\n", ledPin, buttonPin);
+            ex.printStackTrace();
         }
 
         Diozero.shutdown();
