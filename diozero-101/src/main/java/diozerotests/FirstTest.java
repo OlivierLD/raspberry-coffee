@@ -5,11 +5,12 @@ import com.diozero.api.PinInfo;
 import com.diozero.devices.Button;
 import com.diozero.devices.LED;
 import com.diozero.internal.spi.NativeDeviceFactoryInterface;
-import com.diozero.sampleapps.util.ConsoleUtil;
+// import com.diozero.sampleapps.util.ConsoleUtil;
 import com.diozero.sbc.DeviceFactoryHelper;
 import com.diozero.util.Diozero;
 import com.diozero.util.SleepUtil;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /*
@@ -20,13 +21,31 @@ import java.util.Map;
 public class FirstTest {
 
     // PINs are BCM numbers.
-    final static int ledPin    =  8; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 8 does.
-    final static int buttonPin = 12; // Seems OK.
+    static int ledPin    =  8; // 18 does not work on RPi 4B (4gb RAM) (it's an IN pin...), 8 does.
+    static int buttonPin = 12; // Seems OK.
 
-    private final static boolean CHECK_PINS = false;
+    private final static boolean CHECK_PINS = "true".equals(System.getProperty("check-pins"));
 
+    private final static String LED_PIN_PREFIX = "--led-pin:";
+    private final static String BUTTON_PIN_PREFIX = "--button-pin:";
+    /**
+     * Use the -Dcheck-pins=true to check pins directions
+     * @param args Optional --led-pin:XX --button-pin:XX
+     */
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
+
+        Arrays.stream(args).forEach(arg -> {
+            if (arg.startsWith(LED_PIN_PREFIX)) {
+                ledPin = Integer.parseInt(arg.substring(LED_PIN_PREFIX.length()));
+            } else if (arg.startsWith(BUTTON_PIN_PREFIX)) {
+                buttonPin = Integer.parseInt(arg.substring(BUTTON_PIN_PREFIX.length()));
+            } else {
+                System.out.printf("Un-managed prefix %s\n", arg);
+            }
+        });
+
+        System.out.printf("WIll use ledPin %d, buttonPin %d\n.", ledPin, buttonPin);
 
         // Check pins validity
         if (CHECK_PINS) {
@@ -37,31 +56,30 @@ public class FirstTest {
                 // We want DeviceMode.DIGITAL_OUTPUT for the led, and DeviceMode.DIGITAL_INPUT for the button
 
                 System.out.println("----- Checking pins... ------");
-                headers.entrySet().forEach(headerEntry -> {
-                    final Map<Integer, PinInfo> headerEntryValue = headerEntry.getValue();
-                    headerEntryValue.forEach((num, pinInfo) -> {
-                        // final String modeString = ConsoleUtil.getModeString(deviceFactory, pinInfo);
-                        // Do something
-                        final int gpio = pinInfo.getDeviceNumber();
-                        final DeviceMode gpioMode = deviceFactory.getGpioMode(gpio);
-                        // We want DIGITAL_OUTPUT for the led
-                        if (gpio == ledPin) {
-                            if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
-                                System.err.printf("Led pin (%d) NOT suitable for output.\n", ledPin);
-                            } else {
-                                System.out.printf("Led pin (%d) is good to go.\n", ledPin);
-                            }
+//                headers.entrySet().forEach(headerEntry -> {
+//                    final Map<Integer, PinInfo> headerEntryValue = headerEntry.getValue();
+                headers.forEach( (key, headerEntryValue) -> headerEntryValue.forEach((num, pinInfo) -> {
+                    // final String modeString = ConsoleUtil.getModeString(deviceFactory, pinInfo);
+                    // Do something
+                    final int gpio = pinInfo.getDeviceNumber();
+                    final DeviceMode gpioMode = deviceFactory.getGpioMode(gpio);
+                    // We want DIGITAL_OUTPUT for the led
+                    if (gpio == ledPin) {
+                        if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
+                            System.err.printf("Led pin (%d) NOT suitable for output.\n", ledPin);
+                        } else {
+                            System.out.printf("Led pin (%d) is good to go.\n", ledPin);
                         }
-                        // We want DIGITAL_INPUT for the button
-                        if (gpio == buttonPin) {
-                            if (!gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
-                                System.err.printf("Button pin (%d) NOT suitable for input.\n", buttonPin);
-                            } else {
-                                System.out.printf("Button pin (%d) is good to go.\n", buttonPin);
-                            }
+                    }
+                    // We want DIGITAL_INPUT for the button
+                    if (gpio == buttonPin) {
+                        if (!gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
+                            System.err.printf("Button pin (%d) NOT suitable for input.\n", buttonPin);
+                        } else {
+                            System.out.printf("Button pin (%d) is good to go.\n", buttonPin);
                         }
-                    });
-                });
+                    }
+                }));
                 System.out.println("--- Done checking pins... ---");
             } finally {
                 Diozero.shutdown();
