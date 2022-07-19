@@ -11,6 +11,7 @@ import com.diozero.sbc.DeviceFactoryHelper;
 import com.diozero.util.Diozero;
 import com.diozero.util.SleepUtil;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,11 +28,12 @@ public class FirstTest {
     static int buttonPin = 12; // Seems OK.
 
     private final static boolean CHECK_PINS = "true".equals(System.getProperty("check-pins"));
+    private final static boolean BUTTON_VERBOSE = "true".equals(System.getProperty("button-verbose"));
 
     private final static String LED_PIN_PREFIX = "--led-pin:";
     private final static String BUTTON_PIN_PREFIX = "--button-pin:";
     /**
-     * Use the -Dcheck-pins=true to check pins directions
+     * Use the -Dcheck-pins=true to check pins directions, -Dbutton-verbose=true
      * @param args Optional --led-pin:XX --button-pin:XX
      */
     public static void main(String... args) {
@@ -114,15 +116,15 @@ public class FirstTest {
             led.off();
 
             button.whenPressed(nanoTime -> {
-                if (!buttonPressed.get()) {
-                    System.out.printf("Button pressed, turning led on (nanoTime: %d)\n", nanoTime);
+                if (BUTTON_VERBOSE && !buttonPressed.get()) {
+                    System.out.printf("Button pressed, turning led on (at nanoTime: %s)\n", NumberFormat.getInstance().format(nanoTime));
                     buttonPressed.set(true);
                 }
                 led.on();
             });
             button.whenReleased(nanoTime -> {
-                if (buttonPressed.get()) {
-                    System.out.printf("Button released, turning led off (nanoTime: %d)\n", nanoTime);
+                if (BUTTON_VERBOSE && buttonPressed.get()) {
+                    System.out.printf("Button released, turning led off (at nanoTime: %s)\n", NumberFormat.getInstance().format(nanoTime));
                     buttonPressed.set(false);
                 }
                 led.off();
