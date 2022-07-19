@@ -110,16 +110,18 @@ public class FirstTest {
         try (Button button = new Button(buttonPin); LED led = new LED(ledPin)) { // With resources, nice !
 
             System.out.println("--- Button block, top.");
+            led.off();
+
             button.whenPressed(nanoTime -> {
                 if (!buttonPressed.get()) {
-                    System.out.println("Button pressed, turning led on");
+                    System.out.printf("Button pressed, turning led on (nanoTime: %ld)\n", nanoTime);
                     buttonPressed.set(true);
                 }
                 led.on();
             });
             button.whenReleased(nanoTime -> {
                 if (buttonPressed.get()) {
-                    System.out.println("Button released, turning led off");
+                    System.out.printf("Button released, turning led off (nanoTime: %ld)\n", nanoTime);
                     buttonPressed.set(false);
                 }
                 led.off();
