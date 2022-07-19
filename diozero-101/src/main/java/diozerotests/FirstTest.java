@@ -100,6 +100,7 @@ public class FirstTest {
             SleepUtil.sleepSeconds(2);
             System.out.printf("Toggling Led %d\n", ledPin);
             led.toggle(); // Back off
+            SleepUtil.sleepSeconds(2);
         } catch (RuntimeIOException ex) {
             System.err.printf("Exception using ledPin %d\n", ledPin);
             ex.printStackTrace();
