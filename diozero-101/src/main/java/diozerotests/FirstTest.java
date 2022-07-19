@@ -113,8 +113,8 @@ public class FirstTest {
         try (Button button = new Button(buttonPin); LED led = new LED(ledPin)) { // With resources, nice !
 
             System.out.println("--- Button block, top.");
-            led.off();
-            SleepUtil.sleepSeconds(2);
+//            led.off();
+//            SleepUtil.sleepSeconds(2);
 
             button.whenPressed(nanoTime -> {
                 if (BUTTON_VERBOSE && !buttonPressed.get()) {
@@ -130,6 +130,9 @@ public class FirstTest {
                 }
                 led.off();
             });
+            led.off();
+            System.out.println("--- Button block, waiting 20s.");
+
             SleepUtil.sleepSeconds(20); // in seconds
 
         } catch (RuntimeIOException ex) {

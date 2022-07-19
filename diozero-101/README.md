@@ -50,3 +50,6 @@ Many on-line (or not) resistor color-code applications are available:
 
 Connecting leds: See [this](https://makecode.adafruit.com/learnsystem/pins-tutorial/devices/led-connections).
 
+![Wiring](./FirstTest_bb.png)
+
+---
