@@ -14,6 +14,7 @@ import com.diozero.util.SleepUtil;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -117,18 +118,20 @@ public class FirstTest {
 //            led.off();
 //            SleepUtil.sleepSeconds(2);
 
-            // FIXME weird stuff here, pressed says off, released on... See ButtonControlledLed in the sample apps.
+            // Important: See the GpioPullUpDown.PULL_UP in the new Button()... See ButtonControlledLed in the sample apps.
+            // If not set, pushed and released are inverted !!
 
             button.whenPressed(nanoTime -> {
                 if (BUTTON_VERBOSE && !buttonPressed.get()) {
-                    System.out.printf("Button pressed, turning led on (at nanoTime: %s)\n", NumberFormat.getInstance().format(nanoTime));
+                    final Date date = new Date(nanoTime / 1_000 / 1_000);
+                    System.out.printf("Button pressed, turning led on (at nanoTime: %s, %s)\n", NumberFormat.getInstance().format(nanoTime), date);
                     buttonPressed.set(true);
                 }
                 led.on();
             });
             button.whenReleased(nanoTime -> {
                 if (BUTTON_VERBOSE && buttonPressed.get()) {
-                    System.out.printf("Button released, turning led off (at nanoTime: %s)\n", NumberFormat.getInstance().format(nanoTime));
+                    System.out.printf("Button released, turning led off (at nanoTime: %s, %s)\n", NumberFormat.getInstance().format(nanoTime), new Date(nanoTime / 1_000 / 1_000));
                     buttonPressed.set(false);
                 }
                 led.off();
