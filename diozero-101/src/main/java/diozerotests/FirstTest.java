@@ -114,14 +114,14 @@ public class FirstTest {
 
             button.whenPressed(nanoTime -> {
                 if (!buttonPressed.get()) {
-                    System.out.printf("Button pressed, turning led on (nanoTime: %ld)\n", nanoTime);
+                    System.out.printf("Button pressed, turning led on (nanoTime: %d)\n", nanoTime);
                     buttonPressed.set(true);
                 }
                 led.on();
             });
             button.whenReleased(nanoTime -> {
                 if (buttonPressed.get()) {
-                    System.out.printf("Button released, turning led off (nanoTime: %ld)\n", nanoTime);
+                    System.out.printf("Button released, turning led off (nanoTime: %d)\n", nanoTime);
                     buttonPressed.set(false);
                 }
                 led.off();
