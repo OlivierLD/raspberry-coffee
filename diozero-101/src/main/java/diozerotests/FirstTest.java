@@ -1,6 +1,7 @@
 package diozerotests;
 
 import com.diozero.api.DeviceMode;
+import com.diozero.api.GpioPullUpDown;
 import com.diozero.api.PinInfo;
 import com.diozero.api.RuntimeIOException;
 import com.diozero.devices.Button;
@@ -56,7 +57,7 @@ public class FirstTest {
             try (NativeDeviceFactoryInterface deviceFactory = DeviceFactoryHelper.getNativeDeviceFactory()) {
                 final Map<String, Map<Integer, PinInfo>> headers = deviceFactory.getBoardInfo().getHeaders();
 
-                // TODO Find pins ledPin and buttonPin better than with a full scan
+                // TODO Find pins ledPin and buttonPin better than with a full scan.
                 // We want DeviceMode.DIGITAL_OUTPUT for the led, and DeviceMode.DIGITAL_INPUT for the button
 
                 System.out.println("----- Checking pins... ------");
@@ -67,7 +68,7 @@ public class FirstTest {
                     // Do something
                     final int gpio = pinInfo.getDeviceNumber();
                     final DeviceMode gpioMode = deviceFactory.getGpioMode(gpio);
-                    // We want DIGITAL_OUTPUT for the led
+                    // We want DIGITAL_OUTPUT for the LED
                     if (gpio == ledPin) {
                         if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
                             System.err.printf("Led pin (%d, %s) NOT suitable for output.\n", ledPin, pinInfo.getName());
@@ -110,13 +111,13 @@ public class FirstTest {
 
         System.out.println("Button test... (20s)");
         AtomicBoolean buttonPressed = new AtomicBoolean(false); // false: led is (should be) off.
-        try (Button button = new Button(buttonPin); LED led = new LED(ledPin)) { // With resources, nice !
+        try (Button button = new Button(buttonPin, GpioPullUpDown.PULL_UP); LED led = new LED(ledPin)) { // With resources, nice !
 
             System.out.println("--- Button block, top.");
 //            led.off();
 //            SleepUtil.sleepSeconds(2);
 
-            // FIXME weird stuff here, pressed says off, released on...
+            // FIXME weird stuff here, pressed says off, released on... See ButtonControlledLed in the sample apps.
 
             button.whenPressed(nanoTime -> {
                 if (BUTTON_VERBOSE && !buttonPressed.get()) {
