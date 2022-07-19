@@ -66,17 +66,17 @@ public class FirstTest {
                     // We want DIGITAL_OUTPUT for the led
                     if (gpio == ledPin) {
                         if (!gpioMode.equals(DeviceMode.DIGITAL_OUTPUT)) {
-                            System.err.printf("Led pin (%d) NOT suitable for output.\n", ledPin);
+                            System.err.printf("Led pin (%d, %s) NOT suitable for output.\n", ledPin, pinInfo.getName());
                         } else {
-                            System.out.printf("Led pin (%d) is good to go.\n", ledPin);
+                            System.out.printf("Led pin (%d, %s) is good to go.\n", ledPin, pinInfo.getName());
                         }
                     }
                     // We want DIGITAL_INPUT for the button
                     if (gpio == buttonPin) {
                         if (!gpioMode.equals(DeviceMode.DIGITAL_INPUT)) {
-                            System.err.printf("Button pin (%d) NOT suitable for input.\n", buttonPin);
+                            System.err.printf("Button pin (%d, %s) NOT suitable for input.\n", buttonPin, pinInfo.getName());
                         } else {
-                            System.out.printf("Button pin (%d) is good to go.\n", buttonPin);
+                            System.out.printf("Button pin (%d, %s) is good to go.\n", buttonPin, pinInfo.getName());
                         }
                     }
                 }));

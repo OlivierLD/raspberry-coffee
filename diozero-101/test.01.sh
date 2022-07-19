@@ -12,5 +12,5 @@ if [[ "${REMOTE_DEBUG_FLAGS}" != "" ]]; then
   sudo java -cp ${CP} ${REMOTE_DEBUG_FLAGS} ${CHECK_PINS_FLAG} diozerotests.FirstTest $*
 else
   # java -jar ${CP} ${REMOTE_DEBUG_FLAGS}
-  sudo java -jar ${CP} ${REMOTE_DEBUG_FLAGS} ${CHECK_PINS_FLAG} $*
+  sudo java ${CHECK_PINS_FLAG} -jar ${CP} ${REMOTE_DEBUG_FLAGS} $*
 fi
