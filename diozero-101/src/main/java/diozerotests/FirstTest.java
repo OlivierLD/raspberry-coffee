@@ -90,10 +90,10 @@ public class FirstTest {
         try (LED led = new LED(ledPin)) { // With Resource ;)
             System.out.printf("Turning led %d ON\n", ledPin);
             led.on();
-            SleepUtil.sleepSeconds(1);
+            SleepUtil.sleepSeconds(2);
             System.out.printf("Turning led %d OFF\n", ledPin);
             led.off();
-            SleepUtil.sleepSeconds(1);
+            SleepUtil.sleepSeconds(2);
             System.out.printf("Toggling Led %d\n", ledPin);
             led.toggle();
         } catch (RuntimeIOException ex) {
@@ -103,13 +103,20 @@ public class FirstTest {
 
         System.out.println("Button test... (20s)");
         try (Button button = new Button(buttonPin); LED led = new LED(ledPin)) { // With resources, nice !
-            button.whenPressed(nanoTime -> led.on());
-            button.whenReleased(nanoTime -> led.off());
+            button.whenPressed(nanoTime -> {
+                System.out.println("Turning led on");
+                led.on();
+            });
+            button.whenReleased(nanoTime -> {
+                System.out.println("Turning led off");
+                led.off();
+            });
             SleepUtil.sleepSeconds(20);
         } catch (RuntimeIOException ex) {
             System.err.printf("Exception using ledPin %d, buttonPin %d\n", ledPin, buttonPin);
             ex.printStackTrace();
         }
+        System.out.println("Done with the button.");
 
         Diozero.shutdown();
 

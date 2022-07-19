@@ -39,3 +39,14 @@ $ groovy -cp build/libs/diozero-101-1.0-all.jar src/main/groovy/DioZeroGroovy.gr
 To run the above, make sure the `groovy` runtime version matches the one in `build.gradle`.
 
 ---
+
+### Wiring
+The led requires a resistor (330 &Omega; will do).  
+Many on-line (or not) resistor color-code applications are available:
+- <https://www.calculator.net/resistor-calculator.html>
+- <https://www.allaboutcircuits.com/tools/resistor-color-code-calculator/>
+- <https://www.digikey.fr/en/resources/conversion-calculators/conversion-calculator-resistor-color-code>
+- etc...
+
+Connecting leds: See [this](https://makecode.adafruit.com/learnsystem/pins-tutorial/devices/led-connections).
+

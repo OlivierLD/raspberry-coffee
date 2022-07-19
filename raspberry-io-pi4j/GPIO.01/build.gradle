@@ -2,6 +2,7 @@ plugins {
   id 'java'
   id 'idea'
   id 'maven'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.pi4j'
@@ -10,9 +11,13 @@ version = '1.0'
 repositories {
   mavenCentral()
   mavenLocal()
-  maven { url "https://mvnrepository.com/artifact/com.pi4j/pi4j-core" }
+//  maven { url "https://mvnrepository.com/artifact/com.pi4j/pi4j-core" }
 }
 
 dependencies {
   implementation 'com.pi4j:pi4j-core:1.2'
+}
+
+shadowJar {
+  zip64 true
 }
