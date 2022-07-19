@@ -7,6 +7,7 @@ import com.diozero.devices.LED;
 import com.diozero.internal.spi.NativeDeviceFactoryInterface;
 import com.diozero.sampleapps.util.ConsoleUtil;
 import com.diozero.sbc.DeviceFactoryHelper;
+import com.diozero.util.Diozero;
 import com.diozero.util.SleepUtil;
 
 import java.util.Map;
@@ -62,6 +63,8 @@ public class FirstTest {
                     });
                 });
                 System.out.println("--- Done checking pins... ---");
+            } finally {
+                Diozero.shutdown();
             }
         }
 
@@ -83,6 +86,9 @@ public class FirstTest {
             button.whenReleased(nanoTime -> led.off());
             SleepUtil.sleepSeconds(20);
         }
+
+        Diozero.shutdown();
+
         System.out.println("Bye!");
     }
 }
