@@ -103,23 +103,26 @@ public class FirstTest {
         }
 
         System.out.println("Button test... (20s)");
-        AtomicBoolean ledStatus = new AtomicBoolean(false);
+        AtomicBoolean buttonPressed = new AtomicBoolean(false);
         try (Button button = new Button(buttonPin); LED led = new LED(ledPin)) { // With resources, nice !
+
+            System.out.println("--- Button block, top.");
             button.whenPressed(nanoTime -> {
-                if (!ledStatus.get()) {
-                    System.out.println("Turning led on");
+                if (!buttonPressed.get()) {
+                    System.out.println("Button pressed, turning led on");
                 }
-                ledStatus.set(true);
+                buttonPressed.set(true);
                 led.on();
             });
             button.whenReleased(nanoTime -> {
-                if (ledStatus.get()) {
-                    System.out.println("Turning led off");
+                if (buttonPressed.get()) {
+                    System.out.println("Button released, turning led off");
                 }
-                ledStatus.set(false);
+                buttonPressed.set(false);
                 led.off();
             });
-            SleepUtil.sleepSeconds(20);
+            SleepUtil.sleepSeconds(20); // in seconds
+
         } catch (RuntimeIOException ex) {
             System.err.printf("Exception using ledPin %d, buttonPin %d\n", ledPin, buttonPin);
             ex.printStackTrace();
