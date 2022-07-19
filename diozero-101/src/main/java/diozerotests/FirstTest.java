@@ -114,6 +114,7 @@ public class FirstTest {
 
             System.out.println("--- Button block, top.");
             led.off();
+            SleepUtil.sleepSeconds(2);
 
             button.whenPressed(nanoTime -> {
                 if (BUTTON_VERBOSE && !buttonPressed.get()) {
