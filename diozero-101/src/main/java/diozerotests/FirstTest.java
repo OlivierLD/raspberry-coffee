@@ -110,15 +110,15 @@ public class FirstTest {
             button.whenPressed(nanoTime -> {
                 if (!buttonPressed.get()) {
                     System.out.println("Button pressed, turning led on");
+                    buttonPressed.set(true);
                 }
-                buttonPressed.set(true);
                 led.on();
             });
             button.whenReleased(nanoTime -> {
                 if (buttonPressed.get()) {
                     System.out.println("Button released, turning led off");
+                    buttonPressed.set(false);
                 }
-                buttonPressed.set(false);
                 led.off();
             });
             SleepUtil.sleepSeconds(20); // in seconds
