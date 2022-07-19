@@ -13,6 +13,7 @@ import com.diozero.util.SleepUtil;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
  * GPIO Pin numbers, see https://www.diozero.com/api/gpio.html
@@ -102,13 +103,20 @@ public class FirstTest {
         }
 
         System.out.println("Button test... (20s)");
+        AtomicBoolean ledStatus = new AtomicBoolean(false);
         try (Button button = new Button(buttonPin); LED led = new LED(ledPin)) { // With resources, nice !
             button.whenPressed(nanoTime -> {
-                System.out.println("Turning led on");
+                if (!ledStatus.get()) {
+                    System.out.println("Turning led on");
+                }
+                ledStatus.set(true);
                 led.on();
             });
             button.whenReleased(nanoTime -> {
-                System.out.println("Turning led off");
+                if (ledStatus.get()) {
+                    System.out.println("Turning led off");
+                }
+                ledStatus.set(false);
                 led.off();
             });
             SleepUtil.sleepSeconds(20);
