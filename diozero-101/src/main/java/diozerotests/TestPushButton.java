@@ -45,7 +45,7 @@ public class TestPushButton {
 
         System.out.printf("WIll use ledPin %d, buttonPin %d\n.", ledPin, buttonPin);
 
-        System.out.println("Button test... (20s)");
+        System.out.println("Button test... Ctrl-C to stop. Push to turn the led on, release to turn it off.");
 
         final Thread currentThread = Thread.currentThread();
 
@@ -82,12 +82,11 @@ public class TestPushButton {
                 led.off();
             });
             led.off();
-            System.out.println("--- Button block, waiting 20s.");
 
-            // SleepUtil.sleepSeconds(20); // in seconds
             synchronized (currentThread) {
                 try {
                     currentThread.wait();
+                    System.out.println("OK, exiting.");
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
