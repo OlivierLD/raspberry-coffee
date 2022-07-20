@@ -123,14 +123,15 @@ public class FirstTest {
 
             button.whenPressed(nanoTime -> {
                 if (BUTTON_VERBOSE && !buttonPressed.get()) {
-                    final Date date = new Date(nanoTime / 1_000 / 1_000);
-                    System.out.printf("Button pressed, turning led on (at nanoTime: %s, %s)\n", NumberFormat.getInstance().format(nanoTime), date);
+                    // TODO What is that nanoTime thing ?... See https://stackoverflow.com/questions/3523442/difference-between-clock-realtime-and-clock-monotonic
+                    System.out.printf("Button pressed, turning led on (at nanoTime: %s, %s)\n", NumberFormat.getInstance().format(nanoTime), new Date(nanoTime / 1_000 / 1_000));
                     buttonPressed.set(true);
                 }
                 led.on();
             });
             button.whenReleased(nanoTime -> {
                 if (BUTTON_VERBOSE && buttonPressed.get()) {
+                    // TODO What is that nanoTime thing ?...
                     System.out.printf("Button released, turning led off (at nanoTime: %s, %s)\n", NumberFormat.getInstance().format(nanoTime), new Date(nanoTime / 1_000 / 1_000));
                     buttonPressed.set(false);
                 }
