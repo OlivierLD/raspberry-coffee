@@ -36,7 +36,7 @@ public class FirstTest {
     private final static String BUTTON_PIN_PREFIX = "--button-pin:";
     /**
      * Use the -Dcheck-pins=true to check pins directions, -Dbutton-verbose=true
-     * @param args Optional --led-pin:XX --button-pin:XX
+     * @param args Optional --led-pin:XX --button-pin:XX (XX: BCM numbers)
      */
     public static void main(String... args) {
         System.out.println("Starting diozero test.");
