@@ -51,7 +51,7 @@ public class TestToggleLed {
             ex.printStackTrace();
         }
 
-        Diozero.shutdown();
+        Diozero.shutdown(); // Will turn the led down if it is up.
 
         System.out.println("Bye!");
     }

@@ -8,4 +8,4 @@ REMOTE_DEBUG_FLAGS=
 if [[ "${REMOTE_DEBUG_FLAGS}" != "" ]]; then
   echo -e "Will use remote debug this prms ${REMOTE_DEBUG_FLAGS}"
 fi
-sudo java -cp ${CP} ${REMOTE_DEBUG_FLAGS} diozerotests.TestToggleLed $*
+sudo java -cp ${CP} ${REMOTE_DEBUG_FLAGS} diozerotests.TestPushButton $*
