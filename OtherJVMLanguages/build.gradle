@@ -36,7 +36,7 @@ dependencies {
     implementation 'org.codehaus.groovy:http-builder:0.4.0'
     implementation 'javax.ws.rs:javax.ws.rs-api:2.0'
 //    implementation 'org.glassfish.jersey.core:jersey-client:2.10'
-    implementation 'org.scala-lang:scala-library:2.13.3'
+    implementation 'org.scala-lang:scala-library:2.13.8'
     implementation "org.scala-lang:scala-compiler:2.13.3"
     implementation 'com.typesafe.akka:akka-actor_2.11:2.3.11'
 //    compile.sh 'org.clojure:clojure:1.5.1'

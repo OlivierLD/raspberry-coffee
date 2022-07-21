@@ -30,7 +30,7 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    implementation 'org.scala-lang:scala-library:2.13.3'   // 2.12.5'
+    implementation 'org.scala-lang:scala-library:2.13.8'   // 2.12.5'
     implementation "org.scala-lang:scala-compiler:2.13.3"  // 2.12.5"
     testImplementation 'junit:junit:4.13.1'
 }

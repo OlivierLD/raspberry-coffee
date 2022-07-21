@@ -72,7 +72,7 @@ dependencies {
   implementation 'org.codehaus.groovy:http-builder:0.4.0'
 //  implementation "com.netflix.nebula:nebula-clojure-plugin:4.3.1"
 //  implementation 'org.clojure:clojure:1.5.1'
-  implementation 'org.scala-lang:scala-library:2.13.3'
+  implementation 'org.scala-lang:scala-library:2.13.8'
   implementation project(':http-tiny-server')
   testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
