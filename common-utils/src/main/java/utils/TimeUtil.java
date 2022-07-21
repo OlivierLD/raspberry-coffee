@@ -188,7 +188,8 @@ public class TimeUtil {
 		}
 		if (verbose) {
 			// Micro: \u03bc, Nano: \u212b
-			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s nano-s",
+			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s \u212bs",
+//			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s nano-s",
 					debugMess != null ? String.format(" (%s)", debugMess) : "",
 					amount,
 					unit,
@@ -445,12 +446,12 @@ public class TimeUtil {
 		delay(1.5f, TimeUnit.MICROSECONDS);
 		delay(150f, TimeUnit.NANOSECONDS);
 
-		boolean more = false;
+		boolean more = true;
 		if (more) {
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 			BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 			String retString = "";
-			String prompt = "?> ";
+			String prompt = "Hit return ?> ";
 			System.err.print(prompt);
 			try {
 				retString = stdin.readLine();
@@ -566,12 +567,16 @@ public class TimeUtil {
 		year = 2017; month = 6;
 		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
 
-		if (false) {
+		if (true) {
 			StringBuffer duh = new StringBuffer();
 			for (int i = -1_999; i < 2_020; i++) {
 				duh.append(String.format("%d;%f;\n", i, getDeltaT(i, 1)));
 			}
 			System.out.println(duh.toString());
+		}
+
+		if (true) {
+			delay(1_000_000F, TimeUnit.NANOSECONDS, "What the heck!");
 		}
 	}
 }

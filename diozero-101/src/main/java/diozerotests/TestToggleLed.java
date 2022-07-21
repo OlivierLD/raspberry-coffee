@@ -42,7 +42,7 @@ public class TestToggleLed {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             keepLooping.set(false);
             synchronized (currentThread) {
-                currentThread.notify();
+//                currentThread.notify(); // No thread is waiting...
                 try {
                     currentThread.join();
                     System.out.println("... Gone");
@@ -57,6 +57,7 @@ public class TestToggleLed {
                 System.out.printf("Toggling Led %d\n", ledPin);
                 led.toggle();
                 SleepUtil.sleepSeconds(1);
+                // utils.TimeUtil.delay(1f);
             }
         } catch (RuntimeIOException ex) {
             System.err.printf("Exception using ledPin %d\n", ledPin);
@@ -65,6 +66,6 @@ public class TestToggleLed {
 
         Diozero.shutdown(); // Will turn the led down if it is up.
 
-        System.out.println("Bye!");
+        System.out.println("\nBye!");
     }
 }

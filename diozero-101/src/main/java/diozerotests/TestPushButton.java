@@ -106,6 +106,6 @@ public class TestPushButton {
 
         Diozero.shutdown();
 
-        System.out.println("Bye!");
+        System.out.println("\nBye!");
     }
 }
