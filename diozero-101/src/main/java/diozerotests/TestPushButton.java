@@ -27,7 +27,7 @@ public class TestPushButton {
     private final static String LED_PIN_PREFIX = "--led-pin:";
     private final static String BUTTON_PIN_PREFIX = "--button-pin:";
     /**
-     * Use the -Dcheck-pins=true to check pins directions, -Dbutton-verbose=true
+     * Use the -Dbutton-verbose=true
      * @param args Optional --led-pin:XX --button-pin:XX (XX: BCM numbers)
      */
     public static void main(String... args) {
