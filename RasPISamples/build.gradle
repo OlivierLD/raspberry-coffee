@@ -37,6 +37,7 @@ version = '1.0'
 repositories {
   mavenCentral()
   mavenLocal()
+  maven { url "https://mvnrepository.com/artifact" }
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
   // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
 }
