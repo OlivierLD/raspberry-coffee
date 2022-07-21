@@ -52,6 +52,12 @@ public class TestPushButton {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             synchronized (currentThread) {
                 currentThread.notify();
+                try {
+                    currentThread.join();
+                    System.out.println("... Gone");
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
             }
         }, "Oops"));
 
@@ -96,7 +102,7 @@ public class TestPushButton {
             System.err.printf("Exception using ledPin %d, buttonPin %d\n", ledPin, buttonPin);
             ex.printStackTrace();
         }
-        System.out.println("Done with the button.");
+        System.out.println("Done with the button, releasing resources.");
 
         Diozero.shutdown();
 
