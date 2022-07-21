@@ -34,17 +34,29 @@ public class TestToggleLed {
         });
 
         System.out.printf("WIll use ledPin %d\n.", ledPin);
-        System.out.println(":Ctrl-C toi Stop the test");
+        System.out.println(":Ctrl-C to Stop the test");
 
         AtomicBoolean keepLooping = new AtomicBoolean(true);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> keepLooping.set(false), "Oops"));
+        final Thread currentThread = Thread.currentThread();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            keepLooping.set(false);
+            synchronized (currentThread) {
+                currentThread.notify();
+                try {
+                    currentThread.join();
+                    System.out.println("... Gone");
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }
+        }, "Oops"));
 
         try (LED led = new LED(ledPin)) { // With Resource ;)
             while (keepLooping.get()) {
                 System.out.printf("Toggling Led %d\n", ledPin);
                 led.toggle();
-                SleepUtil.sleepSeconds(2);
+                SleepUtil.sleepSeconds(1);
             }
         } catch (RuntimeIOException ex) {
             System.err.printf("Exception using ledPin %d\n", ledPin);
