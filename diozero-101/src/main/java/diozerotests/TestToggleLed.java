@@ -33,8 +33,8 @@ public class TestToggleLed {
             }
         });
 
-        System.out.printf("WIll use ledPin %d\n.", ledPin);
-        System.out.println(":Ctrl-C to Stop the test");
+        System.out.printf("Will use ledPin %d.\n", ledPin);
+        System.out.println(">> Ctrl-C to Stop the test");
 
         AtomicBoolean keepLooping = new AtomicBoolean(true);
 

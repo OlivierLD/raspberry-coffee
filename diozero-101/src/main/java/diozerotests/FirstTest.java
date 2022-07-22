@@ -51,7 +51,7 @@ public class FirstTest {
             }
         });
 
-        System.out.printf("WIll use ledPin %d, buttonPin %d\n.", ledPin, buttonPin);
+        System.out.printf("Will use ledPin %d, buttonPin %d.\n", ledPin, buttonPin);
 
         // Check pins validity
         if (CHECK_PINS) {

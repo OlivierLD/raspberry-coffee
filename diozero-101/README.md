@@ -40,8 +40,8 @@ To run the above, make sure the `groovy` runtime version matches the one in `bui
 
 ---
 
-### Wiring
-The led requires a resistor (330 &Omega; will do).  
+### Wiring (for tests 1 to 3)
+The LED requires a resistor (330 &Omega; will do).  
 Many on-line (or not) resistor color-code applications are available:
 - <https://www.calculator.net/resistor-calculator.html>
 - <https://www.allaboutcircuits.com/tools/resistor-color-code-calculator/>

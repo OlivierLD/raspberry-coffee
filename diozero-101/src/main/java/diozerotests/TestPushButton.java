@@ -43,7 +43,7 @@ public class TestPushButton {
             }
         });
 
-        System.out.printf("WIll use ledPin %d, buttonPin %d\n.", ledPin, buttonPin);
+        System.out.printf("Will use ledPin %d, buttonPin %d.\n", ledPin, buttonPin);
 
         System.out.println("Button test... Ctrl-C to stop. Push to turn the led on, release to turn it off.");
 
