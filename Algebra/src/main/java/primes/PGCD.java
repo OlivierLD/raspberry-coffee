@@ -1,4 +1,4 @@
-package pgcd;
+package primes;
 
 public class PGCD {
 
@@ -13,6 +13,7 @@ public class PGCD {
         return n2;
     }
 
+    // For tests
     public static void main(String... args) {
         int n1 = 60, n2 = 36;
         System.out.printf("PGCD(%d, %d) = %d\n", n1, n2, pgcd(n1, n2));

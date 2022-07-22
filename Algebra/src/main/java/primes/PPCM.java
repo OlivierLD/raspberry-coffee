@@ -1,4 +1,4 @@
-package ppcm;
+package primes;
 
 public class PPCM {
 
@@ -13,6 +13,7 @@ public class PPCM {
         return product / n2;
     }
 
+    // For tests
     public static void main(String... args) {
         int n1 = 60, n2 = 36;
         System.out.printf("PPCM(%d, %d) = %d\n", n1, n2, ppcm(n1, n2));

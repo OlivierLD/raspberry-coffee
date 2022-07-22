@@ -3,8 +3,8 @@ package misc;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
-import pgcd.PGCD;
-import ppcm.PPCM;
+import primes.PGCD;
+import primes.PPCM;
 
 public class PgcdAnPpcmTest {
 
