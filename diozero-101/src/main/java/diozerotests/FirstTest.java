@@ -39,7 +39,7 @@ public class FirstTest {
      * @param args Optional --led-pin:XX --button-pin:XX (XX: BCM numbers)
      */
     public static void main(String... args) {
-        System.out.println("Starting diozero test.");
+        System.out.printf("Starting diozero test %s.\n", FirstTest.class.getName());
 
         Arrays.stream(args).forEach(arg -> {
             if (arg.startsWith(LED_PIN_PREFIX)) {

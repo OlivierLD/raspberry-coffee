@@ -34,7 +34,8 @@ public class PinsCustomization {
 			assertTrue("Exception should have been a InvalidParameterException", ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(String.format("Unexpected error message [%s]",
-                    ex.getMessage()), ex.getMessage().startsWith("Please provide both ") || ex.getMessage().startsWith("keypad.rows should contain 4 elements, "));
+                    ex.getMessage()), ex.getMessage().startsWith("Please provide both ") || // The order of the exception is not granted...
+                    ex.getMessage().startsWith("keypad.rows should contain 4 elements, "));
 			System.out.printf("As expected [%s]\n", ex.toString());
 		}
 	}
