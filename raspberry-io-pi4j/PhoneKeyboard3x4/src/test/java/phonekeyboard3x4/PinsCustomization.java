@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.security.InvalidParameterException;
 
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PinsCustomization {
@@ -15,7 +16,7 @@ public class PinsCustomization {
 
 	@Before
 	public void getStarted() {
-		System.out.println(String.format("Getting started on %s", this.getClass().getName()));
+		System.out.printf("Getting started on %s\n", this.getClass().getName());
 	}
 
 	@Test
@@ -30,10 +31,11 @@ public class PinsCustomization {
 			controller = new KeyboardController();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			assertTrue(ex instanceof InvalidParameterException);
+			assertTrue("Exception should have been a InvalidParameterException", ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
-			assertTrue(String.format("Unexpected error message [%s]", ex.getMessage()), ex.getMessage().startsWith("Please provide both "));
-			System.out.println(String.format("As expected [%s]", ex.toString()));
+			assertTrue(String.format("Unexpected error message [%s]",
+                    ex.getMessage()), ex.getMessage().startsWith("Please provide both ") || ex.getMessage().startsWith("keypad.rows should contain 4 elements, "));
+			System.out.printf("As expected [%s]\n", ex.toString());
 		}
 	}
 
@@ -52,8 +54,8 @@ public class PinsCustomization {
 			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
-            assertTrue(String.format("Unexpected error message [%s]", ex.getMessage()), ex.getMessage().equals("keypad.rows should contain 4 elements, comma-separated."));
-			System.out.println(String.format("As expected [%s]", ex.toString()));
+			assertEquals(String.format("Unexpected error message [%s]", ex.getMessage()), "keypad.rows should contain 4 elements, comma-separated.", ex.getMessage());
+			System.out.printf("As expected [%s]\n", ex.toString());
 		}
 	}
 
@@ -73,7 +75,7 @@ public class PinsCustomization {
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().contains("cannot appear more than once"));
-			System.out.println(String.format("As expected [%s]", ex.toString()));
+			System.out.printf("As expected [%s]\n", ex.toString());
 		}
 	}
 
@@ -93,7 +95,7 @@ public class PinsCustomization {
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().startsWith("Unknown row pin name "));
-			System.out.println(String.format("As expected [%s]", ex.toString()));
+			System.out.printf("As expected [%s]\n", ex.toString());
 		}
 	}
 
