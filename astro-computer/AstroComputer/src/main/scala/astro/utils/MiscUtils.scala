@@ -96,9 +96,11 @@ object MiscUtils {
     val minutes = Math.floor(value / 60d).toInt
     val seconds = value - (minutes * 60)
     if (minutes > 0) // formatted = minutes + "'" + seconds.formatted("%05.02f") + "\""
-      formatted = s"$minutes'${seconds.formatted("%05.02f")}\u201c"
+//      formatted = s"$minutes'${seconds.formatted("%05.02f")}\u201c"
+      formatted = s"$minutes'${"%05.02f".format(seconds)}\u201c"
     else
-      formatted = s"${seconds.formatted("%05.02f")}\u201c"
+//      formatted = s"${seconds.formatted("%05.02f")}\u201c"
+      formatted = s"${"%05.02f".format(seconds)}\u201c"
     formatted
   }
 
@@ -108,7 +110,7 @@ object MiscUtils {
     val raH = Math.floor(t).toInt
     val raMin = Math.floor(60 * (t - raH)).toInt
     val raSec = 10d * (3600d * ((t - raH) - (raMin / 60d))).round.toFloat / 10
-    formatted = raH.formatted("%02d") + "h " + raMin.formatted("%02d") + "m " + raSec.formatted("%05.02f") + "s"
+    formatted = "%02d".format(raH) + "h " + "%02d".format(raMin) + "m " + "%05.02f".format(raSec) + "s"
     formatted
   }
 
@@ -124,10 +126,10 @@ object MiscUtils {
     val eotSec = 600 * (dEoT - eotMin).round / 10d
     if (eotMin == 0) { // Less than 1 minute
       formatted = if (eot > 0) "+"
-      else "-" + " " + eotSec.formatted("%04.01f") + "s"
+      else "-" + " " + "%04.01f".format(eotSec) + "s"
     }
     else formatted = if (eot > 0) "+"
-    else "-" + " " + eotMin.formatted("%02d") + "m " + eotSec.formatted("%04.01f") + "s"
+    else "-" + " " + "%02d".format(eotMin) + "m " + "%04.01f".format(eotSec) + "s"
     formatted
   }
 
