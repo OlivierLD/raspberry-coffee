@@ -7,6 +7,10 @@ import java.util.stream.Collectors;
 
 public class Primes {
 
+    public enum OutputOption {
+        NONE, HTML, MARKDOWN, LATEX
+    }
+
     private final static boolean VERBOSE = "true".equals(System.getProperty("primes.verbose"));
 
     private static void addToMap(Map<Integer, Integer> primeMap, int n) {
@@ -51,8 +55,45 @@ public class Primes {
     }
 
     public static String spitMapOut(int value, Map<Integer, Integer> primeMap) {
-        final String collected = primeMap.keySet().stream().map(prime -> String.format("(%d^%d)", prime, primeMap.get(prime))).collect(Collectors.joining(" x "));
-        return String.format("%s = %s", NumberFormat.getInstance().format(value) ,collected);
+        return spitMapOut(value, primeMap, OutputOption.NONE);
+    }
+    public static String spitMapOut(int value, Map<Integer, Integer> primeMap, OutputOption outputOption) {
+        final String collected = primeMap.keySet()
+                .stream().map(prime -> {
+                    String output;
+                    switch (outputOption) {
+                        case MARKDOWN:
+                        case HTML:
+                            output = String.format("(%d<sup>%d</sup>)", prime, primeMap.get(prime));
+                            break;
+                        case LATEX:
+                            output = String.format("(%d^{%d})", prime, primeMap.get(prime));
+                            break;
+                        case NONE:
+                        default:
+                            output = String.format("(%d^%d)", prime, primeMap.get(prime));
+                    }
+                    return output;
+                })
+                .collect(Collectors.joining((outputOption == OutputOption.MARKDOWN || outputOption == OutputOption.HTML) ?
+                        " &times; " :
+                        (outputOption == OutputOption.LATEX ? " \\times " : " x ")));
+        String finalResult;
+        switch (outputOption) {
+            case MARKDOWN:
+                finalResult = String.format("`%s = %s`", NumberFormat.getInstance().format(value) ,collected);
+                break;
+            case HTML:
+                finalResult = String.format("<code>%s = %s</code>", NumberFormat.getInstance().format(value) ,collected);
+                break;
+            case LATEX:
+                finalResult = String.format("$ %s = %s $", NumberFormat.getInstance().format(value) ,collected);
+                break;
+            case NONE:
+            default:
+                finalResult = String.format("%s = %s", NumberFormat.getInstance().format(value) ,collected);
+        }
+        return finalResult;
     }
 
     // For tests
@@ -60,8 +101,8 @@ public class Primes {
         int n = 315;
         System.out.println(spitMapOut(n, primeFactors(n)));
         n = 144;
-        System.out.println(spitMapOut(n, primeFactors(n)));
+        System.out.println(spitMapOut(n, primeFactors(n), OutputOption.MARKDOWN));
         n = 2_205_000;
-        System.out.println(spitMapOut(n, primeFactors(n)));
+        System.out.println(spitMapOut(n, primeFactors(n), OutputOption.LATEX));
     }
 }

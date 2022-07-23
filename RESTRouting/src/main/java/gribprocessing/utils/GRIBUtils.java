@@ -133,7 +133,7 @@ public class GRIBUtils {
 		String request = "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN";
 
 		try {
-			getGRIB(generateGRIBRequest(request), ".", "grib.grb", true);
+			GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(request), ".", "grib.grb", true);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -235,7 +235,9 @@ Run the test in `gsg.examples.box3d.Sample11`, or do a `../gradlew runSample -Pn
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
 
 There are good documents about all that [here](https://towardsdatascience.com/write-markdown-latex-in-the-jupyter-notebook-10985edb91fd), 
-and [here](https://colab.research.google.com/drive/18_2yFdH8G-6NXY_7fTcshMoScgJ-SYac#scrollTo=VFaCoSXvS-_H).
+[here](https://www.mathjax.org/),
+and [here](https://colab.research.google.com/drive/18_2yFdH8G-6NXY_7fTcshMoScgJ-SYac#scrollTo=VFaCoSXvS-_H).  
+There are many on-line Latex editor, like [here](https://latex.codecogs.com/eqneditor/editor.php).
 
 ```
 Euler's identity: $ e^{i \pi} + 1 = 0 $
