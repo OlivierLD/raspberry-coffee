@@ -8,14 +8,19 @@ import java.util.Arrays;
 
 /**
  * DOD stands for Digital Output Device
- * We will use it for a LED (Note: LED extends DigitalOutputDevice)
+ * We will use it for a LED (Note: LED extends DigitalOutputDevice).
+ *
+ * Note: This is also suitable for a Relay.
+ * See ../RESTRelay/relay_bb.png
+ *
+ * Compare to its PI4J equivalent, gpio01.GPIO01led
  */
 public class TestDOD {
 
     // PINs are BCM numbers.
     static int gpioPin    = 18;
 
-    private final static String GPIO_PIN_PREFIX = "--gpio-pin:";
+    private final static String GPIO_PIN_PREFIX = "--gpio-pin:"; // CLI parameter
 
     /**
      * @param args Optional --gpio-pin:XX (XX: BCM numbers)
