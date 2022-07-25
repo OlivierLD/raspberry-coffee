@@ -4,15 +4,35 @@ import com.diozero.api.DigitalOutputDevice;
 import com.diozero.api.RuntimeIOException;
 import com.diozero.util.SleepUtil;
 
+import java.util.Arrays;
+
 /**
  * DOD stands for Digital Output Device
  * We will use it for a LED (Note: LED extends DigitalOutputDevice)
  */
 public class TestDOD {
 
+    // PINs are BCM numbers.
+    static int gpioPin    = 18;
+
+    private final static String GPIO_PIN_PREFIX = "--gpio-pin:";
+
+    /**
+     * @param args Optional --gpio-pin:XX (XX: BCM numbers)
+     */
     public static void main(String... args) {
 
-        final int gpioPin = 128;
+        System.out.printf("Starting diozero test %s.\n", TestToggleLed.class.getName());
+
+        Arrays.stream(args).forEach(arg -> {
+            if (arg.startsWith(GPIO_PIN_PREFIX)) {
+                gpioPin = Integer.parseInt(arg.substring(GPIO_PIN_PREFIX.length()));
+            } else {
+                System.out.printf("Un-managed prefix %s\n", arg);
+            }
+        });
+        System.out.printf("Will use ledPin %d.\n", gpioPin);
+
         try (DigitalOutputDevice dod = new DigitalOutputDevice(gpioPin, true, false)) {
             System.out.printf("Turning device %d ON\n", gpioPin);
             dod.on();
