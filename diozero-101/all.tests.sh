@@ -7,6 +7,7 @@ echo -e "+---------------------------+---------------------------+"
 echo -e "| 1 - LED & Button Test     | 1D - 1, with remote debug |"
 echo -e "| 2 - LED Test              | 2D - 2, with remote debug |"
 echo -e "| 3 - LED With Button Test  | 3D - 3, with remote debug |"
+echo -e "| 4 - DOD Test              | 4D - 4, with remote debug |"
 echo -e "+---------------------------+---------------------------+"
 echo -e "| Q - Quit                                              |"
 echo -e "+---------------------------+---------------------------+"
@@ -35,6 +36,13 @@ case "${USER_CHOICE}" in
     ;;
   "3D" | "3d")
     JAVA_CLASS=diozerotests.TestPushButton
+    REMOTE_DEBUG_FLAGS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+    ;;
+  "4")
+    JAVA_CLASS=diozerotests.TestDOD
+    ;;
+  "4D" | "4d")
+    JAVA_CLASS=diozerotests.TestDOD
     REMOTE_DEBUG_FLAGS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
     ;;
   "Q" | "q" | *)
