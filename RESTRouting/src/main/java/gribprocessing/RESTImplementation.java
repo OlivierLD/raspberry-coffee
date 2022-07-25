@@ -35,10 +35,10 @@ import java.util.Optional;
  */
 public class RESTImplementation {
 
-	private static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
 	private final static String GRIB_PREFIX = "/grib";
 
-	private GRIBRequestManager gribRequestManager;
+	private final GRIBRequestManager gribRequestManager;
 
 	public RESTImplementation(GRIBRequestManager restRequestManager) {
 
@@ -56,7 +56,7 @@ public class RESTImplementation {
 	 * See {@link #processRequest(Request)}
 	 * See {@link HTTPServer}
 	 */
-	private List<Operation> operations = Arrays.asList(
+	private final List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
 					GRIB_PREFIX + "/oplist",
@@ -119,7 +119,7 @@ public class RESTImplementation {
 	 *
 	 * { "request": "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN" }
 	 *
-	 * @param request
+	 * @param request the request
 	 * @return
 	 */
 	private Response requestGRIBData(Request request) {
@@ -446,7 +446,7 @@ public class RESTImplementation {
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *
 	 * @param request
-	 * @return
+	 * @return dummy stuff.
 	 */
 	private Response emptyOperation(Request request) {
 		Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);

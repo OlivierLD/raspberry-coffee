@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
  */
 public class GRIBServer {
 
-	private HTTPServer httpServer = null;
+	private final HTTPServer httpServer;
 	private int httpPort = 9999;
 
 	public GRIBServer() {
@@ -23,7 +23,7 @@ public class GRIBServer {
 			}
 		}
 
-		System.out.println(String.format(">>> Running on port %d", httpPort));
+		System.out.printf(">>> Running on port %d%n", httpPort);
 		this.httpServer = startHttpServer(httpPort, new GRIBRequestManager(this));
 	}
 

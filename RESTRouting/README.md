@@ -13,3 +13,5 @@ Run `./runGRIBserver`:
 ### TODO
 - GRIB Request generator ?
 - Routing
+- Remove JQuery dependencies, move to pure ES6
+- Other grib providers than `saildocs`. (See <https://opengribs.org/en/gribs>, <https://www.zygrib.org/>, ...)

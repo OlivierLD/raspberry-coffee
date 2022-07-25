@@ -18,7 +18,7 @@ public class RelayManager {
 	private GpioController gpio = null;
 	private final List<GpioPinDigitalOutput> relays = new ArrayList<>();
 
-	private Map<Integer, Pin> relayMap;
+	private final Map<Integer, Pin> relayMap;
 
 	public RelayManager(Map<Integer, Pin> relayMap) {
 		this.relayMap = relayMap;
@@ -26,13 +26,13 @@ public class RelayManager {
 			gpio = GpioFactory.getInstance();
 		} catch (Throwable t) {
 			simulating = true;
-			System.out.println("Simulating Relays");
+			System.out.println("IO Lib not available >> Simulating Relays");
 		}
 
-		relayMap.entrySet().forEach(entry -> {
+		relayMap.forEach((key, value) -> {
 			// For a relay it seems that HIGH means NC (Normally Closed)...
 			if (gpio != null) {
-				relays.add(gpio.provisionDigitalOutputPin(entry.getValue(), String.valueOf(entry.getKey()), PinState.HIGH));
+				relays.add(gpio.provisionDigitalOutputPin(value, String.valueOf(key), PinState.HIGH));
 			}
 		});
 
@@ -44,7 +44,7 @@ public class RelayManager {
 			if (oPin.isPresent()) {
 				GpioPinDigitalOutput pin = oPin.get();
 				if ("true".equals(System.getProperty("relay.verbose", "false"))) {
-					System.out.println(String.format("Setting Relay#%d %s", device, status));
+					System.out.printf("Setting Relay#%d %s\n", device, status);
 				}
 				if ("on".equals(status)) {
 					pin.low();
@@ -52,10 +52,10 @@ public class RelayManager {
 					pin.high();
 				}
 			} else {
-				System.out.println(String.format("Relay %d not found...", device));
+				System.out.printf("Relay %d not found...\n", device);
 			}
 		} else {
-			System.out.println(String.format("Setting relay #%d %s", device, status));
+			System.out.printf("Setting relay #%d %s\n", device, status);
 		}
 	}
 
@@ -67,13 +67,17 @@ public class RelayManager {
 				GpioPinDigitalOutput pin = oPin.get();
 				status = pin.isLow();
 			} else {
-				System.out.println(String.format("Relay %d not found...", device));
+				System.out.printf("Relay %d not found...\n", device);
 			}
 		} else {
 			status = (System.currentTimeMillis() % 2) == 0;
-			System.out.println(String.format("Getting status for relay #%d: %s", device, status));
+			System.out.printf("Getting status for relay #%d: %s\n", device, status);
 		}
 		return status;
+	}
+
+	public Map<Integer, Pin> getRelayMap() {
+		return this.relayMap;
 	}
 
 	public void shutdown() {

@@ -28,10 +28,10 @@ import java.util.Optional;
  */
 public class RESTImplementation {
 
-	private static boolean verbose = "true".equals(System.getProperty("relay.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("relay.verbose", "false"));
 	private final static String RELAY_PREFIX = "/relay";
 
-	private RelayRequestManager relayRequestManager;
+	private final RelayRequestManager relayRequestManager;
 	private RelayManager physicalRelayManager = null;
 
 	public RESTImplementation(RelayRequestManager restRequestManager) {
@@ -53,7 +53,7 @@ public class RESTImplementation {
 	 * See {@link #processRequest(Request)}
 	 * See {@link HTTPServer}
 	 */
-	private List<Operation> operations = Arrays.asList(
+	private final List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
 					RELAY_PREFIX + "/oplist",
@@ -68,7 +68,17 @@ public class RESTImplementation {
 					"GET",
 					RELAY_PREFIX + "/status/{relay-id}",
 					this::getRelayStatus,
-					"Get the relay status")
+					"Get the relay status"),
+			new Operation(
+					"GET",
+					RELAY_PREFIX + "/relay-map",
+					this::getRelayMap,
+					"Returns the relay map (in json)."),
+			new Operation(
+					 "POST",
+					RELAY_PREFIX + "/terminate",
+					this::terminateManager,
+					"Terminates the relayManager. Careful with that one.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -113,8 +123,8 @@ public class RESTImplementation {
 	 * }
 	 * or form-data: status: on|off
 	 *
-	 * @param request
-	 * @return
+	 * @param request the REST Request
+	 * @return REST Response
 	 */
 	private Response setRelayStatus(Request request) {
 		Response response = new Response(request.getProtocol(), Response.CREATED);
@@ -123,7 +133,7 @@ public class RESTImplementation {
 		if (verbose) {
 			List<String> pathPrmNames = request.getPathParameterNames();
 			for (int i=0; i<pathPrmNames.size(); i++) {
-				System.out.println(String.format("%s = %s", pathPrmNames.get(i), pathParameters.get(i)));
+				System.out.printf("%s = %s%n", pathPrmNames.get(i), pathParameters.get(i));
 			}
 		}
 
@@ -133,7 +143,7 @@ public class RESTImplementation {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
 				if (verbose) {
-					System.out.println(String.format("Tx Request: %s", payload));
+					System.out.printf("Tx Request: %s\n", payload);
 				}
 				RelayStatus relayStatus = null;
 				if (contentType.trim().startsWith("multipart/form-data;")) {
@@ -233,8 +243,8 @@ public class RESTImplementation {
 
  	/**
 	 * For dev.
-	 * @param request
-	 * @return
+	 * @param request REST Request
+	 * @return REST Response
 	 */
 	private Response getRelayStatus(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
@@ -262,15 +272,56 @@ public class RESTImplementation {
 		}
 	}
 
+	private Response getRelayMap(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		if (this.physicalRelayManager != null) {
+			Map replayMap = this.physicalRelayManager.getRelayMap();
+			String content = new Gson().toJson(replayMap);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("RELAY-0003")
+							.errorMessage("Request Manager is null"));
+			return response;
+		}
+		return response;
+	}
+
+	/**
+	 * @param request REST Request
+	 * @return REST Response
+	 */
+	private Response terminateManager(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+
+		if (this.relayRequestManager != null) {
+			this.relayRequestManager.shutdownRelayManager();
+			String content = new Gson().toJson("OK");
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("RELAY-0003")
+							.errorMessage("Request Manager is null"));
+			return response;
+		}
+
+		return response;
+	}
+
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *
-	 * @param request
-	 * @return
+	 * @param request REST Request
+	 * @return REST Response
 	 */
 	private Response emptyOperation(Request request) {
-		Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
-		return response;
+		return new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
 	}
 
 	public static class RelayStatus {

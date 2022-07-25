@@ -294,7 +294,7 @@ Heads Up display, from a smart-phone:
 > Just a GPS, data displayable on any kind of browser...  
 > The server can run on the smallest Raspberry Pi.
 
-GPS Console, 6 swippable screens, suitable for all kinds of devices (laptops, tablets, cell-phones)  
+GPS Console, 6 sweepable screens, suitable for all kinds of devices (laptops, tablets, cell-phones)  
 Below, a replay of a kayak trip...
 
 | Position |             UTC Date              | GPS Sats |

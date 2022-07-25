@@ -16,8 +16,8 @@ public class RelayRequestManager implements RESTRequestManager {
 	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private final RESTImplementation restImplementation;
 
-	private RelayServer relayServer = null;
-	private RelayManager relayManager = null; // Physical
+	private final RelayServer relayServer;
+	private final RelayManager relayManager; // Physical
 
 	public RelayRequestManager() throws Exception {
 		this(null);
@@ -35,18 +35,17 @@ public class RelayRequestManager implements RESTRequestManager {
 		//                                                         | |  Relay num for this app
 		//                                                         | Physical pin #11 (GPIO_0)
 		//                                                         Relay num for this app
-		Map<Integer, Pin> relayMap = null;
+		Map<Integer, Pin> relayMap;
 		try {
 			relayMap = buildRelayMap(mapStr);
 			if ("true".equals(System.getProperty("relay.verbose", "false"))) {
-				relayMap.entrySet().forEach(entry -> {
-					System.out.printf("Relay #%d mapped to pin %d (%s) \n",
-							entry.getKey(),
-							PinUtil.findByPin(entry.getValue()).pinNumber(),
-							PinUtil.findByPin(entry.getValue()).pinName());
-				});
+				relayMap.forEach((key, value) -> System.out.printf("Relay #%d mapped to pin %d (%s) \n",
+						key,
+						PinUtil.findByPin(value).pinNumber(),
+						PinUtil.findByPin(value).pinName()));
 			}
 		} catch (Exception ex) {
+			System.err.println(ex.getMessage());
 			throw ex;
 		}
 		this.relayManager = new RelayManager(relayMap);
@@ -55,6 +54,11 @@ public class RelayRequestManager implements RESTRequestManager {
 		restImplementation.setRelayManager(this.relayManager);
 	}
 
+	/**
+	 *
+	 * @param strMap String like "1:11,2:12", where "1", "2" are the relay IDs, and "11", "12" the PHYSICAL pins.
+	 * @return The Expected Map
+	 */
 	private Map<Integer, Pin> buildRelayMap(String strMap) {
 		Map<Integer, Pin> map = new HashMap<>();
 		String[] array = strMap.split(",");
@@ -108,6 +112,10 @@ public class RelayRequestManager implements RESTRequestManager {
 
 	protected List<HTTPServer.Operation> getAllOperationList() {
 		return relayServer.getAllOperationList();
+	}
+
+	protected void shutdownRelayManager() {
+		relayManager.shutdown();
 	}
 
 }
