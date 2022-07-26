@@ -186,7 +186,7 @@ public class MainMCP3008Sample {
 			go = false;
 			synchronized (Thread.currentThread()) {
 				System.out.println("Notifying for exit");
-				Thread.currentThread().notify();
+				// Thread.currentThread().notify();
 				try {
 					Thread.currentThread().join();
 				} catch (InterruptedException ie) {
