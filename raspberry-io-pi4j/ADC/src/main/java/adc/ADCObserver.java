@@ -18,10 +18,10 @@ public class ADCObserver {
 	// 23: DOUT on the ADC is IN on the GPIO. ADC:Slave, GPIO:Master
 	// 24: DIN on the ADC, OUT on the GPIO. Same reason as above.
 	// SPI: Serial Peripheral Interface
-	private static Pin spiClk = RaspiPin.GPIO_01; // Pin BCM 18, Physical #12, clock
+	private static Pin spiClk = RaspiPin.GPIO_01;  // Pin BCM 18, Physical #12, clock
 	private static Pin spiMiso = RaspiPin.GPIO_04; // Pin BCM 23, Physical #16, data in.  MISO: Master In Slave Out
 	private static Pin spiMosi = RaspiPin.GPIO_05; // Pin BCM 24, Physical #18, data out. MOSI: Master Out Slave In
-	private static Pin spiCs = RaspiPin.GPIO_06; // Pin BCM 25, Physical #22, Chip Select
+	private static Pin spiCs = RaspiPin.GPIO_06;   // Pin BCM 25, Physical #22, Chip Select
 
 	private final static int DEFAULT_TOL = 5;   // Tolerance
 	private final static long DEFAULT_PAUSE = 100L;

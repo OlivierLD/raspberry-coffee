@@ -76,7 +76,8 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
 ### Example
 ![Wiring](./RPi-MCP3008-Pot_bb.png)
 
-> ⚠️ The resistor (220 &Omega; here) on the potentiometer is important, if the Raspberry Pi's 5V is used. 
+> ⚠️ If the MCP3008's Vdd and Vin use the Raspberry Pi's 5V, a resistor (220 &Omega; here) on the potentiometer is important.
+> No need for it if Vdd and Vin are connected on the Raspberry Pi's 3V3 (as on the diagram above).
 
 On the diagram above,
 - The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`BCM 18`, `#12`) - Orange wire
@@ -85,6 +86,13 @@ On the diagram above,
 - The `MCP3008`'s `CS` (`#10`) is connected on the RPi's `GPIO_6` (`#22`) - Green wire
 
 > As mentioned in the console, pin numbers are **BCM** numbers.
+
+> The pins above (on the Raspberry Pi) are the default ones for the `ADCObserver`.
+
+You can then use the script `one.channel.sh`:
+```
+ $ ./one.channel.sh
+```
 
 The `./adcreader.3008.sh` command would be issued like
 ```
