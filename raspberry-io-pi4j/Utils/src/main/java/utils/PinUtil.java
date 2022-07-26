@@ -102,6 +102,11 @@ public class PinUtil {
         return wpi;
     }
 
+    /**
+     * Get wPi Pin from BCM number
+     * @param n BCM number
+     * @return wPi Pin
+     */
     public static Pin getPinByGPIONumber(int n) {
         Pin pin = null;
         for (GPIOPin gpioPin : GPIOPin.values()) {

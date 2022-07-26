@@ -39,13 +39,13 @@ public class MainMCP3008Sample {
 //		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
 //		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
 //		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-//		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+//		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();  // aka CE0
 
 		// Defaulted (for diozero & JOB) would be:
 		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
 		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-		Pin cs   = PinUtil.GPIOPin.GPIO_11.pin();
+		Pin cs   = PinUtil.GPIOPin.GPIO_11.pin(); // aka CE1. Not good on a RasPi B4, use --cs:16 (16: BCM => wPi 27)
 
 		System.out.printf("Usage is java %s %s%d %s%d %s%d %s%d %s%d\n",
 				MainMCP3008Sample.class.getName(),
