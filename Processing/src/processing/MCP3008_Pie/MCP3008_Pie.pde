@@ -5,7 +5,7 @@ import utils.PinUtil;
  * Using Sketch > Add File..., select ADC/build/libs/ADC-1.0-all.jar 
  */
 
-boolean SIMULATION = false;
+boolean SIMULATION = false; // Set to true if not on a Raspberry Pi.
 int incSign = 1;
 int value = 0;
 int ADC_CHANNEL = MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
