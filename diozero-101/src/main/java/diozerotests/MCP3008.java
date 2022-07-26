@@ -147,6 +147,7 @@ public class MCP3008 implements AutoCloseable {
                             value,
                             adc.getFSFraction(channel),
                             adc.getVoltage(channel));
+                    first = false;
                 }
                 previousVal = value;
                 SleepUtil.sleepMillis(100L);
