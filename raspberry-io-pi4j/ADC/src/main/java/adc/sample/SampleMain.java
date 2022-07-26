@@ -9,10 +9,17 @@ import adc.utils.EscapeSeq;
 import analogdigitalconverter.mcp.MCPReader;
 import org.fusesource.jansi.AnsiConsole;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static utils.StringUtils.lpad;
 
+/**
+ * See the {@link #main(String...)} method for runtime CLI parameters.
+ */
 public class SampleMain {
-	private final static boolean DEBUG = false;
+	private static boolean DEBUG = false;
+	// 100 character string
 	private final static String STR100 = "                                                                                                    ";
 
 	private final static int DIGITAL_OPTION = 0;
@@ -55,24 +62,75 @@ public class SampleMain {
 		});
 		obs.start();
 
+		final Thread currentThread = Thread.currentThread();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			if (obs != null) {
 				obs.stop();
 			}
+			synchronized (currentThread) {
+//                currentThread.notify(); // No thread is waiting...
+				try {
+					currentThread.join();
+					System.out.println("... Joining");
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
+			}
 		}, "Shutdown Hook"));
 	}
 
+	private final static String DISPLAY_PREFIX = "--display:";
+	private final static String ANALOG_VALUE = "ANALOG";
+	private final static String DIGITAL_VALUE = "DIGITAL";
+	private final static String CHANNEL_PREFIX = "--channel:";
+	private final static String DEBUG_PREFIX = "--debug:";
+	private final static String HELP_PREFIX = "--help";
+
+	/**
+	 * Main for MCP3008 test. Reads one channel of the MCP3008. Ctrl-C to stop.
+	 *
+	 * @param args Optional --display:ANALOG|DIGITAL --channel:X, where X in [0..7] --help
+	 * @throws Exception when failure
+	 */
 	public static void main(String... args) throws Exception {
+		AtomicInteger channel = new AtomicInteger(0);
+
+		Arrays.stream(args).forEach(arg -> {
+			if (arg.startsWith(DISPLAY_PREFIX)) {
+				String displayValue = arg.substring(DISPLAY_PREFIX.length());
+				switch (displayValue) {
+					case ANALOG_VALUE:
+						displayOption = ANALOG_OPTION;
+						break;
+					case DIGITAL_VALUE:
+						displayOption = DIGITAL_OPTION;
+						break;
+					default:
+						System.err.printf("Un-managed display value: %s%n", displayValue);
+						break;
+				}
+			} else if (arg.startsWith(CHANNEL_PREFIX)) {
+				channel.set(Integer.parseInt(arg.substring(CHANNEL_PREFIX.length())));
+			} else if (arg.equals(DEBUG_PREFIX)) {
+				DEBUG = "true".equals(arg.substring(DEBUG_PREFIX.length()));
+			} else if (arg.equals(HELP_PREFIX)) {
+				System.out.println("Usage is:");
+				System.out.printf("java %s %sOPTION %sX %strue|false %s\n", SampleMain.class.getName(), DISPLAY_PREFIX, CHANNEL_PREFIX, DEBUG_PREFIX, HELP_PREFIX);
+				System.out.println("Where:");
+				System.out.println("OPTION is DIGITAL or ANALOG (default ANALOG)");
+				System.out.println("X is in [0..7] (default 0)");
+				System.exit(0);
+			} else {
+				System.err.printf("Un-managed CLI parameter %s%n", arg);
+			}
+		});
+
 		if (displayOption == ANALOG_OPTION) {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
 		}
 
-		int channel = 0;
-		if (args.length > 0) {
-			channel = Integer.parseInt(args[0]);
-		}
-		new SampleMain(channel);
+		new SampleMain(channel.get());
 	}
 
 	private static MCPReader.MCP3008InputChannels findChannel(int ch) throws IllegalArgumentException {
