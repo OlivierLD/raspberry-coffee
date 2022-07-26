@@ -52,15 +52,15 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
        |  03 |  09 | SCL1         | #05 || #06 |          GND |     |     |
        |  04 |  07 | GPCLK0       | #07 || #08 |    UART0_TXD | 15  | 14  |
        |     |     | GND          | #09 || #10 |    UART0_RXD | 16  | 15  |
-       |  17 |  00 | GPIO_0       | #11 || #12 | PCM_CLK/PWM0 | 01  | 18  |
+       |  17 |  00 | GPIO_0       | #11 || #12 | PCM_CLK/PWM0 | 01  | 18  | CLK
        |  27 |  02 | GPIO_2       | #13 || #14 |          GND |     |     |
-       |  22 |  03 | GPIO_3       | #15 || #16 |       GPIO_4 | 04  | 23  |
-       |     |     | 3v3          | #17 || #18 |       GPIO_5 | 05  | 24  |
-   Din |  10 |  12 | SPI0_MOSI    | #19 || #20 |          GND |     |     |
-  Dout |  09 |  13 | SPI0_MISO    | #21 || #22 |       GPIO_6 | 06  | 25  |
-   CLK |  11 |  14 | SPI0_CLK     | #23 || #24 |   SPI0_CS0_N | 10  | 08  | CS
+       |  22 |  03 | GPIO_3       | #15 || #16 |       GPIO_4 | 04  | 23  | MISO Dout
+       |     |     | 3v3          | #17 || #18 |       GPIO_5 | 05  | 24  | MOSI Din
+       |  10 |  12 | SPI0_MOSI    | #19 || #20 |          GND |     |     |
+       |  09 |  13 | SPI0_MISO    | #21 || #22 |       GPIO_6 | 06  | 25  | CS
+       |  11 |  14 | SPI0_CLK     | #23 || #24 |   SPI0_CS0_N | 10  | 08  | 
        |     |     | GND          | #25 || #26 |   SPI0_CS1_N | 11  | 07  |
-       |     |  30 | SDA0         | #27 || #28 |         SCL0 | 31  |     |
+       |  00 |  30 | SDA0         | #27 || #28 |         SCL0 | 31  | 01  |
        |  05 |  21 | GPCLK1       | #29 || #30 |          GND |     |     |
        |  06 |  22 | GPCLK2       | #31 || #32 |         PWM0 | 26  | 12  |
        |  13 |  23 | PWM1         | #33 || #34 |          GND |     |     |
@@ -76,10 +76,10 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
 ### Example
 ![Wiring](./RPi-MCP3008-Pot_bb.png)
 
-> ⚠️ The resistor (220 &Omega; here) on the potentiometer is important! 
+> ⚠️ The resistor (220 &Omega; here) on the potentiometer is important, if the Raspberry Pi's 5V is used. 
 
 On the diagram above,
-- The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`#12`) - Orange wire
+- The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`BCM 18`, `#12`) - Orange wire
 - The `MCP3008`'s `Dout` (`#12`) aka `MISO`, is connected on the RPi's `GPIO_4` (`#16`) - Yellow wire
 - The `MCP3008`'s `Din` (`#11`) aka `MOSI`, is connected on the RPi's `GPIO_5` (`#18`) - Blue wire
 - The `MCP3008`'s `CS` (`#10`) is connected on the RPi's `GPIO_6` (`#22`) - Green wire

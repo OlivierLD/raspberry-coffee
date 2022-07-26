@@ -32,6 +32,7 @@ public class SampleMain {
 
 	public SampleMain(int ch) throws Exception {
 		channel = findChannel(ch);
+		// ADCObserver default pins: CLK: GPIO_01 (BCM 18, Physical #18), MISO: GPIO_04 (BCM 23, Physical #16), MOSI: GPIO_05 (BCM 24, Physical #18), CS: GPIO_06 (BCM 25, Physical #22)
 		final ADCObserver obs = new ADCObserver(channel); // Note: We could instantiate more than one observer (on several channels).
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
