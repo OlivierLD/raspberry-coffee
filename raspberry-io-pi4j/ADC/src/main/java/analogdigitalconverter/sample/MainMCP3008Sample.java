@@ -181,14 +181,16 @@ public class MainMCP3008Sample {
 			System.exit(1);
 		}
 
+		final Thread currentThread = Thread.currentThread();
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down.");
 			go = false;
-			synchronized (Thread.currentThread()) {
+			synchronized (currentThread) {
 				System.out.println("Notifying for exit");
-				// Thread.currentThread().notify();
+				currentThread.notify();
 				try {
-					Thread.currentThread().join();
+					currentThread.join();
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}
@@ -214,8 +216,8 @@ public class MainMCP3008Sample {
 				first = false;
 			}
 			try {
-				synchronized (Thread.currentThread()) {
-					Thread.currentThread().wait(100L);
+				synchronized (currentThread) {
+					currentThread.wait(100L);
 				}
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
@@ -223,5 +225,6 @@ public class MainMCP3008Sample {
 		}
 		System.out.println("\nBye, freeing resources.");
 		MCPReader.shutdownMCP();
+		System.out.println("Done.");
 	}
 }
