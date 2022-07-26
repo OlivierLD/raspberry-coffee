@@ -149,7 +149,7 @@ public class MCP3008 implements AutoCloseable {
         } finally {
             Diozero.shutdown();
         }
-        System.out.println("Exiting.");
+        System.out.println("\nExiting.");
     }
 }
 
