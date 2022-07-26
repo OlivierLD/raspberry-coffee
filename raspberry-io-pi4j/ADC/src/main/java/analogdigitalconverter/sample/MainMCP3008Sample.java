@@ -35,11 +35,17 @@ public class MainMCP3008Sample {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		// Default pins
+		// Default pins (wPi)
+//		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
+//		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
+//		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+//		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+
+		// Defaulted (for diozero & JOB) would be:
 		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
 		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+		Pin cs   = PinUtil.GPIOPin.GPIO_11.pin();
 
 		System.out.printf("Usage is java %s %s%d %s%d %s%d %s%d %s%d\n",
 				MainMCP3008Sample.class.getName(),
