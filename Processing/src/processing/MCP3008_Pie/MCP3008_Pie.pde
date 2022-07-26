@@ -5,7 +5,7 @@ import utils.PinUtil;
  * Using Sketch > Add File..., select ADC/build/libs/ADC-1.0-all.jar 
  */
 
-boolean SIMULATION = true;
+boolean SIMULATION = false;
 int incSign = 1;
 int value = 0;
 int ADC_CHANNEL = MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
@@ -16,10 +16,10 @@ void setup() {
   noFill();
   textSize(72);  
   if (!SIMULATION) {
-    Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
-    Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
-    Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-    Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+    Pin miso = PinUtil.GPIOPin.GPIO_4.pin();
+    Pin mosi = PinUtil.GPIOPin.GPIO_5.pin();
+    Pin clk  = PinUtil.GPIOPin.GPIO_1.pin();
+    Pin cs   = PinUtil.GPIOPin.GPIO_6.pin();
 
     // MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
     MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
