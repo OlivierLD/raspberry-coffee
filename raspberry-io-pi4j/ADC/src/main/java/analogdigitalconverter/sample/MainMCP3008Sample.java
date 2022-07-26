@@ -39,7 +39,7 @@ public class MainMCP3008Sample {
 		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
 		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin(); // Fails on a RPi 4B. Use --cs:1, or another IN pin.
+		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
 		System.out.printf("Usage is java %s %s%d %s%d %s%d %s%d %s%d\n",
 				MainMCP3008Sample.class.getName(),
@@ -182,10 +182,16 @@ public class MainMCP3008Sample {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Shutting down.");
+			System.out.println("\nShutting down.");
 			go = false;
 			synchronized (Thread.currentThread()) {
+				System.out.println("Notifying for exit");
 				Thread.currentThread().notify();
+				try {
+					Thread.currentThread().join();
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
 			}
 		}, "Shutdown Hook"));
 		int lastRead = 0;
@@ -215,7 +221,7 @@ public class MainMCP3008Sample {
 				ie.printStackTrace();
 			}
 		}
-		System.out.println("Bye, freeing resources.");
+		System.out.println("\nBye, freeing resources.");
 		MCPReader.shutdownMCP();
 	}
 }
