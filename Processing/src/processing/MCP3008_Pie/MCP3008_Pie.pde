@@ -16,6 +16,7 @@ void setup() {
   noFill();
   textSize(72);  
   if (!SIMULATION) {
+    // See MainMCP3008Sample for other default pin options...
     Pin miso = PinUtil.GPIOPin.GPIO_4.pin();
     Pin mosi = PinUtil.GPIOPin.GPIO_5.pin();
     Pin clk  = PinUtil.GPIOPin.GPIO_1.pin();
@@ -25,7 +26,7 @@ void setup() {
 //  Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
 //  Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
 //  Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-//  Pin cs   = PinUtil.GPIOPin.GPIO_11.pin(); // Not good for RPi 4...
+//  Pin cs   = PinUtil.GPIOPin.GPIO_11.pin(); // Not good for RPi 4... use --cs:16 (16: BCM => wPi 27)
 
     // MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
     MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);

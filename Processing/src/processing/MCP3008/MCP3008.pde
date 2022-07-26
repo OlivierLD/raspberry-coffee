@@ -11,11 +11,15 @@ void setup() {
   size(200, 200); 
   stroke(255);
   noFill();
-  textSize(72);  
+  textSize(72);
+  
+  // See MainMCP3008Sample for other default pin options...
   Pin miso = PinUtil.GPIOPin.GPIO_4.pin();
   Pin mosi = PinUtil.GPIOPin.GPIO_5.pin();
   Pin clk  = PinUtil.GPIOPin.GPIO_1.pin();
   Pin cs   = PinUtil.GPIOPin.GPIO_6.pin();
+  
+  
 
   // MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
   MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
