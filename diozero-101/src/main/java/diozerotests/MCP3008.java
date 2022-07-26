@@ -102,7 +102,7 @@ public class MCP3008 implements AutoCloseable {
      */
     public float getFSFraction(int channel) throws RuntimeIOException {
         int raw = getRaw(channel);
-        float value = raw / (float) 1024;
+        float value = raw / (float) 1024; // 1024, really ? not 1023 ?
         return value;
     }
 
