@@ -12,7 +12,7 @@ Yes, this is possible!
 
 See [this](https://github.com/OlivierLD/raspberry-coffee/tree/repository).
 
-Artifacts wil be piublished to this repository, in order to be reused in other places (like <https://github.com/OlivierLD/raspberry-coffee>).
+Artifacts can be published to this repository, in order to be reused in other places (like <https://github.com/OlivierLD/raspberry-coffee>).
 
 
 ## First test
