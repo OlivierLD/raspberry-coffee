@@ -14,12 +14,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Represents an MCP3008 analog to digital converter.
  *
  * Requires the following wiring:
- * Vdd-Vref   -> Pi 3V3: Pin #1
- * Gnd        -> Pi GND: Pin #6
- * Mosi, Din  -> Pi MOSI: Pin #19
- * Miso, Dout -> Pi MISO: Pin #21
- * Clk        -> Pi SCLK: Pin #23
- * CS         -> Pi CE1: Pin #26
+ * MCP3008 Vdd-Vref   -> Pi 3V3:  Pin #1
+ * MCP3008 Gnd        -> Pi GND:  Pin #6
+ * MCP3008 Mosi, Din  -> Pi MOSI: Pin #19
+ * MCP3008 Miso, Dout -> Pi MISO: Pin #21
+ * MCP3008 Clk        -> Pi SCLK: Pin #23
+ * MCP3008 CS         -> Pi CE1:  Pin #26
  *
  * Read MCP3008 Channel 0
  *
@@ -129,7 +129,7 @@ public class MCP3008 implements AutoCloseable {
                 go.set(false);
                 try {
                     currentThread.join();
-                    System.out.println("... Joining");
+                    System.out.println("\n... Joining");
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -149,6 +149,7 @@ public class MCP3008 implements AutoCloseable {
         } finally {
             Diozero.shutdown();
         }
+        System.out.println("Exiting.");
     }
 }
 
