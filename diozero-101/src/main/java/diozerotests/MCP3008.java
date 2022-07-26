@@ -5,8 +5,11 @@ import com.diozero.api.RuntimeIOException;
 import com.diozero.api.SpiConstants;
 import com.diozero.api.SpiDevice;
 import com.diozero.util.Diozero;
+import com.diozero.util.SleepUtil;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Represents an MCP3008 analog to digital converter.
  *
@@ -17,6 +20,8 @@ import java.io.IOException;
  * Miso, Dout -> Pi MISO: Pin #21
  * Clk        -> Pi SCLK: Pin #23
  * CS         -> Pi CE1: Pin #26
+ *
+ * Read MCP3008 Channel 0
  *
  * TODO See how to change the wiring...
  */
@@ -114,10 +119,30 @@ public class MCP3008 implements AutoCloseable {
 
     public static void main(String... args) {
 
+        final int channel = 0;
+
+        AtomicBoolean go = new AtomicBoolean(true);
+
+        final Thread currentThread = Thread.currentThread();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            synchronized (currentThread) {
+                go.set(false);
+                try {
+                    currentThread.join();
+                    System.out.println("... Joining");
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }
+        }, "Shutdown Hook"));
+
         try (MCP3008 adc = new MCP3008(SpiConstants.CE1, 3.3f)) {
-            for (int i = 0; i < 5; i++) {
-                System.out.format("C%1d = %4d, %.2f FS, %.2fV %n", i, adc.getRaw(i),
-                        adc.getFSFraction(i), adc.getVoltage(i));
+            while (go.get()) {
+                System.out.format("C0 = %4d, %.2f FS, %.2fV %n",
+                        adc.getRaw(channel),
+                        adc.getFSFraction(channel),
+                        adc.getVoltage(channel));
+                SleepUtil.sleepMillis(100L);
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();

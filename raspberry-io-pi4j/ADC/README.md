@@ -80,10 +80,10 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
 > No need for it if Vdd and Vin are connected on the Raspberry Pi's 3V3 (as on the diagram above).
 
 On the diagram above,
-- The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`BCM 18`, `#12`) - Orange wire
-- The `MCP3008`'s `Dout` (`#12`) aka `MISO`, is connected on the RPi's `GPIO_4` (`#16`) - Yellow wire
-- The `MCP3008`'s `Din` (`#11`) aka `MOSI`, is connected on the RPi's `GPIO_5` (`#18`) - Blue wire
-- The `MCP3008`'s `CS` (`#10`) is connected on the RPi's `GPIO_6` (`#22`) - Green wire
+- The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`BCM 18`, `Physical #12`) - Orange wire
+- The `MCP3008`'s `Dout` (`#12`) aka `MISO`, is connected on the RPi's `GPIO_4` (`BCM 23`, `Physical #16`) - Yellow wire
+- The `MCP3008`'s `Din` (`#11`) aka `MOSI`, is connected on the RPi's `GPIO_5` (`BCM 24`, `Physical #18`) - Blue wire
+- The `MCP3008`'s `CS` (`#10`) is connected on the RPi's `GPIO_6` (`BCM 25`, `Physical #22`) - Green wire
 
 > As mentioned in the console, pin numbers are **BCM** numbers.
 

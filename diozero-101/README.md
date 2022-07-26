@@ -55,6 +55,12 @@ Connecting leds: See [this](https://makecode.adafruit.com/learnsystem/pins-tutor
 ### Wiring for MCP3008
 > _Note_: Not found the way to change the wiring for SPI, as it can be done with PI4J...  
 
+On the diagram below,
+- The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `SCLK` (`BCM 11`, `Physical #23`) - Orange wire
+- The `MCP3008`'s `Dout` (`#12`) aka `MISO`, is connected on the RPi's `MISO` (`BCM 9`, `Physical #21`) - Yellow wire
+- The `MCP3008`'s `Din` (`#11`) aka `MOSI`, is connected on the RPi's `MOSI` (`BCM 10`, `Physical #19`) - Blue wire
+- The `MCP3008`'s `CS` (`#10`) is connected on the RPi's `CE1` (`BCM 7`, `Physical #26`) - Green wire
+
 ![Wiring](./MCP3008_bb.png)
 
 ---
