@@ -52,4 +52,9 @@ Connecting leds: See [this](https://makecode.adafruit.com/learnsystem/pins-tutor
 
 ![Wiring](./FirstTest_bb.png)
 
+### Wiring for MCP3008
+> _Note_: Not found the way to change the wiring for SPI, as it can be done with PI4J...  
+
+![Wiring](./MCP3008_bb.png)
+
 ---

@@ -36,8 +36,8 @@ About 20 lines...
 ```bash
  $> ./gradlew clean shadowJar
 ```
-  > Processing might not like a JDK more recent than 1.8. Make sure you set 
-  > your Java alternative correctly.
+  > Processing 3.0 might not like a JDK more recent than 1.8. Make sure you set 
+  > your Java alternative correctly. Processing 4.0 seems to support more recent versions of Java.
 ```
 $ [sudo] update-alternatives --config java
 $ [sudo] update-alternatives --config javac

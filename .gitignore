@@ -76,3 +76,4 @@ NMEA-mux-WebUI/**/web/20*
 **/__pycache__/
 polo-shirt/generated/
 .vscode
+**/bin
