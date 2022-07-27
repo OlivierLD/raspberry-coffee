@@ -45,7 +45,7 @@ repositories {
 
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'org.json:json:20141113'
   implementation 'org.scala-lang:scala-library:2.13.8'

@@ -197,7 +197,7 @@ public class BMP183 {
 	 * @param value  value to write
 	 * @param rw     READ or WRITE
 	 * @param length length in bits
-	 * @return
+	 * @return the expected value.
 	 */
 	private int spiTransfer(int addr, int value, int rw, int length) {
 		// Bit banging at address "addr", "rw" indicates READ (1) or WRITE (0) operation
@@ -308,7 +308,7 @@ public class BMP183 {
 		double x1 = (this.cal_B2 * (this.B6 * this.B6 / Math.pow(2, 12))) / Math.pow(2, 11);
 		double x2 = this.cal_AC2 * this.B6 / Math.pow(2, 11);
 		double x3 = x1 + x2;
-		double b3 = (double) ((((this.cal_AC1 * 4 + (int) x3) << BMP183_CMD.OVERSAMPLE_3) + 2) / 4);
+		double b3 = ((((this.cal_AC1 * 4 + (int) x3) << BMP183_CMD.OVERSAMPLE_3) + 2) / 4d);
 		x1 = this.cal_AC3 * this.B6 / Math.pow(2, 13);
 		x2 = (this.cal_B1 * (this.B6 * this.B6 / Math.pow(2, 12))) / Math.pow(2, 16);
 		x3 = ((x1 + x2) + 2) / Math.pow(2, 2);
