@@ -32,30 +32,16 @@ version = '1.0'
 
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//    scala {
-//      srcDir 'src/scala'
-//    }
-//    kotlin {
-//      srcDir 'src/kotlin'
-//    }
-//    groovy {
-//      srcDirs = ['src/groovy']
-//    }
-//    clojure {
-//      srcDirs = ['src/clojure']
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
+compileKotlin {
+  kotlinOptions {
+    jvmTarget = "11" // "1.8" //
+  }
+}
+compileTestKotlin {
+  kotlinOptions {
+    jvmTarget = "11" // "1.8" //
+  }
+}
 
 repositories {
   mavenCentral()
