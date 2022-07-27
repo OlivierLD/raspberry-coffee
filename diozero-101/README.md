@@ -35,7 +35,7 @@ For Scala:
 ```
 $ scala -cp build/libs/diozero-101-1.0-all.jar DioZero
 ```
-For Groovy, use `groovyCOnsole`, and add the `diozero-101-1.0-all.jar` to the classpath (Menu `Script` > `Add Jar(s) to ClassPath`), or
+For Groovy, use `groovyConsole`, and add the `diozero-101-1.0-all.jar` to the classpath (Menu `Script` > `Add Jar(s) to ClassPath`), or
 ```
 $ groovy -cp build/libs/diozero-101-1.0-all.jar src/main/groovy/DioZeroGroovy.groovy 
 ```

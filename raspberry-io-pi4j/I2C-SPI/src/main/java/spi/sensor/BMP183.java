@@ -10,6 +10,19 @@ import com.pi4j.io.gpio.RaspiPin;
 
 /**
  * This one has an SPI interface (not I2C)
+ * https://www.adafruit.com/product/1900
+ *
+ * BMP183 SPI Barometric Pressure & Altitude Sensor
+ *
+ * Wiring: https://learn.adafruit.com/adafruit-bmp183-spi-barometric-pressure-and-altitude-sensor/wiring-and-test
+ *
+ * Connect Vin to the power supply, 3V or 5V is fine. Use the same voltage that the microcontroller logic is based off of. For most Arduinos, that is 5V
+ *
+ * GND : Ground
+ * SCK : Clock
+ * SDO : Dout -> MISO
+ * SDI : Din  -> MOSI
+ * CS  : Chip Select
  */
 public class BMP183 {
 	private final static boolean verbose = false;
@@ -100,7 +113,7 @@ public class BMP183 {
 	private final static float DELAY = 1f / 1_000.0f; // SCK frequency 1 MHz ( 1/1000 ms)
 
 	public BMP183() throws Exception {
-		iniBMP183();
+		initBMP183();
 		// Check communication / read ID
 		// int ret = this.readU8(BMP183_REG.ID);
 		int ret = readByte(BMP183_REG.ID);
@@ -115,7 +128,7 @@ public class BMP183 {
 		}
 	}
 
-	private static void iniBMP183() {
+	private static void initBMP183() {
 		gpio = GpioFactory.getInstance();
 		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
 		clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
