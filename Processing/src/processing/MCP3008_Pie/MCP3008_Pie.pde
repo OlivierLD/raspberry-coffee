@@ -30,7 +30,6 @@ void setup() {
 
     // MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
     MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
-
   }
 }
 

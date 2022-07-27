@@ -19,8 +19,6 @@ void setup() {
   Pin clk  = PinUtil.GPIOPin.GPIO_1.pin();
   Pin cs   = PinUtil.GPIOPin.GPIO_6.pin();
   
-  
-
   // MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
   MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
 
