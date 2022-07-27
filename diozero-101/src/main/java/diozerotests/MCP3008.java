@@ -143,8 +143,9 @@ public class MCP3008 implements AutoCloseable {
             while (go.get()) {
                 int value = adc.getRaw(channel);
                 if (first || value != previousVal) {
-                    System.out.format("C0 = %04d, %.2f FS, %.2fV %n",
+                    System.out.format("C0 = %04d => (%.4f), %.2f FS, %.2fV %n",
                             value,
+                            ((float)value / 1023f),
                             adc.getFSFraction(channel),
                             adc.getVoltage(channel));
                     first = false;

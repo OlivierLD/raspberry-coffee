@@ -20,6 +20,9 @@ public class SystemInformation {
     private static final int MIN_PIN_NAME_LENGTH = 8;
 
     public static void main(String... args) {
+
+        System.out.printf("LD_LIBRARY_PATH: %s%n", System.getProperty("LD_LIBRARY_PATH"));
+
         // Attempt to initialise Jansi
         try {
             AnsiConsole.systemInstall();

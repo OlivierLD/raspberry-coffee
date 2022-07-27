@@ -1,7 +1,10 @@
 # [DIOZERO](https://www.diozero.com/)
 
 Another option than `PI4J`. Let's give it a try.  
-Seems not to require any system library. Interesting.
+Seems not to require any external system library. Interesting.
+
+> _Note_: Running on Linux _stretch_, I had a `/lib/arm-linux-gnueabihf/libc.so.6: version 'GLIBC_2.28' not found` when using diozero.    
+> Upgrade to _bullseye_, as explained [here](https://www.sanderh.dev/upgrade-Raspberry-Pi-bullseye/).
 
 - diozero [git repo](https://github.com/mattjlewis/diozero)
 - Samples: <https://github.com/mattjlewis/diozero/tree/main/diozero-core/src/main/java/com/diozero/devices>
