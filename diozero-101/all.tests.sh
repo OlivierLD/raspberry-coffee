@@ -64,4 +64,7 @@ esac
 if [[ "${REMOTE_DEBUG_FLAGS}" != "" ]]; then
   echo -e "Will use remote debug this parameters: ${REMOTE_DEBUG_FLAGS}"
 fi
+if [[ "$*" != "" ]]; then
+  echo -e "Script parameters: $*"
+fi
 java -cp ${CP} ${REMOTE_DEBUG_FLAGS} ${JAVA_CLASS} $*
