@@ -21,7 +21,7 @@ if [[ "$(which gpio)" != "" ]]; then
   echo -e "Output of gpio readall:"
   gpio readall
 fi
-# Channel [0..1] can be passed as prm. Default is 0
+# Channel [0..1] can be passed as prm. Default is 0. Use CLI prms --channel:X --cs:16, etc
 COMMAND="sudo java -cp ${CP} ${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS} analogdigitalconverter.sample.MainMCP3008Sample $*"
 # COMMAND="java -cp ${CP} ${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS} analogdigitalconverter.sample.MainMCP3008Sample $*"
 echo -e "------------------------------------------------------------------------------"

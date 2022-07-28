@@ -91,7 +91,23 @@ Processing is now also available for other languages than Java.
 ### PI4J
 PI4J is a Java library that will help you access `GPIO`, `I2C`, `SPI`, `PWM`, and other hardware protocols.
 ```
-$ curl -s get.pi4j.com | sudo bash
+$ # curl -s get.pi4j.com | sudo bash
+$ curl -sSL https://pi4j.com/install | sudo bash
+```
+
+### Latest (and maybe last) WiringPi
+```
+wget https://project-downloads.drogon.net/wiringpi-latest.deb
+sudo dpkg -i wiringpi-latest.deb
+```
+Or from the source:
+```
+sudo apt-get remove wiringpi -y
+sudo apt-get --yes install git-core gcc make
+cd ~
+git clone https://github.com/WiringPi/WiringPi --branch master --single-branch wiringpi
+cd ~/wiringpi
+sudo ./build
 ```
 
 ### Gradle
