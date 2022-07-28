@@ -56,7 +56,11 @@ For example, the `NMEA-multiplexer` will use:
 The `RESTNavServer` uses all the above, and `astro-computer` as well, and `http-tiny-server` to implement a REST interface.  
 And so on!
 
-The point of truth, telling you what module uses what modules, is the `build.gradle` of the module you are interested in.
+The point of truth, telling you what module uses what modules, is the `build.gradle` of the module you are interested in.  
+To see the full structure, from the repo's root, type
+```
+$ ./gradlew project [--info]
+```
 
 ---
 
