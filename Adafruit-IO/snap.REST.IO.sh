@@ -9,8 +9,7 @@
 #
 CP=./build/libs/Adafruit.IO.REST-1.0-all.jar
 #
-if [ "$1" = "" ]
-then
+if [[ "$1" = "" ]]; then
   echo Need your Adafruit-IO key as parameter.
   echo Aborting.
   exit 1

@@ -8,7 +8,7 @@ object ScalaHttpRequestServer {
     var httpServer: HTTPServer = null
     var httpPort = 9998
 
-    private def doIt: Unit = {
+    private def doIt(): Unit = {
       println("Initializing...")
       val port = System.getProperty("http.port")
       if (port != null) {
