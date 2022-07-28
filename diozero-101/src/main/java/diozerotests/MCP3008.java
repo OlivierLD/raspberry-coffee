@@ -8,6 +8,7 @@ import com.diozero.util.Diozero;
 import com.diozero.util.SleepUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -117,9 +118,19 @@ public class MCP3008 implements AutoCloseable {
         return (getFSFraction(channel) * vRef);
     }
 
+    private final static String CHANNEL_PREFIX = "--channel:";
+    private static int channel = 0;
+
     public static void main(String... args) {
 
-        final int channel = 0;
+        Arrays.asList(args).forEach(arg -> {
+            if (arg.startsWith(CHANNEL_PREFIX)) {
+                channel = Integer.parseInt(arg.substring(CHANNEL_PREFIX.length()));
+            } else {
+                System.out.printf("Un-managed CLI parameter %s%n", arg);
+            }
+        });
+        System.out.printf("Will use MCP3008 channel %d%n", channel);
 
         AtomicBoolean go = new AtomicBoolean(true);
 
