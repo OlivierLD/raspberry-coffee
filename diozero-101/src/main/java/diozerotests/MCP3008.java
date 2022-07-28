@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * Read MCP3008 Channel 0
  *
- * TODO See how to change the wiring...
+ * TODO See how to change the wiring on the Raspberry Pi...
  */
 public class MCP3008 implements AutoCloseable {
 
@@ -126,6 +126,10 @@ public class MCP3008 implements AutoCloseable {
         Arrays.asList(args).forEach(arg -> {
             if (arg.startsWith(CHANNEL_PREFIX)) {
                 channel = Integer.parseInt(arg.substring(CHANNEL_PREFIX.length()));
+                if (channel < 0 || channel > 7) {
+                    System.out.println("Invalid channel, must be in [0..7]");
+                    System.exit(1);
+                }
             } else {
                 System.out.printf("Un-managed CLI parameter %s%n", arg);
             }
