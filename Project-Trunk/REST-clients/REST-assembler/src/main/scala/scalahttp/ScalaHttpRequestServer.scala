@@ -8,7 +8,7 @@ object ScalaHttpRequestServer {
     var httpServer: HTTPServer = null
     var httpPort = 9998
 
-    private def doIt(): Unit = {
+    private def doIt : Unit = {
       println("Initializing...")
       val port = System.getProperty("http.port")
       if (port != null) {
@@ -40,6 +40,6 @@ object ScalaHttpRequestServer {
   def main(args: Array[String]): Unit = {
     println("Starting the Scala server")
     System.setProperty("http.verbose", "true")
-    val scalaHttpServer = new ScalaServer
+    new ScalaServer
   }
 }
