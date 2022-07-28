@@ -5,16 +5,16 @@
 > This project was started in 2015.
 ---
 Main keywords:
-- `Raspberry Pi`
-- `Java and JVM-related languages`
-- `PI4J, Sensors, Actuators`
-- `Navigation, Sailing, NMEA`
-- `Gradle`
-- `Maven`
-- `Github`
+- Raspberry Pi
+- Java and JVM-related languages
+- [PI4J](https://pi4j.com/), Sensors, Actuators
+- Navigation, Sailing, [NMEA](https://nmea.org)
+- Gradle
+- Maven
+- Github
 ---
 - Sensors & Actuators interaction (through Raspberry Pi's GPIO header)
-- Different communication protocols (HTTP, TCP, WebSockets, ...) 
+- Different communication protocols (HTTP, TCP, WebSockets, MQTT, ...) 
 - NMEA protocol implementations (and related utilities)
 ---
 - Some modules will also use [`OpenCV`](https://opencv.org/) (an OpenSource Project for Computer Vision). See below how _not_ to use them, if needed. It's worth a look, though. 
@@ -50,7 +50,7 @@ Some noticeable ones are
 
 Other modules - at the root level - can reuse the modules mentioned above.
 For example, the `NMEA-multiplexer` will use:
-- `raspberry-sailor`, for NMEA Parsing (like GPS or NMEA station)
+- `raspberry-sailor`, for NMEA Data Parsing (like GPS or NMEA station), and Tide calculation utilities
 - `raspberry-io-pi4j`, for extra sensors (like pressure, humidity, temperature, magnetometer, etc)
 
 The `RESTNavServer` uses all the above, and `astro-computer` as well, and `http-tiny-server` to implement a REST interface.  
