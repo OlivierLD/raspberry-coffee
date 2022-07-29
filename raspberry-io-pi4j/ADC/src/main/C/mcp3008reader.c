@@ -54,13 +54,13 @@
  * CLK:  BCM 11, wPi 14
  * MISO: BCM 09, wPi 13
  * MOSI: BCM 10, wPi 12
- * CS:   BCM 07 or 08, wPi 11 or 10
+ * CS:   BCM 07 or 08, wPi 11 or 10 (CE1, CE0)
  */
 
 #define	SPI_CLK	 14 // Clock
 #define SPI_MISO 13 // Master In Slave Out
 #define SPI_MOSI 12 // Master Out Slave In
-#define SPI_CS   11 // Chip Select
+#define SPI_CS   10 // Chip Select
 
 #define ADC_CHANNEL 0 // 0 to 7, 8 channels on the MCP3008 
 #define DISPLAY_DIGIT 0

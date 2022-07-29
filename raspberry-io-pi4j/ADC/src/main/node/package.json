@@ -1,0 +1,16 @@
+{
+	"name": "misc.mcp.tests",
+	"version": "0.0.1",
+	"description": "MCP3008 and other fun stuff",
+	"keywords": [
+		"Stuff",
+		"MCP3008",
+		"WebSockets"
+	],
+	"dependencies": {
+		"websocket": "^1.0.34"
+	},
+	"scripts": {
+		"start": "node server.js"
+	}
+}

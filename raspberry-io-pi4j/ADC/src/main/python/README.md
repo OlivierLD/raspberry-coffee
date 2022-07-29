@@ -14,6 +14,8 @@ echoed [here](https://pypi.org/project/adafruit-circuitpython-mcp3xxx/).
 ```
  $ [sudo] pip3 install adafruit-circuitpython-mcp3xxx  # Use sudo, if you have a syntax error...
  $ python3 adc3008_1.py
+ $ or
+ $ python3 adc3008_py2_1.py
 ```
 
 
