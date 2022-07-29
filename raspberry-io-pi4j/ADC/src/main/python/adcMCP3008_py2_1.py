@@ -44,7 +44,7 @@ while keep_looping:
     try:
         value = chan.value
         voltage = chan.voltage
-        adc = (voltage / 3.3) * 1023
+        adc = int((voltage / 3.3) * 1023)
 #         print('Raw ADC Value: ', value)
 #         print('ADC Voltage: ' + str(voltage) + 'V')
         print("Raw: {}, Voltage: {}, ADC: {}".format(value, str(voltage), adc))   # Look into {adc: %d}...
