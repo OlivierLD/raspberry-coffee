@@ -26,12 +26,16 @@ print('Raw ADC Value: ', chan.value)
 print('ADC Voltage: ' + str(chan.voltage) + 'V')
 print('-------------------')
 
-keep_looping = True
+keep_looping: boolean = True
 
 while keep_looping:
     try:
-        print('Raw ADC Value: ', chan.value)
-        print('ADC Voltage: ' + str(chan.voltage) + 'V')
+        value: int = chan.value
+        voltage: float = chan.voltage
+        adc: int = (3.3 / voltage) * 1023
+#         print('Raw ADC Value: ', value)
+#         print('ADC Voltage: ' + str(voltage) + 'V')
+        print(f"Raw: {value}, Voltage: {str(voltage)}, ADC: {adc}")   # Look into {adc: %d}...
         sleep(0.5)
     except KeyboardInterrupt:
         print("\n\t\tUser interrupted, exiting.")
