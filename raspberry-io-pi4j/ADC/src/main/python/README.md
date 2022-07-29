@@ -4,6 +4,7 @@ Got the original code at <https://learn.sparkfun.com/tutorials/python-programmin
 Requires a 
 ```
 $ pip install spidev
+$ python3 adcMCP3002.py
 ```
 
 ## MCP3008
@@ -11,7 +12,7 @@ For a `MCP3008`, see [here](https://learn.adafruit.com/raspberry-pi-analog-to-di
 
 ```
  $ [sudo] pip3 install adafruit-circuitpython-mcp3xxx
- 
+ $ python3 adc3008_1.py
 ```
 
 
