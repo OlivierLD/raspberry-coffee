@@ -9,6 +9,7 @@ from time import sleep
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
+
 verbose: bool = True
 
 # create the spi bus
