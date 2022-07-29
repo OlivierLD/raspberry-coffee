@@ -1,5 +1,5 @@
 #
-# From Adafruit.
+# Adapted from Adafruit code.
 # MCP3008 Single Ended
 #
 import busio
@@ -20,5 +20,23 @@ mcp = MCP.MCP3008(spi, cs)
 # create an analog input channel on pin 0
 chan = AnalogIn(mcp, MCP.P0)
 
+print('-- First display --')
 print('Raw ADC Value: ', chan.value)
 print('ADC Voltage: ' + str(chan.voltage) + 'V')
+print('-------------------')
+
+keep_looping = True
+
+while keep_looping:
+    try:
+        print('Raw ADC Value: ', chan.value)
+        print('ADC Voltage: ' + str(chan.voltage) + 'V')
+        sleep(0.5)
+    except KeyboardInterrupt:
+        print("\n\t\tUser interrupted, exiting.")
+        keep_looping = False
+        break
+    except:
+        traceback.print_exc(file=sys.stdout)
+
+print('Bye ! Done for now with MCP3008.')
