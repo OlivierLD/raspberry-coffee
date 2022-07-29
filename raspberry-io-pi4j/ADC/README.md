@@ -44,7 +44,7 @@ Output of gpio readall:
 ------------------------------------------------------------------------------
 Running sudo java -cp ./build/libs/ADC-1.0-all.jar  -Dadc.verbose=false -Ddisplay.digit=false  analogdigitalconverter.sample.MainMCP3008Sample --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
 ------------------------------------------------------------------------------
-Running on: Mode: 4B, PCB Rev 1.1, Memory 4GB, Manufactured by Sony UK
+Running on: Model: 4B, PCB Rev 1.1, Memory 4GB, Manufactured by Sony UK
 Usage is java analogdigitalconverter.sample.MainMCP3008Sample --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
 Values above are default values (GPIO/BCM numbers).
 Pins: 9 (GPIO 13) 10 (GPIO 12) 11 (GPIO 14) 8 (GPIO 10)

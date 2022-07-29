@@ -242,6 +242,10 @@ Depending on the IDE you are using, there are two main features you might be int
 > More [here](https://www.jetbrains.com/help/idea/tutorial-remote-debug.html)
 ---
 
+#### Remote Development
+- For Visual Studio Code; <https://code.visualstudio.com/docs/remote/remote-overview>
+- For JetBrain (IntelliJ): <https://www.jetbrains.com/help/idea/remote-development-a.html> (seems to require a 64-bit remote host)
+
 This being said, let's go.
 
 ---

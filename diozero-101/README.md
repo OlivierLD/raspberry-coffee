@@ -66,4 +66,10 @@ On the diagram below,
 
 ![Wiring](./MCP3008_bb.png)
 
+#### Note about MCP3008
+The above works fine on a Raspberry Pi 3B, but I could not get it to work on the 4B.
+
+- PI4J : <https://github.com/OlivierLD/raspberry-coffee/tree/master/raspberry-io-pi4j/ADC>
+- JOB (WiP, a test) : <https://github.com/OlivierLD/JOB>, use the script `samplemenu.sh` in the `core` folder.
+
 ---

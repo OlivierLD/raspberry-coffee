@@ -26,7 +26,7 @@ public class MainMCP3008Sample {
 		try {
 			String[] hardwareData = SystemUtils.getRPiHardwareRevision();
 			if (hardwareData != null) {
-				System.out.printf("Running on: Mode: %s, PCB Rev %s, Memory %s, Manufactured by %s\n",
+				System.out.printf("Running on: Model %s, PCB Rev %s, Memory %s, Manufactured by %s\n",
 						hardwareData[SystemUtils.MODEL_IDX],
 						hardwareData[SystemUtils.PCB_REV_IDX],
 						hardwareData[SystemUtils.MEMORY_IDX],
