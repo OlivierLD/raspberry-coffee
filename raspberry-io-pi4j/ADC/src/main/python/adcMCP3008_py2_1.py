@@ -10,7 +10,7 @@ import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
 
-verbose: bool = True
+verbose = True
 
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
@@ -38,13 +38,13 @@ print('Raw ADC Value: ', chan.value)
 print('ADC Voltage: ' + str(chan.voltage) + 'V')
 print('-------------------')
 
-keep_looping: bool = True
+keep_looping = True
 
 while keep_looping:
     try:
-        value: int = chan.value
-        voltage: float = chan.voltage
-        adc: int = (3.3 / voltage) * 1023
+        value = chan.value
+        voltage = chan.voltage
+        adc = (3.3 / voltage) * 1023
 #         print('Raw ADC Value: ', value)
 #         print('ADC Voltage: ' + str(voltage) + 'V')
         print("Raw: {}, Voltage: {}, ADC: {}".format(value, str(voltage), adc))   # Look into {adc: %d}...
