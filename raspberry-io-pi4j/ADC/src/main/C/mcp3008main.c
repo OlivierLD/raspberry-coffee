@@ -1,6 +1,10 @@
 /*
+ * Requires WiringPi to be installed.
+ *
+ * From the src/main/C folder:
  * Compile with 
  * gcc -l wiringPi -o readMCP3008 mcp3008reader.c mcp3008main.c
+ * Run it with ./readMCP3008
  ***********************************************************************
  * Oliv proudly did it.
  */
@@ -15,6 +19,7 @@
 
 int main(void) {
   fprintf(stdout, "Raspberry Pi reads an ADC\n") ;
+  fprintf(stdout, "Ctrl-C to stop\n") ;
 
   initMPC3008();
 

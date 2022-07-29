@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# Java Compilation
 # @deprecated Use gradle
 # and the lib directory is not there anymore.
 #
