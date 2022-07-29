@@ -9,24 +9,35 @@ from time import sleep
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
+verbose: bool = True
+
 # create the spi bus
 spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
+if verbose:
+    print(f">> SPI type: {type(spi)}")
 
 # create the cs (chip select)
 cs = digitalio.DigitalInOut(board.D5)
+if verbose:
+    print(f">> ChipSelect type: {type(cs)}")
 
 # create the mcp object
 mcp = MCP.MCP3008(spi, cs)
+if verbose:
+    print(f">> MCP type: {type(mcp)}")
 
 # create an analog input channel on pin 0
 chan = AnalogIn(mcp, MCP.P0)
+if verbose:
+    print(f">> Channel type: {type(chan)}")
+
 
 print('-- First display --')
 print('Raw ADC Value: ', chan.value)
 print('ADC Voltage: ' + str(chan.voltage) + 'V')
 print('-------------------')
 
-keep_looping: boolean = True
+keep_looping: bool = True
 
 while keep_looping:
     try:
