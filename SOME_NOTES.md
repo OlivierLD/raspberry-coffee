@@ -28,4 +28,29 @@ $ [sudo] update-alternatives --config javac
 $ systemctl list-units | grep ALSA
 ```
 
+### Displaying (or get) raw files in github
+To display the file located in your repo at
+`https://github.com/OlivierLD/raspberry-coffee/tree/master/install.sh`, use this url:
+```
+https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh
+        |                                                           |
+        |                                                           The path in the repo
+        Notice the machne name
+```
+This url can be used in a browser, on in a `curl` or `wget` command:
+```
+curl -L https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh
+```
+or 
+```
+bash -c "$(curl -L https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh)"
+```
+
+### Render a Web page located in github
+Use `htmlpreview.github.io`:
+
+```
+https://htmlpreview.github.io/?https://github.com/OlivierLD/raspberry-coffee/blob/master/RESTTideEngine/web/101.html
+```
+
 ---

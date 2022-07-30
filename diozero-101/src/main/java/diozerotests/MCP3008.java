@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * MCP3008 Clk        -> Pi SCLK: Physical Pin #23
  * MCP3008 CS         -> Pi CE1:  Physical Pin #26
  *
- * Read MCP3008 Channel 0
+ * Read MCP3008 Channel 0 (by default, use --channel:X to modify it)
  *
  * TODO See how to change the wiring on the Raspberry Pi...
  */

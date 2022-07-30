@@ -255,6 +255,7 @@ If `git` and `java` are available (and they should) on your Raspberry Pi, just r
 ```
 bash -c "$(curl -L https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh)"
 ```
+The command above will clone the repository, and install Gradle if needed.
 
 ---
 This project contains Java code, many times translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).

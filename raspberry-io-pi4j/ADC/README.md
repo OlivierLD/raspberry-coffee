@@ -220,4 +220,10 @@ Pins on the MCP3002 are numbered from 1 to 8, beginning top left, counter-clockw
 . . .
 ```
 
+## NodeJS Interface
+- Start `run.ws.sh`
+- Start `npm start` from the `src/main/node` folder
+- From a browser, reach <http://192.168.1.106:9876/data/display.html> (the IP may vary).
+
+
 
