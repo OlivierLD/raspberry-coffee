@@ -33,8 +33,7 @@ public class MCP3008 implements AutoCloseable {
 
     /**
      * Creates an instance using the desired chip select and reference voltage.It accepts the diozero default SPI controller and byte ordering.
-     * It
-     sets an SPI clock frequency to 1.35MHz.
+     * It sets an SPI clock frequency to 1.35MHz.
      * @param chipSelect the chip select pin
      * @param vRef the reference voltage
      * @throws java.io.IOException when fails

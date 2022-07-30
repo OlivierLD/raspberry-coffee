@@ -24,7 +24,7 @@ object ScalaHttpRequestServer {
       var newHttpServer: HTTPServer = null
       try {
         newHttpServer = new HTTPServer(port, requestManager) {
-          override def onExit(): Unit = {
+          override def onExit(): Unit = {  // WTF ??? Some final exception happens here some times...
             requestManager.onExit()
           }
         }

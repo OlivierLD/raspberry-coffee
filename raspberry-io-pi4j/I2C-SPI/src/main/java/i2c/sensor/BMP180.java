@@ -70,7 +70,7 @@ public class BMP180 {
 	private int cal_MC = 0;
 	private int cal_MD = 0;
 
-	private static boolean verbose = "true".equals(System.getProperty("bmp180.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("bmp180.verbose", "false"));
 
 	private I2CBus bus;
 	private I2CDevice bmp180;
@@ -309,6 +309,7 @@ public class BMP180 {
 		return altitude;
 	}
 
+	// Just for tests
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		BMP180 sensor = new BMP180();

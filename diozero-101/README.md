@@ -67,7 +67,13 @@ On the diagram below,
 ![Wiring](./MCP3008_bb.png)
 
 #### Note about MCP3008
-The above works fine on a Raspberry Pi 3B, but I could not get it to work on the 4B.
+> The above works fine on a Raspberry Pi 3B, but at some point, I had trouble getting it to work on the 4B.
+> 
+> I finally got it to work (in RasPi OS 32 bits _**and**_ 64 bits) on a brand new bullseye OS (full install), on both CE1 and CE0.  
+> But as soon as `wiringPi` was put to work, `diozero` stopped working as expected. Interestingly, a reboot fixes the situation.  
+> This might be something to keep in mind, if you want to work with _both_ `PI4J/wiringPi` and `diozero`.  
+> And `wiringPi` seems not to be suited for a 64-bit OS...
+
 
 - PI4J : <https://github.com/OlivierLD/raspberry-coffee/tree/master/raspberry-io-pi4j/ADC>
 - JOB (WiP, a test) : <https://github.com/OlivierLD/JOB>, use the script `samplemenu.sh` in the `core` folder.
