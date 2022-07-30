@@ -16,11 +16,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * Requires the following wiring:
  * MCP3008 Vdd-Vref   -> Pi 3V3:  Physical Pin #1
- * MCP3008 Gnd        -> Pi GND:  Physical Pin #6
+ * MCP3008 aGnd-dGnd  -> Pi GND:  Physical Pin #6
  * MCP3008 Mosi, Din  -> Pi MOSI: Physical Pin #19
  * MCP3008 Miso, Dout -> Pi MISO: Physical Pin #21
  * MCP3008 Clk        -> Pi SCLK: Physical Pin #23
- * MCP3008 CS         -> Pi CE1:  Physical Pin #26
+ * MCP3008 CS         -> Pi CE1:  Physical Pin #26 - by default. use -cs:0|1 to modify it.
  *
  * Read MCP3008 Channel 0 (by default, use --channel:X to modify it)
  *
@@ -103,7 +103,7 @@ public class MCP3008 implements AutoCloseable {
      */
     public float getFSFraction(int channel) throws RuntimeIOException {
         int raw = getRaw(channel);
-        float value = raw / (float) 1024; // 1024, really ? not 1023 ?
+        float value = raw / (float) 1_024; // 1024, really ? not 1023 ?
         return value;
     }
 
@@ -119,9 +119,9 @@ public class MCP3008 implements AutoCloseable {
     }
 
     private final static String CHANNEL_PREFIX = "--channel:";
-    private static int channel = 0;
+    private static int channel = 0;  // default
     private final static String CS_PREFIX = "--cs:";
-    private static int cs = SpiConstants.CE1;
+    private static int cs = SpiConstants.CE1; // default
 
     public static void main(String... args) {
 
@@ -177,7 +177,7 @@ public class MCP3008 implements AutoCloseable {
                     System.out.format("C%d = %04d => (%.4f), %.2f FS, %.2fV %n",
                             channel,
                             value,
-                            ((float)value / 1023f),
+                            ((float)value / 1_023f),
                             adc.getFSFraction(channel),
                             adc.getVoltage(channel));
                     first = false;
