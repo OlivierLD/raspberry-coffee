@@ -78,12 +78,12 @@ On the diagram below,
 - PI4J : <https://github.com/OlivierLD/raspberry-coffee/tree/master/raspberry-io-pi4j/ADC>
 - JOB (WiP, a test) : <https://github.com/OlivierLD/JOB>, use the script `samplemenu.sh` in the `core` folder.
 
-#### Wiring for BMP180
+#### Wiring for BMP180 (I2C device)
 ![Wiring](./BMP180_bb.png)
 
-- `BMP180 Vin (5V)` to Raspberry Pi physical `#2` (`5V`)
-- `BMP180 Gnd` to Raspberry Pi physical `#6` (`GND`)
-- `BMP180 SDA` to Raspberry Pi's physical `#3` (`SDA0`)
-- `BMP180 SCL` to Raspberry Pi's physical `#5` (`SCL0`)
+- `BMP180 Vin (5V)` to Raspberry Pi's physical `#2` (`5V`)
+- `BMP180 Gnd` to Raspberry Pi's physical `#6` (`GND`)
+- `BMP180 SDA` to Raspberry Pi's physical `#3` (`SDAx`)
+- `BMP180 SCL` to Raspberry Pi's physical `#5` (`SCLx`)
 
 ---
