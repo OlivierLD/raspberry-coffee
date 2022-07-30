@@ -35,7 +35,7 @@ To display the file located in your repo at
 https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh
         |                                                           |
         |                                                           The path in the repo
-        Notice the machne name
+        Notice the machine name
 ```
 This url can be used in a browser, on in a `curl` or `wget` command:
 ```
