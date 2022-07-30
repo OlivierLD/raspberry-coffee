@@ -9,6 +9,7 @@ echo -e "| 2 - LED Test              | 2D - 2, with remote debug |"
 echo -e "| 3 - LED With Button Test  | 3D - 3, with remote debug |"
 echo -e "| 4 - DOD Test (relay, led) | 4D - 4, with remote debug |"
 echo -e "| 5 - MCP3008 Test          | 5D - 5, with remote debug |"
+echo -e "| 6 - BMP180 Test (I2C)     | 6D - 6, with remote debug |"
 echo -e "+---------------------------+---------------------------+"
 echo -e "| Q - Quit                                              |"
 echo -e "+---------------------------+---------------------------+"
@@ -52,6 +53,14 @@ case "${USER_CHOICE}" in
   "5D" | "5d")
     JAVA_CLASS=diozerotests.MCP3008
     REMOTE_DEBUG_FLAGS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+    ;;
+  "6")
+    JAVA_CLASS=diozerotests.MCP3008
+    ;;
+  "6D" | "6d")
+    JAVA_CLASS=diozerotests.I2C_BMP180
+    REMOTE_DEBUG_FLAGS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+    echo -e "Make sure you see address 77 when you do an 'i2cdetect -y 1'"
     ;;
   "Q" | "q" | *)
     exit
