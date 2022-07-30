@@ -120,6 +120,8 @@ public class MCP3008 implements AutoCloseable {
 
     private final static String CHANNEL_PREFIX = "--channel:";
     private static int channel = 0;
+    private final static String CS_PREFIX = "--cs:";
+    private static int cs = SpiConstants.CE1;
 
     public static void main(String... args) {
 
@@ -130,11 +132,25 @@ public class MCP3008 implements AutoCloseable {
                     System.out.println("Invalid channel, must be in [0..7]");
                     System.exit(1);
                 }
+            } else if (arg.startsWith(CS_PREFIX)) {
+                String value = arg.substring(CS_PREFIX.length());
+                switch (value) {
+                    case "0":
+                        cs = SpiConstants.CE0;
+                        break;
+                    case "1":
+                        cs = SpiConstants.CE1;
+                        break;
+                    default:
+                        System.out.printf("Un-managed CS value %s, should be 0 or 1%n", value);
+                        break;
+                }
             } else {
                 System.out.printf("Un-managed CLI parameter %s%n", arg);
             }
         });
         System.out.printf("Will use MCP3008 channel %d%n", channel);
+        System.out.printf("Will use CS %d%n", cs);
 
         AtomicBoolean go = new AtomicBoolean(true);
 
@@ -154,11 +170,12 @@ public class MCP3008 implements AutoCloseable {
         boolean first = true;
         int previousVal = 0;
 
-        try (MCP3008 adc = new MCP3008(SpiConstants.CE1, 3.3f)) {
+        try (MCP3008 adc = new MCP3008(cs, 3.3f)) {
             while (go.get()) {
                 int value = adc.getRaw(channel);
                 if (first || value != previousVal) {
-                    System.out.format("C0 = %04d => (%.4f), %.2f FS, %.2fV %n",
+                    System.out.format("C%d = %04d => (%.4f), %.2f FS, %.2fV %n",
+                            channel,
                             value,
                             ((float)value / 1023f),
                             adc.getFSFraction(channel),
