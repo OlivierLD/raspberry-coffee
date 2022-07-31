@@ -7,6 +7,11 @@ import java.text.NumberFormat;
 
 /**
  * Implements the nuts and bolts of the push button interactions.
+ *
+ * Button:
+ *  - One pin on 3V3
+ *  - One pin on GPIO XX
+ *
  * No need to worry about that in the main class.
  * From the main:
  * - Start with invoking the initCtx method
