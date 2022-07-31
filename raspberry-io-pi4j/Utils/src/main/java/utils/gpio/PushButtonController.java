@@ -152,7 +152,7 @@ public class PushButtonController {
             this.pushedTime = System.currentTimeMillis();
             this.betweenClicks = this.pushedTime - this.releaseTime;
             if (verbose) {
-                System.out.printf("Status: HIGH (aka pushed). Since last release of [%s]: %s ms.\n",
+                System.out.printf("\tStatus: HIGH (aka pushed). Since last release of [%s]: %s ms.\n",
                         this.buttonName,
                         NumberFormat.getInstance().format(this.betweenClicks));
             }
@@ -163,7 +163,7 @@ public class PushButtonController {
             this.previousReleaseTime = this.releaseTime;
             this.releaseTime = System.currentTimeMillis();
             if (verbose) {
-                System.out.printf("Status: LOW (aka released). Button [%s] was down for %s ms.\n",
+                System.out.printf("\tStatus: LOW (aka released). Button [%s] was down for %s ms.\n",
                         this.buttonName,
                         NumberFormat.getInstance().format(this.releaseTime - this.pushedTime));
             }
@@ -172,7 +172,7 @@ public class PushButtonController {
         // TODO Make sure this is right...
         if (status == ButtonStatus.LOW) { // Released. Was before: (this.button.isLow()) {
             if (verbose) {
-                System.out.printf("LOW/Released: Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s\n",
+                System.out.printf("\tLOW/Released: Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s\n",
                         this.buttonName,
                         NumberFormat.getInstance().format(this.betweenClicks),
                         NumberFormat.getInstance().format(this.pushedTime),
@@ -184,7 +184,7 @@ public class PushButtonController {
                 if (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
                     this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                     if (verbose) {
-                        System.out.println("++++ Setting maybeDoubleClick to false");
+                        System.out.println("\t++++ Setting maybeDoubleClick to false");
                     }
                     this.onDoubleClick.run();
                 } else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
@@ -198,13 +198,13 @@ public class PushButtonController {
                         Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
                         if (this.maybeDoubleClick) { // Can have been set to false by a double click
                             if (verbose) {
-                                System.out.println("++++ maybeDoubleClick still true");
+                                System.out.println("\t++++ maybeDoubleClick still true");
                             }
                             this.maybeDoubleClick = false; // Reset
                             this.onClick.run();
                         } else {
                             if (verbose) {
-                                System.out.println("++++ maybeDoubleClick found false, it WAS a double click");
+                                System.out.println("\t++++ maybeDoubleClick found false, it WAS a double click");
                             }
                         }
                     } catch (InterruptedException ie) {
@@ -219,7 +219,7 @@ public class PushButtonController {
     private void initCtx(Pin buttonPin) {
         if (this.gpio != null) {
             if (verbose) {
-                System.out.printf(">> InitCtx on %s, %s\n", this.buttonName, buttonPin);
+                System.out.printf("\t>> InitCtx on %s, %s\n", this.buttonName, buttonPin);
             }
             // provision gpio pin as an output pin and turn it off/pushed down
             this.button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
@@ -234,7 +234,7 @@ public class PushButtonController {
             });
         } else {
             if (verbose) {
-                System.out.printf("No GPIO InitCtx on %s, %s\n", this.buttonName, buttonPin);
+                System.out.printf("\tNo GPIO InitCtx on %s, %s\n", this.buttonName, buttonPin);
             }
         }
     }
@@ -252,7 +252,7 @@ public class PushButtonController {
     public void freeResources() {
         if (this.gpio != null) {
             if (verbose) {
-                System.out.println("Freeing resources");
+                System.out.println("\tFreeing resources");
             }
             this.gpio.shutdown();
         }
