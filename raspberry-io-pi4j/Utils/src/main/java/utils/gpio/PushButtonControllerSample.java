@@ -23,19 +23,19 @@ public class PushButtonControllerSample {
 			ex.printStackTrace();
 		}
 	};
-	private final Runnable sayHellooo = () -> {
+	private final Runnable sayHelloHello = () -> {
 		try {
-			System.out.println("OnDoubleClick: Hellooo!");
+			System.out.println("OnDoubleClick: Hello Hello!");
 		} catch (Exception ex) {
-			System.err.println("Say Hellooo:");
+			System.err.println("Say Hello Hello:");
 			ex.printStackTrace();
 		}
 	};
-	private final Runnable sayHelloHello = () -> {
+	private final Runnable sayHellooo = () -> {
 		try {
-			System.out.println("OnLongClick: Hello Hello!");
+			System.out.println("OnLongClick: Hellooo!");
 		} catch (Exception ex) {
-			System.err.println("Say Hello Hello:");
+			System.err.println("Say Hellooo:");
 			ex.printStackTrace();
 		}
 	};
