@@ -152,7 +152,9 @@ public class PushButtonController {
             this.pushedTime = System.currentTimeMillis();
             this.betweenClicks = this.pushedTime - this.releaseTime;
             if (verbose) {
-                System.out.printf("Status: HIGH. Since last release of [%s]: %s ms.\n", this.buttonName, NumberFormat.getInstance().format(this.betweenClicks));
+                System.out.printf("Status: HIGH (aka pushed). Since last release of [%s]: %s ms.\n",
+                        this.buttonName,
+                        NumberFormat.getInstance().format(this.betweenClicks));
             }
         } else if (status == ButtonStatus.LOW) { // Button released
             // Following one for simulation only
@@ -161,14 +163,16 @@ public class PushButtonController {
             this.previousReleaseTime = this.releaseTime;
             this.releaseTime = System.currentTimeMillis();
             if (verbose) {
-                System.out.printf("Status: LOW. Button [%s] was down for %s ms.\n", this.buttonName, NumberFormat.getInstance().format(this.releaseTime - this.pushedTime));
+                System.out.printf("Status: LOW (aka released). Button [%s] was down for %s ms.\n",
+                        this.buttonName,
+                        NumberFormat.getInstance().format(this.releaseTime - this.pushedTime));
             }
         }
         // Test the click type here, and take action. Event callbacks on button release only
         // TODO Make sure this is right...
-        if (status == ButtonStatus.LOW) { // Was before: (this.button.isLow()) {
+        if (status == ButtonStatus.LOW) { // Released. Was before: (this.button.isLow()) {
             if (verbose) {
-                System.out.printf("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s\n",
+                System.out.printf("LOW/Released: Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s\n",
                         this.buttonName,
                         NumberFormat.getInstance().format(this.betweenClicks),
                         NumberFormat.getInstance().format(this.pushedTime),

@@ -5,6 +5,9 @@ import com.pi4j.io.gpio.RaspiPin;
 
 /**
  * Just test, to be run separately, for debugging...
+ * Button:
+ * - One pin on 3V3
+ * - One pin on GPIO 28 (BCM 20, physical #38)
  */
 public class PushButtonControllerSample {
 
@@ -14,7 +17,7 @@ public class PushButtonControllerSample {
 
 	private final Runnable sayHello = () -> {
 		try {
-			System.out.println("Hello!");
+			System.out.println("OnClick: Hello!");
 		} catch (Exception ex) {
 			System.err.println("Say Hello:");
 			ex.printStackTrace();
@@ -22,7 +25,7 @@ public class PushButtonControllerSample {
 	};
 	private final Runnable sayHellooo = () -> {
 		try {
-			System.out.println("Hellooo!");
+			System.out.println("OnDoubleClick: Hellooo!");
 		} catch (Exception ex) {
 			System.err.println("Say Hellooo:");
 			ex.printStackTrace();
@@ -30,7 +33,7 @@ public class PushButtonControllerSample {
 	};
 	private final Runnable sayHelloHello = () -> {
 		try {
-			System.out.println("Hello Hello!");
+			System.out.println("OnLongClick: Hello Hello!");
 		} catch (Exception ex) {
 			System.err.println("Say Hello Hello:");
 			ex.printStackTrace();
