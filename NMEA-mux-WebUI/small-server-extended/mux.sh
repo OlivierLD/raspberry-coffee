@@ -6,8 +6,7 @@
 OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
-if [[ $# -gt 0 ]]
-then
+if [[ $# -gt 0 ]]; then
   MUX_PROP_FILE=$1
 fi
 #
@@ -27,20 +26,17 @@ WITH_HTTP_SERVER=${WITH_HTTP_SERVER#*with.http.server=}
 PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
 PORT=${PORT#*http.port=}
 #
-if [[ "$WITH_HTTP_SERVER" == "yes" ]]
-then
+if [[ "$WITH_HTTP_SERVER" == "yes" ]]; then
 #  PORT=$(expr $PORT + 1)
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=$PORT"
 else
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=8888"
 fi
 #
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
@@ -50,13 +46,11 @@ fi
 #
 # PROCESS_ON_START=false # Default is true for process.on.start
 #
-if [[ "$PROCESS_ON_START" == "false" ]]
-then
+if [[ "$PROCESS_ON_START" == "false" ]]; then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   MACHINE_NAME=$(echo ${MACHINE_NAME})  # Trim the blanks
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`   # properties
-  if [[ "${PORT}" != "" ]]
-  then
+  if [[ "${PORT}" != "" ]]; then
     PORT=${PORT#*http.port=}
   else
     PORT=`cat ${MUX_PROP_FILE} | grep http.port:`   # yaml
@@ -95,8 +89,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dbutton.verbose=false"
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.sun.flower=true"
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
 #
-if [[ "${PROCESS_ON_START}" != "" ]]
-then
+if [[ "${PROCESS_ON_START}" != "" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
 fi
 #
@@ -116,12 +109,10 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -DdeltaT=AUTO" # 01-Jan-2019
 # CP=$(ls ./build/libs/*.jar)
 CP=./build/libs/small-server-extended-1.0-all.jar
 SUDO=
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   CP=${CP}:./libs/RXTXcomm.jar          # for Mac, could need to be tweaked
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi
@@ -137,6 +128,7 @@ LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
 echo -e "Try reaching http://$(hostname -I):${PORT}/web/index.html from a browser"
+echo -e "          or http://$(hostname -I):${PORT}/zip/index.html from a browser"
 #
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 #

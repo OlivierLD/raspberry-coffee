@@ -325,8 +325,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	private Pin buttonOnePin; // Top
 	private Pin buttonTwoPin; // Bottom
 
-	final static PushButtonController buttonOne = new PushButtonController();
-	final static PushButtonController buttonTwo = new PushButtonController();
+	final static PushButtonController buttonOne = new PushButtonController("Top-Button");
+	final static PushButtonController buttonTwo = new PushButtonController("Bottom-Button");
 
 	private static int serverPort = 9999;
 	private String getLoggingStatusURL = "";

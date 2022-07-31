@@ -12,7 +12,7 @@ public class PushButtonControllerSample {
 
 	final static PushButtonController buttonOne = new PushButtonController();
 
-	private Runnable sayHello = () -> {
+	private final Runnable sayHello = () -> {
 		try {
 			System.out.println("Hello!");
 		} catch (Exception ex) {
@@ -20,7 +20,7 @@ public class PushButtonControllerSample {
 			ex.printStackTrace();
 		}
 	};
-	private Runnable sayHellooo = () -> {
+	private final Runnable sayHellooo = () -> {
 		try {
 			System.out.println("Hellooo!");
 		} catch (Exception ex) {
@@ -28,7 +28,7 @@ public class PushButtonControllerSample {
 			ex.printStackTrace();
 		}
 	};
-	private Runnable sayHelloHello = () -> {
+	private final Runnable sayHelloHello = () -> {
 		try {
 			System.out.println("Hello Hello!");
 		} catch (Exception ex) {
@@ -40,7 +40,7 @@ public class PushButtonControllerSample {
 	public PushButtonControllerSample() {
 		try {
 			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_28; // BCM 20, Physical #38.
+			buttonOnePin = RaspiPin.GPIO_28; // wiPi 28, BCM 20, Physical #38.
 
 			// Button-1 provisioning, with its operations
 			buttonOne.update(
@@ -71,12 +71,20 @@ public class PushButtonControllerSample {
 			synchronized (me) {
 				freeResources();
 				me.notify();
+				try {
+					me.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}, "Shutdown Hook"));
+
+		System.setProperty("button.verbose", "true");
 
 		new PushButtonControllerSample();
 
 		// Now wait for the user to stop the program
+		System.out.println("Ctrl-C to stop.");
 		try {
 			synchronized (me) {
 				me.wait();
