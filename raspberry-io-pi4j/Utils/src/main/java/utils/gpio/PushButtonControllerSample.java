@@ -79,7 +79,7 @@ public class PushButtonControllerSample {
 			}
 		}, "Shutdown Hook"));
 
-		System.setProperty("button.verbose", "true");
+		// System.setProperty("button.verbose", "true");
 
 		new PushButtonControllerSample();
 
