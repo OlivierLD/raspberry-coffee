@@ -10,6 +10,8 @@ We want to have a Nav Server:
 - Able to send or broadcast data on several channels
 - Able to run even if no WiFi network is available
 - Able to provide a Web Graphical User Interface, accessing server side REST Services
+  - From external devices (laptop, tablet, cell-phone) connected on the same network
+  - The network can be the one emitted by the server itself, no Internet required, just WiFi. 
 
 The [`NMEA-multiplexer`](../NMEA-multiplexer/README.md) is able to read, compute, and broadcast data, also accessible from a REST client.
 
@@ -62,7 +64,7 @@ They all come with at least 3 files:
 - `to.prod.sh`, eventually triggered by `builder.sh`, which will take care of building your application and archiving the produced artifacts.
 
 Assuming that you've found (or defined for yourself) the configuration of your dreams, **_all_** you will need to do is:
-- From the Raspberry Pi used for the build, where you've clone the `git` repository: `cd full-server` (where `full.server` is your dream directory)
+- From the Raspberry Pi used for the build, where you've cloned the `git` repository: `cd full-server` (where `full.server` is your dream directory)
 - `./builder.sh`
     - During this step, you will have provided - from the command line - the name of the archive to produce, let's call it `NMEADist` as an example.
 - Now transfer the generated archive to the destination Raspberry Pi:

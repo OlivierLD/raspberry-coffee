@@ -59,10 +59,6 @@ public class PushButtonController {
         this(null, pin);
     }
 
-    public PushButtonController(String buttonName) {
-		this(buttonName, null);
-    }
-
     public PushButtonController(String buttonName,
                                 Pin pin) {
         this(buttonName, pin, null, null, null);

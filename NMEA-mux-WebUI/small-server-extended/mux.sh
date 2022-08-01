@@ -104,7 +104,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -DdeltaT=AUTO" # 01-Jan-2019
 # For the small USB GPS
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.date.offset=7168"
 #
-# JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 # CP=$(ls ./build/libs/*.jar)
 CP=./build/libs/small-server-extended-1.0-all.jar

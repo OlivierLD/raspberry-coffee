@@ -91,9 +91,9 @@ public class StaticUtil {
 	}
 
 	/**
-	 * @param filename
+	 * @param filename guess what.
 	 * @param extension with the preceding ".", like ".ptrn"
-	 * @return
+	 * @return The file name to use.
 	 */
 	public static String makeSureExtensionIsOK(String filename, String extension) {
 		if (!filename.toLowerCase().endsWith(extension)) {
@@ -163,9 +163,9 @@ public class StaticUtil {
 			String cmd = "cmd /k start /D\"" + where + "\" .";
 			//    System.out.println("Executing [" + cmd + "]");
 			Runtime.getRuntime().exec(cmd); // Can contain blanks, need quotes around it...
-		} else if (os.indexOf("Linux") > -1) {
+		} else if (os.contains("Linux")) {
 			Runtime.getRuntime().exec("nautilus " + where);
-		} else if (os.indexOf("Mac") > -1) {
+		} else if (os.contains("Mac")) {
 			String[] applScriptCmd = {
 							"osascript",
 							"-e", "tell application \"Finder\"",
@@ -210,8 +210,8 @@ public class StaticUtil {
 	/**
 	 * remove leading and trailing blanks, CR, NL
 	 *
-	 * @param str
-	 * @return
+	 * @param str the string to trim
+	 * @return the trimmed string
 	 */
 	public static String superTrim(String str) {
 		String str2 = "";
@@ -247,7 +247,7 @@ public class StaticUtil {
 
 	public static byte[] appendByte(byte[] c, byte b) {
 		int newLength = c != null ? c.length + 1 : 1;
-		byte newContent[] = new byte[newLength];
+		byte[] newContent = new byte[newLength];
 		for (int i = 0; i < newLength - 1; i++) {
 			newContent[i] = c[i];
 		}

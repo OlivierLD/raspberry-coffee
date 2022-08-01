@@ -325,8 +325,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	private Pin buttonOnePin; // Top
 	private Pin buttonTwoPin; // Bottom
 
-	final static PushButtonController buttonOne = new PushButtonController("Top-Button");
-	final static PushButtonController buttonTwo = new PushButtonController("Bottom-Button");
+	final static PushButtonController buttonOne = new PushButtonController();
+	final static PushButtonController buttonTwo = new PushButtonController();
 
 	private static int serverPort = 9999;
 	private String getLoggingStatusURL = "";
@@ -658,7 +658,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			System.out.println("> Buttons, Screen and GPS are powered with 5.0, 3v3 is used by the BME280.");
 			System.out.println("---------------------------------------------------------------------------------------------\n");
 
-			// Button-1 provisioning, with its operations
+			// Button-1 provisioning, with its name and operations
 			buttonOne.update(
 					"Top-Button",
 					buttonOnePin,
@@ -666,7 +666,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 					onDoubleClickOne,
 					onLongClickOne);
 
-			// Button-2 provisioning, with its operations
+			// Button-2 provisioning, with its name and operations
 			buttonTwo.update(
 					"Bottom-Button",
 					buttonTwoPin,

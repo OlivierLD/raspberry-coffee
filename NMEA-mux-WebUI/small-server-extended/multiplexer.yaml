@@ -6,7 +6,8 @@ context:
   with.http.server: true
   http.port: 8888
   init.cache: true
-  default.declination: 14
+  # default.declination: 14
+  default.declination: 0
 channels:
   - type: "serial"
     port: "/dev/ttyS80"
