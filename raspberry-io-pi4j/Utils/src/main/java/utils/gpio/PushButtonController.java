@@ -39,7 +39,7 @@ import java.util.Date;
  */
 public class PushButtonController {
 
-    private final SimpleDateFormat DURATION_FMT = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private final SimpleDateFormat DURATION_FMT = new java.text.SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS Z");
 
     private GpioController gpio = null;
     private GpioPinDigitalInput button = null;    // Will remain null in simulation mode
@@ -173,7 +173,7 @@ public class PushButtonController {
         // Test the click type here, and take action. Event callbacks on button release only
         if (status == ButtonStatus.LOW) { // Released. Was before: (this.button.isLow()) {
             if (verbose) {
-                System.out.printf("\tLOW/Released: Button [%s]: betweenClicks: %s ms, pushedTime: %s ms (%s), releaseTime: %s (%s), previousReleaseTime: %s (%s)\n",
+                System.out.printf("\tLOW/Released: Button [%s]:\n\t\tbetweenClicks: %s ms,\n\t\tpushedTime: %s ms (%s),\n\t\treleaseTime: %s (%s),\n\t\tpreviousReleaseTime: %s (%s)\n",
                         this.buttonName,
                         NumberFormat.getInstance().format(this.betweenClicks),
                         NumberFormat.getInstance().format(this.pushedTime),
@@ -257,7 +257,7 @@ public class PushButtonController {
     public synchronized void freeResources() {
         if (this.gpio != null) {
             if (verbose) {
-                System.out.println("\tFreeing resources");
+                System.out.printf("\tFreeing resources for [%s]\n", buttonName);
             }
             this.gpio.shutdown();
         }
