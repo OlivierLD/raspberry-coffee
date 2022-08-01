@@ -43,7 +43,8 @@ This is built just like the other examples in this module, just run
 ```
  $ ./builder.sh
  ```
-and follow the instructions in the console.
+and follow the instructions in the console.   
+Look into the script for technical details, nothing's hidden.
 
 ---
 

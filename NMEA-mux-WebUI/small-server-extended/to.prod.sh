@@ -19,8 +19,7 @@ PROXY_SETTINGS=
 # PROXY_SETTINGS="-Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttps.proxyPort=80"
 echo -en "Do we re-build the Java part ? > "
 read REPLY
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-then
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo -e "Ok, moving on."
 else
   ../../gradlew clean shadowJar ${PROXY_SETTINGS}
@@ -31,8 +30,7 @@ fi
 echo -en "Which (non existent) folder should we create the distribution in ? > "
 # Directory name, that will become the archive name.
 read distdir
-if [[ -d "${distdir}" ]]
-then
+if [[ -d "${distdir}" ]]; then
 	echo -e "Folder ${distdir} exists. Please drop it or choose another name"
 	exit 1
 fi
@@ -96,19 +94,16 @@ echo -e "+----------------------------------------------------------------------
 #
 echo -en "Deploy ${distdir}.tar.gz to ${HOME} ? > "
 read REPLY
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-then
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo -e "Ok, you'll do it yourself."
   echo -e "Bye."
 else
   cp ${distdir}.tar.gz ${HOME}
   cd ${HOME}
-  if [[ -d "${distdir}" ]]
-  then
+  if [[ -d "${distdir}" ]]; then
     echo -en "Folder ${distdir} already exists in ${HOME}. Do we drop it ? > "
     read REPLY
-    if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-    then
+    if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
       echo -e "Ok, aborting. "
       exit 1
     else

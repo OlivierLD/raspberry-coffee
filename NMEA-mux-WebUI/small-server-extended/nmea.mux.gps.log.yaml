@@ -1,12 +1,14 @@
 #
 # Generated on Sun Jun 13 2021 08:24:49 GMT-0700 (Pacific Daylight Time)
+# And reworked later...
 #
 name: "Minimal logger, extended"
 context:
   with.http.server: true
   http.port: 8888
   init.cache: true
-  default.declination: 14.0
+  # default.declination: 14.0
+  default.declination: 0.0
   max.leeway: 10.0
   bsp.factor: 1.0
   aws.factor: 1.0
