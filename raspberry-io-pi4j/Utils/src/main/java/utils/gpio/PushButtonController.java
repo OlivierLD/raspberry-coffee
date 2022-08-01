@@ -4,6 +4,8 @@ import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Implements the nuts and bolts of the push button interactions.
@@ -36,6 +38,8 @@ import java.text.NumberFormat;
  * Also works in simulator mode, the simulator calls the manageButtonState method.
  */
 public class PushButtonController {
+
+    private final SimpleDateFormat DURATION_FMT = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     private GpioController gpio = null;
     private GpioPinDigitalInput button = null;    // Will remain null in simulation mode
@@ -167,15 +171,18 @@ public class PushButtonController {
             }
         }
         // Test the click type here, and take action. Event callbacks on button release only
-        // TODO Make sure this is right...
         if (status == ButtonStatus.LOW) { // Released. Was before: (this.button.isLow()) {
             if (verbose) {
-                System.out.printf("\tLOW/Released: Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s\n",
+                System.out.printf("\tLOW/Released: Button [%s]: betweenClicks: %s ms, pushedTime: %s ms (%s), releaseTime: %s (%s), previousReleaseTime: %s (%s)\n",
                         this.buttonName,
                         NumberFormat.getInstance().format(this.betweenClicks),
                         NumberFormat.getInstance().format(this.pushedTime),
+                        DURATION_FMT.format(new Date(this.pushedTime)),
                         NumberFormat.getInstance().format(this.releaseTime),
-                        NumberFormat.getInstance().format(this.previousReleaseTime));
+                        DURATION_FMT.format(new Date(this.releaseTime)),
+                        NumberFormat.getInstance().format(this.previousReleaseTime),
+                        DURATION_FMT.format(new Date(this.previousReleaseTime))
+                );
             }
             Thread clickManager = new Thread(() -> {
                 // Double, long or single click?
