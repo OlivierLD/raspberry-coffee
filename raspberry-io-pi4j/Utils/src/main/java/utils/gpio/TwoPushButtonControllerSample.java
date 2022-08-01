@@ -70,41 +70,19 @@ public class TwoPushButtonControllerSample {
             Pin buttonOnePin = RaspiPin.GPIO_28; // wiPi 28, BCM 20, Physical #38.
             Pin buttonTwoPin = RaspiPin.GPIO_29; // wiPi 29, BCM 21, Physical #40.
 
-            Thread threadOne = new Thread(() -> {
-                buttonOne = new PushButtonController(
-                        "Button-One",
-                        buttonOnePin,
-                        sayHelloOne,
-                        sayHelloHelloOne,
-                        sayHelloooOne);
-				synchronized (this) {
-					try {
-						this.wait();
-                        System.out.println("threadOne, done waiting.");
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-            });
-            Thread threadTwo = new Thread(() -> {
-                buttonTwo = new PushButtonController(
-                        "Button-Two",
-                        buttonTwoPin,
-                        sayHelloTwo,
-                        sayHelloHelloTwo,
-                        sayHelloooTwo);
-                synchronized (this) {
-                    try {
-                        this.wait();
-                        System.out.println("threadTwo, done waiting.");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            buttonOne = new PushButtonController(
+                    "Button-One",
+                    buttonOnePin,
+                    sayHelloOne,
+                    sayHelloHelloOne,
+                    sayHelloooOne);
 
-            threadOne.start();
-            threadTwo.start();
+            buttonTwo = new PushButtonController(
+                    "Button-Two",
+                    buttonTwoPin,
+                    sayHelloTwo,
+                    sayHelloHelloTwo,
+                    sayHelloooTwo);
 
         } catch (Throwable error) {
             error.printStackTrace();
@@ -146,7 +124,7 @@ public class TwoPushButtonControllerSample {
         try {
             synchronized (me) {
                 me.wait();
-                System.out.println("\nOoch!");
+                System.out.println("\nOk ok! Getting out.");
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

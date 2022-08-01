@@ -45,12 +45,9 @@ public class PushButtonController {
     private String buttonName = "Button";
     private final boolean verbose = "true".equals(System.getProperty("button.verbose"));
 
-    private Runnable onClick = () -> {
-    };       // Empty, NoOp
-    private Runnable onDoubleClick = () -> {
-    }; // Empty, NoOp
-    private Runnable onLongClick = () -> {
-    };   // Empty, NoOp
+    private Runnable onClick = () -> {};       // Empty, NoOp
+    private Runnable onDoubleClick = () -> {}; // Empty, NoOp
+    private Runnable onLongClick = () -> {};   // Empty, NoOp
 
     public PushButtonController() {
     }
@@ -145,7 +142,7 @@ public class PushButtonController {
         LOW
     }
 
-    public void manageButtonState(ButtonStatus status) {
+    public synchronized void manageButtonState(ButtonStatus status) {
         if (status == ButtonStatus.HIGH) { // Button pressed
             // Following one for simulation only
             this.isHighForSimulation = true;
@@ -241,7 +238,7 @@ public class PushButtonController {
     }
 
     // Use for shift-like operations
-    public boolean isPushed() {
+    public synchronized boolean isPushed() {
         if (this.button != null) {
             return this.button.isHigh();
         } else { // Simulation!
