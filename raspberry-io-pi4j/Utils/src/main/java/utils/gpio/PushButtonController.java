@@ -190,7 +190,7 @@ public class PushButtonController {
                 } else { // Single click
                     this.maybeDoubleClick = true;
                 }
-                // If single click... May be the first of a double click
+                // If single click... It may be the first of a double click
                 if (this.maybeDoubleClick) {
                     try {
                         Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
@@ -214,7 +214,7 @@ public class PushButtonController {
         }
     }
 
-    private void initCtx(Pin buttonPin) {
+    private synchronized void initCtx(Pin buttonPin) {
         if (this.gpio != null) {
             if (verbose) {
                 System.out.printf("\t>> InitCtx on %s, %s\n", this.buttonName, buttonPin);
@@ -247,7 +247,7 @@ public class PushButtonController {
         }
     }
 
-    public void freeResources() {
+    public synchronized void freeResources() {
         if (this.gpio != null) {
             if (verbose) {
                 System.out.println("\tFreeing resources");
