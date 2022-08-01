@@ -286,7 +286,6 @@
 			let plotter = document.getElementById('sp-01');
             plotter.setSatellites(val);
             plotter.repaint();
-
 		});
 		events.subscribe('sog', function(val) {
 			document.getElementById('sog').innerText = val.toFixed(2);
