@@ -12,128 +12,147 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class TwoPushButtonControllerSample {
 
-	private Pin buttonOnePin;
-	private Pin buttonTwoPin;
+    private static PushButtonController buttonOne;
+    private static PushButtonController buttonTwo;
 
-	final static PushButtonController buttonOne = new PushButtonController();
-	final static PushButtonController buttonTwo = new PushButtonController();
+    private final Runnable sayHelloOne = () -> {
+        try {
+            System.out.println("OnClick [One]: Hello!");
+        } catch (Exception ex) {
+            System.err.println("Say Hello:");
+            ex.printStackTrace();
+        }
+    };
+    private final Runnable sayHelloHelloOne = () -> {
+        try {
+            System.out.println("OnDoubleClick [One]: Hello Hello!");
+        } catch (Exception ex) {
+            System.err.println("Say Hello Hello:");
+            ex.printStackTrace();
+        }
+    };
+    private final Runnable sayHelloooOne = () -> {
+        try {
+            System.out.println("OnLongClick [One]: Hellooo!");
+        } catch (Exception ex) {
+            System.err.println("Say Hellooo:");
+            ex.printStackTrace();
+        }
+    };
+    private final Runnable sayHelloTwo = () -> {
+        try {
+            System.out.println("OnClick [Two]: Hello!");
+        } catch (Exception ex) {
+            System.err.println("Say Hello:");
+            ex.printStackTrace();
+        }
+    };
+    private final Runnable sayHelloHelloTwo = () -> {
+        try {
+            System.out.println("OnDoubleClick [Two]: Hello Hello!");
+        } catch (Exception ex) {
+            System.err.println("Say Hello Hello:");
+            ex.printStackTrace();
+        }
+    };
+    private final Runnable sayHelloooTwo = () -> {
+        try {
+            System.out.println("OnLongClick [Two]: Hellooo!");
+        } catch (Exception ex) {
+            System.err.println("Say Hellooo:");
+            ex.printStackTrace();
+        }
+    };
 
-	private final Runnable sayHelloOne = () -> {
-		try {
-			System.out.println("OnClick [One]: Hello!");
-		} catch (Exception ex) {
-			System.err.println("Say Hello:");
-			ex.printStackTrace();
-		}
-	};
-	private final Runnable sayHelloHelloOne = () -> {
-		try {
-			System.out.println("OnDoubleClick [One]: Hello Hello!");
-		} catch (Exception ex) {
-			System.err.println("Say Hello Hello:");
-			ex.printStackTrace();
-		}
-	};
-	private final Runnable sayHelloooOne = () -> {
-		try {
-			System.out.println("OnLongClick [One]: Hellooo!");
-		} catch (Exception ex) {
-			System.err.println("Say Hellooo:");
-			ex.printStackTrace();
-		}
-	};
-	private final Runnable sayHelloTwo = () -> {
-		try {
-			System.out.println("OnClick [Two]: Hello!");
-		} catch (Exception ex) {
-			System.err.println("Say Hello:");
-			ex.printStackTrace();
-		}
-	};
-	private final Runnable sayHelloHelloTwo = () -> {
-		try {
-			System.out.println("OnDoubleClick [Two]: Hello Hello!");
-		} catch (Exception ex) {
-			System.err.println("Say Hello Hello:");
-			ex.printStackTrace();
-		}
-	};
-	private final Runnable sayHelloooTwo = () -> {
-		try {
-			System.out.println("OnLongClick [Two]: Hellooo!");
-		} catch (Exception ex) {
-			System.err.println("Say Hellooo:");
-			ex.printStackTrace();
-		}
-	};
+    public TwoPushButtonControllerSample() {
+        try {
+            // Provision buttons here
+            Pin buttonOnePin = RaspiPin.GPIO_28; // wiPi 28, BCM 20, Physical #38.
+            Pin buttonTwoPin = RaspiPin.GPIO_29; // wiPi 29, BCM 21, Physical #40.
 
-	public TwoPushButtonControllerSample() {
-		try {
-			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_28; // wiPi 28, BCM 20, Physical #38.
-			buttonTwoPin = RaspiPin.GPIO_29; // wiPi 29, BCM 21, Physical #40.
-
-			// Button-1 provisioning, with its name and operations
-			buttonOne.update(
-					"Button-One",
-					buttonOnePin,
-					sayHelloOne,
-					sayHelloHelloOne,
-					sayHelloooOne);
-			// Button-1 provisioning, with its name and operations
-			buttonTwo.update(
-					"Button-Two",
-					buttonTwoPin,
-					sayHelloTwo,
-					sayHelloHelloTwo,
-					sayHelloooTwo);
-
-		} catch (Throwable error) {
-			error.printStackTrace();
-		}
-		System.out.println(">> Button 28 (physical #38) provisioned.");
-		System.out.println(">> Button 29 (physical #40) provisioned.");
-		System.out.println("\tTry click, double-click, long-click.");
-
-	}
-
-	public static void freeResources() {
-		// Cleanup
-		buttonOne.freeResources();
-	}
-
-	public static void main(String... args) {
-
-		final Thread me = Thread.currentThread();
-
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			synchronized (me) {
-				freeResources();
-				me.notify();
-				try {
-					me.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+            Thread threadOne = new Thread(() -> {
+                buttonOne = new PushButtonController(
+                        "Button-One",
+                        buttonOnePin,
+                        sayHelloOne,
+                        sayHelloHelloOne,
+                        sayHelloooOne);
+				synchronized (this) {
+					try {
+						this.wait();
+                        System.out.println("threadOne, done waiting.");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		}, "Shutdown Hook"));
+            });
+            Thread threadTwo = new Thread(() -> {
+                buttonTwo = new PushButtonController(
+                        "Button-Two",
+                        buttonTwoPin,
+                        sayHelloTwo,
+                        sayHelloHelloTwo,
+                        sayHelloooTwo);
+                synchronized (this) {
+                    try {
+                        this.wait();
+                        System.out.println("threadTwo, done waiting.");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-		// System.setProperty("button.verbose", "true");
+            threadOne.start();
+            threadTwo.start();
 
-		new TwoPushButtonControllerSample();
+        } catch (Throwable error) {
+            error.printStackTrace();
+        }
+        System.out.println(">> Button 28 (physical #38) provisioned.");
+        System.out.println(">> Button 29 (physical #40) provisioned.");
+        System.out.println("\tTry click, double-click, long-click.");
 
-		// Now wait for the user to stop the program
-		System.out.println("Ctrl-C to stop.");
-		try {
-			synchronized (me) {
-				me.wait();
-				System.out.println("\nOoch!");
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    }
 
-		System.out.println("Bye!");
-	}
+    public static void freeResources() {
+        // Cleanup
+        buttonOne.freeResources();
+        buttonTwo.freeResources();
+    }
+
+    public static void main(String... args) {
+
+        final Thread me = Thread.currentThread();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            synchronized (me) {
+                freeResources();
+                me.notifyAll();
+                try {
+                    me.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, "Shutdown Hook"));
+
+        // System.setProperty("button.verbose", "true");
+
+        new TwoPushButtonControllerSample();
+
+        // Now wait for the user to stop the program
+        System.out.println("Ctrl-C to stop.");
+        try {
+            synchronized (me) {
+                me.wait();
+                System.out.println("\nOoch!");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Bye!");
+    }
 
 }
