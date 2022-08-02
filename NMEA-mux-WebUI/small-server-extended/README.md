@@ -590,7 +590,7 @@ This small server is also an HTTP server. As long as the server is running, it c
 This project also includes a couple of web pages (in turn invoking REST requests), accessible
 from any device seeing the server on its network, at `http://<rpi-ip-address>:8888/zip/index.html`.  
 It can also use a TCP forwarder (see the `yaml` files for details), making the data it reads available to other
-softs, like OpenCPN oe SeaWi for example.
+softs, like OpenCPN or SeaWi for example.
 
 ### June 2021, from scratch, on a RPi Zero, or 3B, or so.
 From a brand-new buster or bullseye image:
