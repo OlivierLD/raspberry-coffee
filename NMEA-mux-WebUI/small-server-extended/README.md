@@ -587,9 +587,11 @@ Sample of NMEA Cache, as a JSON object (`GET /mux/cache`):
 ```
 
 ### June 2021, from scratch, on a RPi Zero, or 3B, or so.
-From a brand new buster image:
+From a brand-new buster or bullseye image:
 - `sudo atp install rxtxlib-java`
 - `sudo apt install openjdk-8-jdk-headless`
   - `sudo update-alternatives --config java`
   - `sudo update-alternatives --config javac`
 - `git clone https://github.com/OlivierLD/raspberry-coffee.git`
+
+Or you can build it on some machine, and use it on another, as explined one step above, [here](../README.md#close-to-production).

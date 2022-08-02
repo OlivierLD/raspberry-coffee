@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Used to debug the PushButtonController.
+#
 CP=./build/libs/Utils-1.0-all.jar
 #
 # For remote debugging

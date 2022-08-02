@@ -4,7 +4,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
 /**
- * Just test, to be run separately, for debugging...
+ * Just test, to be run separately, for (remote) debugging...
  * Button:
  * - One pin on 3V3
  * - One pin on GPIO 28 (BCM 20, physical #38)

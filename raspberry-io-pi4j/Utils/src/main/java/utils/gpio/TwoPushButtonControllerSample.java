@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Just test, to be run separately, for debugging...
+ * Just test, to be run separately, for (remote) debugging...
  * 2 Buttons:
  * - One and Two pin on 3V3
  * - One pin on GPIO 28 (BCM 20, physical #38)

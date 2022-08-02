@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * Buttons with click, double-click, long-click, and other combinations.
  * Uses a small screen (oled SSD1306, Nokia, etc)
  *
- * This class use making use of Runnable and Consumers (thank you Java 8).
+ * This class is using Runnables and Consumers (thank you Java 8).
  *
  * System properties:
  * - button.verbose, default false
@@ -308,7 +308,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	}
 
 	private final MenuItem[] localMenuItems = new MenuItem[] {
-//			new MenuItem().title("Logging status").action(loggingStatus),
+  			new MenuItem().title("Logging status").action(loggingStatus),
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
