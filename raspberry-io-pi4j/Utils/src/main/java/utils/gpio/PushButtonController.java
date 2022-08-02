@@ -188,7 +188,7 @@ public class PushButtonController {
                 System.out.println("\t>> Before starting clickManager thread:");
                 System.out.printf("\t   Thread is %s%n", clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
             }
-            if (clickManager == null || !clickManager.isAlive()) {
+            if (true || clickManager == null || !clickManager.isAlive()) {
                 clickManager = new Thread(() -> {
                     // Double, long or single click?
                     if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
