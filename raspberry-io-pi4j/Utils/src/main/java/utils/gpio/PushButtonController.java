@@ -9,11 +9,11 @@ import java.util.Date;
 
 /**
  * Implements the nuts and bolts of the push button interactions.
- *
+ * <p>
  * Button:
- *  - One pin on 3V3
- *  - One pin on GPIO XX
- *
+ * - One pin on 3V3
+ * - One pin on GPIO XX
+ * <p>
  * No need to worry about that in the main class.
  * From the main:
  * - Start with invoking the initCtx method
@@ -49,9 +49,12 @@ public class PushButtonController {
     private String buttonName = "Button";
     private final boolean verbose = "true".equals(System.getProperty("button.verbose"));
 
-    private Runnable onClick = () -> {};       // Empty, NoOp
-    private Runnable onDoubleClick = () -> {}; // Empty, NoOp
-    private Runnable onLongClick = () -> {};   // Empty, NoOp
+    private Runnable onClick = () -> {
+    };       // Empty, NoOp
+    private Runnable onDoubleClick = () -> {
+    }; // Empty, NoOp
+    private Runnable onLongClick = () -> {
+    };   // Empty, NoOp
 
     public PushButtonController() {
     }
@@ -140,6 +143,7 @@ public class PushButtonController {
      */
     private boolean maybeDoubleClick = false; // To be read as it may be the first click of a double click'.
     private Thread clickManager;
+
     public enum ButtonStatus {
         NONE,
         HIGH,
@@ -188,58 +192,56 @@ public class PushButtonController {
                 System.out.println("\t>> Before starting clickManager thread:");
                 System.out.printf("\t   Thread is %s%n", clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
             }
-            if (true || clickManager == null || !clickManager.isAlive()) {
-                clickManager = new Thread(() -> {
-                    // Double, long or single click?
-                    if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
-                        this.maybeDoubleClick = false; // Done with 2nd click of a double click.
-                        if (verbose) {
-                            System.out.printf("\t++++ In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
-                        }
-                        // Execute double-click operation
-                        this.onDoubleClick.run();
-                    } else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
-                        this.maybeDoubleClick = false; // That is not the first of a double-click
-                        // Execute long-click operation
-                        this.onLongClick.run();
-                    } else { // Single click
-                        this.maybeDoubleClick = true;
-                    }
-                    // If single click... It may be the first of a double click
-                    if (this.maybeDoubleClick) {
-                        try {
-                            Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
-                            if (this.maybeDoubleClick) { // Can have been set to false by a double click
-                                if (verbose) {
-                                    System.out.printf("\t++++ maybeDoubleClick still true (%s), it was NOT a double-click%n", this.buttonName);
-                                }
-                                this.maybeDoubleClick = false; // Reset
-                                // Execute single-click operation
-                                this.onClick.run();
-                            } else {
-                                if (verbose) {
-                                    System.out.printf("\t++++ maybeDoubleClick found false (%s), it WAS a double click (managed before)%n", this.buttonName);
-                                }
-                            }
-                        } catch (InterruptedException ie) {
-                            System.err.printf("Double-click waiter (%s) interrupted%n", this.buttonName);
-                            ie.printStackTrace();
-                        }
-                    }
-                    if (verbose) {
-                        System.out.printf("\tEnd of thread clickManager (%s)%n", this.buttonName);
-                    }
-                });
-                // Thread started, on button release.
-                if (verbose) {
-                    System.out.printf("\t>> Starting the clickManager thread (%s)%n", this.buttonName);
-                }
-                clickManager.start();
-            } else {
-                if (verbose) {
-                    System.out.printf("\tNOT Starting the clickManager thread (%s), one is already on.%n", this.buttonName);
-                }
+            if (clickManager != null && clickManager.isAlive()) {
+                clickManager.interrupt();
+                System.out.printf("\t>> Killing previous clickManager thread (%s).%n", this.buttonName);
             }
+            clickManager = new Thread(() -> {
+                // Double, long or single click?
+                if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
+                    this.maybeDoubleClick = false; // Done with 2nd click of a double click.
+                    if (verbose) {
+                        System.out.printf("\t++++ In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
+                    }
+                    // Execute double-click operation
+                    this.onDoubleClick.run();
+                } else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
+                    this.maybeDoubleClick = false; // That is not the first of a double-click
+                    // Execute long-click operation
+                    this.onLongClick.run();
+                } else { // Single click
+                    this.maybeDoubleClick = true;
+                }
+                // If single click... It may be the first of a double click
+                if (this.maybeDoubleClick) {
+                    try {
+                        Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
+                        if (this.maybeDoubleClick) { // Can have been set to false by a double click
+                            if (verbose) {
+                                System.out.printf("\t++++ maybeDoubleClick still true (%s), it was NOT a double-click%n", this.buttonName);
+                            }
+                            this.maybeDoubleClick = false; // Reset
+                            // Execute single-click operation
+                            this.onClick.run();
+                        } else {
+                            if (verbose) {
+                                System.out.printf("\t++++ maybeDoubleClick found false (%s), it WAS a double click (managed before)%n", this.buttonName);
+                            }
+                        }
+                    } catch (InterruptedException ie) {
+                        System.err.printf("Double-click waiter (%s) interrupted%n", this.buttonName);
+                        ie.printStackTrace();
+                    }
+                }
+                if (verbose) {
+                    System.out.printf("\tEnd of thread clickManager (%s)%n", this.buttonName);
+                }
+            });
+            // Thread started, on button release.
+            if (verbose) {
+                System.out.printf("\t>> Starting the clickManager thread (%s)%n", this.buttonName);
+            }
+            clickManager.start();
         }
     }
 
