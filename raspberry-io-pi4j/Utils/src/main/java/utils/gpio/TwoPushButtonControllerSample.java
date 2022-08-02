@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class TwoPushButtonControllerSample {
 
-    private final SimpleDateFormat SDF = new java.text.SimpleDateFormat("HH:mm:ss.SSS");
+    private final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss.SSS");
 
     private static PushButtonController buttonOne;
     private static PushButtonController buttonTwo;

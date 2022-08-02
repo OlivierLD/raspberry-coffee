@@ -39,7 +39,8 @@ import java.util.Date;
  */
 public class PushButtonController {
 
-    private final SimpleDateFormat DURATION_FMT = new java.text.SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS Z");
+    private final SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS Z");
+    private final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss.SSS");
 
     private GpioController gpio = null;
     private GpioPinDigitalInput button = null;    // Will remain null in simulation mode
@@ -201,6 +202,7 @@ public class PushButtonController {
                 }
             } else {
                 clickManager = new Thread(() -> {
+                    Date threadStartedOn = new Date();
                     boolean wasInterrupted = false;
                     // Double, long or single click?
                     if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
@@ -229,8 +231,9 @@ public class PushButtonController {
                                 if (this.maybeDoubleClick) { // Can have been set to false by a double click
 
                                     if (verbose) {
-                                        System.out.printf("\tAfter DOUBLE_CLICK_DELAY, maybeDoubleClick: Button [%s]:\n\t\tbetweenClicks: %s ms,\n\t\tpushedTime: %s ms (%s),\n\t\treleaseTime: %s (%s),\n\t\tpreviousReleaseTime: %s (%s)\n, => (betweenClicks > 0 && betweenClicks < DOUBLE_CLICK_DELAY): %s\n",
+                                        System.out.printf("\tAfter DOUBLE_CLICK_DELAY, maybeDoubleClick, Button [%s] (started %s):\n\t\tbetweenClicks: %s ms,\n\t\tpushedTime: %s ms (%s),\n\t\treleaseTime: %s (%s),\n\t\tpreviousReleaseTime: %s (%s)\n\t\t => (betweenClicks > 0 && betweenClicks < DOUBLE_CLICK_DELAY): %s\n",
                                                 this.buttonName,
+                                                SDF.format(threadStartedOn),
                                                 NumberFormat.getInstance().format(this.betweenClicks),
                                                 NumberFormat.getInstance().format(this.pushedTime),
                                                 DURATION_FMT.format(new Date(this.pushedTime)),
@@ -271,7 +274,7 @@ public class PushButtonController {
                         }
                     }
                     if (verbose && !wasInterrupted) {
-                        System.out.printf("\tEnd of thread clickManager (%s)%n", this.buttonName);
+                        System.out.printf("\tEnd of thread clickManager (%s) started  %s%n", this.buttonName, SDF.format(threadStartedOn));
                     }
                 });
                 // Thread started, on button release.
