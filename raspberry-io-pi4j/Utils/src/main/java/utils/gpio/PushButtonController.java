@@ -200,7 +200,7 @@ public class PushButtonController {
                 synchronized (currentThread) {
                     try {
                         System.out.println("\t\tCurrentThread waiting");
-                        if (clickManager.isAlive()) {
+                        if (false && clickManager.isAlive()) {
                             currentThread.wait();
                         }
                         System.out.println("\t\tCurrentThread released");
@@ -246,7 +246,7 @@ public class PushButtonController {
                         }
                     } catch (InterruptedException ie) {
                         wasInterrupted = true;
-                        System.out.printf("\t--- Double-click waiter (%s) interrupted%n", this.buttonName);
+                        System.out.printf("\t--- Double-click waiter (%s) interrupted (Exception)%n", this.buttonName);
                         // ie.printStackTrace();
                         // Unlock waiter
                         synchronized (currentThread) {
