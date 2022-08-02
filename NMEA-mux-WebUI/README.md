@@ -503,7 +503,7 @@ In the `NMEA-mux-WebUI` project, `logged` folder
 | ![HAT](./full-server-extended-v2/docimg/08.jpg) | ![USB GPS](./full-server-extended-v2/docimg/perma-hat/perma-hat.02.jpg) |
 
 See [here](../Project-Trunk/REST-clients/TCP-Watch.01#raspberry-pi-zero-w-and-ssd1306-128x64) for the wiring diagrams,
-and [here](./small-server-extended/README.md).
+and [here](./small-server-extended/README.md) for more details and pictures.
 
 ---
 #### Log from small-server-extended
