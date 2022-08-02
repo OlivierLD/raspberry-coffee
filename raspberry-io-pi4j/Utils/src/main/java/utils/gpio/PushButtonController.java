@@ -199,6 +199,7 @@ public class PushButtonController {
                 // Wait for the other click manager to die
                 synchronized (currentThread) {
                     try {
+                        System.out.println("\t\tCurrentThread waiting");
                         currentThread.wait();
                         System.out.println("\t\tCurrentThread released");
                     } catch (InterruptedException e) {
@@ -247,7 +248,7 @@ public class PushButtonController {
                         // ie.printStackTrace();
                         // Unlock waiter
                         synchronized (currentThread) {
-                            currentThread.notifyAll();
+                            currentThread.notify();
                         }
                     }
                 }
