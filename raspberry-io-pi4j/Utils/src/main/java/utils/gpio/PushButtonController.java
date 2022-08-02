@@ -104,16 +104,19 @@ public class PushButtonController {
                        Runnable onClick,
                        Runnable onDoubleClick,
                        Runnable onLongClick) {
+        if (verbose) {
+            System.out.printf("\t >>>> Initial setup for %s, %s%n", buttonName, pin);
+        }
         if (buttonName != null) {
             this.buttonName = buttonName;
         }
-        if (onClick != null) {
+        if (onClick != null) { // Will keep the default (empty) otherwise.
             this.onClick = onClick;
         }
-        if (onDoubleClick != null) {
+        if (onDoubleClick != null) { // Will keep the default (empty) otherwise.
             this.onDoubleClick = onDoubleClick;
         }
-        if (onLongClick != null) {
+        if (onLongClick != null) { // Will keep the default (empty) otherwise.
             this.onLongClick = onLongClick;
         }
 
@@ -248,7 +251,7 @@ public class PushButtonController {
     private synchronized void initCtx(Pin buttonPin) {
         if (this.gpio != null) {
             if (verbose) {
-                System.out.printf("\t>> InitCtx on %s, %s\n", this.buttonName, buttonPin);
+                System.out.printf("\t>> InitCtx on %s, %s, provisioning and adding listener.\n", this.buttonName, buttonPin);
             }
             // provision gpio pin as an output pin and turn it off/pushed down
             this.button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
@@ -260,7 +263,7 @@ public class PushButtonController {
                     buttonStatus = ButtonStatus.LOW;
                 }
                 if (verbose) {
-                    System.out.printf("\t... In button listener (%s), status is %s%n", this.buttonName, buttonStatus);
+                    System.out.printf("\t... In button listener (%s, %s), status is %s%n", this.buttonName, buttonPin, buttonStatus);
                 }
                 manageButtonState(buttonStatus);
             });
