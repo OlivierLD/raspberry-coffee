@@ -203,7 +203,7 @@ public class PushButtonController {
                 synchronized (lock) {
                     try {
                         System.out.println("\t\tCurrentThread waiting");
-                        if (clickManager.isAlive()) {
+                        if (false && clickManager.isAlive()) {
                             lock.wait();
                         }
                         System.out.println("\t\tCurrentThread released");
