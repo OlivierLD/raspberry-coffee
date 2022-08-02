@@ -49,12 +49,9 @@ public class PushButtonController {
     private String buttonName = "Button";
     private final boolean verbose = "true".equals(System.getProperty("button.verbose"));
 
-    private Runnable onClick = () -> {
-    };       // Empty, NoOp
-    private Runnable onDoubleClick = () -> {
-    }; // Empty, NoOp
-    private Runnable onLongClick = () -> {
-    };   // Empty, NoOp
+    private Runnable onClick = () -> {};       // Empty, NoOp
+    private Runnable onDoubleClick = () -> {}; // Empty, NoOp
+    private Runnable onLongClick = () -> {};   // Empty, NoOp
 
     public PushButtonController() {
     }
@@ -200,11 +197,12 @@ public class PushButtonController {
                 System.out.printf("\t>> Killing previous clickManager thread (%s).%n", this.buttonName);
             }
             clickManager = new Thread(() -> {
+                boolean wasInterrupted = false;
                 // Double, long or single click?
                 if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
                     this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                     if (verbose) {
-                        System.out.printf("\t++++ In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
+                        System.out.printf("\t>>> Detected Double-click. In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
                     }
                     // Execute double-click operation
                     this.onDoubleClick.run();
@@ -218,7 +216,7 @@ public class PushButtonController {
                 // If single click... It may be the first of a double click
                 if (this.maybeDoubleClick) {
                     try {
-                        Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
+                        this.wait(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
                         if (this.maybeDoubleClick) { // Can have been set to false by a double click
                             if (verbose) {
                                 System.out.printf("\t++++ maybeDoubleClick still true (%s), it was NOT a double-click%n", this.buttonName);
@@ -232,11 +230,12 @@ public class PushButtonController {
                             }
                         }
                     } catch (InterruptedException ie) {
+                        wasInterrupted = true;
                         System.out.printf("\t--- Double-click waiter (%s) interrupted%n", this.buttonName);
                         // ie.printStackTrace();
                     }
                 }
-                if (verbose) {
+                if (verbose && !wasInterrupted) {
                     System.out.printf("\tEnd of thread clickManager (%s)%n", this.buttonName);
                 }
             });
@@ -263,7 +262,13 @@ public class PushButtonController {
                     buttonStatus = ButtonStatus.LOW;
                 }
                 if (verbose) {
-                    System.out.printf("\t... In button listener (%s, %s), status is %s%n", this.buttonName, buttonPin, buttonStatus);
+                    System.out.println("\t+-------------------------------------");
+                    System.out.printf("\t| ... In button listener (%s, %s), status is %s (%d listener(s))%n",
+                            this.buttonName,
+                            buttonPin,
+                            buttonStatus,
+                            this.button.getListeners().size());
+                    System.out.println("\t+-------------------------------------");
                 }
                 manageButtonState(buttonStatus);
             });
