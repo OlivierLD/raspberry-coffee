@@ -184,6 +184,13 @@ public class PushButtonController {
                         DURATION_FMT.format(new Date(this.previousReleaseTime))
                 );
             }
+            if (verbose) {
+                System.out.println("\t>> Before starting clickManager thread:");
+                System.out.printf("\tThread is %s%n", clickManager == null ? "null" : "not null.");
+                if (clickManager != null) {
+                    System.out.printf("\tand %s%n", clickManager.isAlive() ? "alive" : "not alive.");
+                }
+            }
             if (clickManager == null || !clickManager.isAlive()) {
                 clickManager = new Thread(() -> {
                     // Double, long or single click?
