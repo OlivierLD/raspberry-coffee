@@ -204,7 +204,7 @@ public class PushButtonController {
             final Object lock = new Object();
             if (clickManager != null && clickManager.isAlive()) {
                 if (verbose) {
-                    System.out.printf("\t>> Killing previous clickManager thread (%s).%n", this.buttonName);
+                    System.out.printf("\t>> clickManager thread (%s) is alive.%n", this.buttonName);
                 }
                 if (false) {
                     clickManager.interrupt();
@@ -228,7 +228,7 @@ public class PushButtonController {
                     boolean wasInterrupted = false;
                     // Double, long or single click?
                     if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
-              //        this.maybeDoubleClick = false; // Done with 2nd click of a double click.
+                        this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                         if (verbose) {
                             System.out.printf("\t>>> Detected Double-click. In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
                         }
