@@ -195,7 +195,7 @@ public class PushButtonController {
                         DURATION_FMT.format(new Date(this.previousReleaseTime))
                 );
             }
-            if (true || verbose) {
+            if (verbose) {
                 System.out.printf("\t>> Before starting clickManager thread for %s:\n", this.buttonName);
                 System.out.printf("\t   Thread for %s is %s%n",
                         this.buttonName,
@@ -244,7 +244,7 @@ public class PushButtonController {
                     }
                     // If single click... It may be the first of a double click
                     if (this.maybeDoubleClick) {
-                        if (true || verbose) {
+                        if (verbose) {
                             System.out.printf("\tThread for %s will wait %d ms for a double-click...\n", this.buttonName, DOUBLE_CLICK_DELAY);
                         }
                         try {
@@ -260,7 +260,7 @@ public class PushButtonController {
                                         // Execute double-click operation
                                         this.onDoubleClick.run();
                                     } else {
-                                        if (true || verbose) {
+                                        if (verbose) {
                                             System.out.printf("\t++++ maybeDoubleClick still true (%s), it was NOT a double-click%n", this.buttonName);
                                         }
                                         this.maybeDoubleClick = false; // Reset
