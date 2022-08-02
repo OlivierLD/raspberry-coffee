@@ -192,9 +192,19 @@ public class PushButtonController {
                 System.out.println("\t>> Before starting clickManager thread:");
                 System.out.printf("\t   Thread is %s%n", clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
             }
+            final Thread currentThread = Thread.currentThread();
             if (clickManager != null && clickManager.isAlive()) {
                 clickManager.interrupt();
                 System.out.printf("\t>> Killing previous clickManager thread (%s).%n", this.buttonName);
+                // Wait for the other click manager to die
+                synchronized (currentThread) {
+                    try {
+                        currentThread.wait();
+                        System.out.println("\t\tCurrentThread released");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             clickManager = new Thread(() -> {
                 boolean wasInterrupted = false;
@@ -235,6 +245,10 @@ public class PushButtonController {
                         wasInterrupted = true;
                         System.out.printf("\t--- Double-click waiter (%s) interrupted%n", this.buttonName);
                         // ie.printStackTrace();
+                        // Unlock waiter
+                        synchronized (currentThread) {
+                            currentThread.notifyAll();
+                        }
                     }
                 }
                 if (verbose && !wasInterrupted) {
