@@ -229,8 +229,8 @@ public class PushButtonController {
                             }
                         }
                     } catch (InterruptedException ie) {
-                        System.err.printf("Double-click waiter (%s) interrupted%n", this.buttonName);
-                        ie.printStackTrace();
+                        System.out.printf("\t--- Double-click waiter (%s) interrupted%n", this.buttonName);
+                        // ie.printStackTrace();
                     }
                 }
                 if (verbose) {
@@ -258,6 +258,9 @@ public class PushButtonController {
                     buttonStatus = ButtonStatus.HIGH;
                 } else if (event.getState().isLow()) { // Released
                     buttonStatus = ButtonStatus.LOW;
+                }
+                if (verbose) {
+                    System.out.printf("\t... In button listener (%s), status is %s%n", this.buttonName, buttonStatus);
                 }
                 manageButtonState(buttonStatus);
             });
