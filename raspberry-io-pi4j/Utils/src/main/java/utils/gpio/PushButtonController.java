@@ -184,7 +184,7 @@ public class PushButtonController {
                         DURATION_FMT.format(new Date(this.previousReleaseTime))
                 );
             }
-            if (clickManager != null && !clickManager.isAlive()) {
+            if (clickManager == null || !clickManager.isAlive()) {
                 clickManager = new Thread(() -> {
                     // Double, long or single click?
                     if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
