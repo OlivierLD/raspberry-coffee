@@ -194,8 +194,8 @@ public class PushButtonController {
                         DURATION_FMT.format(new Date(this.previousReleaseTime))
                 );
             }
-            if (verbose) {
-                System.out.println("\t>> Before starting clickManager thread:");
+            if (true || verbose) {
+                System.out.printf("\t>> Before starting clickManager thread for %s:\n", this.buttonName);
                 System.out.printf("\t   Thread for %s is %s%n",
                         this.buttonName,
                         clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
@@ -208,15 +208,17 @@ public class PushButtonController {
                 }
                 clickManager.interrupt();
                 // Wait for the other click manager to die
-                synchronized (lock) {
-                    try {
-                        System.out.println("\t\tCurrentThread waiting");
-                        if (false && clickManager.isAlive()) {
-                            lock.wait();
+                if (false) {
+                    synchronized (lock) {
+                        try {
+                            System.out.println("\t\tCurrentThread waiting");
+                            if (clickManager.isAlive()) {
+                                lock.wait();
+                            }
+                            System.out.println("\t\tCurrentThread released");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        System.out.println("\t\tCurrentThread released");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             }
