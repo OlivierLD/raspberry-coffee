@@ -228,7 +228,7 @@ public class PushButtonController {
                     boolean wasInterrupted = false;
                     // Double, long or single click?
                     if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
-                        this.maybeDoubleClick = false; // Done with 2nd click of a double click.
+              //        this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                         if (verbose) {
                             System.out.printf("\t>>> Detected Double-click. In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
                         }
@@ -250,7 +250,7 @@ public class PushButtonController {
                             synchronized (this) {
                                 this.wait(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
                                 if (this.maybeDoubleClick) { // Can have been set to false by a double click
-                                    if (verbose) {
+                                    if (true || verbose) {
                                         System.out.printf("\t++++ maybeDoubleClick still true (%s), it was NOT a double-click%n", this.buttonName);
                                     }
                                     this.maybeDoubleClick = false; // Reset
@@ -261,6 +261,7 @@ public class PushButtonController {
                                         System.out.printf("\t++++ maybeDoubleClick found false (%s), it WAS a double click (managed before)%n", this.buttonName);
                                     }
                                     System.out.println(">>>>>>> Aha! Execute double-click here?");
+                                    // this.maybeDoubleClick = false;
                                 }
                             }
                         } catch (InterruptedException ie) {
