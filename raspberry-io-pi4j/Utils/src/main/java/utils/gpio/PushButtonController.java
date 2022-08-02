@@ -228,6 +228,19 @@ public class PushButtonController {
                                 this.wait(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
                                 if (this.maybeDoubleClick) { // Can have been set to false by a double click
 
+                                    if (verbose) {
+                                        System.out.printf("\tAfter DOUBLE_CLICK_DELAY, maybeDoubleClick: Button [%s]:\n\t\tbetweenClicks: %s ms,\n\t\tpushedTime: %s ms (%s),\n\t\treleaseTime: %s (%s),\n\t\tpreviousReleaseTime: %s (%s)\n, => (betweenClicks > 0 && betweenClicks < DOUBLE_CLICK_DELAY): %s\n",
+                                                this.buttonName,
+                                                NumberFormat.getInstance().format(this.betweenClicks),
+                                                NumberFormat.getInstance().format(this.pushedTime),
+                                                DURATION_FMT.format(new Date(this.pushedTime)),
+                                                NumberFormat.getInstance().format(this.releaseTime),
+                                                DURATION_FMT.format(new Date(this.releaseTime)),
+                                                NumberFormat.getInstance().format(this.previousReleaseTime),
+                                                DURATION_FMT.format(new Date(this.previousReleaseTime)),
+                                                (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY));
+                                    }
+
                                     if (/*this.maybeDoubleClick &&*/ this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
                                         this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                                         if (verbose) {
