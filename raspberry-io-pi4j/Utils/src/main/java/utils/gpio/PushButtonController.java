@@ -192,16 +192,19 @@ public class PushButtonController {
                 System.out.println("\t>> Before starting clickManager thread:");
                 System.out.printf("\t   Thread is %s%n", clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
             }
-            final Thread currentThread = Thread.currentThread();
+            // final Thread currentThread = Thread.currentThread();
+            final Object lock = new Object();
             if (clickManager != null && clickManager.isAlive()) {
-                System.out.printf("\t>> Killing previous clickManager thread (%s).%n", this.buttonName);
+                if (verbose) {
+                    System.out.printf("\t>> Killing previous clickManager thread (%s).%n", this.buttonName);
+                }
                 clickManager.interrupt();
                 // Wait for the other click manager to die
-                synchronized (currentThread) {
+                synchronized (lock) {
                     try {
                         System.out.println("\t\tCurrentThread waiting");
-                        if (false && clickManager.isAlive()) {
-                            currentThread.wait();
+                        if (clickManager.isAlive()) {
+                            lock.wait();
                         }
                         System.out.println("\t\tCurrentThread released");
                     } catch (InterruptedException e) {
@@ -246,12 +249,16 @@ public class PushButtonController {
                         }
                     } catch (InterruptedException ie) {
                         wasInterrupted = true;
-                        System.out.printf("\t--- Double-click waiter (%s) interrupted (Exception)%n", this.buttonName);
+                        if (verbose) {
+                            System.out.printf("\t--- Double-click waiter (%s) interrupted (InterruptedException)%n", this.buttonName);
+                        }
                         // ie.printStackTrace();
                         // Unlock waiter
-                        synchronized (currentThread) {
-                            System.out.println("\t\tInterrupted thread notifying main thread.");
-                            currentThread.notify();
+                        synchronized (lock) {
+                            if (verbose) {
+                                System.out.println("\t\tInterrupted thread notifying main thread.");
+                            }
+                            lock.notify();
                         }
                     }
                 }

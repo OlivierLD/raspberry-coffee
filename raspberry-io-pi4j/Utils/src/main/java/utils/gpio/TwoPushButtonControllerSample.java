@@ -3,6 +3,9 @@ package utils.gpio;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Just test, to be run separately, for debugging...
  * 2 Buttons:
@@ -12,13 +15,15 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class TwoPushButtonControllerSample {
 
+    private final SimpleDateFormat SDF = new java.text.SimpleDateFormat("HH:mm:ss.SSS");
+
     private static PushButtonController buttonOne;
     private static PushButtonController buttonTwo;
 
     private final Runnable sayHelloOne = () -> {
         try {
             System.out.println("+-----------------------+");
-            System.out.println("| OnClick [One]: Hello! |");
+            System.out.printf("| OnClick [One]: Hello! (%s)%n", SDF.format(new Date()));
             System.out.println("+-----------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello:");
@@ -28,7 +33,7 @@ public class TwoPushButtonControllerSample {
     private final Runnable sayHelloHelloOne = () -> {
         try {
             System.out.println("+-----------------------------------+");
-            System.out.println("| OnDoubleClick [One]: Hello Hello! |");
+            System.out.printf("| OnDoubleClick [One]: Hello Hello! (%s)%n", SDF.format(new Date()));
             System.out.println("+-----------------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello Hello:");
@@ -38,7 +43,7 @@ public class TwoPushButtonControllerSample {
     private final Runnable sayHelloooOne = () -> {
         try {
             System.out.println("+-----------------------------+");
-            System.out.println("| OnLongClick [One]: Hellooo! |");
+            System.out.printf("| OnLongClick [One]: Hellooo! (%s)%n", SDF.format(new Date()));
             System.out.println("+-----------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hellooo:");
@@ -48,7 +53,7 @@ public class TwoPushButtonControllerSample {
     private final Runnable sayHelloTwo = () -> {
         try {
             System.out.println("+-----------------------+");
-            System.out.println("| OnClick [Two]: Hello! |");
+            System.out.printf("| OnClick [Two]: Hello! (%s)%n", SDF.format(new Date()));
             System.out.println("+-----------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello:");
@@ -58,7 +63,7 @@ public class TwoPushButtonControllerSample {
     private final Runnable sayHelloHelloTwo = () -> {
         try {
             System.out.println("+-----------------------------------+");
-            System.out.println("| OnDoubleClick [Two]: Hello Hello! |");
+            System.out.printf("| OnDoubleClick [Two]: Hello Hello! (%s)%n", SDF.format(new Date()));
             System.out.println("+-----------------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello Hello:");
@@ -68,7 +73,7 @@ public class TwoPushButtonControllerSample {
     private final Runnable sayHelloooTwo = () -> {
         try {
             System.out.println("+-----------------------------+");
-            System.out.println("| OnLongClick [Two]: Hellooo! |");
+            System.out.printf("| OnLongClick [Two]: Hellooo! (%s)%n", SDF.format(new Date()));
             System.out.println("+-----------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hellooo:");
