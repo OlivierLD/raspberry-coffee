@@ -124,9 +124,9 @@ public class PushButtonController {
             System.err.println("Not on a PI? Moving on.");
         }
         if (this.gpio != null) {
-            synchronized (this.gpio) {
+//            synchronized (this.gpio) {
                 initCtx(pin);
-            }
+//            }
         } else { // Simulation, if not on a RPi
             initCtx(pin);
         }
@@ -201,34 +201,16 @@ public class PushButtonController {
                         this.buttonName,
                         clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive"));
             }
-            // final Thread currentThread = Thread.currentThread();
-            final Object lock = new Object();
             if (clickManager != null && clickManager.isAlive()) {
                 if (verbose) {
                     System.out.printf("\t>> clickManager thread (%s) is alive.%n", this.buttonName);
-                }
-                if (false) {
-                    clickManager.interrupt();
-                }
-                // Wait for the other click manager to die
-                if (false) {
-                    synchronized (lock) {
-                        try {
-                            System.out.println("\t\tCurrentThread waiting");
-                            if (clickManager.isAlive()) {
-                                lock.wait();
-                            }
-                            System.out.println("\t\tCurrentThread released");
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
             } else {
                 clickManager = new Thread(() -> {
                     boolean wasInterrupted = false;
                     // Double, long or single click?
                     if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
+                        // very unlikely case... TODO Remove it when sure.
                         this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                         if (verbose) {
                             System.out.printf("\t>>> Detected TOP Double-click. In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
@@ -267,12 +249,6 @@ public class PushButtonController {
                                         // Execute single-click operation
                                         this.onClick.run();
                                     }
-//                                } else {
-//                                    if (verbose) {
-//                                        System.out.printf("\t++++ maybeDoubleClick found false (%s), it WAS a double click (managed before)%n", this.buttonName);
-//                                    }
-//                                    System.out.println(">>>>>>> Aha! Execute double-click here?");
-//                                    // this.maybeDoubleClick = false;
                                 }
                             }
                         } catch (InterruptedException ie) {
@@ -281,13 +257,6 @@ public class PushButtonController {
                                 System.out.printf("\t--- Double-click waiter (%s) interrupted (InterruptedException)%n", this.buttonName);
                             }
                             // ie.printStackTrace();
-                            // Unlock waiter
-                            synchronized (lock) {
-                                if (verbose) {
-                                    System.out.println("\t\tInterrupted thread notifying main thread.");
-                                }
-                                lock.notify();
-                            }
                         }
                     } else {
                         if (verbose) {
