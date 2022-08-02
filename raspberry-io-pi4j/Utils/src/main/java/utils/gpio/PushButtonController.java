@@ -194,13 +194,15 @@ public class PushButtonController {
             }
             final Thread currentThread = Thread.currentThread();
             if (clickManager != null && clickManager.isAlive()) {
-                clickManager.interrupt();
                 System.out.printf("\t>> Killing previous clickManager thread (%s).%n", this.buttonName);
+                clickManager.interrupt();
                 // Wait for the other click manager to die
                 synchronized (currentThread) {
                     try {
                         System.out.println("\t\tCurrentThread waiting");
-                        currentThread.wait();
+                        if (clickManager.isAlive()) {
+                            currentThread.wait();
+                        }
                         System.out.println("\t\tCurrentThread released");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
