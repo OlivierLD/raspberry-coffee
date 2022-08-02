@@ -260,6 +260,7 @@ public class PushButtonController {
                                     if (verbose) {
                                         System.out.printf("\t++++ maybeDoubleClick found false (%s), it WAS a double click (managed before)%n", this.buttonName);
                                     }
+                                    System.out.println(">>>>>>> Aha! Execute double-click here?");
                                 }
                             }
                         } catch (InterruptedException ie) {
