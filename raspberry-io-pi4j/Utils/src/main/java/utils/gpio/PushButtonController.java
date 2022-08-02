@@ -248,6 +248,7 @@ public class PushButtonController {
                         // ie.printStackTrace();
                         // Unlock waiter
                         synchronized (currentThread) {
+                            System.out.println("\t\tInterrupted thread notifying main thread.");
                             currentThread.notify();
                         }
                     }
