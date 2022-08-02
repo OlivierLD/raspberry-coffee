@@ -139,7 +139,7 @@ public class PushButtonController {
      * If maybeDoubleClick is now false, it means it has been reset by a double click. In which case the single-click event is not fired.
      */
     private boolean maybeDoubleClick = false; // To be read as it may be the first click of a double click'.
-
+    private Thread clickManager;
     public enum ButtonStatus {
         NONE,
         HIGH,
@@ -184,49 +184,58 @@ public class PushButtonController {
                         DURATION_FMT.format(new Date(this.previousReleaseTime))
                 );
             }
-            Thread clickManager = new Thread(() -> {
-                // Double, long or single click?
-                if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
-                    this.maybeDoubleClick = false; // Done with 2nd click of a double click.
-                    if (verbose) {
-                        System.out.printf("\t++++ In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
-                    }
-                    // Execute double-click operation
-                    this.onDoubleClick.run();
-                } else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
-                    this.maybeDoubleClick = false; // That is not the first of a double-click
-                    // Execute long-click operation
-                    this.onLongClick.run();
-                } else { // Single click
-                    this.maybeDoubleClick = true;
-                }
-                // If single click... It may be the first of a double click
-                if (this.maybeDoubleClick) {
-                    try {
-                        Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
-                        if (this.maybeDoubleClick) { // Can have been set to false by a double click
-                            if (verbose) {
-                                System.out.printf("\t++++ maybeDoubleClick still true (%s), it was NOT a double-click%n", this.buttonName);
-                            }
-                            this.maybeDoubleClick = false; // Reset
-                            // Execute single-click operation
-                            this.onClick.run();
-                        } else {
-                            if (verbose) {
-                                System.out.printf("\t++++ maybeDoubleClick found false (%s), it WAS a double click (managed before)%n", this.buttonName);
-                            }
+            if (clickManager != null && !clickManager.isAlive()) {
+                clickManager = new Thread(() -> {
+                    // Double, long or single click?
+                    if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
+                        this.maybeDoubleClick = false; // Done with 2nd click of a double click.
+                        if (verbose) {
+                            System.out.printf("\t++++ In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
                         }
-                    } catch (InterruptedException ie) {
-                        System.err.printf("Double-click waiter (%s) interrupted%n", this.buttonName);
-                        ie.printStackTrace();
+                        // Execute double-click operation
+                        this.onDoubleClick.run();
+                    } else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
+                        this.maybeDoubleClick = false; // That is not the first of a double-click
+                        // Execute long-click operation
+                        this.onLongClick.run();
+                    } else { // Single click
+                        this.maybeDoubleClick = true;
                     }
-                }
+                    // If single click... It may be the first of a double click
+                    if (this.maybeDoubleClick) {
+                        try {
+                            Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
+                            if (this.maybeDoubleClick) { // Can have been set to false by a double click
+                                if (verbose) {
+                                    System.out.printf("\t++++ maybeDoubleClick still true (%s), it was NOT a double-click%n", this.buttonName);
+                                }
+                                this.maybeDoubleClick = false; // Reset
+                                // Execute single-click operation
+                                this.onClick.run();
+                            } else {
+                                if (verbose) {
+                                    System.out.printf("\t++++ maybeDoubleClick found false (%s), it WAS a double click (managed before)%n", this.buttonName);
+                                }
+                            }
+                        } catch (InterruptedException ie) {
+                            System.err.printf("Double-click waiter (%s) interrupted%n", this.buttonName);
+                            ie.printStackTrace();
+                        }
+                    }
+                    if (verbose) {
+                        System.out.printf("\tEnd of thread clickManager (%s)%n", this.buttonName);
+                    }
+                });
+                // Thread started, on button release.
                 if (verbose) {
-
-                    System.out.printf("\tEnd of thread clickManager (%s)%n", this.buttonName);
+                    System.out.printf("\tStarting the clickManager thread (%s)%n", this.buttonName);
                 }
-            });
-            clickManager.start();
+                clickManager.start();
+            } else {
+                if (verbose) {
+                    System.out.printf("\tNOT Starting the clickManager thread (%s), one is already on.%n", this.buttonName);
+                }
+            }
         }
     }
 
