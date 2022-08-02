@@ -190,7 +190,9 @@ public class PushButtonController {
             }
             if (verbose) {
                 System.out.println("\t>> Before starting clickManager thread:");
-                System.out.printf("\t   Thread is %s%n", clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
+                System.out.printf("\t   Thread for %s is %s%n",
+                        this.buttonName,
+                        clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
             }
             // final Thread currentThread = Thread.currentThread();
             final Object lock = new Object();

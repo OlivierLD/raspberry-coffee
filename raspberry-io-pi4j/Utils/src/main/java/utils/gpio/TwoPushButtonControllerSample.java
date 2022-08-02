@@ -94,6 +94,12 @@ public class TwoPushButtonControllerSample {
                     sayHelloHelloOne,
                     sayHelloooOne);
 
+            try { // This is a test...
+                Thread.sleep(1_000L);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+
             buttonTwo = new PushButtonController(
                     "Button-Two",
                     buttonTwoPin,
