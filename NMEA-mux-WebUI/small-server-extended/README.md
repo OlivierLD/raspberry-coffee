@@ -3,7 +3,7 @@
 > - Can emit its own network
 > - Two push-buttons for User Interface
 > - One OLED Screen
-> - Web UI - accessible from any browser, running on another device on the same network (cell-phone, tablet, laptop,...)
+> - Web UI served from the same device - accessible from any browser, running on another device on the same network (cell-phone, tablet, laptop,...)
 > - Optional BME280 (Temperature, pressure, humidity)
 > - File Logger (with WebUI, logged data can be downloaded from it)
 > - Optional TCP forwarder
@@ -585,6 +585,12 @@ Sample of NMEA Cache, as a JSON object (`GET /mux/cache`):
     "Altitude": 9.1
 }
 ```
+### Web UI
+This small server is also an HTTP server. As long as the server is running, it can serve HTML and REST requests.  
+This project also includes a couple of web pages (in turn invoking REST requests), accessible
+from any device seeing the server on its network, at `http://<rpi-ip-address>:8888/zip/index.html`.  
+It can also use a TCP forwarder (see the `yaml` files for details), making the data it reads available to other
+softs, like OpenCPN oe SeaWi for example.
 
 ### June 2021, from scratch, on a RPi Zero, or 3B, or so.
 From a brand-new buster or bullseye image:
