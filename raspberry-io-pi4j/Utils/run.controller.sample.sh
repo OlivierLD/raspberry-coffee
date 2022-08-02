@@ -3,7 +3,7 @@ CP=./build/libs/Utils-1.0-all.jar
 #
 # For remote debugging
 REMOTE_DEBUG_FLAGS=
-# REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
+# REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="-Dbutton.verbose=true"

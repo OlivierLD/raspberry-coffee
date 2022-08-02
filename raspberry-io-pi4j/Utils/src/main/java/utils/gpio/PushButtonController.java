@@ -158,6 +158,9 @@ public class PushButtonController {
 
     public synchronized void manageButtonState(ButtonStatus status) {
         if (status == ButtonStatus.HIGH) { // Button pressed
+
+            this.maybeDoubleClick = false; // The key for double-click detection, by the clickManager thread.
+
             // Following one for simulation only
             this.isHighForSimulation = true;
 
