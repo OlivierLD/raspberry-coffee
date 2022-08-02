@@ -243,6 +243,9 @@ public class PushButtonController {
                     }
                     // If single click... It may be the first of a double click
                     if (this.maybeDoubleClick) {
+                        if (true || verbose) {
+                            System.out.printf("\tThread for %s will wait %d ms for a double-click...\n", this.buttonName, DOUBLE_CLICK_DELAY);
+                        }
                         try {
                             synchronized (this) {
                                 this.wait(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
@@ -272,6 +275,10 @@ public class PushButtonController {
                                 }
                                 lock.notify();
                             }
+                        }
+                    } else {
+                        if (verbose) {
+                            System.out.printf("\t%s not waiting for a possible double-click.\n", this.buttonName);
                         }
                     }
                     if (verbose && !wasInterrupted) {
