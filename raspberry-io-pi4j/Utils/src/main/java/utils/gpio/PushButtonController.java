@@ -132,6 +132,7 @@ public class PushButtonController {
     private long releaseTime = 0L;
     private long betweenClicks = 0L;
 
+    private final static long MIN_DOUBLE_CLICK_DELAY = 20L; // Sometimes, HIGH is repeated too fast to be real
     private final static long DOUBLE_CLICK_DELAY = 200L; // Less than 2 10th of sec between clicks
     private final static long LONG_CLICK_DELAY = 500L; // Long click: more than half a second
 
@@ -205,7 +206,7 @@ public class PushButtonController {
                     Date threadStartedOn = new Date();
                     boolean wasInterrupted = false;
                     // Double, long or single click?
-                    if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
+                    if (this.maybeDoubleClick && this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY && this.betweenClicks > MIN_DOUBLE_CLICK_DELAY) {
                         // very unlikely case... TODO Remove it when sure.
                         this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                         if (verbose) {
@@ -244,7 +245,7 @@ public class PushButtonController {
                                                 (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY));
                                     }
 
-                                    if (/*this.maybeDoubleClick &&*/ this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
+                                    if (/*this.maybeDoubleClick &&*/ this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY && this.betweenClicks > MIN_DOUBLE_CLICK_DELAY) {
                                         this.maybeDoubleClick = false; // Done with 2nd click of a double click.
                                         if (verbose) {
                                             System.out.printf("\t>>> Detected 2nd Double-click. In DoubleClick branch (%s), Setting maybeDoubleClick back to false%n", this.buttonName);
