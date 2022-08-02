@@ -94,7 +94,7 @@ public class TwoPushButtonControllerSample {
                     sayHelloHelloOne,
                     sayHelloooOne);
 
-            if (false) {
+            if (true) {
                 try { // This is a test... In case the failure we've seen comes from the two provisioning being too close to each other.
                     Thread.sleep(1_000L);
                 } catch (InterruptedException ie) {
