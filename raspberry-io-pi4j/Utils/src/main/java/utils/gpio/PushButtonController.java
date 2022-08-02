@@ -123,7 +123,13 @@ public class PushButtonController {
             // Absorb. You're not on a Pi.
             System.err.println("Not on a PI? Moving on.");
         }
-        initCtx(pin);
+        if (this.gpio != null) {
+            synchronized (this.gpio) {
+                initCtx(pin);
+            }
+        } else { // Simulation, if not on a RPi
+            initCtx(pin);
+        }
     }
 
     private long pushedTime = 0L;
