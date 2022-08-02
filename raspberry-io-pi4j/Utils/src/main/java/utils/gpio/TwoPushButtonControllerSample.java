@@ -17,7 +17,9 @@ public class TwoPushButtonControllerSample {
 
     private final Runnable sayHelloOne = () -> {
         try {
-            System.out.println("OnClick [One]: Hello!");
+            System.out.println("+-----------------------+");
+            System.out.println("| OnClick [One]: Hello! |");
+            System.out.println("+-----------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello:");
             ex.printStackTrace();
@@ -25,7 +27,9 @@ public class TwoPushButtonControllerSample {
     };
     private final Runnable sayHelloHelloOne = () -> {
         try {
-            System.out.println("OnDoubleClick [One]: Hello Hello!");
+            System.out.println("+-----------------------------------+");
+            System.out.println("| OnDoubleClick [One]: Hello Hello! |");
+            System.out.println("+-----------------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello Hello:");
             ex.printStackTrace();
@@ -33,7 +37,9 @@ public class TwoPushButtonControllerSample {
     };
     private final Runnable sayHelloooOne = () -> {
         try {
-            System.out.println("OnLongClick [One]: Hellooo!");
+            System.out.println("+-----------------------------+");
+            System.out.println("| OnLongClick [One]: Hellooo! |");
+            System.out.println("+-----------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hellooo:");
             ex.printStackTrace();
@@ -41,7 +47,9 @@ public class TwoPushButtonControllerSample {
     };
     private final Runnable sayHelloTwo = () -> {
         try {
-            System.out.println("OnClick [Two]: Hello!");
+            System.out.println("+-----------------------+");
+            System.out.println("| OnClick [Two]: Hello! |");
+            System.out.println("+-----------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello:");
             ex.printStackTrace();
@@ -49,7 +57,9 @@ public class TwoPushButtonControllerSample {
     };
     private final Runnable sayHelloHelloTwo = () -> {
         try {
-            System.out.println("OnDoubleClick [Two]: Hello Hello!");
+            System.out.println("+-----------------------------------+");
+            System.out.println("| OnDoubleClick [Two]: Hello Hello! |");
+            System.out.println("+-----------------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hello Hello:");
             ex.printStackTrace();
@@ -57,7 +67,9 @@ public class TwoPushButtonControllerSample {
     };
     private final Runnable sayHelloooTwo = () -> {
         try {
-            System.out.println("OnLongClick [Two]: Hellooo!");
+            System.out.println("+-----------------------------+");
+            System.out.println("| OnLongClick [Two]: Hellooo! |");
+            System.out.println("+-----------------------------+");
         } catch (Exception ex) {
             System.err.println("Say Hellooo:");
             ex.printStackTrace();

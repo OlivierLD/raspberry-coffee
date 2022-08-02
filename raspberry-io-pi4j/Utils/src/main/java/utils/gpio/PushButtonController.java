@@ -186,10 +186,7 @@ public class PushButtonController {
             }
             if (verbose) {
                 System.out.println("\t>> Before starting clickManager thread:");
-                System.out.printf("\tThread is %s%n", clickManager == null ? "null" : "not null.");
-                if (clickManager != null) {
-                    System.out.printf("\tand %s%n", clickManager.isAlive() ? "alive" : "not alive.");
-                }
+                System.out.printf("\t   Thread is %s%s%n", clickManager == null ? "null" : String.format("not null, and %s.", clickManager.isAlive() ? "alive" : "not alive."));
             }
             if (clickManager == null || !clickManager.isAlive()) {
                 clickManager = new Thread(() -> {
@@ -235,7 +232,7 @@ public class PushButtonController {
                 });
                 // Thread started, on button release.
                 if (verbose) {
-                    System.out.printf("\tStarting the clickManager thread (%s)%n", this.buttonName);
+                    System.out.printf("\t>> Starting the clickManager thread (%s)%n", this.buttonName);
                 }
                 clickManager.start();
             } else {
