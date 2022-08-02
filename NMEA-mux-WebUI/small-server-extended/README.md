@@ -594,4 +594,4 @@ From a brand-new buster or bullseye image:
   - `sudo update-alternatives --config javac`
 - `git clone https://github.com/OlivierLD/raspberry-coffee.git`
 
-Or you can build it on some machine, and use it on another, as explained one step above, [here](../#close-to-production).
+Or you can build it on some machine, and use it on another, as explained one step above, [here](../README.md).
