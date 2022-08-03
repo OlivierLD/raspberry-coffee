@@ -152,8 +152,13 @@ public class RESTImplementation {
 		List<String> pathParameters = request.getPathParameters(); // If needed...
 
 		try {
-			Map<String, Object> serviceData = this.featureRequestManager.getDataCache(); // TODO Tweak this
-			String content = new Gson().toJson(serviceData);
+			Map<String, Object> serviceData = this.featureRequestManager.getDataCache(); // TODO Tweak this...
+			String content = "";
+			try {
+				content = new Gson().toJson(serviceData);
+			} catch (IllegalArgumentException iae) {
+				System.out.printf("Device status failed, serviceData: %s%n", serviceData);
+			}
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
