@@ -136,7 +136,7 @@ when displaying the web pages involving intensive REST requests. Works, though.
 > Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)  
 > ![Bigger](../perma-proto-pi-hat_bb_01.png)  
 > ![Bigger](../perma-proto-pi-hat_bb_02.png)  
-> _**Note**_: on the images above, the wiring is set as it fits on the HAT, that explains some overlaps with other hardware.
+> _**Note**_: on the images above, the wiring is set as it fits on the HAT, that explains some overlaps between wires and other hardware.
 > Using a Perma-Proto HAT allows moving hardware around. Notice on the second picture that the screen
 > is higher on the HAT than on the first one. This way it can fit in a smaller enclosure.
 
