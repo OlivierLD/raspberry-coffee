@@ -157,7 +157,7 @@ public class RESTImplementation {
 			try {
 				content = new Gson().toJson(serviceData);
 			} catch (IllegalArgumentException iae) {
-				System.out.printf("Device status failed, serviceData: %s%n", serviceData);
+				System.out.printf("Device status failed (but moving on), serviceData: %s%n", serviceData);
 			}
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
