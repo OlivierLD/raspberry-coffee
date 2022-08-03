@@ -16,6 +16,11 @@
     <script src="js/date.proto.js"></script>
     <script type="text/javascript">
 
+        function setOpacity(e) {
+            let v = this.value;
+            document.body.style.setProperty("--opacity", v);
+        };
+
         let lpad = (str, pad, len) => {
             while (str.length < len) {
                 str = pad + str;
@@ -287,6 +292,10 @@
         };
     </script>
     <style type="text/css">
+    	:root {
+            --opacity: 0.25;
+		}
+
         body {
             color: blue;
             font-family: "Courier New";
@@ -307,7 +316,7 @@
         .bg-data {
             font-size: 64px;
             font-weight: bold;
-            color: rgba(0, 0, 0, 0.15);
+            color: rgba(0, 0, 0, var(--opacity));
             text-align: left;
             margin-top: 125px;
             margin-left: 20px;
@@ -351,6 +360,11 @@
 </div>
 <div style="padding: 4px;">✊&nbsp;<small>Guaranteed <b><i>0%</i></b> external libraries (100% pure organic HTML5/CSS3/ES6, GMO free).</small></div>
 <h2><span class="top-one" onclick="showHideAstroData();" title="Click to show/hide">🌻 Sun Flower - Raw Data <span id="device-pos"></span></span></h2>
+<div>
+    <b>BG Opacity</b>
+    <input type="range" value="0.15" min="0" max="1.0" step="0.01" style="width: 80%;" oninput="setOpacity.call(this, event); opacity01.value = this.value;" />
+    <output name="opacity" id="opacity01"></output>
+</div>
 <div id="astro-data">
     <table style="margin: auto; border: 0px solid cyan;" class="astro-data">
         <tr>
