@@ -343,7 +343,7 @@ Here is an interesting setting, with a Raspberry Pi Zero:
 ![Stacked](./pictures/new.setting.jpg)
 
 - There is a [Stepper Motor bonnet](https://www.adafruit.com/product/4280)
-    - Works like the [Adafruit Motor Hat](https://www.adafruit.com/product/2348), used previously (same code).
+    - Works like the [Adafruit Motor Hat](https://www.adafruit.com/product/2348), used previously (same code), it is smaller and fits nicely on a Raspberry Pi Zero.
 - With a [GPIO Stacking Header](https://www.adafruit.com/product/2223)
 - A small [OLED I2C Screen](https://www.adafruit.com/product/3527)
 
@@ -354,10 +354,14 @@ Here is an interesting setting, with a Raspberry Pi Zero:
             
 ![RPi Zero](./pictures/RPi.zero.display.jpg)
 
-### TODO Next...
-- Add a compass (magnetometer)
-- Add a GPS
+### A "Production" build script
+- A build script, to produce a "production" tar-file, to deploy on the device, without having to use git and gradle on it.
+- Use `./builder.sh` and follow instructions in the terminal.
+  - Do pay attention to the version of the JDK. Small Raspberry Pis may not support JDK 11...
 
+### TODO Next...
+- Add a compass (magnetometer), to dynamically provide the device's orientation.
+- Add a GPS, to dynamically provide the position.
 
 
 ---
