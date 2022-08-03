@@ -119,7 +119,7 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 ### Configurations
 #### [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/)
 RAM: 512 Mb
-- **_Good for logging_**
+- **_Good for logging_** (when you go hiking, biking, kayaking, etc) 
 - A bit challenging when acting as a server (Web and REST), too small.
 - With a 2200mAH LiPo battery, alive between 1:00:31pm and 8:05:57pm (lifespan: 7:05:26)
 - With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
@@ -129,13 +129,16 @@ RAM: 512 Mb
 RAM: 512 Mb
 
 - More powerful that the `Raspberry Pi Zero`, obviously, but still a bit challenged 
-when displaying the web pages involving intensive REST requests.
+when displaying the web pages involving intensive REST requests. Works, though.
 - With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
 - Not enough memory for the xsl/fop/pdf publications
 
-> Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)
-![Bigger](../perma-proto-pi-hat_bb_01.png)
-![Bigger](../perma-proto-pi-hat_bb_02.png)
+> Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)  
+> ![Bigger](../perma-proto-pi-hat_bb_01.png)  
+> ![Bigger](../perma-proto-pi-hat_bb_02.png)  
+> _**Note**_: on the images above, the wiring is set as it fits on the HAT, that explains some overlaps with other hardware.
+> Using a Perma-Proto HAT allows moving hardware around. Notice on the second picture that the screen
+> is higher on the HAT than on the first one. This way it can fit in a smaller enclosure.
 
 #### [Raspberry Pi 3 B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
 #### [Raspberry Pi 3 B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
@@ -160,7 +163,7 @@ In this configuration, the consumption is between 0.25 and 0.30 Amps.
 > Bonus: [3D printed](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) enclosure (with pictures!).
 
 #### Networking...
-By default, the Raspberry Pi emits its own network, but it is some times convenient (to say the least) to hook uyop to the Internet.
+By default, the Raspberry Pi can emit its own network, but it is some times convenient (to say the least) to hook it up to the Internet.
 
 > Note: When the Raspberry emits its own network, the file to look into to flip this feature on and off (when you need an update or upgrade, for example) is `/etc/network/interfaces`.
 >
