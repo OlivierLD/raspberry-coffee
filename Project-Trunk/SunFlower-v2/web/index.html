@@ -16,9 +16,8 @@
     <script src="js/date.proto.js"></script>
     <script type="text/javascript">
 
-        function setOpacity(e) {
-            let v = this.value;
-            document.body.style.setProperty("--opacity", v);
+        let setOpacity = (value) => {
+            document.body.style.setProperty("--opacity", value);
         };
 
         let lpad = (str, pad, len) => {
@@ -362,7 +361,7 @@
 <h2><span class="top-one" onclick="showHideAstroData();" title="Click to show/hide">🌻 Sun Flower - Raw Data <span id="device-pos"></span></span></h2>
 <div>
     <b>BG Opacity</b>
-    <input type="range" value="0.15" min="0" max="1.0" step="0.01" style="width: 80%;" oninput="setOpacity.call(this, event); opacity01.value = this.value;" />
+    <input type="range" value="0.15" min="0" max="1.0" step="0.01" style="width: 80%;" oninput="setOpacity(this.value); opacity01.value = this.value;" />
     <output name="opacity" id="opacity01"></output>
 </div>
 <div id="astro-data">
