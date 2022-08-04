@@ -1,5 +1,7 @@
 # Navigation Server
 #### Prolongation/Extension of the NMEA-multiplexer
+This is the one you want if the board (computer) you want to run it on is strong enough.  
+It might not be the case for small boards like Raspberry Pi Zero or A+... See [NMEA-mux-WebUI](../NMEA-mux-WebUI) for more details on alternate configurations. 
 
 > This project was tested and used at sea, in the real world.
 
