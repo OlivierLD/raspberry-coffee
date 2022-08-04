@@ -12,6 +12,9 @@ java -cp ${CP} com.diozero.sampleapps.GpioReadAll
 #
 # Compare to others, if available
 #
+echo -e "-----------------------"
+echo -e "--- Other utilities ---"
+echo -e "-----------------------"
 if [[ "$(which pinout)" != "" ]]; then
   echo -e "-- pinout --"
   pinout
