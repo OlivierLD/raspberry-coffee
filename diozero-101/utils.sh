@@ -12,6 +12,13 @@ java -cp ${CP} com.diozero.sampleapps.GpioReadAll
 #
 # Compare to others, if available
 #
+if [[ "$(which pinout)" != "" ]]; then
+  echo -e "-- pinout --"
+  pinout
+else
+  echo -e "pinout not available."
+fi
+
 if [[ "$(which gpio)" != "" ]]; then
   echo -e "-- gpio readall --"
   gpio readall
@@ -24,7 +31,7 @@ if [[ -f ../common-utils/build/libs/common-utils-1.0-all.jar ]]; then
   java -cp ../common-utils/build/libs/common-utils-1.0-all.jar utils.GenericPinUtil
 else
   if [[ -f ../common-utils/build/libs/common-utils-1.0.jar ]]; then
-    echo -e "-- java utils.GenericPinUtil (non-fat) --"
+    echo -e "-- java utils.GenericPinUtil (non-fat, fallback) --"
     java -cp ../common-utils/build/libs/common-utils-1.0.jar utils.GenericPinUtil
   else
     echo -e "utils.GenericPinUtil not available..."

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Decomposition into prime factors.
+ */
 public class Primes {
 
     public enum OutputOption {
@@ -17,6 +20,19 @@ public class Primes {
         primeMap.merge(n, 1, Integer::sum);
     }
 
+    /**
+     * The main method. Does the actual decomposition.
+     *
+     * @param n The number to decompose
+     * @return The Map holding the decomposition:
+     *          key: the prime number
+     *          value: its power
+     *
+     * Example:
+     * - n = 315
+     * - returns {3=2, 5=1, 7=1}
+     * To be read : 315 = 3^2 * 5^1 * 7^1
+     */
     public static Map<Integer, Integer> primeFactors(int n) {
         Map<Integer, Integer> primeMap = new HashMap<>();
 
