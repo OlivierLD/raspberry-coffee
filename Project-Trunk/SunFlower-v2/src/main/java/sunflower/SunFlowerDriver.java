@@ -63,6 +63,9 @@ import static utils.TimeUtil.delay;
  */
 public class SunFlowerDriver {
 
+	private final static int SSD1306_WIDTH = 128;
+	private final static int SSD1306_HEIGHT = 32;
+
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // HTTPServer.class.getName());
 	static {
 		LOGGER.setLevel(Level.INFO);
@@ -849,8 +852,9 @@ public class SunFlowerDriver {
 		}
 
 		if (withSSD1306) {
-			int width = 128;
-			int height = 32;
+			int width = SSD1306_WIDTH;
+			int height = SSD1306_HEIGHT;
+
 			sb = new ScreenBuffer(width, height);
 			try {
 				oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS, width, height); // I2C interface
@@ -861,7 +865,7 @@ public class SunFlowerDriver {
 				// Not on a RPi? Try JPanel.
 				oled = null;
 				System.out.println("Displaying substitute Swing Led Panel");
-				SwingLedPanel.ScreenDefinition screenDef = SwingLedPanel.ScreenDefinition.SSD1306_128x32;
+				SwingLedPanel.ScreenDefinition screenDef = SwingLedPanel.ScreenDefinition.SSD1306_128x32; // ;)
 				substitute = new SwingLedPanel(screenDef);
 				substitute.setLedColor(Color.red);
 				substitute.setVisible(true);
@@ -1024,7 +1028,7 @@ public class SunFlowerDriver {
 
 	private void displayOled() {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		boolean oneLine = false;
+		boolean oneLine = false; // Hard coded option.
 		int fontFactor = 2;
 		if (oneLine) {
 			fontFactor = 3;

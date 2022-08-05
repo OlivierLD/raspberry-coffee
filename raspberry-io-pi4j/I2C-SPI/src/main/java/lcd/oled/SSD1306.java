@@ -68,11 +68,11 @@ public class  SSD1306 {
 
 	//private final static int SPI_PORT =  0;
 	private final static int SPI_DEVICE = Spi.CHANNEL_0; // 0
-  private final static int DEFAULT_WIDTH = 128,
-		                       DEFAULT_HEIGHT = 32;
+  	private final static int DEFAULT_WIDTH = 128,
+		                     DEFAULT_HEIGHT = 32;
 
 	private int width = DEFAULT_WIDTH,
-							height = DEFAULT_HEIGHT;
+				height = DEFAULT_HEIGHT;
 	private final int clockHertz = 8_000_000; // 8 MHz
 	private int vccstate = 0; // or SSD1306_EXTERNALVCC
 	private int pages = 0;

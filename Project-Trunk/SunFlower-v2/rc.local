@@ -21,7 +21,7 @@ fi
 echo "-- From /etc/rc.local --"
 # ln -s /dev/ttyACM0 /dev/ttyS80
 echo "Now starting a SunFlower server"
-cd ~pi/sun-flower-dist
-nohup ./server.sh &
-cd -
+pushd ~pi/sun-flower-dist
+  nohup ./server.sh > sf.log 2>&1 &
+popd
 exit 0

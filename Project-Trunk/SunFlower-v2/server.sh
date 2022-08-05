@@ -49,7 +49,8 @@ JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=false" # Set to true NOT to use the 
 JAVA_OPTS="${JAVA_OPTS} -Dping.nmea.server=false"
 JAVA_OPTS="${JAVA_OPTS} -Dnmea.server.base.url=http://192.168.42.30:9991"
 #
-JAVA_OPTS="${JAVA_OPTS} -Dwith.ssd1306=true" # OLED!
+JAVA_OPTS="${JAVA_OPTS} -Dwith.ssd1306=true" # OLED! Default 128x32
+JAVA_OPTS="${JAVA_OPTS} -Dssd1306.verbose=false"
 #
 JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 #
@@ -57,7 +58,7 @@ JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 # Make sure ping.nmea.server=false
 # May require a link sudo ln -s /dev/ttyACM0 /dev/ttyS80
 #           and sudo apt-install librxtx-java
-JAVA_OPTS="${JAVA_OPTS} -Ddate.from.gps=false"
+JAVA_OPTS="${JAVA_OPTS} -Ddate.from.gps=false"   # if false, next ones are ignored.
 JAVA_OPTS="${JAVA_OPTS} -Dgps.verbose=false"
 JAVA_OPTS="${JAVA_OPTS} -Dgps.serial.baud.rate=4800"
 #
@@ -85,5 +86,5 @@ echo -e "Try curl -X GET http://${MY_IP}:${PORT}/sf/status"
 echo -e "Or browse http://${MY_IP}:${PORT}/web/index.html"
 echo -e "       or http://${MY_IP}:${PORT}/zip/index.html"
 #
-echo -e "Try 'nohup $0 > sf.log &'"
+echo -e "Also try 'nohup $0 > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer
