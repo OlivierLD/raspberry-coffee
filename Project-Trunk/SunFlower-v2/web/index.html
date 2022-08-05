@@ -192,7 +192,7 @@
         let drawElevation = (divId, elev) => {
             // console.log(`Sun Elevation: ${elev.toFixed(2)}`);
             // document.getElementById(divId).innerHTML = `Sun Elevation: ${elev.toFixed(2)}&deg;`;
-            let fillColor = 'white';
+            let fillColor = rgba(0, 0, 0, 0.1); // 'white';
             let parent = (divId !== null) ? document.getElementById(divId) : null;
 
             let svg = document.createElementNS(XMLNS, 'svg');
