@@ -1,3 +1,8 @@
+# Preamble
+The files contained in this folder do not intend to be more than examples!  
+Again: _**examples**_. Bring them to prod at your own risks.  
+This is open source. You need to know what you're doing. You would not give a gun to an idiot, would you?
+
 ## TODO
 - Web-Component console, with mirror/starwars effect for HeadsUp display, with at least (to begin with):
     - TWS, TWD

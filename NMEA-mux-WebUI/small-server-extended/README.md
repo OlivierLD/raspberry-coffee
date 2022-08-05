@@ -80,7 +80,10 @@ Good for all terrain logging!
 Raspberry Pi A+, with a 3D-printed enclosure, Solar power supply. 
 - See [here](https://learn.adafruit.com/solar-boost-bag).
 
-![3D printed stuff](./img/01.full.setting.jpg)
+![3D printed stuff](./img/01.full.setting.jpg)  
+3D printed enclosure, 6600 mAh battery, solar panel  
+![Real life](./img/kayak.setting.jpg)  
+At work! Producing documents like [this](https://www.google.com/maps/d/embed?mid=1HGimwWDpelTGRKgWL7jj9R2uva0uX1Q&hl=en&ehbc=2E312F).
 
 - 3D files [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Battery.Cases).
 
