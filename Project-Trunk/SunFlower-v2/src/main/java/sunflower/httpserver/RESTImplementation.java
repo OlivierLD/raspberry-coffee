@@ -10,10 +10,7 @@ import http.RESTProcessorUtil;
 import sunflower.SunFlowerDriver;
 
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -153,11 +150,13 @@ public class RESTImplementation {
 
 		try {
 			Map<String, Object> serviceData = this.featureRequestManager.getDataCache(); // TODO Tweak this...
+			// To avoid concurrentAccessException
+			final Map<String, Object> _serviceData = (Map<String, Object>)((HashMap<String, Object>)serviceData).clone(); // shallow copy
 			String content = "";
 			try {
-				synchronized (serviceData) {
-					content = new Gson().toJson(serviceData);
-				}
+//				synchronized (serviceData) {
+					content = new Gson().toJson(_serviceData);
+//				}
 			} catch (IllegalArgumentException iae) {
 				System.out.printf("Device status failed (but moving on), serviceData: %s%n", serviceData);
 			}
