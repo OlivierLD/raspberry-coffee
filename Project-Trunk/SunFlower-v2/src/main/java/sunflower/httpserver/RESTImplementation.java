@@ -155,7 +155,9 @@ public class RESTImplementation {
 			Map<String, Object> serviceData = this.featureRequestManager.getDataCache(); // TODO Tweak this...
 			String content = "";
 			try {
-				content = new Gson().toJson(serviceData);
+				synchronized (serviceData) {
+					content = new Gson().toJson(serviceData);
+				}
 			} catch (IllegalArgumentException iae) {
 				System.out.printf("Device status failed (but moving on), serviceData: %s%n", serviceData);
 			}
