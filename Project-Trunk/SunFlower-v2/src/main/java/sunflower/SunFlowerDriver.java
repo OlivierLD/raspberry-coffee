@@ -1046,6 +1046,7 @@ public class SunFlowerDriver {
 		}
 
 		if ("true".equals(System.getProperty("ssd1306.verbose"))) {
+			System.out.printf("At %s%n", SDF.format(new Date()));
 			ScreenBuffer.dumpScreenBuffer(sb);
 		}
 
