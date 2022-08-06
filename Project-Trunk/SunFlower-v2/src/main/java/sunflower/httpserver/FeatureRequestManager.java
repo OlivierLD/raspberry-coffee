@@ -8,7 +8,6 @@ import http.client.HTTPClient;
 import sunflower.SunFlowerDriver;
 
 import java.io.StringReader;
-import java.net.ConnectException;
 import java.net.SocketException;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -20,8 +19,8 @@ import java.util.Map;
  */
 public class FeatureRequestManager implements RESTRequestManager {
 
-	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
-	private RESTImplementation restImplementation;
+	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private final RESTImplementation restImplementation;
 
 	private SunFlowerServer sunFlowerServer = null;
 	private SunFlowerDriver featureManager = null; // Physical, the actual device (SunFlowerDriver)
@@ -116,7 +115,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 				} catch (/*ConnectException | */ SocketException ce) {
 					if (!alreadyRaisedConnectException) {
 						System.out.println(              "+------------------------------------------------------------------------------------");
-						System.out.println(String.format("| >>> %s:NMEA Thread connecting to %s: %s", NumberFormat.getInstance().format(System.currentTimeMillis()), resource, ce.toString()));
+						System.out.printf("| >>> %s:NMEA Thread connecting to %s: %s\n", NumberFormat.getInstance().format(System.currentTimeMillis()), resource, ce.toString());
 						System.out.println(              "+------------------------------------------------------------------------------------");
 						alreadyRaisedConnectException = true;
 					}
@@ -126,7 +125,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 				featureManager.setDevicePosition(latitude, longitude);
 				featureManager.setDeviceHeading(heading);
 				if (httpVerbose) {
-					System.out.println(String.format(">> From the cache: lat: %.02f, lng: %.02f, hdg: %.02f", latitude, longitude, heading));
+					System.out.printf(">> From the cache: lat: %.02f, lng: %.02f, hdg: %.02f\n", latitude, longitude, heading);
 				}
 
 				try {
@@ -167,15 +166,13 @@ public class FeatureRequestManager implements RESTRequestManager {
 		restImplementation.setFeatureManager(this.featureManager);
 
 		this.featureManager.init(); // Takes care of the system variables as well.
-		Thread featureThread = new Thread(() -> {
-			this.featureManager.start();
-		}, "feature-thread");
+		Thread featureThread = new Thread(this.featureManager::start, "feature-thread");
 		featureThread.start();
 
 		if ("true".equals(System.getProperty("ping.nmea.server", "false"))) {
 			String serverUrl = System.getProperty("nmea.server.base.url", "http://localhost:9999");
 			if (httpVerbose) {
-				System.out.println(String.format(">>> Starting NMEA thread on %s", serverUrl));
+				System.out.printf(">>> Starting NMEA thread on %s\n", serverUrl);
 			}
 			// Will get data from /mux/cache (See RESTNavServer and NMEAMultiplexer).
 			// Examples: nmea.mux.hmc5883l.properties and nmea.mux.hmc5883l.yaml, nmea.mux.hmc5883l.oled.yaml,
@@ -185,7 +182,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 
 	}
 
-	private Map<String, Object> dataCache = new HashMap<>();
+	private final Map<String, Object> dataCache = new HashMap<>();
 	public synchronized  Map<String, Object> getDataCache() {
 		return this.dataCache;
 	}
@@ -195,7 +192,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 	 *
 	 * @param request incoming request
 	 * @return as defined in the {@link RESTImplementation}
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException Oops
 	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
