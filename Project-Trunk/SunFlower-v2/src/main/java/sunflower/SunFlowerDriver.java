@@ -1044,6 +1044,11 @@ public class SunFlowerDriver {
 			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
+
+		if ("true".equals(System.getProperty("ssd1306.verbose"))) {
+			ScreenBuffer.dumpScreenBuffer(sb);
+		}
+
 		if (oled != null) {
 			oled.setBuffer(sb.getScreenBuffer());
 			try {

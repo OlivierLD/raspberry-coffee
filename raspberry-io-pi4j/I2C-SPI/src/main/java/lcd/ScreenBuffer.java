@@ -5,6 +5,9 @@ import lcd.utils.CharacterMatrixes;
 
 import java.awt.Point;
 import java.awt.Polygon;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import utils.StringUtils;
 
 public class ScreenBuffer {
@@ -70,7 +73,7 @@ public class ScreenBuffer {
 			for (int col = 0; col < this.w; col++) {
 				int bmVal = 0;
 				for (int b = 0; b < 8; b++) {
-					if (screenMatrix[(line * 8) + b][col] == 'X') {
+					if (this.screenMatrix[(line * 8) + b][col] == 'X') {
 						bmVal |= (1 << b);
 					}
 				}
@@ -79,6 +82,14 @@ public class ScreenBuffer {
 			}
 		}
 		return this.screenBuffer;
+	}
+
+	// For debug or so. Dump on a terminal.
+	public static void dumpScreenBuffer(ScreenBuffer screenBuffer) {
+	    char[][] matrix = screenBuffer.screenMatrix;
+		Arrays.asList(matrix).forEach(line -> {
+			System.out.println(Arrays.asList(line).stream().map(c -> new String(c)).collect(Collectors.joining("")));
+		});
 	}
 
 	/**

@@ -13,6 +13,7 @@ import com.pi4j.wiringpi.Spi;
 import utils.PinUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static utils.TimeUtil.delay;
 
@@ -158,6 +159,12 @@ public class  SSD1306 {
 		initSSD1306(w, h);
 	}
 
+	/**
+	 * I2C Interface, with default width and height
+	 * @param i2cAddr I2C Address
+	 * @throws I2CFactory.UnsupportedBusNumberException Oops
+	 * @throws IOException Oops
+	 */
 	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		this(i2cAddr, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
@@ -215,13 +222,13 @@ public class  SSD1306 {
 				System.exit(1);
 			}
 
-			gpio = GpioFactory.getInstance();
+			SSD1306.gpio = GpioFactory.getInstance();
 
-			mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
-			clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
-			chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.HIGH);
-			resetOutput = gpio.provisionDigitalOutputPin(spiRst, "RST", PinState.LOW);
-			dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
+			SSD1306.mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
+			SSD1306.clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
+			SSD1306.chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.HIGH);
+			SSD1306.resetOutput = gpio.provisionDigitalOutputPin(spiRst, "RST", PinState.LOW);
+			SSD1306.dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
 
 			if (verbose) {
 				String[] map = new String[]{
@@ -253,7 +260,7 @@ public class  SSD1306 {
 	}
 
 	public int[] getBuffer() {
-		return buffer;
+		return this.buffer;
 	}
 
 	/**
@@ -448,12 +455,12 @@ public class  SSD1306 {
 		this.command(0); // Page start address. (0 = reset)
 		this.command(this.pages - 1); // Page end address.
 
-		if (dcOutput != null) {
+		if (SSD1306.dcOutput != null) { // SPI
 			// Write buffer data.
 			//   Set DC high for data.
-			dcOutput.high();
+			SSD1306.dcOutput.high();
 			this.write(this.buffer);
-		} else {
+		} else {                        // I2C
 			try {
 				byte[] bb = new byte[this.buffer.length];
 				for (int i=0; i<bb.length; i++) {

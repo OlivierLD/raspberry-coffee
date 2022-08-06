@@ -5,6 +5,9 @@
 # REST Interface for the data.
 # Designed to be started in background.
 #
+# Note: If the computer if not connected to the Internet, you need to get the date from the GPS.
+# (see -Ddate.from.gps=true|false)
+#
 CP=./build/libs/SunFlower-v2-1.0-all.jar
 JAVA_OPTS=
 # JAVA_OPTS="${JAVA_OPTS} -Ddevice.lat=37.7489 -Ddevice.lng=-122.5070"  # SF
@@ -54,9 +57,9 @@ JAVA_OPTS="${JAVA_OPTS} -Dssd1306.verbose=false"
 #
 JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 #
-# Add a GPS on a Serial Port (to get RMC Date amd Position)
+# Add a GPS on a Serial Port (to get RMC Date and Position)
 # Make sure ping.nmea.server=false
-# May require a link sudo ln -s /dev/ttyACM0 /dev/ttyS80
+# May require a link sudo ln -s /dev/ttyACM0 /dev/ttyS80. See gps.serial.port below.
 #           and sudo apt-install librxtx-java
 JAVA_OPTS="${JAVA_OPTS} -Ddate.from.gps=false"   # if false, next ones are ignored.
 JAVA_OPTS="${JAVA_OPTS} -Dgps.verbose=false"
