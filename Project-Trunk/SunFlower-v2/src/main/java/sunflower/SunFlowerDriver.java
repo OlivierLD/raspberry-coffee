@@ -1398,6 +1398,39 @@ public class SunFlowerDriver {
 	}
 
 	public void stop() {
+
+		// Displaying message on screen
+		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+		boolean oneLine = false; // Hard coded option.
+		int fontFactor = 2;
+		if (oneLine) {
+			fontFactor = 3;
+			String display = String.format("Parking device.");
+			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+		} else {
+			String lineOne = String.format("Parking and");
+			String lineTwo = String.format("Stopping device");
+			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+		}
+
+		if ("true".equals(System.getProperty("ssd1306.verbose"))) {
+			System.out.printf("At %s%n", SDF.format(new Date()));
+			ScreenBuffer.dumpScreenBuffer(sb);
+		}
+
+		if (oled != null) {
+			oled.setBuffer(sb.getScreenBuffer());
+			try {
+				oled.display();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} else if (substitute != null) {
+			substitute.setBuffer(sb.getScreenBuffer());
+			substitute.display();
+		}
+
 		this.keepGoing = false;
 		// Park the device
 		parkDevice();
