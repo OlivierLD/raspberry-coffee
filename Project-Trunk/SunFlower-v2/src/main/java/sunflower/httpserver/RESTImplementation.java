@@ -163,7 +163,7 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex1) {
-			System.err.println(">> Managed Exception:");
+			System.err.println(">> Managed Exception SUN_FLOWER-0001:");
 			ex1.printStackTrace();
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -187,7 +187,7 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex1) {
-			System.err.println(">> Managed Exception:");
+			System.err.println(">> Managed Exception SUN_FLOWER-0002:");
 			ex1.printStackTrace();
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -210,7 +210,7 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex1) {
-			System.err.println(">> Managed Exception:");
+			System.err.println(">> Managed Exception SUN_FLOWER-0003:");
 			ex1.printStackTrace();
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -269,7 +269,7 @@ public class RESTImplementation {
 				response.setPayload(content.getBytes());
 				return response;
 			} catch (Exception ex1) {
-				System.err.println(">> Managed Exception:");
+				System.err.println(">> Managed Exception SUN_FLOWER-0004:");
 				ex1.printStackTrace();
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
@@ -329,7 +329,7 @@ public class RESTImplementation {
 				response.setPayload(content.getBytes());
 				return response;
 			} catch (Exception ex1) {
-				System.err.println(">> Managed Exception:");
+				System.err.println(">> Managed Exception SUN_FLOWER-0007:");
 				ex1.printStackTrace();
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
@@ -389,7 +389,7 @@ public class RESTImplementation {
 				response.setPayload(content.getBytes());
 				return response;
 			} catch (Exception ex1) {
-				System.err.println(">> Managed Exception:");
+				System.err.println(">> Managed Exception SUN_FLOWER-0010:");
 				ex1.printStackTrace();
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,

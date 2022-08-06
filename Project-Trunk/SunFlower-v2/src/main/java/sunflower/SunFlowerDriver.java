@@ -1405,11 +1405,11 @@ public class SunFlowerDriver {
 		int fontFactor = 2;
 		if (oneLine) {
 			fontFactor = 3;
-			String display = String.format("Parking device.");
+			String display = String.format("Parking...");
 			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		} else {
-			String lineOne = String.format("Parking and");
-			String lineTwo = String.format("Stopping device");
+			String lineOne = String.format("Parking,");
+			String lineTwo = String.format("Stopping.");
 			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
