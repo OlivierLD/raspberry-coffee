@@ -1,11 +1,6 @@
 package utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -255,7 +250,6 @@ public class StaticUtil {
 		return newContent;
 	}
 
-
 	public static void shutdown() throws RuntimeException, IOException {
 		String shutdownCommand;
 		String operatingSystem = System.getProperty("os.name");
@@ -288,6 +282,37 @@ public class StaticUtil {
 
 		Runtime.getRuntime().exec(shutdownCommand); // Might require a sudo, hey...
 		System.exit(0);
+	}
+
+	public final static Object deepCopy(Object original) throws Exception {
+		Object clone = null;
+
+		ByteArrayOutputStream bos = null;
+		ByteArrayInputStream bis = null;
+		try {
+			// Serialize
+			bos = new ByteArrayOutputStream();
+			ObjectOutputStream out = new ObjectOutputStream(bos);
+			out.writeObject(original);
+			out.flush();
+//                    byte[] byteArray = bos.toByteArray();
+			// De-Serialize
+			bis = new ByteArrayInputStream(bos.toByteArray());
+			ObjectInput in = new ObjectInputStream(bis);
+			clone = in.readObject();
+		} finally {
+			try {
+				if (bos != null) {
+					bos.close();
+				}
+				if (bis != null) {
+					bis.close();
+				}
+			} catch (IOException ex) {
+				// ignore close exception
+			}
+		}
+		return clone;
 	}
 
 	public static void main(String... args) throws Exception {

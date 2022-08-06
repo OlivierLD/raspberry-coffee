@@ -7,6 +7,7 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import sunflower.SunFlowerDriver;
+import utils.StaticUtil;
 
 import java.util.*;
 
@@ -149,7 +150,8 @@ public class RESTImplementation {
 		try {
 			Map<String, Object> serviceData = this.featureRequestManager.getDataCache(); // TODO Tweak this...
 			// Clone to avoid concurrentAccessException
-			final Map<String, Object> _serviceData = (Map<String, Object>)((HashMap<String, Object>)serviceData).clone(); // shallow copy
+//			final Map<String, Object> _serviceData = (Map<String, Object>)((HashMap<String, Object>)serviceData).clone(); // shallow copy
+			final Map<String, Object> _serviceData = (Map<String, Object>)StaticUtil.deepCopy(serviceData);
 			String content = "";
 			try {
 				content = new Gson().toJson(_serviceData);

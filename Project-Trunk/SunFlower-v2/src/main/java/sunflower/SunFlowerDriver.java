@@ -1069,7 +1069,7 @@ public class SunFlowerDriver {
 	public void start() {
 		keepGoing = true;
 
-		// If GSP required, start Serial Thread
+		// If GPS required, start Serial Thread
 		boolean dateFromGPS = "true".equals(System.getProperty("date.from.gps")); // =true"
 		String serialPort = System.getProperty("gps.serial.port"); // =/dev/ttyS80", "/dev/tty.usbmodem141101"
 		String baudRateStr = System.getProperty("gps.serial.baud.rate", "4800"); // =4800"
@@ -1259,6 +1259,16 @@ public class SunFlowerDriver {
 		}
 		// End
 		if (withSSD1306) {
+			// TODO Wait for signal
+			synchronized (currentThread) {
+				try {
+					currentThread.wait();
+					System.out.println("Final shutdown...");
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
 			// Clear the screen before shutting down.
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			if (oled != null) {
@@ -1459,6 +1469,8 @@ public class SunFlowerDriver {
 		}
 	}
 
+	private final Thread currentThread = Thread.currentThread();
+
 	public void init() {
 		// Display all system variables
 		if (false) {
@@ -1488,6 +1500,9 @@ public class SunFlowerDriver {
 				try {
 					thread.wait();
 					System.out.println("Bye now!");
+					synchronized(currentThread) {
+						currentThread.notify();
+					}
 				} catch (Exception absorbed) {
 					System.err.println("Ctrl-C: Oops!");
 					absorbed.printStackTrace();
