@@ -1397,7 +1397,7 @@ public class SunFlowerDriver {
 		}
 	}
 
-	public void stop() {
+	public void stop(Thread parent) {
 
 		// Displaying message on screen
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
@@ -1454,6 +1454,9 @@ public class SunFlowerDriver {
 		if (astroThread != null) {
 			astroThread.stopCalculating();
 		}
+		synchronized (parent) {
+			parent.notify();
+		}
 	}
 
 	public void init() {
@@ -1478,10 +1481,17 @@ public class SunFlowerDriver {
 			if (gpsReader != null) {
 				gpsReader.stopReading();
 			}
-			this.stop();
-			try { Thread.sleep(5_000); } catch (Exception absorbed) {
-				System.err.println("Ctrl-C: Oops!");
-				absorbed.printStackTrace();
+			final Thread thread = Thread.currentThread();
+
+			this.stop(thread);
+			synchronized (thread) {
+				try {
+					thread.wait();
+					System.out.println("Bye now!");
+				} catch (Exception absorbed) {
+					System.err.println("Ctrl-C: Oops!");
+					absorbed.printStackTrace();
+				}
 			}
 		}, "Shutdown Hook"));
 
