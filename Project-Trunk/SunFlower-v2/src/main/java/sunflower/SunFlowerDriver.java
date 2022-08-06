@@ -108,7 +108,7 @@ public class SunFlowerDriver {
 
 	public void setDeviceHeading(double hdg) {
 		if (hdg != this.deviceHeading) { // Then orient the device?
-			System.out.println(String.format("Heading has changed from %.02f to %.02f", this.deviceHeading, hdg));
+			System.out.printf("Heading has changed from %.02f to %.02f\n", this.deviceHeading, hdg);
 		}
 		this.deviceHeading = hdg;
 	}
@@ -557,7 +557,7 @@ public class SunFlowerDriver {
 	}
 
 	private void logWithTime(String message) {
-//		System.out.println(String.format("%s - %s", SDF.format(new Date()), message));
+//		System.out.printf("%s - %s", SDF.format(new Date()), message));
 		getInstance().getLogger().info(String.format("%s - %s", SDF.format(new Date()), message));
 	}
 
@@ -570,7 +570,7 @@ public class SunFlowerDriver {
 	}
 
 	public void setDevicePosition(double lat, double lng) {
-		this.devicePosition = new Position(lat, lng);
+		SunFlowerDriver.devicePosition = new Position(lat, lng);
 	}
 
 	// TODO a queue to separate the MotorThreads?
@@ -597,14 +597,14 @@ public class SunFlowerDriver {
 				long before = System.currentTimeMillis();
 				if (MOTOR_HAT_VERBOSE) {
 					System.out.println("+----------------------------------------------");
-					System.out.println(String.format("| Starting move of %d steps on motor #%d (%s)", nbSteps, this.stepper.getMotorNum(), this.stepper.getMotorNum() == 1 ? "Z" : "Elev"));
+					System.out.printf("| Starting move of %d steps on motor #%d (%s)\n", nbSteps, this.stepper.getMotorNum(), this.stepper.getMotorNum() == 1 ? "Z" : "Elev");
 					System.out.println("+----------------------------------------------");
 				}
 				if ("false".equals(System.getProperty("no.motor.movement", "false"))) {
 					this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
 						if (MOTOR_HAT_VERBOSE && TOO_LONG_EXCEPTION_VERBOSE) {
 							// t.printStackTrace();
-							System.out.println(String.format("\t\tToo long! %s", t));
+							System.out.printf("\t\tToo long! %s\n", t);
 						}
 					});
 				} else {
@@ -613,15 +613,15 @@ public class SunFlowerDriver {
 				long after = System.currentTimeMillis();
 				if (MOTOR_HAT_VERBOSE) {
 					System.out.println("+----------------------------------------------");
-					System.out.println(String.format("| Completed move of %d steps on motor #%d in %d ms", nbSteps, this.stepper.getMotorNum(), (after - before)));
+					System.out.printf("| Completed move of %d steps on motor #%d in %d ms\n", nbSteps, this.stepper.getMotorNum(), (after - before));
 					System.out.println("+----------------------------------------------");
 				}
 				MoveCompleted payload = new MoveCompleted(new Date(), this.nbSteps, (after - before));
 				instance.publish(this.stepper.getMotorNum() == 1 ? EventType.MOVING_AZIMUTH_END : EventType.MOVING_ELEVATION_END, payload);
 				if (MOTOR_HAT_VERBOSE) {
-					System.out.println(String.format("\t%s on motor #%d",
+					System.out.printf("\t%s on motor #%d\n",
 							payload.toString(),
-							this.stepper.getMotorNum()));
+							this.stepper.getMotorNum());
 				}
 			} catch (IOException ie) {
 				ie.printStackTrace();
@@ -692,7 +692,7 @@ public class SunFlowerDriver {
 							if (!matcher.matches()) {
 								throw new RuntimeException(String.format("%s does not match expected format %s", startDate, patternStr));
 							} else {
-								System.out.println(String.format("\tSimulation starting %s", startDate));
+								System.out.printf("\tSimulation starting %s\n", startDate);
 								int year = Integer.parseInt(startDate.substring(0, 4));
 								int month = Integer.parseInt(startDate.substring(5, 7));
 								int day = Integer.parseInt(startDate.substring(8, 10));
@@ -720,7 +720,7 @@ public class SunFlowerDriver {
 							if (incrementPerSecond < 1) {
 								throw new RuntimeException("increment.per.second must be greater than 0");
 							}
-							System.out.println(String.format("\tIncrementing date by %d s every %d second(s).", incrementPerSecond, (loopDelay / 1_000L)));
+							System.out.printf("\tIncrementing date by %d s every %d second(s).\n", incrementPerSecond, (loopDelay / 1_000L));
 						} else {
 							previousDate.add(Calendar.SECOND, incrementPerSecond);
 							date.setTime(previousDate.getTime());
@@ -758,7 +758,7 @@ public class SunFlowerDriver {
 					// Calculate Solar Date and TIme
 					solarDate = getSolarDateFromEOT(date.getTime(), devicePosition.getLatitude(), devicePosition.getLongitude());
 					if (ASTRO_VERBOSE) {
-						System.out.println(String.format("At %s, from %s, Z: %.02f, Elev: %.02f ", date.getTime(), devicePosition, sunAzimuth, sunElevation));
+						System.out.printf("At %s, from %s, Z: %.02f, Elev: %.02f \n", date.getTime(), devicePosition, sunAzimuth, sunElevation);
 					}
 				} else {
 					System.out.println("No position yet!");
@@ -837,7 +837,7 @@ public class SunFlowerDriver {
 		}
 
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM))); // 30
-//		System.out.println(String.format("RPM set to %d.", rpm));
+//		System.out.printf("RPM set to %d.", rpm));
 
 		try {
 			this.mh = new AdafruitMotorHAT(DEFAULT_STEPS_PER_REV); // Default addr 0x60
@@ -897,8 +897,8 @@ public class SunFlowerDriver {
 
 		if (SPECIAL_DEBUG_VERBOSE) {
 			System.out.println("+-----------------------------------------------------");
-			System.out.println(String.format("Calculating motor payload, origin: %.02f, currentOffset: %d, from %.02f to %.02f (ratio: %.02f)",
-					origin, currentStepOffset, from, to, ratio));
+			System.out.printf("Calculating motor payload, origin: %.02f, currentOffset: %d, from %.02f to %.02f (ratio: %.02f)\n",
+					origin, currentStepOffset, from, to, ratio);
 			System.out.println("+-----------------------------------------------------");
 		}
 
@@ -920,14 +920,14 @@ public class SunFlowerDriver {
 			int diff = stepsFromOrigin - currentStepOffset;
 
 			if (SPECIAL_DEBUG_VERBOSE) {
-				System.out.println(String.format(
-						"\t** Before move: current offset: %d, from %.02f to %.02f, inverted:%s, StepsFromOrig: %d, diff:%d",
+				System.out.printf(
+						"\t** Before move: current offset: %d, from %.02f to %.02f, inverted:%s, StepsFromOrig: %d, diff:%d\n",
 						currentStepOffset,
 						from,
 						to,
 						inverted ? "true" : "false",
 						stepsFromOrigin,
-						diff));
+						diff);
 			}
 
 			diff *= (inverted ? -1 : 1);
@@ -936,13 +936,13 @@ public class SunFlowerDriver {
 //					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 
 			if (SPECIAL_DEBUG_VERBOSE) {
-				System.out.println(String.format(
-						"Moving from %.02f to %.02f: %d step(s) (instead of %d, steps from origin: %d).",
+				System.out.printf(
+						"Moving from %.02f to %.02f: %d step(s) (instead of %d, steps from origin: %d).\n",
 						from,
 						to,
 						diff,
 						(int) Math.round(((to - from) / 360d) * STEPS_PER_CIRCLE / ratio),
-						stepsFromOrigin));
+						stepsFromOrigin);
 			}
 			motorPayload.nbSteps = Math.abs(diff);
 		}
@@ -954,15 +954,15 @@ public class SunFlowerDriver {
 			if (ASTRO_VERBOSE) {
 				System.out.println("---------------------------------------------------");
 				System.out.println(">> Parking the device");
-				System.out.println(String.format("\t Elev: from %.02f to %.02f", currentDeviceElevation, PARKED_ELEVATION));
-				System.out.println(String.format("\t Z   : from %.02f to %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
+				System.out.printf("\t Elev: from %.02f to %.02f\n", currentDeviceElevation, PARKED_ELEVATION);
+				System.out.printf("\t Z   : from %.02f to %.02f\n", currentDeviceAzimuth, PARKED_AZIMUTH);
 				System.out.println("---------------------------------------------------");
 			}
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
 			// Put Z to 0 or 180, Elev. to 90.
 
 			// Parking from currentDeviceElevation to PARKED_ELEVA            response_content = json.dumps(response).encode()NOTION
-			System.out.println(String.format("\t - Parking elevation %.02f -> %.02f", currentDeviceElevation, PARKED_ELEVATION));
+			System.out.printf("\t - Parking elevation %.02f -> %.02f\n", currentDeviceElevation, PARKED_ELEVATION);
 			MotorPayload parkElev = getMotorPayload( // The 2 first parameters use the accumulated number of steps
 				    PARKED_ELEVATION,
 					currentDeviceElevationStepOffset,
@@ -972,7 +972,7 @@ public class SunFlowerDriver {
 					elevationInverted);
 			String mess_1 = String.format("(Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
 			if (MOVES_VERBOSE) {
-				System.out.println(String.format("Parking %s", mess_1));
+				System.out.printf("Parking %s\n", mess_1);
 			}
 			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
 			if (!simulating) {
@@ -983,7 +983,7 @@ public class SunFlowerDriver {
 			currentDeviceElevationStepOffset += (parkElev.nbSteps * (parkElev.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 
 			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
-			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
+			System.out.printf("\t - Parking azimuth %.02f -> %.02f\n", currentDeviceAzimuth, PARKED_AZIMUTH);
 			MotorPayload parkZ = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 				    PARKED_AZIMUTH,
 					currentDeviceAzimuthStepOffset,
@@ -993,7 +993,7 @@ public class SunFlowerDriver {
 					azimuthInverted);
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
 			if (MOVES_VERBOSE) {
-				System.out.println(String.format("Parking %s", mess_2));
+				System.out.printf("Parking %s\n", mess_2);
 			}
 			this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess_2));
 			if (!simulating) {
@@ -1141,17 +1141,17 @@ public class SunFlowerDriver {
 			this.publish(EventType.CELESTIAL_DATA, sunData);
 
 			if (ASTRO_VERBOSE) {
-				System.out.println(String.format(
-						"Device : %s\nSun : %s",
+				System.out.printf(
+						"Device : %s\nSun : %s\n",
 						deviceData,
-						sunData));
+						sunData);
 			}
 
 			// Important: Re-frame the values of SunData with minDiffForMove, @see adjustDeviceValue
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
 				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset, this.deviceHeading);  // Use deviceHeading here
-//				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
+//				System.out.printf("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
 
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
@@ -1165,11 +1165,11 @@ public class SunFlowerDriver {
 							azimuthInverted);
 					currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
 					if (SPECIAL_DEBUG_VERBOSE) {
-						System.out.println(String.format(
-								"\tAzimuthStepOffset now %d (command %s, inverted %s)",
+						System.out.printf(
+								"\tAzimuthStepOffset now %d (command %s, inverted %s)\n",
 								currentDeviceAzimuthStepOffset,
 								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
-								azimuthInverted ? "true" : "false"));
+								azimuthInverted ? "true" : "false");
 					}
 					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) * azimuthMotorRatio));
 
@@ -1184,8 +1184,8 @@ public class SunFlowerDriver {
 						}
 					}
 					if (SPECIAL_DEBUG_VERBOSE) {
-						System.out.println(String.format("Z. NbSteps(%s): %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, Effective: %.03f",
-								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveMove));
+						System.out.printf("Z. NbSteps(%s): %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, Effective: %.03f\n",
+								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveMove);
 					}
 					currentDeviceAzimuth += effectiveMove; // = adjustedAzimuth;
 				}
@@ -1209,7 +1209,7 @@ public class SunFlowerDriver {
 							elevationInverted);
 					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 					if (SPECIAL_DEBUG_VERBOSE) {
-						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
+						System.out.printf("\tElevationStepOffset now %d\n", currentDeviceElevationStepOffset);
 					}
 					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) * elevationMotorRatio));
 
@@ -1226,8 +1226,8 @@ public class SunFlowerDriver {
 						}
 					}
 					if (SPECIAL_DEBUG_VERBOSE) {
-						System.out.println(String.format("Elev. NbSteps(%s): %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effective: %.03f",
-								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
+						System.out.printf("Elev. NbSteps(%s): %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effective: %.03f\n",
+								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove);
 					}
 					currentDeviceElevation += effectiveMove; // = adjustedElevation;
 //				} else {
@@ -1235,16 +1235,16 @@ public class SunFlowerDriver {
 				}
 				if (hasMoved) {
 					if (ASTRO_VERBOSE) {
-						System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
+						System.out.printf("Sun's position is now: Elev: %s, Z: %.02f\n", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth);
 					}
 					if (MOVES_VERBOSE) {
 //					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
-						System.out.println(String.format(
-								">> Device has moved, now: Elevation %.02f (stepOffset %d), Azimuth %.02f (stepOffset %d)",
+						System.out.printf(
+								">> Device has moved, now: Elevation %.02f (stepOffset %d), Azimuth %.02f (stepOffset %d)\n",
 								currentDeviceElevation,
 								currentDeviceElevationStepOffset,
 								currentDeviceAzimuth,
-								currentDeviceAzimuthStepOffset));
+								currentDeviceAzimuthStepOffset);
 					}
 					// OLED Screen?
 					if (withSSD1306) {
@@ -1293,7 +1293,7 @@ public class SunFlowerDriver {
 		System.out.println("---------------------------------------------------------------------------------");
 		boolean keepAsking = true;
 		while (keepAsking) {
-			System.out.println(String.format("Current status: Z=%.02f, Elev.=%.02f", currentDeviceAzimuth, currentDeviceElevation));
+			System.out.printf("Current status: Z=%.02f, Elev.=%.02f\n", currentDeviceAzimuth, currentDeviceElevation);
 			if (withSSD1306) {
 				displayOled();
 			}
@@ -1313,22 +1313,22 @@ public class SunFlowerDriver {
 				} else {
 					String[] userData = userInput.trim().split("=");
 					if (userData.length != 2) {
-						System.out.println(String.format("Unknown input [%s], try something else.", userInput));
+						System.out.printf("Unknown input [%s], try something else.\n", userInput);
 					} else {
 						if (!userData[0].equalsIgnoreCase("Z") && !userData[0].equalsIgnoreCase("E")) {
-							System.out.println(String.format("Choose E or Z, not [%s]", userData[0]));
+							System.out.printf("Choose E or Z, not [%s]\n", userData[0]);
 						} else {
 							double value = Double.NaN;
 							try {
 								value = Double.parseDouble(userData[1]);
 							} catch (NumberFormatException nfe) {
-								System.out.println(String.format("Bad numeric value [%s]", userData[1]));
+								System.out.printf("Bad numeric value [%s]\n", userData[1]);
 							}
 							if ( ! Double.isNaN(value) ) {
-								// System.out.println(String.format("Setting %s to %f", userData[0].toUpperCase(), value));
+								// System.out.printf("Setting %s to %f", userData[0].toUpperCase(), value));
 								if (userData[0].equalsIgnoreCase("Z")) {
 									if (value < 0 || value > 360) {
-										System.out.println(String.format("Bad Azimuth value: %f, should be in [0..360]", value));
+										System.out.printf("Bad Azimuth value: %f, should be in [0..360]\n", value);
 									} else {
 										MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 												PARKED_AZIMUTH,
@@ -1349,13 +1349,13 @@ public class SunFlowerDriver {
 										currentDeviceAzimuth = value;
 										currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
 										if (SPECIAL_DEBUG_VERBOSE) {
-											System.out.println(String.format("\tAzimuthStepOffset now %d", currentDeviceAzimuthStepOffset));
+											System.out.printf("\tAzimuthStepOffset now %d\n", currentDeviceAzimuthStepOffset);
 										}
 									}
 								}
 								if (userData[0].equalsIgnoreCase("E")) {
 									if (value < 0 || value > 90) {
-										System.out.println(String.format("Bad Elevation value: %f, should be in [0..90]", value));
+										System.out.printf("Bad Elevation value: %f, should be in [0..90]\n", value);
 									} else {
 										MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 												PARKED_ELEVATION,
@@ -1376,7 +1376,7 @@ public class SunFlowerDriver {
 										currentDeviceElevation = value;
 										currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 										if (SPECIAL_DEBUG_VERBOSE) {
-											System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
+											System.out.printf("\tElevationStepOffset now %d\n", currentDeviceElevationStepOffset);
 										}
 									}
 								}
@@ -1385,7 +1385,7 @@ public class SunFlowerDriver {
 					}
 				}
 			} else {
-				System.out.println(String.format("Last command was [%s]", lastCommand));
+				System.out.printf("Last command was [%s]\n", lastCommand);
 			}
 		}
 		if (withSSD1306) {
@@ -1437,7 +1437,7 @@ public class SunFlowerDriver {
 		}
 
 		if (SUN_FLOWER_VERBOSE) {
-			System.out.println(String.format(">> Motor Style set to %s", motorStyle.toString()));
+			System.out.printf(">> Motor Style set to %s\n", motorStyle.toString());
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -1533,7 +1533,7 @@ public class SunFlowerDriver {
 					if (messageType != EventType.DEVICE_INFO &&
 							messageType != EventType.CELESTIAL_DATA &&
 							messageType != EventType.DEVICE_DATA) {
-						System.out.println(String.format("Listener: %s: %s", messageType, messageContent.toString()));
+						System.out.printf("Listener: %s: %s\n", messageType, messageContent.toString());
 					}
 					lastMessageType = messageType;
 				}
