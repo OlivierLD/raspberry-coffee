@@ -81,7 +81,10 @@ esac
 CP=${CP}:/usr/share/java/RXTXcomm.jar                                # For Raspberry Pi
 #
 REMOTE_DEBUG_FLAGS=
-# REMOTE_DEBUG_FLAGS="$REMOTE_DEBUG_FLAGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+# JDK 9 and up
+# REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+# JDK 5-8
+# REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
 JAVA_OPTS="${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS}"
 MY_IP=$(hostname -I | awk '{ print $1 }')
 MY_IP=$(echo ${MY_IP})  # Trim the blanks
