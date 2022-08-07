@@ -737,7 +737,7 @@ public class SunFlowerDriver {
 				if (ASTRO_VERBOSE) {
 					System.out.println("Starting Sun data calculation at " + date.getTime());
 				}
-				// TODO Make it non-static, and synchronized ?..
+
 				AstroComputerV2 acv2 = new AstroComputerV2();
 				acv2.calculate(date.get(Calendar.YEAR),
 										date.get(Calendar.MONTH) + 1,
@@ -761,7 +761,7 @@ public class SunFlowerDriver {
 						System.out.printf("At %s, from %s, Z: %.02f, Elev: %.02f \n", date.getTime(), devicePosition, sunAzimuth, sunElevation);
 					}
 				} else {
-					System.out.println("No position yet!");
+					System.out.println("No position yet!"); // See below the "date.simulation" property. If true, requires -Dstart.date.simulation=2020-03-06T20:00:00" (UTC)
 				}
 				long firstSlack = loopDelay;
 				if ("true".equals(System.getProperty("date.simulation"))) {
