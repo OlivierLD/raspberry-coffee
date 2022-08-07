@@ -457,8 +457,8 @@ public class RESTImplementation {
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *
-	 * @param request
-	 * @return
+	 * @param request Request
+	 * @return Response
 	 */
 	private Response emptyOperation(Request request) {
 		Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
