@@ -118,6 +118,9 @@ public class RESTImplementation {
 	 * @return the actual result.
 	 */
 	public Response processRequest(Request request) throws UnsupportedOperationException {
+		if (verbose) {
+			System.out.printf("ProcessRequest: looking for %s %s%n", request.getVerb(), request.getPath());
+		}
 		Optional<Operation> opOp = operations
 				.stream()
 				.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
