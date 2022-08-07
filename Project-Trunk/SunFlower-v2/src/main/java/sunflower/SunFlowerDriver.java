@@ -1287,6 +1287,11 @@ public class SunFlowerDriver {
 				substitute.dispose();
 			}
 			System.out.println("SSD1306 terminated");
+			synchronized (lock) {
+				System.out.println("\t>> Sending signal to the hook");
+				lock.notify();
+				System.out.println("\t>> Signal sent to the hook.");
+			}
 		}
 		System.out.println("\n\n\n... Done with the SunFlowerDriver program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
@@ -1488,8 +1493,6 @@ public class SunFlowerDriver {
 			System.out.printf(">> Motor Style set to %s\n", motorStyle.toString());
 		}
 
-		final Thread currentThread = Thread.currentThread();
-
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 //			System.out.println("\nShutting down, releasing resources.");
 			if (gpsReader != null) {
@@ -1497,7 +1500,7 @@ public class SunFlowerDriver {
 			}
 			this.stop();
 			System.out.println("Stop completed.");
-			// Tell the SSD1306 to shutdown
+			// Tell the SSD1306 to shut down
 			if (withSSD1306) {
 				synchronized (lock) {
 					System.out.println("\t>> Sending signal for the SSD1306");
@@ -1506,12 +1509,15 @@ public class SunFlowerDriver {
 				}
 				// Wait for the OLED to turn off (ugly)
 				// delay(500);
-			}
-			try {
-				// Will allow to the SSD1306 to shutdown.
-				currentThread.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				synchronized (lock) {
+					try {
+						// Wait for the OLED to turn off
+						lock.wait();
+						System.out.println("\tNow we're done.");
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}, "Shutdown Hook"));
 
