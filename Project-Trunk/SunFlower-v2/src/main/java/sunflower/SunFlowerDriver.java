@@ -1502,6 +1502,8 @@ public class SunFlowerDriver {
 					lock.notify();
 					System.out.println("\t>> Signal sent");
 				}
+				// Wait for the OLED to turn off (ugly)
+				delay(500);
 			}
 		}, "Shutdown Hook"));
 
