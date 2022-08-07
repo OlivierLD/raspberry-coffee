@@ -104,8 +104,7 @@ public class RESTImplementation {
 					"GET",
 					SF_PREFIX + "/test-oled",
 					this::testOled,
-					"Display the QS 'value' prm on the OLED (if available)"
-			)
+					"Display the QS 'value' prm on the OLED (if available)")
 	);
 
 	protected List<Operation> getOperations() {
