@@ -20,6 +20,7 @@ import java.util.Map;
 public class FeatureRequestManager implements RESTRequestManager {
 
 	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private final boolean sunFlowerVerbose = "true".equals(System.getProperty("sun.flower.verbose", "false"));
 	private final RESTImplementation restImplementation;
 
 	private SunFlowerServer sunFlowerServer = null;
@@ -197,7 +198,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
 		HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.
-		if (this.httpVerbose) {
+		if (this.httpVerbose || this.sunFlowerVerbose) {
 			System.out.println("======================================");
 			System.out.println("Request :\n" + request.toString());
 			System.out.println("Response :\n" + response.toString());

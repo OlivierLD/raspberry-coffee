@@ -103,7 +103,7 @@ public class RESTImplementation {
 			new Operation(
 					"GET",
 					SF_PREFIX + "/test-oled",
-					this::testOled,
+					this::testOledScreen,
 					"Display the QS 'value' prm on the OLED (if available)")
 	);
 
@@ -412,7 +412,7 @@ public class RESTImplementation {
 		}
 	}
 
-	private Response testOled(Request request) {
+	private Response testOledScreen(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Map<String, String> queryStringParameters = request.getQueryStringParameters();
 		String testString = "TEST";

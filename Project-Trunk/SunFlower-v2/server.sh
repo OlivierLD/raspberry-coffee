@@ -11,7 +11,7 @@
 CP=./build/libs/SunFlower-v2-1.0-all.jar
 JAVA_OPTS=
 
-JAVA_OPTS="${JAVA_OPTS} -Dsun.flower.verbose=true"  # REST snitch
+JAVA_OPTS="${JAVA_OPTS} -Dsun.flower.verbose=false"  # REST snitch
 # JAVA_OPTS="${JAVA_OPTS} -Ddevice.lat=37.7489 -Ddevice.lng=-122.5070"  # SF
 JAVA_OPTS="${JAVA_OPTS} -Ddevice.lat=47.677677 -Ddevice.lng=-3.135667"  # Belz
 JAVA_OPTS="${JAVA_OPTS} -Dazimuth.ratio=16:76"  # For V5
@@ -52,7 +52,7 @@ JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=false" # Set to true NOT to use the 
 #
 # NMEA Data server (NMEA-multiplexer), position and heading
 JAVA_OPTS="${JAVA_OPTS} -Dping.nmea.server=false"
-JAVA_OPTS="${JAVA_OPTS} -Dnmea.server.base.url=http://192.168.42.30:9991"
+JAVA_OPTS="${JAVA_OPTS} -Dnmea.server.base.url=http://192.168.42.30:9991"  # Do touch that one!
 #
 JAVA_OPTS="${JAVA_OPTS} -Dwith.ssd1306=true" # OLED! Default 128x32
 JAVA_OPTS="${JAVA_OPTS} -Dssd1306.verbose=false"
