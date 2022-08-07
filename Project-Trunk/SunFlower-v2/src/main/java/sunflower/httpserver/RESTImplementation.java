@@ -10,6 +10,8 @@ import sunflower.SunFlowerDriver;
 // import utils.StaticUtil;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -19,7 +21,9 @@ import java.util.*;
  */
 public class RESTImplementation {
 
-	private final static boolean verbose = "true".equals(System.getProperty("sun.flower.verbose", "false"));
+	// That one below allows the system variable (sun.flower.verbose) to be modified during the program execution
+	// TODO Do this everywhere
+	private final static Supplier<Boolean> verbose = () -> "true".equals(System.getProperty("sun.flower.verbose", "false"));
 	private final static String SF_PREFIX = "/sf";
 
 	private final FeatureRequestManager featureRequestManager; // Will hold the data cache
@@ -123,7 +127,7 @@ public class RESTImplementation {
 	 * @return the actual result.
 	 */
 	public Response processRequest(Request request) throws UnsupportedOperationException {
-		if (verbose) {
+		if (verbose.get()) {
 			System.out.printf("ProcessRequest (%s): From: %s, looking for %s %s%n",
 					this.getClass().getName(),
 					(request.getHeaders() != null ? request.getHeaders().get("User-Agent") : "-?-"),
