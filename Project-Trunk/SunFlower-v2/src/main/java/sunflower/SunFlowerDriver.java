@@ -1260,7 +1260,17 @@ public class SunFlowerDriver {
 		// End
 		if (withSSD1306) {
 			System.out.println("Terminating SSD1306");
-			// TODO Wait for signal ?
+			// Wait for signal ?
+			try {
+				synchronized (lock) {
+					System.out.println("Waiting for a signal to turn SSD1306 off");
+					lock.wait();
+					System.out.println("Signal received.");
+				}
+			} catch (InterruptedException ie) {
+				System.err.println("Exception in the wait:");
+				ie.printStackTrace();
+			}
 			// Clear the screen before shutting down.
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			if (oled != null) {
@@ -1459,7 +1469,7 @@ public class SunFlowerDriver {
 		}
 	}
 
-	private final Thread currentThread = Thread.currentThread();
+	private final Object lock = new Object(); // Used for synchronization between threads.
 
 	public void init() {
 		// Display all system variables
@@ -1485,6 +1495,14 @@ public class SunFlowerDriver {
 			}
 			this.stop();
 			System.out.println("Stop completed.");
+			// Tell the SSD1306 to shutdown
+			if (withSSD1306) {
+				synchronized (lock) {
+					System.out.println("\t>> Sending signal for the SSD1306");
+					lock.notify();
+					System.out.println("\t>> Signal sent");
+				}
+			}
 		}, "Shutdown Hook"));
 
 		String strLat = System.getProperty("device.lat");

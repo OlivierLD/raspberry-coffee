@@ -150,6 +150,7 @@ public class RESTImplementation {
 		try {
 			Map<String, Object> serviceData = this.featureRequestManager.getDataCache(); // TODO Tweak this...
 			// Clone to avoid concurrentAccessException
+			@SuppressWarnings("unchecked")
 			final Map<String, Object> _serviceData = (Map<String, Object>)((HashMap<String, Object>)serviceData).clone(); // shallow copy
 //			@SuppressWarnings("unchecked")
 //			final Map<String, Object> _serviceData = (Map<String, Object>)StaticUtil.deepCopy(serviceData);

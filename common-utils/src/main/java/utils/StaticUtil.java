@@ -286,7 +286,7 @@ public class StaticUtil {
 
 	/**
 	 * Deep Copy, for deep objects (maps, trees, etc)
-	 * @param original the original object, must be cloneable
+	 * @param original the original object, must be Serializable
 	 * @return The clone.
 	 * @throws Exception when fails
 	 */
