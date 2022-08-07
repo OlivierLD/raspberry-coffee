@@ -1190,14 +1190,18 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth += effectiveMove; // = adjustedAzimuth;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
-//				logWithTime(String.format("Elev: sun:%f, min:%d, currentDev:%f, adjusted:%f, minForMove:%f",
-//						sunElevation,
-//						minimumAltitude,
-//						currentDeviceElevation,
-//						adjustedElevation,
-//						minDiffForMove));
+				if (MOTOR_HAT_VERBOSE) {
+					logWithTime(String.format("Elev: sun:%f, min:%d, currentDev:%f, adjusted:%f, minForMove:%f",
+							sunElevation,
+							minimumAltitude,
+							currentDeviceElevation,
+							adjustedElevation,
+							minDiffForMove));
+				}
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
-//					logWithTime("\tMoving!");
+					if (MOTOR_HAT_VERBOSE) {
+						logWithTime("\tMoving!");
+					}
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
@@ -1423,11 +1427,11 @@ public class SunFlowerDriver {
 		int fontFactor = 2;
 		if (oneLine) {
 			fontFactor = 3;
-			String display = String.format("Parking...");
+			String display = "Parking...";
 			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		} else {
-			String lineOne = String.format("Parking,");
-			String lineTwo = String.format("Stopping.");
+			String lineOne = "Parking,";
+			String lineTwo = "Stopping.";
 			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
