@@ -252,7 +252,7 @@ public class RESTImplementation {
 				.filter("value"::equals)
 				.map(key -> queryStringParameters.get(key))
 				.findFirst();
-		if (value.isEmpty()) {
+		if (!value.isPresent()) { // .isEmpty not available in JDK 8
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
@@ -312,7 +312,7 @@ public class RESTImplementation {
 				.filter(key -> "value".equals(key))
 				.map(key -> queryStringParameters.get(key))
 				.findFirst();
-		if (value.isEmpty()) {
+		if (!value.isPresent()) { // .isEmpty not available in JDK 8
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
@@ -372,7 +372,7 @@ public class RESTImplementation {
 				.filter(key -> "value".equals(key))
 				.map(key -> queryStringParameters.get(key))
 				.findFirst();
-		if (value.isEmpty()) {
+		if (!value.isPresent()) { // .isEmpty not available in JDK 8
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
