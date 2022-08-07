@@ -284,8 +284,14 @@ public class StaticUtil {
 		System.exit(0);
 	}
 
+	/**
+	 * Deep Copy, for deep objects (maps, trees, etc)
+	 * @param original the original object, must be cloneable
+	 * @return The clone.
+	 * @throws Exception when fails
+	 */
 	public final static Object deepCopy(Object original) throws Exception {
-		Object clone = null;
+		Object clone;
 
 		ByteArrayOutputStream bos = null;
 		ByteArrayInputStream bis = null;

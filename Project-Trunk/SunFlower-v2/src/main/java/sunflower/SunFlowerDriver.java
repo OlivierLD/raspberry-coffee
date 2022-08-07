@@ -1259,16 +1259,8 @@ public class SunFlowerDriver {
 		}
 		// End
 		if (withSSD1306) {
-			// TODO Wait for signal
-			synchronized (currentThread) {
-				try {
-					currentThread.wait();
-					System.out.println("Final shutdown...");
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
+			System.out.println("Terminating SSD1306");
+			// TODO Wait for signal ?
 			// Clear the screen before shutting down.
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			if (oled != null) {
@@ -1284,6 +1276,7 @@ public class SunFlowerDriver {
 				substitute.display();
 				substitute.dispose();
 			}
+			System.out.println("SSD1306 terminated");
 		}
 		System.out.println("\n\n\n... Done with the SunFlowerDriver program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
@@ -1407,7 +1400,7 @@ public class SunFlowerDriver {
 		}
 	}
 
-	public void stop(Thread parent) {
+	public void stop() {
 
 		// Displaying message on screen
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
@@ -1451,7 +1444,7 @@ public class SunFlowerDriver {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), ANSIUtil.ansiSetTextColor(howMany++ % 2 == 0 ? ANSIUtil.ANSI_GREEN : ANSIUtil.ANSI_RED) + "Waiting for the device to be parked"));
 			delay(1_000L);
 		}
-		if (mh != null) {
+		if (mh != null) { // Motor Hat
 			try { // Release all
 				mh.getMotor(AdafruitMotorHAT.Motor.M1).run(AdafruitMotorHAT.MotorCommand.RELEASE);
 				mh.getMotor(AdafruitMotorHAT.Motor.M2).run(AdafruitMotorHAT.MotorCommand.RELEASE);
@@ -1463,9 +1456,6 @@ public class SunFlowerDriver {
 		}
 		if (astroThread != null) {
 			astroThread.stopCalculating();
-		}
-		synchronized (parent) {
-			parent.notify();
 		}
 	}
 
@@ -1493,21 +1483,8 @@ public class SunFlowerDriver {
 			if (gpsReader != null) {
 				gpsReader.stopReading();
 			}
-			final Thread thread = Thread.currentThread();
-
-			this.stop(thread);
-			synchronized (thread) {
-				try {
-					thread.wait();
-					System.out.println("Bye now!");
-					synchronized(currentThread) {
-						currentThread.notify();
-					}
-				} catch (Exception absorbed) {
-					System.err.println("Ctrl-C: Oops!");
-					absorbed.printStackTrace();
-				}
-			}
+			this.stop();
+			System.out.println("Stop completed.");
 		}, "Shutdown Hook"));
 
 		String strLat = System.getProperty("device.lat");
