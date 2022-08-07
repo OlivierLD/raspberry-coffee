@@ -442,7 +442,7 @@ public class RESTImplementation {
 			String key = queryStringParameters.get("key");
 			String value = queryStringParameters.get("value");
 			if (key != null && value != null) {
-				System.setProperty(key, value);  // Warning: will work if valoue is explicitly read each time (not at the beginning, as a final...).
+				System.setProperty(key, value);  // Warning: will work if value is explicitly read each time (not at the beginning, as a final...).
 			} else {
 				response.setStatus(Response.BAD_REQUEST);
 				response.setPayload("requires 'key' and 'value' QS parameters".getBytes());
