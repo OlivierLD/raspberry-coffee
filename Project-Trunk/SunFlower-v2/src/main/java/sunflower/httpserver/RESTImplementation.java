@@ -124,7 +124,11 @@ public class RESTImplementation {
 	 */
 	public Response processRequest(Request request) throws UnsupportedOperationException {
 		if (verbose) {
-			System.out.printf("ProcessRequest (%s): looking for %s %s%n", this.getClass().getName(), request.getVerb(), request.getPath());
+			System.out.printf("ProcessRequest (%s): From: %s, looking for %s %s%n",
+					this.getClass().getName(),
+					(request.getHeaders() != null ? request.getHeaders().get("User-Agent") : "-?-"),
+					request.getVerb(),
+					request.getPath());
 		}
 		Optional<Operation> opOp = operations
 				.stream()
