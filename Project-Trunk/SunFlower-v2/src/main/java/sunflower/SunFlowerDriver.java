@@ -1507,8 +1507,7 @@ public class SunFlowerDriver {
 					lock.notify();
 					System.out.println("\t>> Signal sent");
 				}
-				// Wait for the OLED to turn off (ugly)
-				// delay(500);
+				// To wait for the OLED to turn off
 				synchronized (lock) { // Reusing the same lock mechanism.
 					try {
 						// Wait for the OLED to turn off
