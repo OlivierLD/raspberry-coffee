@@ -1509,7 +1509,7 @@ public class SunFlowerDriver {
 				}
 				// Wait for the OLED to turn off (ugly)
 				// delay(500);
-				synchronized (lock) {
+				synchronized (lock) { // Reusing the same lock mechanism.
 					try {
 						// Wait for the OLED to turn off
 						lock.wait();
