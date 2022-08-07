@@ -7,7 +7,7 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import sunflower.SunFlowerDriver;
-import utils.StaticUtil;
+// import utils.StaticUtil;
 
 import java.util.*;
 
@@ -19,10 +19,10 @@ import java.util.*;
  */
 public class RESTImplementation {
 
-	private static boolean verbose = "true".equals(System.getProperty("sun.flower.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("sun.flower.verbose", "false"));
 	private final static String SF_PREFIX = "/sf";
 
-	private FeatureRequestManager featureRequestManager; // Will hold the data cache
+	private final FeatureRequestManager featureRequestManager; // Will hold the data cache
 	private SunFlowerDriver featureManager = null;
 
 	private static class ValueHolder {
@@ -64,7 +64,7 @@ public class RESTImplementation {
 	 * See {@link #processRequest(Request)}
 	 * See {@link HTTPServer}
 	 */
-	private List<Operation> operations = Arrays.asList(
+	private final List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
 					SF_PREFIX + "/oplist",
@@ -104,7 +104,12 @@ public class RESTImplementation {
 					"GET",
 					SF_PREFIX + "/test-oled",
 					this::testOledScreen,
-					"Display the QS 'value' prm on the OLED (if available)")
+					"Display the QS 'value' prm on the OLED (if available)"),
+			new Operation(
+					"POST",
+					SF_PREFIX + "set-system-prop",
+					this::setSystemProperty,
+					"Set a system property. Warning: works only if explicitly read each time.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -119,7 +124,7 @@ public class RESTImplementation {
 	 */
 	public Response processRequest(Request request) throws UnsupportedOperationException {
 		if (verbose) {
-			System.out.printf("ProcessRequest: looking for %s %s%n", request.getVerb(), request.getPath());
+			System.out.printf("ProcessRequest (%s): looking for %s %s%n", this.getClass().getName(), request.getVerb(), request.getPath());
 		}
 		Optional<Operation> opOp = operations
 				.stream()
@@ -146,11 +151,6 @@ public class RESTImplementation {
 		return response;
 	}
 
- 	/**
-	 * WiP
-	 * @param request
-	 * @return
-	 */
 	private Response getDeviceStatus(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
@@ -249,10 +249,10 @@ public class RESTImplementation {
 		Optional<String> value = queryStringParameters
 				.keySet()
 				.stream()
-				.filter(key -> "value".equals(key))
+				.filter("value"::equals)
 				.map(key -> queryStringParameters.get(key))
 				.findFirst();
-		if (!value.isPresent()) {
+		if (value.isEmpty()) {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
@@ -312,7 +312,7 @@ public class RESTImplementation {
 				.filter(key -> "value".equals(key))
 				.map(key -> queryStringParameters.get(key))
 				.findFirst();
-		if (!value.isPresent()) {
+		if (value.isEmpty()) {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
@@ -372,7 +372,7 @@ public class RESTImplementation {
 				.filter(key -> "value".equals(key))
 				.map(key -> queryStringParameters.get(key))
 				.findFirst();
-		if (!value.isPresent()) {
+		if (value.isEmpty()) {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
@@ -433,8 +433,25 @@ public class RESTImplementation {
 			response.setPayload(ex.getMessage().getBytes());
 		}
 		return response;
+	}
 
-
+	private Response setSystemProperty(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		if (queryStringParameters != null) {
+			String key = queryStringParameters.get("key");
+			String value = queryStringParameters.get("value");
+			if (key != null && value != null) {
+				System.setProperty(key, value);  // Warning: will work if valoue is explicitly read each time (not at the beginning, as a final...).
+			} else {
+				response.setStatus(Response.BAD_REQUEST);
+				response.setPayload("requires 'key' and 'value' QS parameters".getBytes());
+			}
+		} else {
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload("requires 'key' and 'value' QS parameters".getBytes());
+		}
+		return response;
 	}
 
 	/**
