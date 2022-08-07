@@ -129,6 +129,7 @@ public class RESTImplementation {
 			Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
 		} else {
+			System.out.printf(">> OP not found: %s %s %n", request.getVerb(), request.getPath());
 			throw new UnsupportedOperationException(String.format("%s not managed", request.toString()));
 		}
 	}
@@ -421,11 +422,14 @@ public class RESTImplementation {
 		}
 		// Display
 		try {
+			System.out.printf("In %s, testing oled with %s %n", this.getClass().getName(), testString);
 			this.featureManager.testOled(testString);
+			response.setPayload(testString.getBytes());
 		} catch (Exception ex) {
+			ex.printStackTrace();
+			response.setStatus(Response.BAD_REQUEST);
 			response.setPayload(ex.getMessage().getBytes());
 		}
-
 		return response;
 
 

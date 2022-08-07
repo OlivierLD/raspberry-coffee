@@ -1578,10 +1578,10 @@ public class SunFlowerDriver {
 	public void testOled(String text) {
 		System.out.println("Testing OLED");
 		if (withSSD1306 && oled != null) {
+			System.out.printf("In %s, testing Oled with %s%n", this.getClass().getName(), text);
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			int fontFactor = 3;
-			String display = String.format("%.01f/%.01f", currentDeviceElevation, currentDeviceAzimuth);
-			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(text, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			oled.setBuffer(sb.getScreenBuffer());
 			try {
 				oled.display();
