@@ -111,7 +111,7 @@ public class RESTImplementation {
 					"Display the QS 'value' prm on the OLED (if available)"),
 			new Operation(
 					"POST",
-					SF_PREFIX + "set-system-prop",
+					SF_PREFIX + "/set-system-prop",
 					this::setSystemProperty,
 					"Set a system property. Warning: works only if explicitly read each time.")
 	);
@@ -451,6 +451,7 @@ public class RESTImplementation {
 			String value = queryStringParameters.get("value");
 			if (key != null && value != null) {
 				System.setProperty(key, value);  // Warning: will work if value is explicitly read each time (not at the beginning, as a final...).
+				response.setPayload(String.format("{ key: '%s', value: '%s' }", key, value).getBytes());
 			} else {
 				response.setStatus(Response.BAD_REQUEST);
 				response.setPayload("requires 'key' and 'value' QS parameters".getBytes());
