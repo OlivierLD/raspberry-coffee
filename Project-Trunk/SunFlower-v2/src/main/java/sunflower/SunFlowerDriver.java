@@ -1488,6 +1488,8 @@ public class SunFlowerDriver {
 			System.out.printf(">> Motor Style set to %s\n", motorStyle.toString());
 		}
 
+		final Thread currentThread = Thread.currentThread();
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 //			System.out.println("\nShutting down, releasing resources.");
 			if (gpsReader != null) {
@@ -1503,7 +1505,13 @@ public class SunFlowerDriver {
 					System.out.println("\t>> Signal sent");
 				}
 				// Wait for the OLED to turn off (ugly)
-				delay(500);
+				// delay(500);
+			}
+			try {
+				// Will allow to the SSD1306 to shutdown.
+				currentThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}, "Shutdown Hook"));
 
