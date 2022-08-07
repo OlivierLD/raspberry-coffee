@@ -23,8 +23,12 @@ public class RESTImplementation {
 
 	// That one below allows the system variable (sun.flower.verbose) to be modified during the program execution
 	// TODO Do this everywhere
-	private final static Supplier<Boolean> verbose = () -> "true".equals(System.getProperty("sun.flower.verbose", "false"));
-	private final static String SF_PREFIX = "/sf";
+	private final static Supplier<Boolean> verbose = () -> {
+		boolean b = "true".equals(System.getProperty("sun.flower.verbose", "false"));
+		System.out.printf("Reading 'sun.flower.verbose' -> %b%n", b);
+		return b;
+	};
+ 	private final static String SF_PREFIX = "/sf";
 
 	private final FeatureRequestManager featureRequestManager; // Will hold the data cache
 	private SunFlowerDriver featureManager = null;
@@ -139,12 +143,15 @@ public class RESTImplementation {
 				.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
 				.findFirst();
 		if (opOp.isPresent()) {
+			if (verbose.get()) {
+				System.out.println("\t>> Doing it!!");
+			}
 			Operation op = opOp.get();
 			request.setRequestPattern(op.getPath()); // To get the prms later on.
 			Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
 		} else {
-			System.out.printf(">> OP not found: %s %s %n", request.getVerb(), request.getPath());
+			System.out.printf("\t>> OP not found: %s %s %n", request.getVerb(), request.getPath());
 			throw new UnsupportedOperationException(String.format("%s not managed", request.toString()));
 		}
 	}
