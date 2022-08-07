@@ -99,7 +99,13 @@ public class RESTImplementation {
 					"POST",
 					SF_PREFIX + "/device-heading",
 					this::setDeviceHeading,
-					"Set the device heading ('value' as QueryString parameter)")
+					"Set the device heading ('value' as QueryString parameter)"),
+			new Operation(
+					"GET",
+					SF_PREFIX + "/test-oled",
+					this::testOled,
+					"Display the QS 'value' prm on the OLED (if available)"
+			)
 	);
 
 	protected List<Operation> getOperations() {
@@ -159,6 +165,7 @@ public class RESTImplementation {
 				content = new Gson().toJson(_serviceData);
 			} catch (IllegalArgumentException iae) {
 				System.out.printf("Device status failed (but moving on), serviceData: %s%n", _serviceData);
+				content = "Device not initialized yet.";
 			}
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
@@ -400,6 +407,28 @@ public class RESTImplementation {
 				return response;
 			}
 		}
+	}
+
+	private Response testOled(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		String testString = "TEST";
+		if (queryStringParameters != null) {
+			String value = queryStringParameters.get("value");
+			if (value != null) {
+				testString = value;
+			}
+		}
+		// Display
+		try {
+			this.featureManager.testOled(testString);
+		} catch (Exception ex) {
+			response.setPayload(ex.getMessage().getBytes());
+		}
+
+		return response;
+
+
 	}
 
 	/**
