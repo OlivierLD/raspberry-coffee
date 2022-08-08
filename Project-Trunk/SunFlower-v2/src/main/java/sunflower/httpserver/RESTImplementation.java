@@ -5,6 +5,7 @@ import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
+import http.HttpHeaders;
 import http.RESTProcessorUtil;
 import sunflower.SunFlowerDriver;
 // import utils.StaticUtil;
@@ -458,6 +459,7 @@ public class RESTImplementation {
 			String value = queryStringParameters.get("value");
 			if (key != null && value != null) {
 				System.setProperty(key, value);  // Warning: will work if value is explicitly read each time (not at the beginning, as a final...).
+				response.getHeaders().put(HttpHeaders.CONTENT_TYPE, "application/json");
 				response.setPayload(String.format("{ key: '%s', value: '%s' }", key, value).getBytes());
 			} else {
 				response.setStatus(Response.BAD_REQUEST);

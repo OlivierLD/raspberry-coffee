@@ -1118,44 +1118,45 @@ public class HTTPServer {
 
 	/**
 	 * Full mime-type list at https://www.sitepoint.com/web-foundations/mime-types-complete-list/
+	 * Add more types and extensions as/when needed.
 	 *
 	 * @param f file name (full)
 	 * @return the mime-type for the given file name
 	 */
-	private static String getContentType(String f) { // TODO add more types, as/when required
+	private static String getContentType(String f) {
 		String contentType = HttpHeaders.TEXT_PLAIN;
 		if (f.endsWith(".html")) {
-			contentType = "text/html";
+			contentType = HttpHeaders.TEXT_HTML;
 		} else if (f.endsWith(".js")) {
-			contentType = "text/javascript";
+			contentType = HttpHeaders.TEXT_JAVASCRIPT;
 		} else if (f.endsWith(".css")) {
-			contentType = "text/css";
+			contentType = HttpHeaders.TEXT_CSS;
 		} else if (f.endsWith(".xml")) {
 			contentType = HttpHeaders.TEXT_XML;
 		} else if (f.endsWith(".ico")) {
-			contentType = "image/x-icon";
+			contentType = HttpHeaders.IMAGE_X_ICON;
 		} else if (f.endsWith(".png")) {
-			contentType = "image/png";
+			contentType = HttpHeaders.IMAGE_PNG;
 		} else if (f.endsWith(".gif")) {
-			contentType = "image/gif";
+			contentType = HttpHeaders.IMAGE_GIF;
 		} else if (f.endsWith(".jpg") || f.endsWith(".jpeg")) {
-			contentType = "image/jpeg";
+			contentType = HttpHeaders.IMAGE_JPEG;
 		} else if (f.endsWith(".svg")) {
-			contentType = "image/svg+xml";
+			contentType = HttpHeaders.IMAGE_SVG_XML;
 		} else if (f.endsWith(".woff")) {
-			contentType = "application/x-font-woff";
+			contentType = HttpHeaders.APPLICATION_X_FONT_WOFF;
 		} else if (f.endsWith(".wav")) {
-			contentType = "audio/wav";
+			contentType = HttpHeaders.AUDIO_WAV;
 		} else if (f.endsWith(".pdf")) {
-			contentType = "application/pdf";
+			contentType = HttpHeaders.APPLICATION_PDF;
 		} else if (f.endsWith(".json")) {
 			contentType = HttpHeaders.APPLICATION_JSON;
 		} else if (f.endsWith(".ttf")) {
-			contentType = "application/x-font-ttf";
+			contentType = HttpHeaders.APPLICATION_X_FONT_TTF;
 		} else {
-			System.out.println(String.format("Unrecognized file type (content type) for [%s], you might want to add it to " +
-							"%s", f, HTTPServer.class.getName()
-					));
+			System.out.printf("Unrecognized file type (content type) for [%s], you might want to add it to %s\n",
+					f,
+					HTTPServer.class.getName());
 		}
 		return contentType;
 	}
