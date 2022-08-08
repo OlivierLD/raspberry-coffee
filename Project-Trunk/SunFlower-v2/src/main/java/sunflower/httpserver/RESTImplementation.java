@@ -118,7 +118,13 @@ public class RESTImplementation {
 					"POST",
 					SF_PREFIX + "/set-system-prop",
 					this::setSystemProperty,
-					"Set a system property. Warning: works only if explicitly read each time.")
+					"Set a system property. Warning: works only if explicitly read each time."),
+			new Operation(
+					"POST",
+					SF_PREFIX + "/force-shutdown-substitute",
+					this::forceSubstituteScreenShutdown,
+					"Fore the shutdown of the Swing JPanel substitute."
+			)
 	);
 
 	protected List<Operation> getOperations() {
@@ -443,6 +449,18 @@ public class RESTImplementation {
 			System.out.printf("In %s, testing oled with %s %n", this.getClass().getName(), testString);
 			this.featureManager.testOled(testString);
 			response.setPayload(testString.getBytes());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload(ex.getMessage().getBytes());
+		}
+		return response;
+	}
+
+	private Response forceSubstituteScreenShutdown(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			this.featureManager.forceSubstituteShutdown();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			response.setStatus(Response.BAD_REQUEST);

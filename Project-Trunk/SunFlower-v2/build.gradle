@@ -36,6 +36,7 @@ dependencies {
 //  implementation project(':NMEA-multiplexer')
 //  implementation 'astro.computer:astro.computer:1.0'
   implementation project(':astro-computer:AstroComputer')
+  testImplementation 'junit:junit:4.13'
 }
 
 jar { // Adding some lines in the MANIFEST.mf. Compatible with shadowJar's mergeServiceFiles above.

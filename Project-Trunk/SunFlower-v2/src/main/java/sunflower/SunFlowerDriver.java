@@ -1301,6 +1301,14 @@ public class SunFlowerDriver {
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
+	public void forceSubstituteShutdown() {
+		System.out.println("Forcing sustitute shutdown.");
+		if (substitute != null) {
+			substitute.dispose();
+		} else {
+			System.out.println("\t>> There is no substitute to dispose.");
+		}
+	}
 	/**
 	 * Move the device from user's input, not from astro thread
 	 */
@@ -1476,6 +1484,7 @@ public class SunFlowerDriver {
 		if (astroThread != null) {
 			astroThread.stopCalculating();
 		}
+		System.out.println("End of stop().");
 	}
 
 	private final Object lock = new Object(); // Used for synchronization between threads.
@@ -1514,8 +1523,8 @@ public class SunFlowerDriver {
 				// To wait for the OLED to turn off
 				synchronized (lock) { // Reusing the same lock mechanism.
 					try {
-						// Wait for the OLED to turn off
-						lock.wait();
+						// Wait for the OLED to turn off, up 2 5 seconds.
+						lock.wait(5_000L);
 						System.out.println("\tNow we're done.");
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -1577,16 +1586,21 @@ public class SunFlowerDriver {
 
 	public void testOled(String text) {
 		System.out.println("Testing OLED");
-		if (withSSD1306 && oled != null) {
+		if (withSSD1306) {
 			System.out.printf("In %s, testing Oled with %s%n", this.getClass().getName(), text);
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			int fontFactor = 3;
 			sb.text(text, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			oled.setBuffer(sb.getScreenBuffer());
-			try {
-				oled.display();
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			if (oled != null) {
+				oled.setBuffer(sb.getScreenBuffer());
+				try {
+					oled.display();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			} else if (substitute != null) {
+				substitute.setBuffer(sb.getScreenBuffer());
+				substitute.display();
 			}
 		} else {
 			System.out.println("No OLED available.");
