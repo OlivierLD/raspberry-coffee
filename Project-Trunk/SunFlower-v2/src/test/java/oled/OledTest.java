@@ -38,7 +38,7 @@ public class OledTest {
 
     @After
     public void tearDown() {
-        // Shut down the server.
+        // Shut down the server started in setup.
         try {
             String response = HTTPClient.doGet(String.format("http://localhost:%d/exit", HTTP_PORT), null);
             System.out.printf("Returned >> %s\n", response);

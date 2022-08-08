@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
   id 'java'
   id 'maven'
@@ -34,16 +36,16 @@ dependencies {
   implementation project(':raspberry-io-pi4j:I2C-SPI')        // For the Motor Hat, includes common-utils, AstroComputer. 'gradlew dependencies' is your friend...
   implementation project(':raspberry-sailor:NMEA-Parser')
 //  implementation project(':NMEA-multiplexer')
-//  implementation 'astro.computer:astro.computer:1.0'
   implementation project(':astro-computer:AstroComputer')
-  testImplementation 'junit:junit:4.13'
+  // For tests
+  testImplementation 'junit:junit:4.13.2'
 }
 
 jar { // Adding some lines in the MANIFEST.mf. Compatible with shadowJar's mergeServiceFiles above.
   manifest {
     attributes (
             'Built-By'       : System.properties['user.name'],
-            'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+            'Build-Timestamp': new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
 //            'Build-Revision' : versioning.info.commit,
             'Build-from'     : "Module '${project.name}'",
             'Created-By'     : "Gradle ${gradle.gradleVersion}",
