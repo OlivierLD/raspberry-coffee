@@ -25,7 +25,7 @@ public class RESTImplementation {
 	// TODO Do this everywhere
 	private final static Supplier<Boolean> verbose = () -> {
 		boolean b = "true".equals(System.getProperty("sun.flower.verbose", "false"));
-		System.out.printf("Reading 'sun.flower.verbose' -> %b%n", b);
+		// System.out.printf("Reading 'sun.flower.verbose' -> %b%n", b);
 		return b;
 	};
  	private final static String SF_PREFIX = "/sf";
