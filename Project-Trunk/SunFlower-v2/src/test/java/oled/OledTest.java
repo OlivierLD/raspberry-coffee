@@ -1,6 +1,6 @@
 package oled;
 
-import http.HttpHeaders;
+//import http.HttpHeaders;
 import http.client.HTTPClient;
 import org.junit.After;
 import org.junit.Before;
@@ -20,13 +20,13 @@ public class OledTest {
 
     @Before
     public void setup() {
+        // Some system props, and start the server
         System.setProperty("http.port", String.valueOf(HTTP_PORT));
         System.setProperty("with.ssd1306", "true");
         try {
-            sunFlowerServer = new SunFlowerServer();
-//            sunFlowerServer.startHttpServer();
+            sunFlowerServer = new SunFlowerServer(); // Also starts the server
             try {
-                Thread.sleep(10_000); // Wait a bit.
+                Thread.sleep(10_000L); // Wait a bit.
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
@@ -37,9 +37,10 @@ public class OledTest {
 
     @After
     public void tearDown() {
+        // Shut down the server.
         try {
             String response = HTTPClient.doGet(String.format("http://localhost:%d/exit", HTTP_PORT), null);
-            System.out.println(String.format("Returned >> %s", response));
+            System.out.printf("Returned >> %s\n", response);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -52,7 +53,7 @@ public class OledTest {
         String url = String.format("http://localhost:%d/sf/test-oled?value=OLEDTest", HTTP_PORT);
         try {
             String returnedPayload = HTTPClient.doGet(url, headers);
-            System.out.println(String.format("Returned >> %s", returnedPayload));
+            System.out.printf("Returned >> %s\n", returnedPayload);
             assertEquals("Oops", "OLEDTest", returnedPayload);
         } catch (Exception e) {
             fail(e.getMessage());
@@ -63,8 +64,8 @@ public class OledTest {
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
-        if (true) {
-            // Not necessary, now we have the lock.wait(5_000L); in the shutdown hook in the SunFlowerDriver.
+        if (false) {
+            // Not necessary, as now we have the lock.wait(5_000L); in the shutdown hook in the SunFlowerDriver.
             try {
                 final HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(String.format("http://localhost:%d/sf/force-shutdown-substitute", HTTP_PORT), headers, null);
                 assertEquals("Expected 200/OK", 200, httpResponse.getCode());
