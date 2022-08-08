@@ -1,11 +1,13 @@
 package http;
 
 public class HttpHeaders {
+    // Keys
     public final static String CONTENT_TYPE = "Content-Type";
     public final static String CONTENT_LENGTH = "Content-Length";
     public final static String USER_AGENT = "User-Agent";
     public final static String ACCEPT = "Accept";
 
+    // Content-Type Values
     public final static String TEXT_PLAIN = "text/plain";
     public final static String TEXT_HTML = "text/html";
     public final static String TEXT_XML = "text/xml";
