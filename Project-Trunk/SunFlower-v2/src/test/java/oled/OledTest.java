@@ -15,8 +15,9 @@ import static org.junit.Assert.fail;
 
 public class OledTest {
 
-    private SunFlowerServer sunFlowerServer;
+//    private SunFlowerServer sunFlowerServer; // now a local variable in the setup.
     private final static int HTTP_PORT = 1234;
+    private final static boolean FORCE_SUBSTITUTE_SHUTDOWN = false;
 
     @Before
     public void setup() {
@@ -24,7 +25,7 @@ public class OledTest {
         System.setProperty("http.port", String.valueOf(HTTP_PORT));
         System.setProperty("with.ssd1306", "true");
         try {
-            sunFlowerServer = new SunFlowerServer(); // Also starts the server
+            /* SunFlowerServer sunFlowerServer = */ new SunFlowerServer(); // Also starts the server
             try {
                 Thread.sleep(10_000L); // Wait a bit.
             } catch (InterruptedException ie) {
@@ -64,7 +65,7 @@ public class OledTest {
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
-        if (false) {
+        if (FORCE_SUBSTITUTE_SHUTDOWN) {
             // Not necessary, as now we have the lock.wait(5_000L); in the shutdown hook in the SunFlowerDriver.
             try {
                 final HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(String.format("http://localhost:%d/sf/force-shutdown-substitute", HTTP_PORT), headers, null);
