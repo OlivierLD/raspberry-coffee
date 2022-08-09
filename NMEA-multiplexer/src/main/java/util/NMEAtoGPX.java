@@ -16,6 +16,7 @@ import java.util.TimeZone;
 /**
  * GPX generator, from NMEA log.
  * GPX is compatible with Navigation software like OpenCPN.
+ * GPs eXchange format.
  */
 public class NMEAtoGPX {
 	private static Map<String, Integer> map = new HashMap<>();

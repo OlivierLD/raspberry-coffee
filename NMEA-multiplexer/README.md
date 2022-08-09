@@ -764,6 +764,27 @@ computers:
   > Note: This does not work correctly on Safari, which does not support correctly the `<dialog>` element of HTML5.  
   > Looks like Firefox also has issues...   
   > Brave, Chromium, and Chrome work OK.
+
+#### Log-files Utilities
+Several small utilities are available to do several operations on the data log files. You can
+- merge several log files
+- shrink (remove leading and trailing lines with no speed) log files
+- turn a log-file (.nmea) into
+    - CSV
+    - GPX
+    - KML
+    - JSON
+
+> _**Note**_: scripts are available to invoke those utilities. See (for Linux-like systems):
+> - `log.analyzer.sh`
+> - `log.merge.sh`
+> - `log.shrinker.sh`
+> - `log.to.csv.sh`
+> - `log.to.gpx.sh`
+> - `log.to.kml.sh`
+> - `log.to.json.sh`
+
+---
 - A sample of a log file analyzer is in `util.LogAnalyzer`:
 ```bash
  $ java -cp ./build/libs/NMEA-multiplexer-1.0-all.jar util.LogAnalyzer ./sample.data/2017.06.17.nmea

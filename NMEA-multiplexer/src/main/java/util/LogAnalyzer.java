@@ -4,7 +4,7 @@ import calc.GeoPoint;
 import calc.GeomUtil;
 import calc.GreatCircle;
 import calc.GreatCirclePoint;
-import calc.calculation.AstroComputer;
+//import calc.calculation.AstroComputer;
 import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
@@ -22,14 +22,16 @@ import java.util.zip.ZipFile;
 import static nmea.parser.StringParsers.GGA_ALT_IDX;
 
 /**
- * Analyze a log file
- * Time, distance, min-max, type and number of strings
+ * Analyze a log file (from a file with .nmea extension, or a zip file)
+ * Time, distance, min-max, type and number of strings.
  *
- * TODO: From a file in a zip
+ * We look for RMC and GGA strings.
+ *
+ * Result displayed in a Swing JFrame.
  */
 public class LogAnalyzer {
 
-	private static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 	static {
 		SDF.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
@@ -124,12 +126,12 @@ public class LogAnalyzer {
 		map.put(id, nb + 1);
 	}
 
-	private final static double MAX_CALCULATED_SPEED = 20 * 1852 / 3600; // 10 knots in m/s
+	private final static double MAX_CALCULATED_SPEED = 20 * 1_852 / 3_600; // 10 knots in m/s
 
 	public static void main(String... args) {
 
-		boolean verbose = "true".equals(System.getProperty("verbose"));
-		String speedUnit = System.getProperty("speed.unit");
+		final boolean verbose = "true".equals(System.getProperty("verbose"));
+		final String speedUnit = System.getProperty("speed.unit");
 		if (speedUnit != null) {
 			switch (speedUnit) {
 				case "KMH":
@@ -139,7 +141,7 @@ public class LogAnalyzer {
 					unitToUse = SpeedUnit.KN;
 					break;
 				default:
-					System.out.println(String.format("Unknown unit [%s], defaulting to knots.", speedUnit));
+					System.out.printf("Unknown unit [%s], defaulting to knots.\n", speedUnit);
 					unitToUse = SpeedUnit.KN;
 					break;
 			}
@@ -160,6 +162,9 @@ public class LogAnalyzer {
 					throw new IllegalArgumentException("Please provide the file path in archive as second parameter");
 				}
 				String pathInArchive = args[1]; // Required
+				if (verbose) {
+					System.out.printf("Will look into %s to analyze %s\n", dataFileName, pathInArchive);
+				}
 				ZipFile zipFile = new ZipFile(dataFileName);
 				ZipEntry zipEntry = zipFile.getEntry(pathInArchive);
 				if (zipEntry == null) { // Path not found in the zip, take first entry.
@@ -167,6 +172,9 @@ public class LogAnalyzer {
 				}
 				fis = zipFile.getInputStream(zipEntry);
 			} else {
+				if (verbose) {
+					System.out.printf("Will analyze %s\n", dataFileName);
+				}
 				fis = new FileInputStream(dataFileName);
 			}
 
@@ -240,9 +248,9 @@ public class LogAnalyzer {
 										if (rmcTime != null && prevRMCTime != null) {
 											double deltaT = rmcTime.getTime() - prevRMCTime.getTime();
 											if (deltaT > 0) {
-												calcSpeed = (distance * 1000d) / (deltaT / 1000d); // ms
+												calcSpeed = (distance * 1_000d) / (deltaT / 1_000d); // ms
 //												if (calcSpeed > MAX_CALCULATED_SPEED) {
-//													System.out.println(String.format("Speed: %.02f", calcSpeed));
+//													System.out.printf("Speed: %.02f", calcSpeed));
 //												}
 												maxSpeedCalc = Math.max(maxSpeedCalc, calcSpeed);
 											}
@@ -282,14 +290,14 @@ public class LogAnalyzer {
 										if (previousPos != null) {
 											distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 											if (verbose && distance == 0) {
-												System.out.println(String.format("Rec # %d (RMC# %d), Step: %.03f km between %s and %s (%s, previous was %s)",
+												System.out.printf("Rec # %d (RMC# %d), Step: %.03f km between %s and %s (%s, previous was %s)\n",
 														originalFileRecNo,
 														nbRMCRec,
 														distance,
 														previousPos.toString(),
 														gp.toString(),
 														rmcTime != null ? SDF.format(rmcTime) : "",
-														prevRMCTime != null ? SDF.format(prevRMCTime) : "-"));
+														prevRMCTime != null ? SDF.format(prevRMCTime) : "-");
 											}
 											distanceInKm += distance;
 											bw.write(String.format("%d;%d;%d;%f;=(B%d-B%d);%s;%s\n",
@@ -318,10 +326,10 @@ public class LogAnalyzer {
 										maxSpeed = Math.max(maxSpeed, rmc.getSog());
 										minSpeed = Math.min(minSpeed, rmc.getSog());
 									} else {
-										System.out.println(String.format("Skipping too fast record: %.04f ms", calcSpeed));
+										System.out.printf("Skipping too fast record: %.04f ms\n", calcSpeed);
 									}
 								} else {
-									System.out.println(String.format(">> NO RMC Position at rec#%d", originalFileRecNo));
+									System.out.printf(">> NO RMC Position at rec#%d\n", originalFileRecNo);
 								}
 							}
 						} else if (id.equals("GGA")) {
@@ -336,7 +344,7 @@ public class LogAnalyzer {
 						// More Sentence IDs ?..
 					} else {
 						if (verbose) {
-							System.out.println(String.format("Invalid data [%s]", line));
+							System.out.printf("Invalid data [%s]\n", line);
 						}
 						String strId = "---";
 						try {
@@ -356,31 +364,31 @@ public class LogAnalyzer {
 
 			// Display summary
 			assert (start != null && arrival != null);
-			System.out.println(String.format("Started %s", SDF.format(start)));
-			System.out.println(String.format("Arrived %s", SDF.format(arrival)));
-			System.out.println(String.format("Used %s record(s) out of %s. Total distance: %.03f %s, in %s. Avg speed:%.03f %s",
+			System.out.printf("Started %s\n", SDF.format(start));
+			System.out.printf("Arrived %s\n", SDF.format(arrival));
+			System.out.printf("Used %s record(s) out of %s. Total distance: %.03f %s, in %s. Avg speed:%.03f %s\n",
 					NumberFormat.getInstance().format(nbRec),
 					NumberFormat.getInstance().format(totalNbRec),
 					distanceInKm / (unitToUse.equals(SpeedUnit.KMH) ? 1 : 1.852),
 					unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm",
 					msToHMS(arrival.getTime() - start.getTime()),
 					(distanceInKm / ((arrival.getTime() - start.getTime()) / ((double) HOUR))) / (unitToUse.equals(SpeedUnit.KMH) ? 1 : 1.852),
-					unitToUse.label()));
-			System.out.println(String.format("Max Speed (SOG): %.03f %s", maxSpeed * unitToUse.convert(), unitToUse.label()));
-			System.out.println(String.format("Min Speed (SOG): %.03f %s", minSpeed * unitToUse.convert(), unitToUse.label()));
+					unitToUse.label());
+			System.out.printf("Max Speed (SOG): %.03f %s\n", maxSpeed * unitToUse.convert(), unitToUse.label());
+			System.out.printf("Min Speed (SOG): %.03f %s\n", minSpeed * unitToUse.convert(), unitToUse.label());
 			double deltaAlt = (maxAlt - minAlt);
 			if (!Double.isInfinite(deltaAlt)) {
-				System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
+				System.out.printf("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m\n", minAlt, maxAlt, (maxAlt - minAlt));
 			}
-			System.out.println(String.format("Top-Left    :%s (%f / %f)", new GeoPos(maxLat, minLng).toString(), maxLat, minLng));
-			System.out.println(String.format("Bottom-Right:%s (%f / %f)", new GeoPos(minLat, maxLng).toString(), minLat, maxLng));
-			System.out.println(String.format("Min Lat (%s) record idx (in %s): %d, at %s", GeomUtil.decToSex(minLat, GeomUtil.SWING, GeomUtil.NS), args[0], minLatIdx, SDF.format(minLatDate)));
-			System.out.println(String.format("Max Lat (%s) record idx (in %s): %d, at %s", GeomUtil.decToSex(maxLat, GeomUtil.SWING, GeomUtil.NS), args[0], maxLatIdx, SDF.format(maxLatDate)));
-			System.out.println(String.format("Min Lng (%s) record idx (in %s): %d, at %s", GeomUtil.decToSex(minLng, GeomUtil.SWING, GeomUtil.EW), args[0], minLngIdx, SDF.format(minLngDate)));
-			System.out.println(String.format("Max Lng (%s) record idx (in %s): %d, at %s", GeomUtil.decToSex(maxLng, GeomUtil.SWING, GeomUtil.EW), args[0], maxLngIdx, SDF.format(maxLngDate)));
+			System.out.printf("Top-Left    :%s (%f / %f)\n", new GeoPos(maxLat, minLng).toString(), maxLat, minLng);
+			System.out.printf("Bottom-Right:%s (%f / %f)\n", new GeoPos(minLat, maxLng).toString(), minLat, maxLng);
+			System.out.printf("Min Lat (%s) record idx (in %s): %d, at %s\n", GeomUtil.decToSex(minLat, GeomUtil.SWING, GeomUtil.NS), args[0], minLatIdx, SDF.format(minLatDate));
+			System.out.printf("Max Lat (%s) record idx (in %s): %d, at %s\n", GeomUtil.decToSex(maxLat, GeomUtil.SWING, GeomUtil.NS), args[0], maxLatIdx, SDF.format(maxLatDate));
+			System.out.printf("Min Lng (%s) record idx (in %s): %d, at %s\n", GeomUtil.decToSex(minLng, GeomUtil.SWING, GeomUtil.EW), args[0], minLngIdx, SDF.format(minLngDate));
+			System.out.printf("Max Lng (%s) record idx (in %s): %d, at %s\n", GeomUtil.decToSex(maxLng, GeomUtil.SWING, GeomUtil.EW), args[0], maxLngIdx, SDF.format(maxLngDate));
 			System.out.println();
 
-			System.out.println(String.format("Max Calc Speed: %.03f ms", maxSpeedCalc));
+			System.out.printf("Max Calc Speed: %.03f ms\n", maxSpeedCalc);
 
 			// Width, height
 			GreatCircle gc = new GreatCircle(new GreatCirclePoint(new GeoPoint(Math.toRadians(minLat),
@@ -395,15 +403,15 @@ public class LogAnalyzer {
 			double distTLBR = gc.getDistanceInNM();
 			distBLTR *= unitToUse.convert(); // (unitToUse.equals(SpeedUnit.KMH) ? 1.852 : 1);
 			distTLBR *= unitToUse.convert(); // (unitToUse.equals(SpeedUnit.KMH) ? 1.852 : 1);
-			System.out.println(String.format("Bottom-Left to top-right: %.03f %s", distBLTR, (unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm")));
-			System.out.println(String.format("Top-Left to bottom-right: %.03f %s", distTLBR, (unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm")));
+			System.out.printf("Bottom-Left to top-right: %.03f %s\n", distBLTR, (unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm"));
+			System.out.printf("Top-Left to bottom-right: %.03f %s\n", distTLBR, (unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm"));
 
 			// Maps
 			if (verbose) {
 				System.out.println("Valid Strings:");
-				validStrings.keySet().stream().forEach(key -> System.out.println(String.format("%s : %d elements", key, validStrings.get(key))));
+				validStrings.keySet().stream().forEach(key -> System.out.printf("%s : %d elements\n", key, validStrings.get(key)));
 				System.out.println("Invalid Strings:");
-				invalidStrings.keySet().stream().forEach(key -> System.out.println(String.format("%s : %d elements", key, invalidStrings.get(key))));
+				invalidStrings.keySet().stream().forEach(key -> System.out.printf("%s : %d elements\n", key, invalidStrings.get(key)));
 			}
 			try {
 				// A Map on a canvas?

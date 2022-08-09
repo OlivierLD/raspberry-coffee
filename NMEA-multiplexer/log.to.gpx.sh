@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# GPS eXchange
+#
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 JAVA_OPTIONS=
 #
