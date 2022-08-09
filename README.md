@@ -2,7 +2,14 @@
 
 #### Java code and wirings for the Raspberry Pi, featuring reusable libraries and snippets
 
-> This project was started in 2015.
+> This project was started in 2015.  
+> Among several modules, some emerged. We clearly have two major threads:
+> - Actuators and Sensors (look into `raspberry-io-pi4j` and others)
+> - Navigation utilities (look into `raspberry-sailor`, `NMEA-multiplexer` and others)
+> 
+> Those two above can interact. For example, navigation software can use sensors.  
+> And again, this project is not limited to those two threads.
+
 ---
 Main keywords:
 - Raspberry Pi
