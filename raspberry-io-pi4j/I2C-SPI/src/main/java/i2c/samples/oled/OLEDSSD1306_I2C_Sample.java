@@ -1,9 +1,8 @@
 package i2c.samples.oled;
 
-import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+//import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.io.IOException;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.utils.img.ImgInterface;
@@ -23,7 +22,7 @@ public class OLEDSSD1306_I2C_Sample {
 
 		oled.begin();
 		oled.clear();
-//  oled.display();
+    //  oled.display();
 
 		int WIDTH = 128;
 		int HEIGHT = 32;
@@ -54,6 +53,7 @@ public class OLEDSSD1306_I2C_Sample {
 		try {
 			Thread.sleep(2_000);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		// Blinking
 		if ("true".equals(System.getProperty("verbose", "false"))) {
@@ -67,6 +67,7 @@ public class OLEDSSD1306_I2C_Sample {
 		try {
 			Thread.sleep(500);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
@@ -77,6 +78,7 @@ public class OLEDSSD1306_I2C_Sample {
 		try {
 			Thread.sleep(500);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
@@ -87,6 +89,7 @@ public class OLEDSSD1306_I2C_Sample {
 		try {
 			Thread.sleep(500);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
@@ -97,6 +100,7 @@ public class OLEDSSD1306_I2C_Sample {
 		try {
 			Thread.sleep(500);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
 		// End blinking
@@ -131,6 +135,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(500);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.circle(74, 16, 10);
@@ -139,6 +144,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(500);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.circle(80, 16, 5);
@@ -147,6 +153,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(500);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// Lines
@@ -157,6 +164,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.line(126, 1, 1, 30);
@@ -165,6 +173,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.line(1, 25, 120, 10);
@@ -173,6 +182,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.line(10, 5, 10, 30);
@@ -181,6 +191,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.line(1, 5, 120, 5);
@@ -189,6 +200,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// Rectangles
@@ -199,6 +211,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.rectangle(15, 3, 50, 30);
@@ -207,6 +220,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			sb.clear();
@@ -219,6 +233,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// Arc & plot
@@ -230,6 +245,7 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// Shape
@@ -245,8 +261,9 @@ public class OLEDSSD1306_I2C_Sample {
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// Centered text
@@ -260,8 +277,9 @@ public class OLEDSSD1306_I2C_Sample {
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 			// sb.clear();
 			txt = "A much longer string.";
@@ -270,8 +288,9 @@ public class OLEDSSD1306_I2C_Sample {
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// Vertical marquee
@@ -348,8 +367,9 @@ public class OLEDSSD1306_I2C_Sample {
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// A curve (progressing)
@@ -364,8 +384,9 @@ public class OLEDSSD1306_I2C_Sample {
 				//  System.out.println("X:" + x + ", ampl: " + (amplitude));
 				int _y = 16 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 16d)));
 				sb.plot(_x + 2, _y);
-				if (prev != null)
+				if (prev != null) {
 					sb.line(prev.x, prev.y, _x + 2, _y);
+				}
 				prev = new Point(_x + 2, _y);
 				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 				oled.display();
@@ -374,8 +395,9 @@ public class OLEDSSD1306_I2C_Sample {
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 			// Bouncing
@@ -401,13 +423,15 @@ public class OLEDSSD1306_I2C_Sample {
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 //  sb.dumpScreen();
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1_000);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 
@@ -422,8 +446,9 @@ public class OLEDSSD1306_I2C_Sample {
 		oled.display();
 
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		sb.clear();
 		oled.clear(); // Blank screen

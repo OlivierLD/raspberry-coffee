@@ -453,8 +453,6 @@ public class  SSD1306 {
 		this.command(SSD1306_PAGEADDR);
 		this.command(0); // Page start address. (0 = reset)
 		this.command(this.pages - 1); // Page end address.
-		// a test...
-		this.command(SSD1306_DISPLAYALLON_RESUME); // 0xA4
 
 		if (SSD1306.dcOutput != null) { // SPI
 			// Write buffer data.
