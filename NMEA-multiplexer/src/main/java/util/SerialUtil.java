@@ -13,10 +13,10 @@ public class SerialUtil {
 		System.out.println("\n----- Serial Port List -----");
 		while (enumeration.hasMoreElements()) {
 			CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
-			System.out.println(String.format("Port: %s, %s, %s.",
+			System.out.printf("Port: %s, %s, %s.\n",
 					cpi.getName(),
 					SerialReader.readablePortType(cpi.getPortType()),
-					(cpi.isCurrentlyOwned() ? String.format("(owned by %s)", cpi.getCurrentOwner()) : "free")));
+					(cpi.isCurrentlyOwned() ? String.format("(owned by %s)", cpi.getCurrentOwner()) : "free"));
 			nbp++;
 		}
 		System.out.println("Found " + nbp + " port(s)");

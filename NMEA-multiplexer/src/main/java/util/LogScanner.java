@@ -58,7 +58,7 @@ public class LogScanner {
 								break;
 						}
 					} else {
-						System.err.println(String.format("Invalid Checksum for [%s], line # %d", line, lineNum));
+						System.err.printf("Invalid Checksum for [%s], line # %d\n", line, lineNum);
 					}
 					lineNum++;
 				}
@@ -69,11 +69,9 @@ public class LogScanner {
 		}
 		System.out.println("Distinct sentences:");
 		distinctSentences.keySet()
-						.forEach(k -> {
-							System.out.println(String.format("%s -> %d sentence(s)", k, distinctSentences.get(k)));
-						});
+						.forEach(k ->  System.out.printf("%s -> %d sentence(s)\n", k, distinctSentences.get(k)) );
 
-		System.out.println(String.format("Latitude range [%f, %f]", minLat, maxLat));
-		System.out.println(String.format("Longitude range [%f, %f]", minLng, maxLng));
+		System.out.printf("Latitude range [%f, %f]\n", minLat, maxLat);
+		System.out.printf("Longitude range [%f, %f]\n", minLng, maxLng);
 	}
 }

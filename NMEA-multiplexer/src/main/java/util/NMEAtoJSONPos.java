@@ -4,11 +4,12 @@ import nmea.parser.RMC;
 import nmea.parser.StringParsers;
 import org.json.JSONArray;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 /**
  * JSON positions generator, from NMEA log.
@@ -20,14 +21,14 @@ import java.util.TimeZone;
  *     ];
  */
 public class NMEAtoJSONPos {
-	private static Map<String, Integer> map = new HashMap<>();
+	private final static Map<String, Integer> map = new HashMap<>();
 
 	private static void transform(String fileInName,
 	                              String fileOutName) throws Exception {
 
 		JSONArray jsonArray = new JSONArray();
 		BufferedReader br = new BufferedReader(new FileReader(fileInName));
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(fileOutName)));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(fileOutName));
 
 		String line = "";
 
@@ -71,10 +72,10 @@ public class NMEAtoJSONPos {
 			String inputFileName = args[0];
 			String outputFileName = inputFileName + ".json";
 			NMEAtoJSONPos.transform(inputFileName, outputFileName);
-			System.out.println(String.format("\nGenerated file %s is ready.", outputFileName));
+			System.out.printf("\nGenerated file %s is ready.\n", outputFileName);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		map.keySet().forEach(key -> System.out.println(String.format("%s: %d records", key, map.get(key))));
+		map.keySet().forEach(key -> System.out.printf("%s: %d records\n", key, map.get(key)));
 	}
 }

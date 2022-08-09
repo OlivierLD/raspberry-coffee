@@ -9,13 +9,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * KML, to an array of arrays (LeafLetJS)
@@ -35,7 +36,7 @@ public class XMLtoJSON {
         Hashtable<String, String> nsHash;
 
         CustomResolver() {
-            nsHash = new Hashtable<String, String>();
+            nsHash = new Hashtable<>();
         }
     }
 
@@ -43,9 +44,9 @@ public class XMLtoJSON {
 
     private final static String KML_NAMESPACE = "http://earth.google.com/kml/2.0";
 
-    public final static void main(String... args) throws Exception {
-        String fileName = "/Users/olivierlediouris/oliv/web.site/donpedro/journal/trip/GPX/the.full.trip.kml";
-        String outputFileName = "/Users/olivierlediouris/oliv/web.site/donpedro/journal/trip/GPX/the.full.trip.json";
+    public static void main(String... args) throws Exception {
+        String fileName = String.format("%s/oliv/web.site/donpedro/journal/trip/GPX/the.full.trip.kml", System.getProperty("user.dir"));
+        String outputFileName = String.format("%s/oliv/web.site/donpedro/journal/trip/GPX/the.full.trip.json", System.getProperty("user.dir"));
         File file = new File(fileName);
         if (!file.exists()) {
             throw new RuntimeException(String.format("File Not Found: %s", fileName));
@@ -67,15 +68,15 @@ public class XMLtoJSON {
 
         Element documentElement = parsedGPX.getDocumentElement();
         String rootTagName = documentElement.getTagName();
-        System.out.println(String.format("Document root is %s (tag), %s (local), %s (node)", rootTagName, documentElement.getLocalName(), documentElement.getNodeName()));
+        System.out.printf("Document root is %s (tag), %s (local), %s (node)\n", rootTagName, documentElement.getLocalName(), documentElement.getNodeName());
 
         String coordinatesPath = "/kml:kml/kml:Document/kml:Placemark/kml:LineString/kml:coordinates/text()";
         NodeList nodeList = parsedGPX.selectNodes(coordinatesPath, resolver); // selectSingleNode could do too.
-        System.out.println(String.format("Selected %d node(s)", nodeList.getLength()));
+        System.out.printf("Selected %d node(s)\n", nodeList.getLength());
         String content = nodeList.item(0).getNodeValue();
-        System.out.println(String.format("Content: %s", content));
+        System.out.printf("Content: %s\n", content);
         String[] dataLines = content.split("\n");
-        System.out.println(String.format("%d lines of data", dataLines.length));
+        System.out.printf("%d lines of data\n", dataLines.length);
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(outputFileName));
             bw.write("[");
@@ -91,7 +92,7 @@ public class XMLtoJSON {
                     }
                 }
             });
-            bw.write(finalData.stream().collect(Collectors.joining(", ")));
+            bw.write(String.join(", ", finalData));
 
             bw.write("]\n");
 
@@ -99,7 +100,7 @@ public class XMLtoJSON {
             List<String> placeList = new ArrayList<>();
             String placesPath = "kml:kml/kml:Document/kml:Folder/kml:Placemark";
             nodeList = parsedGPX.selectNodes(placesPath, resolver);
-            System.out.println(String.format("Selected %d Placemark node(s)", nodeList.getLength()));
+            System.out.printf("Selected %d Placemark node(s)\n", nodeList.getLength());
             for (int i=0; i<nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 String name = ((XMLElement) node).selectSingleNode("kml:name/text()", resolver).getNodeValue();
@@ -107,7 +108,7 @@ public class XMLtoJSON {
                 String description = (descNode != null) ? descNode.getNodeValue() : null;
                 if (description != null) {
                     description = description.trim();
-                    while (description.indexOf("\n ") > -1) {
+                    while (description.contains("\n ")) {
                         description = description.replace("\n ", "\n");
                     }
 //                    description = description.replace("<\\\\//", "<//");
@@ -147,7 +148,7 @@ public class XMLtoJSON {
 //                System.out.println(jsonObject.toString(2));
             }
             bw.write("\n[");
-            bw.write(placeList.stream().collect(Collectors.joining(", ")));
+            bw.write(String.join(", ", placeList));
             bw.write("]\n");
 
             bw.close();

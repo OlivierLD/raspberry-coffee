@@ -25,7 +25,7 @@ import static utils.TimeUtil.msToHMS;
  * KML: Keyhole Markup Language (Keyhole was acquired by Google, and became Google Maps)
  */
 public class NMEAtoKML {
-	private static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 
 	private final static double KNOTS_TO_KMH = 1.852;
 
@@ -144,7 +144,7 @@ public class NMEAtoKML {
 									maxLng = Math.max(maxLng, gp.lng);
 									if (previousPos != null) {
 										double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
-//									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
+//									System.out.printf("Step: %.03f km between %s and %s (%s)",
 //													distance,
 //													previousPos.toString(),
 //													gp.toString(),
@@ -166,7 +166,7 @@ public class NMEAtoKML {
 						}
 						// More Sentence IDs ?..
 					} else {
-						System.out.println(String.format("Invalid data [%s]", line));
+						System.out.printf("Invalid data [%s]\n", line);
 					}
 				}
 			}
@@ -182,20 +182,20 @@ public class NMEAtoKML {
 
 			// Display summary
 			assert (startPos != null && start != null && arrival != null);
-			System.out.println(String.format("Started %s from %s", SDF.format(start), startPos.toString()));
-			System.out.println(String.format("Arrived %s at %s", SDF.format(arrival), previousPos.toString()));
-			System.out.println(String.format("%s record(s) out of %s. Total distance: %.03f km, in %s. Avg speed:%.03f km/h",
+			System.out.printf("Started %s from %s\n", SDF.format(start), startPos.toString());
+			System.out.printf("Arrived %s at %s\n", SDF.format(arrival), previousPos.toString());
+			System.out.printf("%s record(s) out of %s. Total distance: %.03f km, in %s. Avg speed:%.03f km/h\n",
 					NumberFormat.getInstance().format(nbRec),
 					NumberFormat.getInstance().format(totalNbRec),
 					distanceInKm,
 					fmtDHMS(msToHMS(arrival.getTime() - start.getTime())),
-					distanceInKm / ((arrival.getTime() - start.getTime()) / ((double)HOUR))));
-			System.out.println(String.format("Max Speed: %.03f km/h", maxSpeed * KNOTS_TO_KMH));
-			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
-			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
-			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));
+					distanceInKm / ((arrival.getTime() - start.getTime()) / ((double)HOUR)));
+			System.out.printf("Max Speed: %.03f km/h\n", maxSpeed * KNOTS_TO_KMH);
+			System.out.printf("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m\n", minAlt, maxAlt, (maxAlt - minAlt));
+			System.out.printf("Top-Left    :%s\n", new GeoPos(maxLat, minLng).toString());
+			System.out.printf("Bottom-Right:%s\n", new GeoPos(minLat, maxLng).toString());
 
-			System.out.println(String.format("\nGenerated file %s is ready.", outputFileName));
+			System.out.printf("\nGenerated file %s is ready.\n", outputFileName);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

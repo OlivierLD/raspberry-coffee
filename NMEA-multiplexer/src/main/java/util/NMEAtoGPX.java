@@ -5,7 +5,6 @@ import nmea.parser.StringParsers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
@@ -19,7 +18,7 @@ import java.util.TimeZone;
  * GPs eXchange format.
  */
 public class NMEAtoGPX {
-	private static Map<String, Integer> map = new HashMap<>();
+	private final static Map<String, Integer> map = new HashMap<>();
 	private final static SimpleDateFormat UTC_MASK = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
 	static {
@@ -31,7 +30,7 @@ public class NMEAtoGPX {
 		BufferedReader br = new BufferedReader(new FileReader(fileInName));
 		String line = "";
 
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(fileOutName)));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(fileOutName));
 		bw.write("<?xml version=\"1.0\"?>\n" +
 				"<gpx version=\"1.1\" creator=\"OpenCPN\" " +
 				"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
@@ -83,10 +82,10 @@ public class NMEAtoGPX {
 			String inputFileName = args[0];
 			String outputFileName = inputFileName + ".gpx";
 			NMEAtoGPX.transform(inputFileName, outputFileName);
-			System.out.println(String.format("\nGenerated file %s is ready.", outputFileName));
+			System.out.printf("\nGenerated file %s is ready.\n", outputFileName);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		map.keySet().forEach(key -> System.out.println(String.format("%s: %d records", key, map.get(key))));
+		map.keySet().forEach(key -> System.out.printf("%s: %d records\n", key, map.get(key)));
 	}
 }

@@ -61,13 +61,13 @@ public class LogShrinker {
 								break;
 						}
 					} else {
-						System.err.println(String.format("Invalid Checksum for [%s], line # %d", line, lineNum));
+						System.err.printf("Invalid Checksum for [%s], line # %d\n", line, lineNum);
 					}
 					lineNum++;
 				}
 			}
 			bufferedReader.close();
-			System.out.println(String.format("On %d records, start moving at %d (last zero-speed record), stop at %d", lineNum, starsAtRecNo + 1, endsAtRecNo + 1));
+			System.out.printf("On %d records, start moving at %d (last zero-speed record), stop at %d\n", lineNum, starsAtRecNo + 1, endsAtRecNo + 1);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

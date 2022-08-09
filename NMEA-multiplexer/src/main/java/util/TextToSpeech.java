@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TextToSpeech {
-	private static Map<String, String> speechTools = new HashMap<>();
+	private final static Map<String, String> speechTools = new HashMap<>();
 	// See this: https://howtoraspberrypi.com/make-talk-raspberry-pi-espeak/
 	static{
 		speechTools.put("Mac OS X", "say \"%s\"");

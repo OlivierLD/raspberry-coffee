@@ -39,7 +39,7 @@ public class NMEAtoCSV {
 	@SuppressWarnings("unchecked")
 	public static void main(String... args) {
 
-		System.out.println(String.format("Running from %s.", System.getProperty("user.dir")));
+		System.out.printf("Running from %s.\n", System.getProperty("user.dir"));
 
 		String nmeaFileName = "";
 		String csvOutputName = "";
@@ -75,25 +75,25 @@ public class NMEAtoCSV {
 		List<String> badStrings = new ArrayList<>();
 		dataToWrite.forEach(key -> {
 			if (VERBOSE) {
-				System.out.println(String.format("String %s", key));
+				System.out.printf("String %s\n", key);
 			}
 			StringParsers.Dispatcher dispatcher = StringParsers.findDispatcherByKey(key);
 			if (dispatcher == null) {
-				System.err.println(String.format("No parser found for %s", key));
+				System.err.printf("No parser found for %s\n", key);
 				ai.incrementAndGet();
 				badStrings.add(key);
 			} else {
 				Class returnedType = dispatcher.returnedType();
-				System.out.println(String.format("Will retain %s, %s", key, dispatcher.description()));
+				System.out.printf("Will retain %s, %s\n", key, dispatcher.description());
 				if (VERBOSE) {
-					System.out.println(String.format("Parsing %s returns %s: %s",
+					System.out.printf("Parsing %s returns %s: %s\n",
 							key,
 							returnedType.getName(),
 							NMEAComposite.class.isAssignableFrom(returnedType) ||
 									returnedType.equals(Double.class) ||
 									returnedType.equals(Float.class) ||
 									returnedType.equals(Integer.class) ||
-									returnedType.equals(String.class) ? "OK" : "not OK"));
+									returnedType.equals(String.class) ? "OK" : "not OK");
 				}
 				if (!NMEAComposite.class.isAssignableFrom(returnedType)) {
 					if (returnedType.equals(Double.class) ||
@@ -104,7 +104,7 @@ public class NMEAtoCSV {
 						fullCsvHeader.append(String.format("%s%s", (fullCsvHeader.length() > 0 ? SEPARATOR : ""), oneColHeader));
 						oneCsvLine.put(key, null);
 					} else {
-						System.err.println(String.format("No proper type returned after parsing %s", key));
+						System.err.printf("No proper type returned after parsing %s\n", key);
 						ai.incrementAndGet();
 						badStrings.add(key);
 					}
@@ -113,7 +113,7 @@ public class NMEAtoCSV {
 						String header = (String)returnedType.getDeclaredMethod("getCsvHeader", String.class)
 								.invoke(null, SEPARATOR); // 1st arg, no Obj, method is static
 						if (VERBOSE) {
-							System.out.println(String.format("CSV Header [%s]", header));
+							System.out.printf("CSV Header [%s]\n", header);
 						}
 						fullCsvHeader.append(String.format("%s%s", (fullCsvHeader.length() > 0 ? SEPARATOR : ""), header));
 						oneCsvLine.put(key, null);
@@ -123,9 +123,9 @@ public class NMEAtoCSV {
 				}
 			}
 		});
-//		System.out.println(String.format("CSV Header: %s", fullCsvHeader.toString()));
+//		System.out.printf("CSV Header: %s", fullCsvHeader.toString()));
 		if (ai.get() > 0) {
-			System.err.println(String.format("%d  un-managed string(s):", ai.get()));
+			System.err.printf("%d  un-managed string(s):\n", ai.get());
 			String badOnes = String.join(", ", badStrings);
 			System.err.println(badOnes);
 			throw new IllegalArgumentException(String.format("Not suited for CSV: %s", badOnes));
@@ -137,11 +137,11 @@ public class NMEAtoCSV {
 					breakAt,
 					String.join(", ", dataToWrite)));
 		}
-		System.out.println(String.format("Will turn %s into %s, using strings %s, breaking at %s",
+		System.out.printf("Will turn %s into %s, using strings %s, breaking at %s\n",
 				nmeaFileName,
 				csvOutputName,
 				nmeaStringsToParse,
-				breakAt));
+				breakAt);
 		// Tests for now
 //		System.out.println(RMC.getCsvHeader(SEPARATOR));
 
@@ -157,7 +157,7 @@ public class NMEAtoCSV {
 					try {
 						StringParsers.ParsedData parsedData = StringParsers.autoParse(line);
 						if (dataToWrite.contains(parsedData.getSentenceId())) {
-							// System.out.println(String.format("Managing %s", parsedData.getSentenceId()));
+							// System.out.printf("Managing %s", parsedData.getSentenceId()));
 							// Populate the map here
 							if (parsedData.getParsedData() instanceof NMEAComposite) {
 								String data = ((NMEAComposite)parsedData.getParsedData()).getCsvData(SEPARATOR);
