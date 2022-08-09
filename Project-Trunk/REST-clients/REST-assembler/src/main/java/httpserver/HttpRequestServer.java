@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class HttpRequestServer {
 
 	private HTTPServer httpServer = null;
-	private int httpPort = 9999;
+	private int httpPort = 9_999;
 
 	public HttpRequestServer() {
 

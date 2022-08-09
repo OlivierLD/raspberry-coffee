@@ -16,7 +16,7 @@ public class Pressure implements Serializable {
 	public final static double HPA_TO_mmHG = 1.3332239;
 	public final static double HPA_TO_INHG = 33.8638816;
 	public final static double HPA_TO_PSI = 68.9475729;
-	public final static double HPA_TO_ATM = 1013.25;
+	public final static double HPA_TO_ATM = 1_013.25;
 
 	public Pressure() {
 	}

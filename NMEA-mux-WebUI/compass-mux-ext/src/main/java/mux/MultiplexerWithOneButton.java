@@ -40,7 +40,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 
 	final static PushButtonController buttonOne = new PushButtonController();
 
-	private static int serverPort = 9999;
+	private static int serverPort = 9_999;
 
 	private String turnLoggingOnURL = "";
 	private String turnLoggingOffURL = "";

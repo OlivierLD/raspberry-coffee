@@ -22,7 +22,7 @@ import static utils.TimeUtil.msToHMS;
 /**
  * Turn NMEA log data into KML
  * @see <a href="https://www.google.com/search?q=load+a+kml+file+in+google+earth+on+mac&rlz=1C5CHFA_enUS756US756&oq=load+a+kml+file+in+google+earth+on+mac&aqs=chrome..69i57.7973j0j4&sourceid=chrome&ie=UTF-8">this</a>.
- * Keyhole Markup Language (Keyhole was acquired by Google, and became Google Maps)
+ * KML: Keyhole Markup Language (Keyhole was acquired by Google, and became Google Maps)
  */
 public class NMEAtoKML {
 	private static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");

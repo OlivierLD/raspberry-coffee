@@ -52,7 +52,7 @@ public class ADCChannel {
 		if (!simulating) {
 			adc = MCPReader.readMCP(this.adcChannel);
 		} else {
-			adc = (int)Math.round(Math.random() * 1024);
+			adc = (int)Math.round(Math.random() * 1_024);
 		}
 		return adc; // [0..1023]
 	}

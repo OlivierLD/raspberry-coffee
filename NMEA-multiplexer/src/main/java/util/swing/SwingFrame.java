@@ -94,7 +94,7 @@ public class SwingFrame extends JFrame {
 		JLabel toLabel = new JLabel("To");
 		toSlider = new JSlider(JSlider.HORIZONTAL, 0, MAX_SLIDER, MAX_SLIDER);
 		toSlider.setEnabled(true);
-//		toSlider.setValue(1000);
+//		toSlider.setValue(1_000);
 		toSlider.addChangeListener(changeEvent -> {
 //			System.out.println("To listener" + changeEvent);
 //			toSlider.setToolTipText(String.format("%d", toSlider.getValue()));

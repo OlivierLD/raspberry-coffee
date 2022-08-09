@@ -203,8 +203,8 @@ public class TideUtilities {
 		double value = 0d;
 
 		double stationBaseHeight = ts.getBaseHeight();
-		long nbSecSinceJan1st = (d.getTimeInMillis() - jan1st.getTimeInMillis()) / 1000L;
-//  long nbSecSinceJan1st = (d.getTime().getTime() - jan1st.getTime().getTime() ) / 1000L;
+		long nbSecSinceJan1st = (d.getTimeInMillis() - jan1st.getTimeInMillis()) / 1_000L;
+//  long nbSecSinceJan1st = (d.getTime().getTime() - jan1st.getTime().getTime() ) / 1_000L;
 //  System.out.println(" ----- NbSec for " + d.getTime().toString() + " = " + nbSecSinceJan1st);
 		double timeOffset = nbSecSinceJan1st * 0.00027777777777777778D;
 		if ("true".equals(System.getProperty("tide.verbose"))) {
