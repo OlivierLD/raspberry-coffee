@@ -33,7 +33,7 @@ public class TCPGreetingsClient {
 		try {
 			client.startConnection("127.0.0.1", 6666);
 			String response = client.sendMessage("hello server");
-			System.out.println(String.format("Server responded %s", response));
+			System.out.printf("Server responded %s\n", response);
 		} catch (Exception ex) {
 			// Ooch!
 			ex.printStackTrace();

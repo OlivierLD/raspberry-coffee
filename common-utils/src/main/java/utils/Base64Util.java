@@ -116,7 +116,7 @@ public class Base64Util {
 		System.out.println("=============================================");
 		String toEncode = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 		String encoded = Base64Util.encodeToString(toEncode);
-		System.out.println(String.format("1. Encoded (%d -> %d): %s", toEncode.length(), encoded.length(),  encoded));
+		System.out.printf("1. Encoded (%d -> %d): %s\n", toEncode.length(), encoded.length(),  encoded);
 		String decoded = Base64Util.decodeToString(encoded);
 		System.out.println("2. Re-decoded:" + decoded);
 

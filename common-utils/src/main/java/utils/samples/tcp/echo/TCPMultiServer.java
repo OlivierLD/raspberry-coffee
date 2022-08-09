@@ -22,7 +22,7 @@ public class TCPMultiServer {
 	}
 
 	private static class EchoClientHandler extends Thread {
-		private Socket clientSocket;
+		private final Socket clientSocket;
 		private PrintWriter out;
 		private BufferedReader in;
 
@@ -37,7 +37,7 @@ public class TCPMultiServer {
 
 				String inputLine;
 				while ((inputLine = in.readLine()) != null) {
-					System.out.println(String.format("Read >> %s", inputLine));
+					System.out.printf("Read >> %s\n", inputLine);
 					if (".".equals(inputLine)) {
 						out.println("bye");
 						break;

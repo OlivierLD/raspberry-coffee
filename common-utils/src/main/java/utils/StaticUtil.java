@@ -290,7 +290,7 @@ public class StaticUtil {
 	 * @return The clone.
 	 * @throws Exception when fails
 	 */
-	public final static Object deepCopy(Object original) throws NotSerializableException, IOException, ClassNotFoundException {
+	public static Object deepCopy(Object original) throws NotSerializableException, IOException, ClassNotFoundException {
 		Object clone;
 
 		ByteArrayOutputStream bos = null;

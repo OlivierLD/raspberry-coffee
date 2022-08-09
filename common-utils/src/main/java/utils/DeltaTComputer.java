@@ -3,7 +3,6 @@ package utils;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.stream.Collectors;
 
 /**
  * To run in standalone from the command line
@@ -52,11 +51,11 @@ public class DeltaTComputer {
         } else {
             if (year == Integer.MIN_VALUE || month == -1) {
                 System.out.println("If --now is not there, you need to provide both --year: and --month:");
-                System.out.printf("\tYou provided: %s%n", Arrays.asList(args).stream().collect(Collectors.joining(" ")));
+                System.out.printf("\tYou provided: %s%n", String.join(" ", Arrays.asList(args)));
                 System.exit(1);
             }
         }
         double deltaT = TimeUtil.getDeltaT(year, month);
-        System.out.println(String.format("For %s %d => \u0394T %f s", MONTHS[month - 1], year, deltaT));
+        System.out.printf("For %s %d => \u0394T %f s\n", MONTHS[month - 1], year, deltaT);
     }
 }

@@ -188,19 +188,19 @@ public class TimeUtil {
 		}
 		if (verbose) {
 			// Micro: \u03bc, Nano: \u212b
-			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s \u212bs",
-//			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s nano-s",
+			System.out.printf("Wait requested%s: %f %s => Waiting %s ms and %s \u212bs\n",
+//			System.out.printf("Wait requested%s: %f %s => Waiting %s ms and %s nano-s",
 					debugMess != null ? String.format(" (%s)", debugMess) : "",
 					amount,
 					unit,
 					NumberFormat.getInstance().format(ms),
-					NumberFormat.getInstance().format(ns)));
+					NumberFormat.getInstance().format(ns));
 			before = System.currentTimeMillis();
 		}
 		delay(ms, ns);
 		if (verbose) {
 			after = System.currentTimeMillis();
-			System.out.println(String.format("\tMeasured diff: %s ms", NumberFormat.getInstance().format(after - before)));
+			System.out.printf("\tMeasured diff: %s ms\n", NumberFormat.getInstance().format(after - before));
 		}
 	}
 
@@ -293,9 +293,9 @@ public class TimeUtil {
 	/**
 	 * Y parameter (not year) for deltaT computing.
 	 *
-	 * @param year
+	 * @param year the year
 	 * @param month in [1..12]
-	 * @return
+	 * @return The Y, for DeltaT
 	 */
 	private static double getY(int year, int month) {
 		if (year < -1_999 || year > 3_000) {
@@ -315,7 +315,7 @@ public class TimeUtil {
 	 *
 	 * @param year from -1999 to +3000
 	 * @param month in [1..12], NOT in [0..11]
-	 * @return
+	 * @return deltaT
 	 */
 	public static double getDeltaT(int year, int month) {
 		if (year < -1_999 || year > 3_000) {
@@ -434,7 +434,7 @@ public class TimeUtil {
 	/**
 	 * This is for tests
 	 *
-	 * @param args
+	 * @param args CLI args
 	 */
 	public static void main(String... args) {
 
@@ -543,7 +543,7 @@ public class TimeUtil {
 			System.out.println("To DMS:" + decHoursToDMS(13.831260480533272));
 
 			long _now = System.currentTimeMillis();
-			System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
+			System.out.printf("Now: %s\n", fmtDHMS(msToHMS(_now)));
 
 			long elapsed = 231_234_567_890L; // 123456L; //
 			System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
@@ -551,21 +551,21 @@ public class TimeUtil {
 		String[] months = new String[] {"Jan", "Feb", "Mar","Apr", "May", "Jun",
 		                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 		int year = 2020, month = 1;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 		month = 12;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 		year = 1955; month = 1;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 		year = 1960; month = 1;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 		year = 1965; month = 1;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 		year = 2000; month = 1;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 		year = 2005; month = 1;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 		year = 2017; month = 6;
-		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		System.out.printf("DeltaT %s %d: %f\n", months[month - 1], year, getDeltaT(year, month));
 
 		if (true) {
 			StringBuffer duh = new StringBuffer();

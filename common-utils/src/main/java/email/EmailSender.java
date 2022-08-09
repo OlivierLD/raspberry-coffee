@@ -1,5 +1,5 @@
 package email;
-/**
+/*
  * Many accounts need an "App Password"...
  * See <https://www.codeproject.com/Articles/5266074/Send-Email-with-Java-and-Yahoo-Mail>
  *     <https://support.google.com/accounts/answer/185833?p=InvalidSecondFactor&visit_id=637762242149664166-1125601348&rd=1>
@@ -41,7 +41,7 @@ public class EmailSender {
 	private static String sendEmailsTo;
 	private static String eventSubject;
 
-	private static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
 
 	private static final class HttpHeaders {
 		public final static String CONTENT_TYPE = "Content-Type";

@@ -18,8 +18,8 @@ public class AzimuthAndElevation {
 		AMERICAS("I-4 F3 Americas", -97.6), // -98.4),
 		ALPHASAT("Alphasat", 24.9);
 
-		private double longitude;
-		private String satName;
+		private final double longitude;
+		private final String satName;
 		Satellite(String satName, double longitude) {
 			this.satName = satName;
 			this.longitude = longitude;
@@ -87,12 +87,12 @@ public class AzimuthAndElevation {
 	//	Satellite toAim = Satellite.ASIA_PACIFIC;
 			Result result = aim(toAim, lat, lng);
 			NumberFormat NF = new DecimalFormat("##0.0");
-			System.out.println(String.format("%s: Z: %s\272 (true), el: %s\272, tilt: %s\272", toAim.satName(), NF.format(result.zDegrees), NF.format(result.elevDegrees), NF.format(result.tilt)));
+			System.out.printf("%s: Z: %s\272 (true), el: %s\272, tilt: %s\272\n", toAim.satName(), NF.format(result.zDegrees), NF.format(result.elevDegrees), NF.format(result.tilt));
 			if (result.elevDegrees > maxAlt) {
 				maxAlt = result.elevDegrees;
 				toUse = toAim;
 			}
 		}
-		System.out.println(String.format("\nuse %s", (toUse != null ? toUse.satName() : "???")));
+		System.out.printf("\nuse %s\n", (toUse != null ? toUse.satName() : "???"));
 	}
 }

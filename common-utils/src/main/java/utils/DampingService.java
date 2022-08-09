@@ -11,7 +11,7 @@ import java.util.List;
 public class DampingService<T> {
 
 	private int maxLength;
-	private List<T> buffer;
+	private final List<T> buffer;
 
 	public DampingService (int maxLength) {
 		if (maxLength < 1) {

@@ -29,7 +29,7 @@ public class DownloadChangeColor {
         long after = System.currentTimeMillis();
         long reading = after - before;
         NumberFormat nf = NumberFormat.getInstance();
-        System.out.println(String.format("Downloaded in %s ms", nf.format(reading)));
+        System.out.printf("Downloaded in %s ms\n", nf.format(reading));
 
         int width = bimg.getWidth();
         int height = bimg.getHeight();

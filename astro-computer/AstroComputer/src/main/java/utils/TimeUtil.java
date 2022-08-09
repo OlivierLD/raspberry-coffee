@@ -1,7 +1,5 @@
 package utils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeUtil {
 
-	private static boolean verbose = "true".equals(System.getProperty("time.verbose"));
+	private final static boolean verbose = "true".equals(System.getProperty("time.verbose"));
 
 	public static class DMS {
 		int hours;
@@ -188,18 +186,18 @@ public class TimeUtil {
 		}
 		if (verbose) {
 			// Micro: \u03bc, Nano: \u212b
-			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s nano-s",
+			System.out.printf("Wait requested%s: %f %s => Waiting %s ms and %s nano-s\n",
 					debugMess != null ? String.format(" (%s)", debugMess) : "",
 					amount,
 					unit,
 					NumberFormat.getInstance().format(ms),
-					NumberFormat.getInstance().format(ns)));
+					NumberFormat.getInstance().format(ns));
 			before = System.currentTimeMillis();
 		}
 		delay(ms, ns);
 		if (verbose) {
 			after = System.currentTimeMillis();
-			System.out.println(String.format("\tMeasured diff: %s ms", NumberFormat.getInstance().format(after - before)));
+			System.out.printf("\tMeasured diff: %s ms\n", NumberFormat.getInstance().format(after - before));
 		}
 	}
 
@@ -292,9 +290,9 @@ public class TimeUtil {
 	/**
 	 * Y parameter (not year) for deltaT computing.
 	 *
-	 * @param year
+	 * @param year the year
 	 * @param month in [1..12]
-	 * @return
+	 * @return Y, for deltaT
 	 */
 	private static double getY(int year, int month) {
 		if (year < -1_999 || year > 3_000) {
@@ -316,7 +314,7 @@ public class TimeUtil {
 	 *
 	 * @param year from -1999 to +3000
 	 * @param month in [1..12], NOT in [0..11]
-	 * @return
+	 * @return deltaT
 	 */
 	public static double getDeltaT(int year, int month) {
 		if (year < -1_999 || year > 3_000) {

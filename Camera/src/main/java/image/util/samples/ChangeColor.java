@@ -20,8 +20,8 @@ public class ChangeColor {
 	 *
 	 * TODO Add blur & sharp, drawing underneath
 	 *
-	 * @param args
-	 * @throws Exception
+	 * @param args CLI parameters
+	 * @throws Exception Oops
 	 */
 	public static void main(String... args)
 			throws Exception {
@@ -51,11 +51,11 @@ public class ChangeColor {
 
 		NumberFormat nf = NumberFormat.getInstance();
 
-		System.out.println(String.format("Reading took %s ms", nf.format(reading)));
-		System.out.println(String.format("Transforming took %s ms", nf.format(tx)));
-		System.out.println(String.format("Writing took %s ms", nf.format(writing)));
+		System.out.printf("Reading took %s ms\n", nf.format(reading));
+		System.out.printf("Transforming took %s ms\n", nf.format(tx));
+		System.out.printf("Writing took %s ms\n", nf.format(writing));
 
-		System.out.println(String.format("All together %s ms", nf.format(reading + tx + writing)));
+		System.out.printf("All together %s ms\n", nf.format(reading + tx + writing));
 
 		bimg = ImageIO.read(new File(IMG_NAME_2));
 		// Transparent red
@@ -94,6 +94,6 @@ public class ChangeColor {
 
 //		Image image = ImageUtil.readImage(IMG_NAME_1);
 //		BufferedImage bimg2 = ImageUtil.toBufferedImage(image);
-//		System.out.println(String.format("Image is%s a BufferedImage.", (image instanceof BufferedImage) ? "" : " not"));
+//		System.out.printf("Image is%s a BufferedImage.", (image instanceof BufferedImage) ? "" : " not"));
 	}
 }

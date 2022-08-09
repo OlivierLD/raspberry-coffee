@@ -43,7 +43,7 @@ public class EmailReceiver {
 	private static String acceptSubject;
 	private static String ackSubject;
 
-	private static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
 	private static final class HttpHeaders {
@@ -263,7 +263,7 @@ public class EmailReceiver {
 							new FlagTerm(new Flags(Flags.Flag.DELETED), false));
 
 			// st = new SubjectTerm("PI Request");
-			Message msgs[] = folder.search(st);
+			Message[] msgs = folder.search(st);
 //    Message msgs[] = folder.getMessages();
 
 			if (verbose) {
@@ -272,7 +272,7 @@ public class EmailReceiver {
 			for (int msgNum = 0; msgNum < msgs.length; msgNum++) {
 				try {
 					Message mess = msgs[msgNum];
-					Address from[] = mess.getFrom();
+					Address[] from = mess.getFrom();
 					String sender = "";
 					try {
 						sender = from[0].toString();
@@ -283,8 +283,8 @@ public class EmailReceiver {
 					if (true && (subject.equals(acceptSubject) || (acceptedSubjects != null && acceptedSubjects.contains(subject)))) { // Could not have the SubjectTerm to works properly...
 						if (verbose) {
 							System.out.println("Message from [" + sender + "], subject [" + subject + "], content [" + mess.getContent().toString().trim() + "]");
-							System.out.println(String.format("Seen   : %s", (mess.isSet(javax.mail.Flags.Flag.SEEN) ? "yes" : "no")));
-							System.out.println(String.format("Deleted: %s", (mess.isSet(javax.mail.Flags.Flag.DELETED) ? "yes" : "no")));
+							System.out.printf("Seen   : %s\n", (mess.isSet(javax.mail.Flags.Flag.SEEN) ? "yes" : "no"));
+							System.out.printf("Deleted: %s\n", (mess.isSet(javax.mail.Flags.Flag.DELETED) ? "yes" : "no"));
 						}
 						if (!mess.isSet(javax.mail.Flags.Flag.SEEN) && !mess.isSet(javax.mail.Flags.Flag.DELETED)) {
 							MessageContent messageContent = printMessage(mess, dir);
@@ -431,7 +431,7 @@ public class EmailReceiver {
 				for (int i = 0; i < nbParts; i++) {
 					messagePart = ((Multipart) content).getBodyPart(i);
 					if (verbose) {
-						System.out.println(String.format("Part #%d, Content-Type: %s, file %s", i, messagePart.getContentType(), messagePart.getFileName()));
+						System.out.printf("Part #%d, Content-Type: %s, file %s\n", i, messagePart.getContentType(), messagePart.getFileName());
 					}
 					String dateBasedDirectoryName = SDF.format(new Date());
 					File storageDir = new File((dir == null ? "." + File.separator : dir + File.separator) + dateBasedDirectoryName);
@@ -471,7 +471,7 @@ public class EmailReceiver {
 						newFileName += messagePart.getFileName();
 						FileOutputStream fos = new FileOutputStream(newFileName);
 						if (verbose) {
-							System.out.println(String.format("Downloading %s into %s...", messagePart.getFileName(), newFileName));
+							System.out.printf("Downloading %s into %s...\n", messagePart.getFileName(), newFileName);
 						}
 						copy(is, fos);
 						if (verbose) {
@@ -505,7 +505,7 @@ public class EmailReceiver {
 					throws IOException {
 		synchronized (in) {
 			synchronized (out) {
-				byte buffer[] = new byte[256];
+				byte[] buffer = new byte[256];
 				while (true) {
 					int bytesRead = in.read(buffer);
 					if (bytesRead == -1)

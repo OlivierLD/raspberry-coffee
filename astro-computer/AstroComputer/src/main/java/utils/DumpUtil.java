@@ -32,7 +32,7 @@ public class DumpUtil {
 		PrintStream out = (ps != null ? ps : System.out);
 		String[] sa = DumpUtil.dualDump(ba, lpad);
 		if (sa != null) {
-			Arrays.stream(sa).forEach(str -> out.println(String.format("%s%s", lpad == 0 ? "\t" : pad(lpad), str)));
+			Arrays.stream(sa).forEach(str -> out.printf("%s%s\n", lpad == 0 ? "\t" : pad(lpad), str));
 		}
 	}
 
@@ -128,7 +128,7 @@ public class DumpUtil {
 
 	/**
 	 * Small utility to know where a method is called from.
-	 * @return
+	 * @return the stack
 	 */
 	public static List<String> whoCalledMe() {
 		Throwable t = new Throwable();

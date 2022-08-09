@@ -131,7 +131,7 @@ public class EmailWatcher {
 							System.out.println("-- With attachments: --");
 							mess.getContent().getAttachments()
 									.stream()
-									.forEach(att -> System.out.println(String.format("File %s, type %s", att.getFullPath(), att.getMimeType())) );
+									.forEach(att -> System.out.printf("File %s, type %s\n", att.getFullPath(), att.getMimeType()) );
 							System.out.println("-----------------------");
 						}
 					}
@@ -140,13 +140,13 @@ public class EmailWatcher {
 						keepLooping = false;
 						System.out.println("Will exit next batch.");
 					} else {
-						System.out.println(String.format("Operation: [%s], sent for processing...", operation));
+						System.out.printf("Operation: [%s], sent for processing...\n", operation);
 
 						final String finalOp = operation;
 						MessageContext messCtx = new MessageContext()
 								.message(mess)
 								.sender(sender);
-						Optional<EmailProcessor> processor = emailWatcher.processors
+						Optional<EmailProcessor> processor = EmailWatcher.processors
 								.stream()
 								.filter(p -> p.getKey().equals(finalOp))
 								.findFirst();
@@ -154,7 +154,7 @@ public class EmailWatcher {
 							processor.get().getProcessor().accept(messCtx);
 						} else {
 							// Operation not found.
-							System.out.println(String.format("No processor registered for operation [%s]", operation));
+							System.out.printf("No processor registered for operation [%s]\n", operation);
 							try {
 								Thread.sleep(1_000L);
 							} catch (InterruptedException ie) {
@@ -191,8 +191,8 @@ public class EmailWatcher {
 	}
 
 	public static class EmailProcessor {
-		private String key;
-		private Consumer<MessageContext> processor;
+		private final String key;
+		private final Consumer<MessageContext> processor;
 
 		public EmailProcessor(String key, Consumer<MessageContext> processor) {
 			this.key = key;
@@ -276,7 +276,7 @@ public class EmailWatcher {
 						if ("text/x-sh".equals(attachment.getMimeType()) || HttpHeaders.TEXT_PLAIN.equals(attachment.getMimeType())) {
 							cmd = "sh ./" + attachment.getFullPath();
 						} else {
-							System.err.println(String.format("Mime-type %s not supported", attachment.getMimeType()));
+							System.err.printf("Mime-type %s not supported\n", attachment.getMimeType());
 						}
 						if (cmd != null) {
 							try {
