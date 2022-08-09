@@ -32,7 +32,7 @@ public class OLEDSSD1306_I2C_ClockSample {
 		int HEIGHT = 32;
 
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
-		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
+		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("ScreenBuffer ready...");
 		}
@@ -52,12 +52,14 @@ public class OLEDSSD1306_I2C_ClockSample {
 			}
 		}, "I'm the killer"));
 
+		System.out.println("Look at your screen...");
+
 		while (keepGoing.get()) {
 			Date now = new Date();
 			String date = SDF_DATE.format(now);
 			String time = SDF_TIME.format(now);
 
-			sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			sb.text(date, 2, 8);
 			sb.text(time, 2, 17);
