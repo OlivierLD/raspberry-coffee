@@ -1,6 +1,9 @@
 #!/bin/bash
 CP=./build/libs/I2C-SPI-1.0-all.jar
 #
+echo -e "Try $0 IP"
+echo -e " or $0 \"Whatever you want to display\""
+#
 JAVA_OPTIONS=
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dssd1306.verbose=false"
@@ -15,7 +18,7 @@ if [[ "$1" == "IP" ]]; then
 	fi
 	#
 	_OLED=$(i2cdetect -y 1 | grep 3c)
-	if [[ "${_OLED}" ]]; then
+	if [[ "${_OLED}" != "" ]]; then
 	  printf "+---------------+\n"
 	  printf "| OLED Detected |\n"
 	  printf "+---------------+\n"
