@@ -2,17 +2,15 @@ package i2c.samples.oled;
 
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
-import lcd.utils.img.ImgInterface;
-import lcd.utils.img.Java32x32;
 import utils.TimeUtil;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Uses the I2C interface
+ * Ctrl-C to stop.
  */
 public class OLEDSSD1306_I2C_ClockSample {
 
