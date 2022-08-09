@@ -5,7 +5,8 @@
 #
 CP=./build/libs/SunFlower-v2-1.0-all.jar
 JAVA_OPTS=
-JAVA_OPTS="${JAVA_OPTS} -Ddevice.lat=37.7489 -Ddevice.lng=-122.5070"
+# JAVA_OPTS="${JAVA_OPTS} -Ddevice.lat=37.7489 -Ddevice.lng=-122.5070"  # SF
+JAVA_OPTS="${JAVA_OPTS} -Ddevice.lat=47.677677 -Ddevice.lng=-3.135667"  # Belz
 JAVA_OPTS="${JAVA_OPTS} -Dazimuth.ratio=16:76"  # For V5
 # JAVA_OPTS="${JAVA_OPTS} -Dazimuth.ratio=20:40"  # For V3
 JAVA_OPTS="${JAVA_OPTS} -Delevation.ratio=18:128"

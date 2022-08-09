@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class LedPanelScratchPad
 		extends java.awt.Frame {
-	private LedPanelScratchPad instance = this;
+	private final LedPanelScratchPad instance = this;
 	private LEDPanel ledPanel;
 	private JPanel bottomPanel;
 	private JCheckBox gridCheckBox;
@@ -40,7 +40,7 @@ public class LedPanelScratchPad
 
 	private final static int BUFFER_SIZE = (NB_COLS * NB_LINES) / 32;
 
-	private static int[] buffer = new int[BUFFER_SIZE];
+	private final static int[] buffer = new int[BUFFER_SIZE];
 
 	public LedPanelScratchPad() {
 		initComponents();

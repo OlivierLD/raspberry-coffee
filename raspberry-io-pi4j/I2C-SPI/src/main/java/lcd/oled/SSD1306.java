@@ -13,12 +13,11 @@ import com.pi4j.wiringpi.Spi;
 import utils.PinUtil;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import static utils.TimeUtil.delay;
 
 /**
- * SSD1306, small OLED screen. SPI and I2C. 128x32, 128x64 (2 versions)
+ * SSD1306, small OLED screen. SPI <u><i>and</i></u> I2C. 128x32, 128x64 (2 versions)
  *
  * This code is common to both I2C or SPI interface. See the different constructors.
  * Adapted from the Arduino code from Adafruit.
@@ -82,11 +81,11 @@ public class  SSD1306 {
 	//private SpiDevice spiDevice = null; // Only available in PI4J Jan-2015
 
 	// SPI: Serial Peripheral Interface. Default pin values.
-	private static Pin spiClk = RaspiPin.GPIO_14; // Pin #23, SCLK, GPIO_11
+	private static Pin spiClk = RaspiPin.GPIO_14;  // Pin #23, SCLK, GPIO_11
 	private static Pin spiMosi = RaspiPin.GPIO_12; // Pin #19, SPI0_MOSI
-	private static Pin spiCs = RaspiPin.GPIO_10; // Pin #24, SPI0_CE0_N
-	private static Pin spiRst = RaspiPin.GPIO_05; // Pin #18, GPIO_24
-	private static Pin spiDc = RaspiPin.GPIO_04; // Pin #16, GPIO_23
+	private static Pin spiCs = RaspiPin.GPIO_10;   // Pin #24, SPI0_CE0_N
+	private static Pin spiRst = RaspiPin.GPIO_05;  // Pin #18, GPIO_24
+	private static Pin spiDc = RaspiPin.GPIO_04;   // Pin #16, GPIO_23
 
 	private static GpioController gpio;
 
@@ -285,7 +284,7 @@ public class  SSD1306 {
 	}
 
 	private final int MASK = 0x80; // MSBFIRST, 0x80 = 0&10000000
-//private final int MASK = 0x01; // LSBFIRST
+  //private final int MASK = 0x01; // LSBFIRST
 
 	private void write(int[] data, boolean assert_ss, boolean deassert_ss) {
 		// Fail if MOSI is not specified.
@@ -422,7 +421,7 @@ public class  SSD1306 {
 			this.command(0xF1);
 		}
 		this.command(SSD1306_SETVCOMDETECT);       // 0xDB
-		this.command(0x40);
+		this.command(SSD1306_SETSTARTLINE);        // 0x40
 		this.command(SSD1306_DISPLAYALLON_RESUME); // 0xA4
 		this.command(SSD1306_NORMALDISPLAY);       // 0xA6
 
@@ -454,6 +453,8 @@ public class  SSD1306 {
 		this.command(SSD1306_PAGEADDR);
 		this.command(0); // Page start address. (0 = reset)
 		this.command(this.pages - 1); // Page end address.
+		// a test...
+		this.command(SSD1306_DISPLAYALLON_RESUME); // 0xA4
 
 		if (SSD1306.dcOutput != null) { // SPI
 			// Write buffer data.

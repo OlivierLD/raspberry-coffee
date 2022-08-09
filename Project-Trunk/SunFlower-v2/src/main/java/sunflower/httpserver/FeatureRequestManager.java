@@ -5,7 +5,8 @@ import com.google.gson.GsonBuilder;
 import http.HTTPServer;
 import http.RESTRequestManager;
 import http.client.HTTPClient;
-import sunflower.SunFlowerDriver;
+import sunflower.main.SunFlowerDriver;
+import sunflower.main.SunFlowerServer;
 
 import java.io.StringReader;
 import java.net.SocketException;

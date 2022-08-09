@@ -1,6 +1,7 @@
-package sunflower.httpserver;
+package sunflower.main;
 
 import http.HTTPServer;
+import sunflower.httpserver.FeatureRequestManager;
 import utils.SystemUtils;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class SunFlowerServer {
 		System.out.println(String.format("Try REST request : GET http://%s:%d/sf/oplist", ipAddress, httpPort));
 	}
 
-	protected List<HTTPServer.Operation> getAllOperationList() {
+	public List<HTTPServer.Operation> getAllOperationList() {
 		return this.httpServer.getRequestManagers()
 				.stream()
 				.flatMap(requestManager -> requestManager.getRESTOperationList().stream())

@@ -5,7 +5,7 @@ import http.client.HTTPClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sunflower.httpserver.SunFlowerServer;
+import sunflower.main.SunFlowerServer;
 
 import java.util.HashMap;
 import java.util.Map;

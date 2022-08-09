@@ -54,8 +54,15 @@ Current status: Z=213.00, Elev.=90.00
 . . .
 ``` 
  
+## Two flavors
+The two scripts `console.sh` and `server.sh` are similar, in that sense that they both drive the solar panel.
+A small difference though, the `server.sh` provides a REST and HTTP access to the features, that can be accessed - and to some extent driven - from a Web UI.  
+- `console.sh` runs `sunflower.main.ConsoleMain`
+- `server.sh` runs `sunflower.main.SunFlowerServer`
+
+
 ### ANSI Console output
-This console is designed not to run in background mode (see `SunFlowerServer` for that), it orients the panel, as it displays the
+This console is designed _**not**_ to run in background mode (see `SunFlowerServer` for that), it orients the panel, as it displays the
 orientation parameters.
 
 Run `sunflower.main.ConsoleMain`, from the script `console.sh`.

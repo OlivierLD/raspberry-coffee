@@ -13,7 +13,7 @@ import java.util.Set;
 import utils.StringUtils;
 
 public class LedPanelMain2 extends java.awt.Frame {
-	private LedPanelMain2 instance = this;
+	private final LedPanelMain2 instance = this;
 	private LEDPanel ledPanel;
 	private JPanel bottomPanel;
 	private JCheckBox gridCheckBox;
@@ -33,7 +33,7 @@ public class LedPanelMain2 extends java.awt.Frame {
 
 	private final static int BUFFER_SIZE = (NB_COLS * NB_LINES) / 8;
 
-	private static int[] buffer = new int[BUFFER_SIZE];
+	private final static int[] buffer = new int[BUFFER_SIZE];
 
 	public LedPanelMain2() {
 		initComponents();

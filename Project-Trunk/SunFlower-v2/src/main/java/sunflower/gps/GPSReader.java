@@ -161,32 +161,9 @@ public class GPSReader implements SerialIOCallbacks {
         }
     }
 
-    private static final SimpleDateFormat SDF_DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    public static final SimpleDateFormat SDF_DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     static {
         SDF_DATETIME.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
     }
-
-    /**
-     * Standalone test
-     * @param args
-     */
-    public static void main(String... args) {
-        final GPSReader gpsReader = new GPSReader(date -> {
-            System.out.println(SDF_DATETIME.format(date));
-        }, "RMC");
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                gpsReader.stopReading();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }, "Shutdown Hook"));
-
-        String defaultValue = "/dev/tty.usbmodem141101";
-        // "/dev/ttyUSB0"
-        gpsReader.startReading(defaultValue, 4_800);
-
-        System.out.println("Done.");
-    }
+    // See the test gps.GPSReaderTest
 }

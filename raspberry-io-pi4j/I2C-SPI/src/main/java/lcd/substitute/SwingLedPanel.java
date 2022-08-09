@@ -20,6 +20,10 @@ import lcd.utils.CharacterMatrixes;
 import lcd.utils.LEDPanel;
 import utils.StringUtils;
 
+/**
+ * Can be used in a Graphical Environment (like a desktop) to simulate
+ * the oled screen. It uses Swing, hence the Graphical Desktop Environment requirement.
+ */
 public class SwingLedPanel
 				extends Frame {
 	private SwingLedPanel instance = this;
@@ -245,6 +249,6 @@ public class SwingLedPanel
 
 		SwingLedPanel lp = new SwingLedPanel(ScreenDefinition.NOKIA5110);
 		lp.setVisible(true);
-		lp.displayTest();
+		lp.displayTest(); // Hard-coded text for this one.
 	}
 }

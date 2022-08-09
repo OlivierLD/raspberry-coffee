@@ -1,7 +1,6 @@
 package sunflower.main;
 
 import org.fusesource.jansi.AnsiConsole;
-import sunflower.SunFlowerDriver;
 import sunflower.utils.ANSIUtil;
 import utils.TimeUtil;
 

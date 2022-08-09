@@ -7,11 +7,14 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.HttpHeaders;
 import http.RESTProcessorUtil;
-import sunflower.SunFlowerDriver;
+import sunflower.main.SunFlowerDriver;
 // import utils.StaticUtil;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -34,6 +37,10 @@ public class RESTImplementation {
 	private final FeatureRequestManager featureRequestManager; // Will hold the data cache
 	private SunFlowerDriver featureManager = null;
 
+	/**
+	 * Workaround the absence of an AtomicDouble.
+	 * TODO Could be replaced by an AtomicReference<Double>
+	 */
 	private static class ValueHolder {
 		private double value;
 

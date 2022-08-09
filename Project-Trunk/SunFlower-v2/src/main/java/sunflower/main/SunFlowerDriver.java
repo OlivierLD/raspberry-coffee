@@ -1,4 +1,4 @@
-package sunflower;
+package sunflower.main;
 
 import calc.DeadReckoning;
 import calc.GeomUtil;
