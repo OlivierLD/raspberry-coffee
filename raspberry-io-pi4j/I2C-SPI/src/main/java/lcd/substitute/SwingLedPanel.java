@@ -116,10 +116,10 @@ public class SwingLedPanel
 		int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
 		int panelHeight = Math.round(300f * (this.nbLines / 32f));
 
-//		setUndecorated(undecorated);
-		if (undecorated) {
-			removeMinMaxClose(this);
-		}
+		setUndecorated(undecorated);
+//		if (undecorated) {
+//			removeMinMaxClose(this);
+//		}
 
 		setPreferredSize(new Dimension(panelWidth, panelHeight));
 		setTitle("LCD Screen Buffer");

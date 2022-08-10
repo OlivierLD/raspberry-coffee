@@ -5,8 +5,7 @@ import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
 import utils.TimeUtil;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
