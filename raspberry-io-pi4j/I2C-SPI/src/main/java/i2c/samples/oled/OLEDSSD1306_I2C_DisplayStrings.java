@@ -68,7 +68,7 @@ public class OLEDSSD1306_I2C_DisplayStrings {
 			oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS, width, height); // I2C interface
 			oled.begin();
 			oled.clear();
-  //  oled.display();
+        //  oled.display();
 		} catch (Throwable error) {
 			// Not on a RPi? Try JPanel.
 			oled = null;

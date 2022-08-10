@@ -1,9 +1,6 @@
 package lcd.substitute;
 
-import java.awt.Color;
-import java.awt.Frame;
-import java.awt.Dimension;
-import java.awt.HeadlessException;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -13,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
+import javax.swing.*;
+
 import lcd.ScreenBuffer;
 import lcd.utils.CharacterMatrixes;
 import lcd.utils.LEDPanel;
@@ -25,7 +22,7 @@ import utils.StringUtils;
  * the oled screen. It uses Swing, hence the Graphical Desktop Environment requirement.
  */
 public class SwingLedPanel
-				extends Frame {
+				extends JFrame {
 	private SwingLedPanel instance = this;
 	private LEDPanel ledPanel;
 	private JPanel bottomPanel;
@@ -74,6 +71,9 @@ public class SwingLedPanel
 	}
 
 	public SwingLedPanel(ScreenDefinition config) {
+		this(config, false);
+	}
+	public SwingLedPanel(ScreenDefinition config, boolean unDecorated) {
 		try {
 			this.config = config;
 			this.nbLines = this.config.height();
@@ -81,7 +81,7 @@ public class SwingLedPanel
 			this.bufferSize = (this.nbCols * this.nbLines) / 8;
 			this.buffer = new int[this.bufferSize];
 
-			initComponents();
+			initComponents(unDecorated);
 			int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
 			int panelHeight = Math.round(300f * (this.nbLines / 32f));
 
@@ -91,17 +91,35 @@ public class SwingLedPanel
 		}
 	}
 
+	// Does not work...
+	public void removeMinMaxClose(Component comp) {
+		if (comp instanceof AbstractButton) {
+			comp.getParent().remove(comp);
+		}
+		if (comp instanceof Container) {
+			Component[] comps = ((Container) comp).getComponents();
+			for (int x = 0, y = comps.length; x < y; x++) {
+				removeMinMaxClose(comps[x]);
+			}
+		}
+	}
+
 	/**
 	 * This method is called from within the constructor to
 	 * initialize the form.
 	 */
-	private void initComponents() {
+	private void initComponents(boolean undecorated) {
 		ledPanel = new LEDPanel(nbLines, nbCols);
 
 		ledPanel.setWithGrid(false);
 
 		int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
 		int panelHeight = Math.round(300f * (this.nbLines / 32f));
+
+//		setUndecorated(undecorated);
+		if (undecorated) {
+			removeMinMaxClose(this);
+		}
 
 		setPreferredSize(new Dimension(panelWidth, panelHeight));
 		setTitle("LCD Screen Buffer");
