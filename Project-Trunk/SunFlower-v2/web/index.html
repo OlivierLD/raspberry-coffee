@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
- | Very basic UI for SunFlower.
+ | Very basic UI for SunFlower Server.
  | Mostly illustrates how to get to the REST services.
  | But all data are available this way.
  | Features a dynamic background, to display Sun's data, and some basic (but cool) SVG drawings.
@@ -372,7 +372,7 @@
     <table style="margin: auto; border: 0px solid cyan;" class="astro-data">
         <tr>
             <td colspan="8">
-                <b>BG Opacity</b>
+                <b>BG Opacity:</b>
                 <input type="range" value="0.15" min="0" max="1.0" step="0.01" style="width: 80%;" oninput="setOpacity(this.value); opacity01.value = this.value;" />
                 <output name="opacity" id="opacity01"></output>
             </td>

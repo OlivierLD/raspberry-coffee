@@ -55,6 +55,10 @@ Current status: Z=213.00, Elev.=90.00
 ``` 
  
 ## Two flavors
+> _**Important Note**_: the celestial data (the Sun's coordinates) use the current date as a parameter, which is probably the most important one.
+> If your device is not connected to the Internet, it is your duty to provide an accurate date. To do so, use
+> `date -s` from a terminal, like in `date -s "2022-08-10 17:04:29"`.
+
 The two scripts `console.sh` and `server.sh` are similar, in that sense that they both drive the solar panel.
 A small difference though, the `server.sh` provides a REST and HTTP access to the features, that can be accessed - and to some extent driven - from a Web UI.  
 - `console.sh` runs `sunflower.main.ConsoleMain`
