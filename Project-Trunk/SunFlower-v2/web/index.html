@@ -299,6 +299,7 @@
             color: blue;
             font-family: "Courier New";
         }
+
         /* 
          * For the div odf the background data: 
          * Notice the position and the z-index.
@@ -333,6 +334,14 @@
 
         .top-one:hover {
            cursor: pointer;
+        }
+
+        .sun-data {
+            color: red;
+        }
+
+        .device-data {
+            color: green;
         }
     </style>
 </head>
@@ -370,11 +379,11 @@
         </tr>
         <tr>
             <th>System Date</th>
-            <th>Sun Z</th>
-            <th>Sun El.</th>
-            <th>Dev. Z</th>
+            <th class="sun-data">Sun Z</th>
+            <th class="sun-data">Sun El.</th>
+            <th class="device-data">Dev. Z</th>
             <th>Last Z move</th>
-            <th>Dev. El.</th>
+            <th class="device-data">Dev. El.</th>
             <th>Last El. move</th>
 
             <!--th>Sun Z.</th-->
@@ -394,11 +403,11 @@
         </tr>
         <tr>
             <td style="text-align: center; vertical-align: top;"><span id="date"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="sun-z"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="sun-el"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="dev-z"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="sun-z" class="sun-data"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="sun-el" class="sun-data"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="dev-z" class="device-data"></span></td>
             <td style="text-align: right; vertical-align: top;"><span id="last-dev-z-move"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="dev-el"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="dev-el" class="device-data"></span></td>
             <td style="text-align: right; vertical-align: top;"><span id="last-dev-el-move"></span></td>
         </tr>
         <tr>
