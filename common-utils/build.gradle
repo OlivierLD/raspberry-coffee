@@ -27,7 +27,7 @@ dependencies {
 //    implementation 'javax.mail:mail:1.5.0-b01'  // Previous one
     implementation 'com.sun.mail:javax.mail:1.6.2'
 //    implementation 'javax.mail:javax.mail-api:1.6.0'
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.2'
 
 //    testImplementation project(':http-tiny-server')
 }

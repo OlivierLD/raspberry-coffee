@@ -15,7 +15,7 @@ LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 # ENV ftp_proxy http://etc...
 # ENV no_proxy "*.oracle.com,.home.net"
 
-ENV SCALA_VERSION 2.13.3
+ENV SCALA_VERSION 2.13.8
 # ENV SCALA_VERSION 2.12.12
 # ENV SCALA_VERSION 2.12.6
 ENV SCALA_TARBALL http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.deb

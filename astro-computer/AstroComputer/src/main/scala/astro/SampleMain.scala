@@ -22,8 +22,9 @@ object SampleMain {
       date.set(Calendar.HOUR_OF_DAY, 16) // and not just Calendar.HOUR !!!!
       date.set(Calendar.MINUTE, 50)
       date.set(Calendar.SECOND, 20)
+      date.set(Calendar.MILLISECOND, 0)
     }
-    System.out.println(String.format("Calculations for %s (%s)", SDF_UTC.format(date.getTime), if (now) "now" else "not now"))
+    println(String.format("Calculations for %s (%s)", SDF_UTC.format(date.getTime), if (now) "now" else "not now"))
     // Take time here, JVM is loaded, etc...
     val before = System.currentTimeMillis
     // Recalculate
@@ -79,6 +80,6 @@ object SampleMain {
     println(s"Lunar Distance: ${lpad(decToSex(result.LDist, MiscUtils.SWING, MiscUtils.NONE), 10, " ")}")
     println(s"Moon Phase: ${moonPhase(result)}")
     println(s"Day of Week: ${LongTermAlmanac.WEEK_DAYS(weekDay(result))}")
-    System.out.println("Done with Scala!")
+    println("Done with Scala!")
   }
 }

@@ -31,5 +31,5 @@ repositories {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 //  implementation fileTree(dir: '/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4', include: ['*.jar'])
-  testImplementation group: 'junit', name: 'junit', version: '4.13'
+  testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 }

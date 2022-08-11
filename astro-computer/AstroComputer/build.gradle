@@ -3,7 +3,7 @@ plugins {
   id 'scala'
   id 'idea'
   id 'maven' // to be upgraded to 'maven-publish'
-  id 'com.github.johnrengelman.shadow' // version '6.0.0' // Remove version if used in a git submodule.
+  id 'com.github.johnrengelman.shadow' version '6.0.0' // Remove version if used in a gradle submodule.
   id "application"
 }
 
@@ -31,7 +31,7 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation 'org.scala-lang:scala-library:2.13.8'   // 2.12.5'
-    implementation "org.scala-lang:scala-compiler:2.13.3"  // 2.12.5"
+    implementation "org.scala-lang:scala-compiler:2.13.8"  // 2.12.5"
     testImplementation 'junit:junit:4.13.1'
 }
 

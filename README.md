@@ -332,6 +332,12 @@ root# curl -sL https://deb.nodesource.com/setup_9.x | bash -
 root# exit
 $ sudo apt-get install -y nodejs
 ```
+`screen` is nice to have too:
+```
+$ sudo apt-get install screen
+$ screen -version
+```
+
 - make sure what you might need is installed, by typing:
 ```
 $ java -version
@@ -370,6 +376,12 @@ $ which wget
         - Start Jupyter Notebooks by typing `jupyter notebook [--allow-root] --ip 0.0.0.0 --no-browser`
         - Then the command to use to reach Jupyter would show up in the console.
     - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
+    - _Jupyter Notebooks_ were originally developed for Python, but they're now also available for pretty much any language that comes with a REPL (Read Execute Print Loop), like Java (9+), Scala, NodeJS, ...
+      - [Spencer Park / IJava](https://github.com/SpencerPark/IJava)
+      - [Almond, for Scala](https://almond.sh/)
+      - [IJavaScript](https://github.com/n-riesco/ijavascript)
+      - . . .
+      
 
 ### Extra softs
 - Docker
