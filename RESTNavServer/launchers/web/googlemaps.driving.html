@@ -11,9 +11,14 @@
 
   <link rel="icon" type="image/ico" href="icons/jellyfish.ico">
 
-  <!-- TODO Replace with Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+  <!-- GoogleMaps was replaced with Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+        crossorigin=""/>
+  <!-- Make sure you put this AFTER Leaflet's CSS -->
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+          integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+          crossorigin=""></script>
 
   <!--script type="text/javascript"
           src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu5cW4UXjXZTswehBdIO8jCZdzUbk2v5o"></script>
@@ -104,12 +109,16 @@
 
   let map = L.map('map-canvas').setView([currentLatitude, currentLongitude], 13);
 
-  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-    maxZoom: 18,
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    id: 'mapbox.streets'
+//  L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+//    maxZoom: 18,
+//    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+//            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+//            'Imagery ï¿½ <a href="http://mapbox.com">Mapbox</a>',
+//    id: 'mapbox.streets'
+//  }).addTo(map);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
   let statusFld;
@@ -258,12 +267,13 @@
     }
 
     if (posMarker !== undefined) {
-      posMarker.setMap(null);
+//      posMarker.setMap(null);
+      map.removeLayer(posMarker);
     }
     posMarker = L.marker([pos.lat, pos.lng]).addTo(map)
             .bindPopup('<b>GPS Position</b><br>' +
-                    'L: ' + decToSex(lastLatlng.lat(), 'NS') + "<br>" +
-                    'G: ' + decToSex(lastLatlng.lng(), 'EW')); // .openPopup();
+                    'L: ' + decToSex(lastLatlng.lat, 'NS') + "<br>" +
+                    'G: ' + decToSex(lastLatlng.lng, 'EW')); // .openPopup();
 
     // console.log("Pushing on track", pos);
     // console.log("Track is now %d pos long", track.length);
@@ -271,7 +281,8 @@
     track.push([pos.lat, pos.lng]);
 //      track.push(new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180));
     if (polyline !== undefined) {
-      polyline.setMap(null);
+      // polyline.setMap(null);
+      map.removeLayer(polyline);
     }
     polyline = L.polyline(track, {color: 'red'}).addTo(map);
 
@@ -290,7 +301,7 @@
     let crosshair = document.getElementById('crosshair');
     let zoomVal = document.getElementById('zoom-value');
     crosshair.title = (follow === true ? "Stop following" : "Start following");
-    if (lastLatlng !== undefined) {
+    if (lastLatlng) {
       map.panTo(lastLatlng.lat, lastLatlng.lng);
       let cb = document.getElementById("with-zoom");
       if (cb !== undefined) {

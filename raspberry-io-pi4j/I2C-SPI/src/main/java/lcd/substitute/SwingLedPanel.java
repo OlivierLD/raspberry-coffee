@@ -1,6 +1,10 @@
 package lcd.substitute;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -10,7 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import lcd.ScreenBuffer;
 import lcd.utils.CharacterMatrixes;
@@ -94,11 +101,13 @@ public class SwingLedPanel
 	// Does not work...
 	public void removeMinMaxClose(Component comp) {
 		if (comp instanceof AbstractButton) {
+			System.out.printf("Removing button from %s%n", comp.getParent().getClass().getName());
 			comp.getParent().remove(comp);
 		}
 		if (comp instanceof Container) {
 			Component[] comps = ((Container) comp).getComponents();
-			for (int x = 0, y = comps.length; x < y; x++) {
+			System.out.printf("Container %s, %d component(s)...%n", comp.getClass().getName(), comps.length);
+			for (int x = 0; x < comps.length; x++) {
 				removeMinMaxClose(comps[x]);
 			}
 		}
@@ -116,19 +125,19 @@ public class SwingLedPanel
 		int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
 		int panelHeight = Math.round(300f * (this.nbLines / 32f));
 
-		setUndecorated(undecorated);
+		this.setUndecorated(undecorated);
 //		if (undecorated) {
 //			removeMinMaxClose(this);
 //		}
 
-		setPreferredSize(new Dimension(panelWidth, panelHeight));
-		setTitle("LCD Screen Buffer");
-		addWindowListener(new WindowAdapter() {
+		this.setPreferredSize(new Dimension(panelWidth, panelHeight));
+		this.setTitle("LCD Screen Buffer");
+		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
 				exitForm(evt);
 			}
 		});
-		add(ledPanel, java.awt.BorderLayout.CENTER);
+		this.add(ledPanel, java.awt.BorderLayout.CENTER);
 
 		bottomPanel = new JPanel();
 		gridCheckBox = new JCheckBox("With Grid");
@@ -138,8 +147,8 @@ public class SwingLedPanel
 			ledPanel.setWithGrid(gridCheckBox.isSelected());
 			ledPanel.repaint();
 		});
-		add(bottomPanel, java.awt.BorderLayout.SOUTH);
-		pack();
+		this.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+		this.pack();
 
 		// Key listener
 		this.addKeyListener(new KeyListener() {

@@ -20,21 +20,23 @@ function lpad(str, len, pad) {
 	return padded;
 }
 
-function decToSex(val, ns_ew) {
-	let absVal = Math.abs(val);
-	let intValue = Math.floor(absVal);
-	let dec = absVal - intValue;
-	dec *= 60;
-	let s = "";
-	if (val < 0) {
-		s += (ns_ew === 'NS' ? 'S' : 'W');
-	} else {
-		s += (ns_ew === 'NS' ? 'N' : 'E');
-	}
-	s += " ";
-	s += intValue + /*"°"*/ "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
-//  s = intValue + String.fromCharCode(176) + dec.toFixed(2) + "'";
-	return s;
+if (decToSex === undefined) {
+    let decToSex = (val, ns_ew) => {
+        let absVal = Math.abs(val);
+        let intValue = Math.floor(absVal);
+        let dec = absVal - intValue;
+        dec *= 60;
+        let s = "";
+        if (val < 0) {
+            s += (ns_ew === 'NS' ? 'S' : 'W');
+        } else {
+            s += (ns_ew === 'NS' ? 'N' : 'E');
+        }
+        s += " ";
+        s += intValue + /*"°"*/ "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
+    //  s = intValue + String.fromCharCode(176) + dec.toFixed(2) + "'";
+        return s;
+    }
 }
 
 function onMessage(json) {
@@ -66,10 +68,14 @@ function onMessage(json) {
 		}
 	}
 	if (json.COG !== undefined) {
-		rose.setValue(Math.round(json.COG.angle));
+	    if (rose) {
+		    rose.setValue(Math.round(json.COG.angle));
+		}
 	}
 	if (json.SOG !== undefined) {
-		displayBSP.setValue(json.SOG.speed * (1.852 / 1.609)); // Apply coeff for speed. Knots to mph
+	    if (displayBSP) {
+		    displayBSP.setValue(json.SOG.speed * (1.852 / 1.609)); // Apply coeff for speed. Knots to mph
+		}
 	}
 }
 
@@ -91,7 +97,9 @@ function generateSatelliteData(sd) {
 		}
 	}
 	html += "</table>";
-	satData.innerHTML = html;
+	if (satData) {
+	  satData.innerHTML = html;
+	}
 }
 
 function deadReckoning(from, dist, route) {

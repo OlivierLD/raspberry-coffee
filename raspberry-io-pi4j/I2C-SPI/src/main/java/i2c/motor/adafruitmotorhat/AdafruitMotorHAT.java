@@ -10,11 +10,12 @@ import java.util.function.Consumer;
 import static utils.TimeUtil.delay;
 
 /**
- * For https://www.adafruit.com/product/2348
- * and https://www.adafruit.com/product/4280
+ * For https://www.adafruit.com/product/2348 and https://www.adafruit.com/product/4280
  * Adapted from the python code at https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git
  * WIP.
  * For DC and/or stepper motors.
+ *
+ * Also see {@link PWM}
  */
 public class AdafruitMotorHAT {
 	public enum Style {

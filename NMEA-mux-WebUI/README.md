@@ -1,6 +1,8 @@
 # Building and Customizing your own Nav Server
 
 #### How to customize, extend, enrich the base classes of the `NMEA-multiplexer`.
+Those different versions may come with some WebUI, but this is obviously not mandatory.  
+By WebUI, we mean web pages, and REST services able to communicate with the server.
 
 ---
 

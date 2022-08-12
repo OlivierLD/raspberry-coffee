@@ -39,7 +39,7 @@ if [[ $# -gt 0 ]]; then
 fi
 #
 function openBrowser() {
-  if [[ $(uname -a) == *Linux* ]]; then
+  if [[ $(uname -s) == *Linux* ]]; then
     sensible-browser "$1"
   else
     open "$1"  # Darwin
@@ -81,8 +81,9 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
 	echo -e "|                     (Check your GPS connection setting in nmea.mux.gps.properties file) |"
 	echo -e "|  5. Like option '1', but with 'Sun Flower' option                                       |"
-	echo -e "|  6. Replay logged kayak data                                                            |"
-	echo -e "|  7. Replay logged driving data (in Google Maps)                                         |"
+	echo -e "|  6. Replay logged kayak data (Drakes Estero)                                            |"
+	echo -e "|  6b. Replay logged kayak data (Ria d'Etel)                                              |"
+	echo -e "|  7. Replay logged driving data (with a Maps)                                            |"
 	echo -e "|  8. Replay logged kayak data, ANSI console display                                      |"
 	echo -e "|  9. Replay logged sailing data (Bora-Bora - Tongareva), ANSI console display            |"
 	echo -e "|  9b. Replay logged sailing data (China Camp - Oyster Point), ANSI console display       |"
@@ -223,6 +224,17 @@ while [[ "${GO}" == "true" ]]; do
 	    ;;
 	  "6")
 	    PROP_FILE=nmea.mux.kayak.log.properties
+	    echo -e "Launching Nav Server with ${PROP_FILE}"
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
+	    fi
+	    GO=false
+	    ;;
+	  "6b")
+	    PROP_FILE=nmea.mux.kayak.etel.yaml
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
