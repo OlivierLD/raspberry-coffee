@@ -10,7 +10,7 @@ in several other languages.
 > This is actually an interesting exercise. Those celestial calculations involve **_a lot_** of code (more than **20K** lines of code, for each language presented here).
 > It is always interesting to consider the following aspects:
 > - Productivity (once you know what you want, how long does it take to write the _right_ code, with and without an IDE - when it exists)
-> - Readability (do you still understand what you wrote two weeks before? 🤓 )
+> - Readability (do you still understand what _**you**_ wrote two weeks before? 🤓 )
 > - Speed of execution (C is probably the fastest, but how far behind are the others?)
 > - Debugging (local, remote, ...)  
 > - Maintainability (can someone who did not write it add features or maintain the code)
@@ -63,7 +63,7 @@ Here is a quick list of some IDEs I use. They _all_ have a free version.
 
 #### From Java 
 From this module's root.
-> _**Important Note**_: If you run this project in standalone (i.e. _NOT_ as a git submodule), do set the version for the `shadowJar` plugin in `build.gradle`.  
+> _**Important Note**_: If you run this project in standalone (i.e. _NOT_ as a Gradle submodule), do set the version for the `shadowJar` plugin in `build.gradle`.  
 > Make sure that
 >```
 >  id 'com.github.johnrengelman.shadow' // version '6.0.0'
@@ -74,8 +74,8 @@ From this module's root.
 >```
 
 ```
-$ ../gradlew clean shadowJar
-$ java -cp build/libs/astro.computer-1.0-all.jar celestial.almanac.JavaSample
+$ ../../gradlew clean shadowJar
+$ java -cp build/libs/AstroComputer-1.0-all.jar celestial.almanac.JavaSample
 Calculations for 2020-03-28 16:50:20 UTC (not now)
 ...DeltaT set to 71.71293632812495
 Calculations done for 2020-03-28 16:50:20 UTC, in 55 ms <<<
@@ -112,11 +112,11 @@ $
 #### From Scala
 If not done before, do a 
 ```
-$ ../gradlew clean shadowJar
+$ ../../gradlew clean shadowJar
 ```
 
 ```
-$ java -cp ./build/libs/astro.computer-1.0-all.jar astro.SampleMain
+$ scala -cp ./build/libs/AstroComputer-1.0-all.jar astro.SampleMain
 Calculations for 2020-03-28 16:50:20 UTC (not now)
 New deltaT: 71.71293632812495
 Calculations done for 2020-03-28 16:50:20 UTC, in 64 ms <<<
@@ -327,7 +327,7 @@ real	0m0.019s
 user	0m0.016s
 sys	0m0.000s
 
-$ time java -cp build/libs/astro.computer-1.0-all.jar celestial.almanac.JavaSample
+$ time java -cp build/libs/AstroComputer-1.0-all.jar celestial.almanac.JavaSample
 Calculations done for 2020-03-28 16:50:20 UTC
 Sun data:	Decl.:  3°21.50'N, GHA:   71°21.81', RA: 00h 31m 07.20s, sd: 16'01.22", hp:    08.81"
 Moon data:	Decl.: 16°11.39'N, GHA:   25°09.69', RA: 03h 35m 55.70s, sd: 14'54.36", hp: 54'42.28"
