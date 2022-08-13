@@ -77,6 +77,7 @@ public class CharacterModeConsole {
 		suffixes.put("MMB", new AssociatedData("mb", DF_4));  // Pressure at Sea Level
 		suffixes.put("DBT", new AssociatedData("m", DF_31));  // Depth
 		suffixes.put("LOG", new AssociatedData("nm", DF_4));  // Log
+		suffixes.put("DAY", new AssociatedData("nm", DF_31)); // Daily Log
 		suffixes.put("CCS", new AssociatedData("kt", DF_22)); // Computed Current Speed
 		suffixes.put("CCD", new AssociatedData("t", DF_3));   // Computed Current Direction
 		suffixes.put("TBF", new AssociatedData("m", DF_4));   // Time buffer (in minutes) for current calculation
@@ -360,6 +361,12 @@ public class CharacterModeConsole {
 			case "LOG":
 				try {
 					value = ((Distance) ndc.get(NMEADataCache.LOG)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "DAY":
+				try {
+					value = ((Distance) ndc.get(NMEADataCache.DAILY_LOG)).getValue();
 				} catch (Exception ignore) {
 				}
 				break;
