@@ -70,6 +70,11 @@ public class NMEAUtils {
         computeAndSendValuesToCache(cache, false);
     }
 
+    /**
+     * Compute values for the cache
+     * @param cache The full thing
+     * @param isHDTPresent Heading True is present
+     */
     @SuppressWarnings("unchecked")
     public static void computeAndSendValuesToCache(NMEADataCache cache, boolean isHDTPresent) {
         double heading = 0d;
@@ -103,8 +108,15 @@ public class NMEAUtils {
             cache.put(NMEADataCache.VARIATION, new Angle180EW(w));
             heading = hdc + w; // true
             cache.put(NMEADataCache.HDG_TRUE, new Angle360(heading));
-            //  System.out.println("HDG True:" + heading);
-            //  System.out.println("==========================");
+            if (true) {
+                System.out.println("=== Computed Values ===");
+                  System.out.println("HDG Compass:" + hdc);
+                  System.out.println("Declination:" + dec);
+                  System.out.println("Deviation  :" + dev);
+                  System.out.println("Variation  :" + w);
+                  System.out.println("HDG True   :" + heading);
+                  System.out.println("==========================");
+            }
         } else
             try {
                 heading = ((Angle360) cache.get(NMEADataCache.HDG_TRUE)).getValue() + ((Double) cache.get(NMEADataCache.HDG_OFFSET)).doubleValue();
