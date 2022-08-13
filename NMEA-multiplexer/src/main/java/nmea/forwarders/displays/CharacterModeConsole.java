@@ -171,7 +171,7 @@ public class CharacterModeConsole {
 						prefix = "W";
 					}
 					val = Math.abs(val);
-					value = prefix + " " + DF_22.format(val).trim();
+					value = prefix + " " + DF_22.format(val).trim() + '\u00b0';
 				} else {
 					if (DEBUG) {
 						System.out.println("What?? " + fromCache.getClass().getName());
