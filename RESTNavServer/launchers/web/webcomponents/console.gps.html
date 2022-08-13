@@ -343,6 +343,13 @@
             setHdgOnDevCurve('compass-deviation', val, dev => {
                 bo.dev = dev;
             });
+            setHdgOnDevCurve('split-flap-display-dev', val, dev => {
+                if (decl) {
+                    let variation = decl + dev;
+                    document.getElementById('split-flap-display-var').value =
+                        (variation < 0 ? "W " : "E ") + Math.abs(variation).toFixed(1);
+                }
+            });
             // Boat Overview
             // console.log(`BoatOverview: setting HDG to ${val}`);
             bo.hdg = val;
@@ -378,6 +385,8 @@
         events.subscribe(events.topicNames.DECL, val => {
             decl = val;
             document.getElementById('boat-overview-01').Decl = val;
+            let str = (val < 0 ? "W " : "E ") + Math.abs(val).toFixed(1);
+            document.getElementById('split-flap-display-decl').value = str;
         });
         events.subscribe(events.topicNames.TO_WP, val => {
             let bo = document.getElementById('boat-overview-01');
@@ -2601,6 +2610,43 @@
                                                                         width="200"
                                                                         height="200"></wind-angle-display>
 
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" border="1">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td>Declination</td>
+                                                            <td>Deviation</td>
+                                                            <td>Variation</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <split-flap-display id="split-flap-display-decl"
+                                                                                    class="split-flap-night"
+                                                                                    nb-char="6"
+                                                                                    font-size="20"
+                                                                                    justified="LEFT"
+                                                                                    value="E 0.0"></split-flap-display>
+                                                            </td>
+                                                            <td>
+                                                                <split-flap-display id="split-flap-display-dev"
+                                                                                    class="split-flap-night"
+                                                                                    nb-char="6"
+                                                                                    font-size="20"
+                                                                                    justified="LEFT"
+                                                                                    value="E 0.0"></split-flap-display>
+                                                            </td>
+                                                            <td>
+                                                                <split-flap-display id="split-flap-display-var"
+                                                                                    class="split-flap-night"
+                                                                                    nb-char="6"
+                                                                                    font-size="20"
+                                                                                    justified="LEFT"
+                                                                                    value="E 0.0"></split-flap-display>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </td>
                                             </tr>
                                         </table>
