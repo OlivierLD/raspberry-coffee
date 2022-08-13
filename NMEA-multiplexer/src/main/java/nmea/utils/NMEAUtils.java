@@ -78,7 +78,7 @@ public class NMEAUtils {
     @SuppressWarnings("unchecked")
     public static void computeAndSendValuesToCache(NMEADataCache cache, boolean isHDTPresent) {
         double heading = 0d;
-        System.out.println("HDT is here:" + isHDTPresent);
+//        System.out.println("HDT is here:" + isHDTPresent);
         if (!isHDTPresent) {
             double hdc = 0d;
             double dec = 0d;
