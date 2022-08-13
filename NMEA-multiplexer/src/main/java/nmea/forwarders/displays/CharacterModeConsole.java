@@ -2,17 +2,7 @@ package nmea.forwarders.displays;
 
 import calc.GeomUtil;
 import context.NMEADataCache;
-import nmea.parser.Angle180;
-import nmea.parser.Angle360;
-import nmea.parser.Current;
-import nmea.parser.Depth;
-import nmea.parser.Distance;
-import nmea.parser.GeoPos;
-import nmea.parser.Pressure;
-import nmea.parser.SolarDate;
-import nmea.parser.Speed;
-import nmea.parser.Temperature;
-import nmea.parser.UTCDate;
+import nmea.parser.*;
 import org.fusesource.jansi.AnsiConsole;
 import utils.StringUtils;
 
@@ -101,6 +91,9 @@ public class CharacterModeConsole {
 		nonNumericData.put("NWP", 10); // Next Way point
 		nonNumericData.put("LAT", 12); // Latitude
 		nonNumericData.put("LNG", 12); // Longitude
+		nonNumericData.put("DEC",  6); // Mag Declination
+		nonNumericData.put("DEV",  6); // Mag Deviation
+		nonNumericData.put("VAR",  6); // Mag Variation
 	}
 
 	private static Map<String, String> colorMap = new HashMap<String, String>();
@@ -167,6 +160,36 @@ public class CharacterModeConsole {
 		// The small touchscreen (320x240) in 8x8 resolution has 40 columns per line of text, in 6x12, 54 columns.
 	}
 
+	private static String formatMagneticData(Object fromCache) {
+		String value = "-";
+		try {
+			if (fromCache != null) {
+				if (fromCache instanceof Angle180EW) {
+					double val = ((Angle180EW)fromCache).getValue();
+					String prefix = "E";
+					if (val < 0) {
+						prefix = "W";
+					}
+					val = Math.abs(val);
+					value = prefix + " " + DF_31.format(val).trim();
+				} else {
+					if (DEBUG) {
+						System.out.println("What?? " + fromCache.getClass().getName());
+					}
+				}
+			} else {
+				if (DEBUG) {
+					System.out.println(">> MAG DATA: null value.");
+				}
+			}
+		} catch (Exception e) {
+			value = "-";
+			// System.err.println("Mag Data: " + fromCache);
+			// e.printStackTrace();
+		}
+		return value;
+	}
+
 	public void displayData(NMEADataCache ndc, Properties props) {
 		if (first.get()) {
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
@@ -221,6 +244,15 @@ public class CharacterModeConsole {
 								value = "-";
 								//   e.printStackTrace();
 							}
+							break;
+						case "DEC": // Magnetic Declination
+							value = formatMagneticData(ndc.get(NMEADataCache.DECLINATION));
+							break;
+						case "DEV": // Magnetic Deviation
+							value = formatMagneticData(ndc.get(NMEADataCache.DEVIATION));
+							break;
+						case "VAR": // Magnetic Variation
+							value = formatMagneticData(ndc.get(NMEADataCache.VARIATION));
 							break;
 						default: // Un-managed...
 							try {
