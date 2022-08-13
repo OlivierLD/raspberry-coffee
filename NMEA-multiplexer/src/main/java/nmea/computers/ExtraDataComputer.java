@@ -175,7 +175,7 @@ public class ExtraDataComputer extends Computer {
 							cache.put(NMEADataCache.HDG_COMPASS, new Angle360(hdg));
 						} else {
 							double dec = 0d;
-							if (dev != -Double.MAX_VALUE) {
+							if (dev != -Double.MAX_VALUE && var == 0d) {
 								dec = dev;
 							} else {
 								dec = var;

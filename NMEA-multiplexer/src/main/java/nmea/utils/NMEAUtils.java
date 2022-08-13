@@ -98,7 +98,7 @@ public class NMEAUtils {
             //  System.out.println("Declination:" + dec);
 
             @SuppressWarnings("unchecked")
-            double dev = getDeviation(heading, (List<double[]>) cache.get(NMEADataCache.DEVIATION_DATA)); // From the curve
+            double dev = getDeviation(hdc, (List<double[]>) cache.get(NMEADataCache.DEVIATION_DATA)); // From the curve
             cache.put(NMEADataCache.DEVIATION, new Angle180EW(dev));
 
             heading = hdc + dev; // Magnetic

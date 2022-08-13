@@ -47,6 +47,7 @@ dependencies {
 //    implementation project(':SunFlower')
 //    implementation project(':GPS.sun.servo')
 //    implementation project(':LoRa')    // Needed for a publisher
+    testImplementation 'junit:junit:4.13.2'
 }
 
 shadowJar {
