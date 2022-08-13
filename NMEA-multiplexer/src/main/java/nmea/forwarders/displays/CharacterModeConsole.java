@@ -27,6 +27,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * System variables:
  * cc.verbose, default false
  * console.refresh, default yes
+ *
+ * See how to parameterize the console in provided properties files (like char.console.properties in RESTNavServer project)
  */
 public class CharacterModeConsole {
 	private final static boolean DEBUG = "true".equals(System.getProperty("cc.verbose", "false"));
@@ -52,7 +54,7 @@ public class CharacterModeConsole {
 	private final boolean startedUpdatedWithRMC = false;
 	private final AtomicBoolean first = new AtomicBoolean(true);
 
-	private final static Map<String, AssociatedData> suffixes = new HashMap<>();
+	private final static Map<String, AssociatedData> suffixes = new HashMap<>(); // For numerical data
 
 	/*
 	 * Associate the data mentioned in char.console.properties with a unit and an edit mask (Format).
