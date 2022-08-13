@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * KML, to an array of arrays (LeafLetJS)
  *
- * @deprecated Use XMLtoJSON instead.
+ * @Deprecated Use XMLtoJSON instead.
  */
 public class KMLtoJSON {
     public static void main(String... args) {

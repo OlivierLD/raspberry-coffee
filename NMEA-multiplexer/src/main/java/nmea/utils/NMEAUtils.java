@@ -109,7 +109,7 @@ public class NMEAUtils {
             cache.put(NMEADataCache.VARIATION, new Angle180EW(w));
             heading = hdc + w; // true
             cache.put(NMEADataCache.HDG_TRUE, new Angle360(heading));
-            if (true) {
+            if (false) {
                 System.out.println("=== Computed Values ===");
                   System.out.println("HDG Compass:" + hdc);
                   System.out.println("Declination:" + dec);
