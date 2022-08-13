@@ -42,7 +42,7 @@ include "Joystick"
 // include "jsonQL"
 include "diozero-101"
 // Astro Computer
-include('astro-computer:AstroComputer')
+include(':astro-computer:AstroComputer')
 // Raspberry IO Pi4J
 include('raspberry-io-pi4j:Utils')
 include('raspberry-io-pi4j:ADC')
