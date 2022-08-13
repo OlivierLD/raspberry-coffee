@@ -31,10 +31,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CharacterModeConsole {
 	private final static boolean DEBUG = "true".equals(System.getProperty("cc.verbose", "false"));
 
-	private static int cellSize = 13;
-	private static int dataSize = 5;
-	private static int keySize = 3;
-	private static int suffixSize = 3;
+	private final static int cellSize = 13;
+	private final static int dataSize = 5;
+	private final static int keySize = 3;
+	private final static int suffixSize = 3;
 
 	private final static Format DF_22 = new DecimalFormat("#0.00");
 	private final static Format DF_31 = new DecimalFormat("#00.0");
@@ -49,12 +49,12 @@ public class CharacterModeConsole {
 	}
 
 	private Date loggingStarted = null;
-	private boolean startedUpdatedWithRMC = false;
+	private final boolean startedUpdatedWithRMC = false;
 	private final AtomicBoolean first = new AtomicBoolean(true);
 
-	private static Map<String, AssociatedData> suffixes = new HashMap<String, AssociatedData>();
+	private final static Map<String, AssociatedData> suffixes = new HashMap<>();
 
-	/**
+	/*
 	 * Associate the data mentioned in char.console.properties with a unit and an edit mask (Format).
 	 * If new values are to be displayed, they should be added here, and in {@link #getValueFromCache(String, NMEADataCache)}
 	 */
@@ -82,7 +82,7 @@ public class CharacterModeConsole {
 		suffixes.put("HUM", new AssociatedData("%", DF_31));  // Humidity
 	}
 
-	private static Map<String, Integer> nonNumericData = new HashMap<>(); // Key, str length.
+	private final static Map<String, Integer> nonNumericData = new HashMap<>(); // Key, str length.
 
 	static {
 		nonNumericData.put("POS", 24); // Geographical Position
@@ -96,7 +96,7 @@ public class CharacterModeConsole {
 		nonNumericData.put("VAR",  6); // Mag Variation
 	}
 
-	private static Map<String, String> colorMap = new HashMap<String, String>();
+	private final static Map<String, String> colorMap = new HashMap<>();
 
 	static {
 		colorMap.put("RED", EscapeSeq.ANSI_RED);
@@ -434,7 +434,7 @@ public class CharacterModeConsole {
 					if (keys.size() != 1 && DEBUG)
 						System.err.println("TBF: Nb entry(ies) in Calculated Current Map:" + keys.size());
 					for (Long l : keys)
-						value = l / (60_000);
+						value = l / (60_000d);
 				} catch (Exception ignore) {
 				}
 				break;
@@ -482,7 +482,7 @@ public class CharacterModeConsole {
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ansiSetTextAndBackgroundColor(EscapeSeq.ANSI_WHITE, EscapeSeq.ANSI_BLACK) + EscapeSeq.ANSI_BOLD + screenTitle + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT);
 		}
 		// Ordered lists
-		Map<Integer, Map<Integer, String>> table = new TreeMap<Integer, Map<Integer, String>>();
+		Map<Integer, Map<Integer, String>> table = new TreeMap<>();
 		Set<String> keys = consoleData.keySet();
 		for (String s : keys) {
 			ConsoleData cd = consoleData.get(s);
@@ -490,9 +490,10 @@ public class CharacterModeConsole {
 			int row = cd.getY();
 			Map<Integer, String> rowMap = table.get(row);
 			if (rowMap == null) {
-				rowMap = new TreeMap<Integer, String>();
+				rowMap = new TreeMap<>();
 				table.put(row, rowMap);
 			}
+//			Map<Integer, String> rowMap = table.computeIfAbsent(row, k -> new TreeMap<>());
 			rowMap.put(col, cd.getKey());
 		}
 
@@ -500,7 +501,7 @@ public class CharacterModeConsole {
 		for (Integer i : rows) {
 			Map<Integer, String> cols = table.get(i);
 			Set<Integer> values = cols.keySet();
-			List<CharData> consoleLine = new ArrayList<CharData>();
+			List<CharData> consoleLine = new ArrayList<>();
 			for (Integer j : values) {
 				String k = cols.get(j);
 //      System.err.print(k + " ");
@@ -579,14 +580,12 @@ public class CharacterModeConsole {
 						EscapeSeq.ANSI_NORMAL +
 						EscapeSeq.ANSI_DEFAULT_BACKGROUND +
 						EscapeSeq.ANSI_DEFAULT_TEXT;
-		;
-
 		AnsiConsole.out.println(line);
 	}
 
 	private static class AssociatedData {
-		private String suffix;
-		private Format fmt;
+		private final String suffix;
+		private final Format fmt;
 
 		public String getSuffix() {
 			return suffix;
@@ -689,12 +688,12 @@ public class CharacterModeConsole {
 	}
 
 	private static class ConsoleData {
-		private String key;
-		private int x;
-		private int y;
-		private String fgData;
-		private String bgData;
-		private String fgTitle;
+		private final String key;
+		private final int x;
+		private final int y;
+		private final String fgData;
+		private final String bgData;
+		private final String fgTitle;
 
 		public String getKey() {
 			return key;
@@ -724,7 +723,7 @@ public class CharacterModeConsole {
 			return bgTitle;
 		}
 
-		private String bgTitle;
+		private final String bgTitle;
 
 		public ConsoleData(String key, int x, int y, String fgData, String bgData, String fgTitle, String bgTitle) {
 			this.key = key;
