@@ -78,6 +78,7 @@ public class NMEAUtils {
     @SuppressWarnings("unchecked")
     public static void computeAndSendValuesToCache(NMEADataCache cache, boolean isHDTPresent) {
         double heading = 0d;
+        System.out.println("HDT is here:" + isHDTPresent);
         if (!isHDTPresent) {
             double hdc = 0d;
             double dec = 0d;
@@ -97,7 +98,7 @@ public class NMEAUtils {
             //  System.out.println("Declination:" + dec);
 
             @SuppressWarnings("unchecked")
-            double dev = getDeviation(heading, (List<double[]>) cache.get(NMEADataCache.DEVIATION_DATA));
+            double dev = getDeviation(heading, (List<double[]>) cache.get(NMEADataCache.DEVIATION_DATA)); // From the curve
             cache.put(NMEADataCache.DEVIATION, new Angle180EW(dev));
 
             heading = hdc + dev; // Magnetic
