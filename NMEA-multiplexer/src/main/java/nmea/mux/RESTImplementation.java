@@ -55,15 +55,7 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -310,7 +302,7 @@ public class RESTImplementation {
 
 	protected List<Operation> getOperations() {
 		if (restVerbose()) {
-			System.out.println(String.format("%s => %d operations", this.getClass().getName(), this.operations.size()));
+			System.out.printf("%s => %d operations\n", this.getClass().getName(), this.operations.size());
 		}
 		return this.operations;
 	}
@@ -957,7 +949,7 @@ public class RESTImplementation {
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
 						.filter(fwd -> fwd instanceof WebSocketWriter &&
-								((WebSocketWriter) fwd).getWsUri() == wsJson.getWsUri())
+								((WebSocketWriter) fwd).getWsUri().equals(wsJson.getWsUri()))
 						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
@@ -982,7 +974,7 @@ public class RESTImplementation {
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
 						.filter(fwd -> fwd instanceof WebSocketProcessor &&
-								((WebSocketProcessor) fwd).getWsUri() == wspJson.getWsUri())
+								Objects.equals(((WebSocketProcessor) fwd).getWsUri(), wspJson.getWsUri())) // null-safe
 						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
@@ -2521,6 +2513,7 @@ public class RESTImplementation {
 
 	/**
 	 * Expects (in payload) a map like
+	 * <pre>
 	 * {
 	 *     "sog": {
 	 *         "unit": "kt",
@@ -2531,8 +2524,9 @@ public class RESTImplementation {
 	 *         "cog": 123
 	 *     }
 	 * }
-	 * @param request
-	 * @return
+	 * </pre>
+	 * @param request the REST request
+	 * @return payload like above
 	 */
 	private HTTPServer.Response setSCOG(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
@@ -2835,8 +2829,8 @@ public class RESTImplementation {
 	/**
 	 * Dynamically composed, based on the <code>operations</code> List.
 	 *
-	 * @param request
-	 * @return
+	 * @param request REST request
+	 * @return list of operations
 	 */
 	private HTTPServer.Response getOperationList(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
@@ -2954,17 +2948,18 @@ public class RESTImplementation {
 	}
 
 	private List<Object> getInputChannelList() {
-		return nmeaDataClients.stream().map(nmea -> nmea.getBean()).collect(Collectors.toList());
+		return nmeaDataClients.stream().map(NMEAClient::getBean).collect(Collectors.toList());
 	}
 
 	private List<Object> getForwarderList() {
-		return nmeaDataForwarders.stream().map(fwd -> fwd.getBean()).collect(Collectors.toList());
+		return nmeaDataForwarders.stream().map(Forwarder::getBean).collect(Collectors.toList());
 	}
 
 	private List<Object> getComputerList() {
-		return nmeaDataComputers.stream().map(cptr -> cptr.getBean()).collect(Collectors.toList());
+		return nmeaDataComputers.stream().map(Computer::getBean).collect(Collectors.toList());
 	}
 
+	// TODO Make it an AtomicReference ?
 	public static class EpochHolder {
 		long epoch;
 

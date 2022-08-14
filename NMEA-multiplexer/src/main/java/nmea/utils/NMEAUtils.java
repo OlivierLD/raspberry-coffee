@@ -36,7 +36,7 @@ public class NMEAUtils {
 
     public static String translateEscape(String str, int option) {
         String s = null;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             if (option == CR_NL) {
                 if (str.charAt(i) == (char) 0x0A) // [NL], \n, [LF]
@@ -293,13 +293,14 @@ public class NMEAUtils {
     }
 
     /**
-     * TODO Use Math.atan2
      *
-     * @param x
-     * @param y
-     * @return
+     * @param x deltaX
+     * @param y deltaY
+     * @return the dir, in degrees
+     *
+     * @Deprecated Use getDir (below)
      */
-    public static double getDir(float x, float y) {
+    public static double getDirObsolete(float x, float y) {
         double dir = 0.0D;
         if (y != 0) {
             dir = Math.toDegrees(Math.atan((double) x / (double) y));
@@ -330,6 +331,24 @@ public class NMEAUtils {
             dir -= 360D;
         }
         return dir;
+    }
+
+    /**
+     *
+     * @param x deltaX
+     * @param y deltaY
+     * @return the dir, in degrees [0..360[
+     */
+    public static double getDir(double x, double y) {
+        if (x == 0d && y == 0d) {
+            throw new RuntimeException("Ambiguous... deltaX and deltaY set to zero.");
+        }
+        double direction = 180 + Math.toDegrees(Math.atan2(x, y));
+        while (direction < 0) {
+            direction += 360;
+        }
+        direction %= 360;
+        return direction;
     }
 
     public static double getLeeway(double awa, double maxLeeway) {
@@ -419,9 +438,7 @@ public class NMEAUtils {
         try {
             Set<Double> set = data.keySet();
             List<Double> list = new ArrayList<>(set.size());
-            for (Double d : set) {
-                list.add(d);
-            }
+            list.addAll(set);
             Collections.sort(list);
 
             ret = new ArrayList<>(list.size());

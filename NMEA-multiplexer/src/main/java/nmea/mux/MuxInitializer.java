@@ -75,7 +75,7 @@ public class MuxInitializer {
             String clss = muxProps.getProperty(classProp);
             if (clss != null) { // Dynamic loading
                 if (verbose) {
-                    System.out.println(String.format("\t>> %s - Dynamic loading for input channel %s", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp));
+                    System.out.printf("\t>> %s - Dynamic loading for input channel %s\n", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp);
                 }
                 try {
                     // Devices and Sentences filters.
@@ -134,7 +134,7 @@ public class MuxInitializer {
                     thereIsMore = false;
                 } else {
                     if (verbose) {
-                        System.out.println(String.format("\t>> %s - Loading channel %s (%s)", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type));
+                        System.out.printf("\t>> %s - Loading channel %s (%s)\n", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type);
                     }
                     String deviceFilters = "";
                     String sentenceFilters = "";
@@ -223,7 +223,7 @@ public class MuxInitializer {
                                 fileClient.setZip(zip);
                                 fileClient.setPathInArchive(pathInArchive);
                                 nmeaDataClients.add(fileClient);
-//                                System.out.println(String.format(">>> Loop: %b", fileClient.isLoop()));
+//                                System.out.printf(">>> Loop: %b", fileClient.isLoop()));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -320,7 +320,7 @@ public class MuxInitializer {
                                 try {
                                     headingOffset = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.heading.offset", MUX_IDX_FMT.format(muxIdx)), "0"));
                                     if (headingOffset > 180 || headingOffset < -180) {
-                                        System.err.println(String.format("Warning: Bad range for Heading Offset, must be in [-180..180], found %d. Defaulting to 0", headingOffset));
+                                        System.err.printf("Warning: Bad range for Heading Offset, must be in [-180..180], found %d. Defaulting to 0\n", headingOffset);
                                         headingOffset = 0;
                                     }
                                 } catch (NumberFormatException nfe) {
@@ -330,7 +330,7 @@ public class MuxInitializer {
                                 try {
                                     readFrequency = Long.parseLong(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
                                     if (readFrequency < 0) {
-                                        System.err.println(String.format("Warning: Bad value for Read Frequency, must be positive, found %d.", readFrequency));
+                                        System.err.printf("Warning: Bad value for Read Frequency, must be positive, found %d.\n", readFrequency);
                                         readFrequency = null;
                                     }
                                 } catch (NumberFormatException nfe) {
@@ -340,20 +340,20 @@ public class MuxInitializer {
                                 try {
                                     dampingSize = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
                                     if (dampingSize < 0) {
-                                        System.err.println(String.format("Warning: Bad value for Damping Size, must be positive, found %d.", dampingSize));
+                                        System.err.printf("Warning: Bad value for Damping Size, must be positive, found %d.\n", dampingSize);
                                         dampingSize = null;
                                     }
                                 } catch (NumberFormatException nfe) {
                                     nfe.printStackTrace();
                                 }
                                 if (verbose) {
-                                    System.out.println(String.format("For HMC5883L channel: deviceFilters: %s, sentenceFilters: %s, devicePrefix: %s, headingOffset: %d, readFrequency: %d, dampingSize: %d",
+                                    System.out.printf("For HMC5883L channel: deviceFilters: %s, sentenceFilters: %s, devicePrefix: %s, headingOffset: %d, readFrequency: %d, dampingSize: %d\n",
                                             deviceFilters,
                                             sentenceFilters,
                                             hmc5883lDevicePrefix,
                                             headingOffset,
                                             readFrequency,
-                                            dampingSize));
+                                            dampingSize);
                                 }
                                 HMC5883LClient hmc5883lClient = new HMC5883LClient(
                                         !deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
@@ -399,7 +399,7 @@ public class MuxInitializer {
                                 try {
                                     headingOffset = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.heading.offset", MUX_IDX_FMT.format(muxIdx)), "0"));
                                     if (headingOffset > 180 || headingOffset < -180) {
-                                        System.err.println(String.format("Warning: Bad range for Heading Offset, must be in [-180..180], found %d. Defaulting to 0", headingOffset));
+                                        System.err.printf("Warning: Bad range for Heading Offset, must be in [-180..180], found %d. Defaulting to 0\n", headingOffset);
                                         headingOffset = 0;
                                     }
                                 } catch (NumberFormatException nfe) {
@@ -409,7 +409,7 @@ public class MuxInitializer {
                                 try {
                                     readFrequency = Long.parseLong(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
                                     if (readFrequency < 0) {
-                                        System.err.println(String.format("Warning: Bad value for Read Frequency, must be positive, found %d.", readFrequency));
+                                        System.err.printf("Warning: Bad value for Read Frequency, must be positive, found %d.\n", readFrequency);
                                         readFrequency = null;
                                     }
                                 } catch (NumberFormatException nfe) {
@@ -419,20 +419,20 @@ public class MuxInitializer {
                                 try {
                                     dampingSize = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
                                     if (dampingSize < 0) {
-                                        System.err.println(String.format("Warning: Bad value for Damping Size, must be positive, found %d.", dampingSize));
+                                        System.err.printf("Warning: Bad value for Damping Size, must be positive, found %d.\n", dampingSize);
                                         dampingSize = null;
                                     }
                                 } catch (NumberFormatException nfe) {
                                     nfe.printStackTrace();
                                 }
                                 if (verbose) {
-                                    System.out.println(String.format("For LSM303 channel: deviceFilters: %s, sentenceFilters: %s, devicePrefix: %s, headingOffset: %d, readFrequency: %d, dampingSize: %d",
+                                    System.out.printf("For LSM303 channel: deviceFilters: %s, sentenceFilters: %s, devicePrefix: %s, headingOffset: %d, readFrequency: %d, dampingSize: %d\n",
                                             deviceFilters,
                                             sentenceFilters,
                                             lsm303DevicePrefix,
                                             headingOffset,
                                             readFrequency,
-                                            dampingSize));
+                                            dampingSize);
                                 }
                                 LSM303Client lsm303Client = new LSM303Client(
                                         !deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
@@ -535,14 +535,14 @@ public class MuxInitializer {
             muxIdx++;
         }
         if (verbose) {
-            System.out.println(String.format("\t>> %s - Done with input channels", NumberFormat.getInstance().format(System.currentTimeMillis())));
+            System.out.printf("\t>> %s - Done with input channels\n", NumberFormat.getInstance().format(System.currentTimeMillis()));
         }
 
         // Data Cache
         if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
             try {
                 if (verbose) {
-                    System.out.println(String.format("\t>> %s - Initializing Cache", NumberFormat.getInstance().format(System.currentTimeMillis())));
+                    System.out.printf("\t>> %s - Initializing Cache\n", NumberFormat.getInstance().format(System.currentTimeMillis()));
                 }
                 String deviationFile = muxProps.getProperty("deviation.file.name", "zero-deviation.csv");
                 double maxLeeway = Double.parseDouble(muxProps.getProperty("max.leeway", "0"));
@@ -566,7 +566,7 @@ public class MuxInitializer {
             String clss = muxProps.getProperty(classProp);
             if (clss != null) { // Dynamic loading
                 if (verbose) {
-                    System.out.println(String.format("\t>> %s - Dynamic loading for output %s", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp));
+                    System.out.printf("\t>> %s - Dynamic loading for output %s\n", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp);
                 }
                 try {
                     Object dynamic = Class.forName(clss).getDeclaredConstructor().newInstance();
@@ -606,7 +606,7 @@ public class MuxInitializer {
                     thereIsMore = false;
                 } else {
                     if (verbose) {
-                        System.out.println(String.format("\t>> %s - Loading for output channel %s (%s)", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type));
+                        System.out.printf("\t>> %s - Loading for output channel %s (%s)\n", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type);
                     }
                     switch (type) {
                         case "serial":
@@ -665,7 +665,7 @@ public class MuxInitializer {
                             final int idx = fwdIdx;
                             Properties configProps = new Properties();
                             if (verboseStr != null) {
-                                System.out.println(String.format("Setting verbose to %s (%s)", verboseStr, verboseStr.trim()));
+                                System.out.printf("Setting verbose to %s (%s)\n", verboseStr, verboseStr.trim());
                                 configProps.put("verbose", verboseStr.trim());
                             }
                             properties.forEach(prop -> {
@@ -693,10 +693,8 @@ public class MuxInitializer {
                                     restForwarder.setProperties(forwarderProps);
                                 }
                                 if ("true".equals(System.getProperty("mux.props.verbose"))) {
-                                    System.out.println(String.format("Props for forwarder %s", restForwarder.getClass().getName()));
-                                    configProps.forEach((name, value) -> {
-                                        System.out.println(String.format("%s : %s", name, value));
-                                    });
+                                    System.out.printf("Props for forwarder %s\n", restForwarder.getClass().getName());
+                                    configProps.forEach((name, value) -> System.out.printf("%s : %s\n", name, value));
                                 }
                                 restForwarder.setProperties(configProps);
                                 restForwarder.init();
@@ -859,7 +857,7 @@ public class MuxInitializer {
             fwdIdx++;
         }
         if (verbose) {
-            System.out.println(String.format("\t>> %s - Don with forwarders", NumberFormat.getInstance().format(System.currentTimeMillis())));
+            System.out.printf("\t>> %s - Don with forwarders\n", NumberFormat.getInstance().format(System.currentTimeMillis()));
         }
         // Init cache (for Computers).
         if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
@@ -873,7 +871,7 @@ public class MuxInitializer {
                     String clss = muxProps.getProperty(classProp);
                     if (clss != null) { // Dynamic loading
                         if (verbose) {
-                            System.out.println(String.format("\t>> %s - Dynamic loading for computer %s", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp));
+                            System.out.printf("\t>> %s - Dynamic loading for computer %s\n", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp);
                         }
                         try {
                             Object dynamic = Class.forName(clss).getDeclaredConstructor(Multiplexer.class).newInstance(mux);
@@ -905,7 +903,7 @@ public class MuxInitializer {
                             thereIsMore = false;
                         } else {
                             if (verbose) {
-                                System.out.println(String.format("\t>> %s - Loading computer %s (%s)", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type));
+                                System.out.printf("\t>> %s - Loading computer %s (%s)\n", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type);
                             }
                             switch (type) {
                                 case "tw-current": // True Wind and Current computer. True Wind is calculated with GPS COG & SOG), as it should. Also involves the LongTimeCurrentCalculator.
@@ -929,7 +927,7 @@ public class MuxInitializer {
                                     }
                                     break;
                                 default:
-                                    System.err.println(String.format("Computer type [%s] not supported.", type));
+                                    System.err.printf("Computer type [%s] not supported.\n", type);
                                     break;
                             }
                         }
@@ -937,7 +935,7 @@ public class MuxInitializer {
                     cptrIdx++;
                 }
                 if (verbose) {
-                    System.out.println(String.format("\t>> %s - Done with computers", NumberFormat.getInstance().format(System.currentTimeMillis())));
+                    System.out.printf("\t>> %s - Done with computers\n", NumberFormat.getInstance().format(System.currentTimeMillis()));
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -950,10 +948,10 @@ public class MuxInitializer {
         Properties properties = new Properties();
 
         yamlMap.keySet().forEach(k -> {
-//		System.out.println(String.format("%s -> %s", k, yamlMap.get(k).getClass().getName()));
+//		System.out.printf("%s -> %s", k, yamlMap.get(k).getClass().getName()));
             switch (k) {
                 case "name":
-                    System.out.println(String.format("Definition Name: %s", yamlMap.get(k)));
+                    System.out.printf("Definition Name: %s\n", yamlMap.get(k));
                     break;
                 case "context":
                     Map<String, Object> context = (Map<String, Object>) yamlMap.get(k);
@@ -969,7 +967,7 @@ public class MuxInitializer {
                             String propName = String.format("mux.%02d.%s", nb, channelKey);
                             properties.setProperty(propName, channel.get(channelKey).toString());
                             if ("yes".equals(System.getProperty("yaml.tx.verbose", "no"))) {
-                                System.out.println(String.format("Setting [%s] to [%s]", propName, channel.get(channelKey).toString()));
+                                System.out.printf("Setting [%s] to [%s]\n", propName, channel.get(channelKey).toString());
                             }
                         });
                     });

@@ -385,7 +385,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
 
         boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));
         if (infraVerbose) {
-            System.out.println(String.format("PROCESS ON START: %b", startProcessingOnStart));
+            System.out.printf("PROCESS ON START: %b\n", startProcessingOnStart);
         }
         GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions);
         mux.setEnableProcess(startProcessingOnStart);
