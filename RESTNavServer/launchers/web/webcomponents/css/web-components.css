@@ -307,6 +307,10 @@ jumbo-display .digital-font-green {
 	--value-font-size-factor: 1
 }
 
+.decreased-label-font {
+	--value-font-size-factor: 0.75;
+}
+
 .analogdisplay-monochrome-yellow {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: yellow;
