@@ -340,14 +340,20 @@
             hdg = val; // hdg, in console.logic.js
             setData('compass-display-01', val);
             let bo = document.getElementById('boat-overview-01');
-            setHdgOnDevCurve('compass-deviation', val, dev => {
+            setHdgOnDevCurve('compass-deviation', val, (dev) => {
                 bo.dev = dev;
             });
-            setHdgOnDevCurve('split-flap-display-dev', val, dev => {
+            setHdgOnDevCurve('split-flap-display-dev', val, (dev) => {
                 if (decl) {
                     let variation = decl + dev;
-                    document.getElementById('split-flap-display-var').value =
-                        (variation < 0 ? "W " : "E ") + Math.abs(variation).toFixed(1);
+                    let displayStr = (variation < 0 ? "W " : "E ") + Math.abs(variation).toFixed(1);
+                    document.getElementById('split-flap-display-var').value = displayStr;
+
+                    document.getElementById('analog-dev').value = dev;
+                    document.getElementById('analog-dev').displayValue = (dev < 0 ? "W " : "E ") + Math.abs(dev).toFixed(1);
+
+                    document.getElementById('analog-var').value = variation;
+                    document.getElementById('analog-var').displayValue = displayStr;
                 }
             });
             // Boat Overview
@@ -387,6 +393,8 @@
             document.getElementById('boat-overview-01').Decl = val;
             let str = (val < 0 ? "W " : "E ") + Math.abs(val).toFixed(1);
             document.getElementById('split-flap-display-decl').value = str;
+            document.getElementById('analog-decl').value = decl;
+            document.getElementById('analog-decl').displayValue = str;
         });
         events.subscribe(events.topicNames.TO_WP, val => {
             let bo = document.getElementById('boat-overview-01');
@@ -2644,6 +2652,68 @@
                                                                                     font-size="20"
                                                                                     justified="LEFT"
                                                                                     value="E 0.0"></split-flap-display>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <analog-display class="analogdisplay-monochrome-orange decreased-label-font"
+                                                                                title="Declination, East or West"
+                                                                                id="analog-decl"
+                                                                                min-value="-15"
+                                                                                max-value="15"
+                                                                                abs-tick-value="true"
+                                                                                rotate-digits="false"
+                                                                                value="0"
+                                                                                display-value="E 0.0"
+                                                                                major-ticks="5"
+                                                                                minor-ticks="0.5"
+                                                                                with-border="true"
+                                                                                rotate-digits="true"
+                                                                                overlap="40"
+                                                                                label="D"
+                                                                                unit="Degrees &deg;"
+                                                                                width="120"
+                                                                                height="120"></analog-display>
+                                                            </td>
+                                                            <td>
+                                                                <analog-display class="analogdisplay-monochrome-orange decreased-label-font"
+                                                                                title="Deviation, East or West"
+                                                                                id="analog-dev"
+                                                                                min-value="-15"
+                                                                                max-value="15"
+                                                                                abs-tick-value="true"
+                                                                                rotate-digits="false"
+                                                                                value="0"
+                                                                                display-value="E 0.0"
+                                                                                major-ticks="5"
+                                                                                minor-ticks="0.5"
+                                                                                with-border="true"
+                                                                                rotate-digits="true"
+                                                                                overlap="40"
+                                                                                label="d"
+                                                                                unit="Degrees &deg;"
+                                                                                width="120"
+                                                                                height="120"></analog-display>
+                                                            </td>
+                                                            <td>
+                                                                <analog-display class="analogdisplay-monochrome-orange decreased-label-font"
+                                                                                title="Variation, East or West"
+                                                                                id="analog-var"
+                                                                                min-value="-15"
+                                                                                max-value="15"
+                                                                                abs-tick-value="true"
+                                                                                rotate-digits="false"
+                                                                                value="0"
+                                                                                display-value="E 0.0"
+                                                                                major-ticks="5"
+                                                                                minor-ticks="0.5"
+                                                                                with-border="true"
+                                                                                rotate-digits="true"
+                                                                                overlap="40"
+                                                                                label="W"
+                                                                                unit="Degrees &deg;"
+                                                                                width="120"
+                                                                                height="120"></analog-display>
                                                             </td>
                                                         </tr>
                                                     </table>
