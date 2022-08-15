@@ -10,7 +10,7 @@ class SerialPI4J {
   def delay(t: Float): Unit = {
     try { Thread.sleep((t * 1000).asInstanceOf[Long]) }
     catch {
-      case ie: InterruptedException => ie.printStackTrace
+      case ie: InterruptedException => ie.printStackTrace()
     }
   }
   def init(operation: (String) => Unit): Unit = {  // Send a block here
@@ -30,9 +30,9 @@ class SerialPI4J {
     serial.isOpen
   }
 
-  def closeSerial: Unit = {
+  def closeSerial(): Unit = {
     if (serial.isOpen)
-      serial.close
+      serial.close()
   }
 
   def writeSerial(mess: String): Unit = {
@@ -40,7 +40,7 @@ class SerialPI4J {
       serial.write(b)
       delay(0.001f)    // To break the 16 character barrier...
     })
-    serial.flush
+    serial.flush()
   }
 }
 
@@ -73,12 +73,12 @@ object utils {
       var lineRight = ""
       val start = l * LINE_LEN
 
-      (start to Math.min(start + LINE_LEN, ba.length) - 1).foreach(c => {
+      (start until Math.min(start + LINE_LEN, ba.length)).foreach(c => {
         lineLeft  += (lpad(Integer.toHexString(ba(c).asInstanceOf[Int]).toUpperCase, 2, "0") + " ")
         lineRight += (if (isAsciiPrintable(str.charAt(c))) str.charAt(c) else ".")
       })
       lineLeft = rpad(lineLeft, 3 * LINE_LEN, " ") + " "
-      result(l) = lineLeft + "    " + lineRight
+      result(l) = s"${lineLeft}    ${lineRight}"
     })
     result
   }
@@ -113,26 +113,26 @@ object SerialPI4J {
     })
     println("Opening")
     try {
-      serial.openSerial("/dev/ttyS0", 9600) // TODO Those prms as System variables.
+      serial.openSerial("/dev/ttyS0", 9_600) // TODO Those prms as System variables.
     } catch {
       case ex: Exception =>
-        ex.printStackTrace
+        ex.printStackTrace()
     }
     println("Adding shutdown hook")
     sys addShutdownHook {
       println("Shutdown hook caught.")
       me synchronized {
-        me notify
+        me notify()
       }
       println("Closing")
-      serial.closeSerial
+      serial.closeSerial()
       println("Bye.")
     }
     // Wait here
     me = Thread currentThread
 
     me synchronized {
-      me wait
+      me wait()
     }
     System.exit(0)
   }
