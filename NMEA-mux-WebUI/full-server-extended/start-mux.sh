@@ -11,8 +11,7 @@ _PAPIRUS=$(i2cdetect -y 1 | grep 48) || true
 # echo "OLED: $_OLED"
 # echo "PAPIRUS: $_PAPIRUS"
 #
-if [[ "$1" == "-w" ]] # To wait for everything to start?
-then
+if [[ "$1" == "-w" ]]; then # To wait for everything to start?
 	echo -e ""
 	echo -e "+-------------------------------+"
 	echo -e "| Giving Multiplexer some slack |"
@@ -25,20 +24,17 @@ then
 fi
 #
 MY_IP=$(hostname -I | awk '{ print $1 }')
-if [[ "$MY_IP" == "" ]]
-then
+if [[ "$MY_IP" == "" ]]; then
   MY_IP="192.168.50.10" # Change as needed
 fi
 #
 NETWORK_NAME=$(iwconfig | grep wlan0 | awk '{ print $4 }')
 NETWORK_NAME=${NETWORK_NAME:6}
-if [[ "$NETWORK_NAME" == "aster" ]] # From Mode:Master Get the network name from the config file... ssid in /etc/hostapd/hostapd.conf
-then
+if [[ "$NETWORK_NAME" == "aster" ]]; then # From Mode:Master Get the network name from the config file... ssid in /etc/hostapd/hostapd.conf
 	NETWORK_NAME=$(cat /etc/hostapd/hostapd.conf | grep -e ^ssid)
 	NETWORK_NAME=${NETWORK_NAME:5}
 fi
-if [[ "$NETWORK_NAME" == "" ]]
-then
+if [[ "$NETWORK_NAME" == "" ]]; then
   NETWORK_NAME="RPi-Gateway" # Change as needed
 fi
 #
@@ -66,8 +62,7 @@ else
 fi
 #
 # cd ~pi/NMEADist
-if [[ -f "to.mux.sh" ]]
-then
+if [[ -f "to.mux.sh" ]]; then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"

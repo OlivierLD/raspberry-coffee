@@ -7,15 +7,13 @@ YAML_FILE=./yaml/sample.yaml
 DESTINATION_PACKAGE=oliv.io
 FLAVOR=jaxrs-jersey
 # FLAVOR=nodejs-express-server
-if [ -d ${GENERATION_FOLDER} ]
-then
+if [[ -d ${GENERATION_FOLDER} ]]; then
 	echo -e "----------------------------------------------------------------------------------------------------"
   echo -e "Folder ${GENERATION_FOLDER} exists. The changes you may have made would be lost if we drop the folder."
 	echo -e "----------------------------------------------------------------------------------------------------"
   echo -en "Do you want to drop it? y|n > "
   read a
-  if [ "$a" == "y" ] || [ "$a" == "Y" ]
-  then
+  if [[ "$a" == "y" ]] || [[ "$a" == "Y" ]]; then
 		rm -rf ${GENERATION_FOLDER}
   else
     echo -e "Change the directory name in the script, or delete the folder yourself.\nExiting."
@@ -24,8 +22,7 @@ then
 fi
 OPENAPI_GENERATOR=openapi-generator
 GENERATOR_EXISTS=$(which ${OPENAPI_GENERATOR})
-if [[ "${GENERATOR_EXISTS}" == "" ]]
-then
+if [[ "${GENERATOR_EXISTS}" == "" ]]; then
   echo -e "---------------------------------------------------"
   echo -e "Trying plan B..., openapi-generator was not found on this system."
   echo -e "Assume that you've downloaded the jar with"
@@ -53,8 +50,7 @@ echo -e "${COMMAND}"
 echo -en "Proceed y|n ? > "
 read REPLY
 #
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-then
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo "Canceled."
   exit 0
 fi

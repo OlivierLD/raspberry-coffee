@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 #
-if [[ $# != 2 ]]
-then
+if [[ $# != 2 ]]; then
   echo -e "Usage is $0 [log.file.name] [csv.file.name]"
   echo -e "example: $0 sample.data/2010-11.03.Taiohae.nmea today.csv"
   exit 1

@@ -6,15 +6,12 @@
 # OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
-if [[ $# -gt 0 ]]
-then
+if [[ $# -gt 0 ]]; then
   MUX_PROP_FILE=$1
 fi
 #
-if [[ $# -gt 1 ]]
-then
-  if [[ "$2" == "-w" ]]
-  then
+if [[ $# -gt 1 ]]; then
+  if [[ "$2" == "-w" ]]; then
 	  echo -e ""
 		echo -e "+------------------------+"
 		echo -e "| Giving Java some slack |"
@@ -37,8 +34,7 @@ JAVA_OPTIONS=
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [[ "${PROCESS_ON_START}" == "false" ]]
-then
+if [[ "${PROCESS_ON_START}" == "false" ]]; then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
@@ -65,8 +61,7 @@ fi
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
 #
-if [[ "${PROCESS_ON_START}" != "" ]]
-then
+if [[ "${PROCESS_ON_START}" != "" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
 fi
 #
@@ -82,8 +77,7 @@ SUDO=
 # DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
 #
-if [[ "$DARWIN" != "" ]]
-then
+if [[ "$DARWIN" != "" ]]; then
 	echo Running on Mac
   JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/Library/Java/Extensions"  # for Mac
   CP=${CP}:./libs/RXTXcomm.jar          # for Mac

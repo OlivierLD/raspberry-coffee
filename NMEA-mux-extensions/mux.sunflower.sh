@@ -2,8 +2,7 @@
 #
 # No properties file name is used as parameter here...
 MACHINE=RPi
-if [ $# -ne 0 ]
-then
+if [[ $# -ne 0 ]]; then
 	echo -e ">>> No properties file argument needed (nor taken). Properties file is hard-coded."
 	echo -e "Machine (1st prm) can be Mac or RPi"
 	MACHINE=$1
@@ -21,8 +20,7 @@ echo "With $MUX_PROP_FILE, reach the sun.data.html page, on the appropriate port
 echo Using properties file $MUX_PROP_FILE
 #
 JAVA_OPTIONS=
-if [ "$MACHINE" = "Mac" ]
-then
+if [[ "$MACHINE" = "Mac" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=../Serial.IO/libs" # for Mac
 else
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni"      # for Raspberry Pi
@@ -50,8 +48,7 @@ CP=${CP}:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrie
 CP=${CP}:./build/libs/NMEA-multiplexer-1.0-all.jar
 # CP=${CP}:../SunFlower/build/libs/SunFlower-1.0-all.jar # Included in GPS.sun.servo-1.0-all.jar
 #
-if [ "$MACHINE" = "Mac" ]
-then
+if [[ "$MACHINE" = "Mac" ]]; then
   CP=${CP}:../Serial.IO/libs/RXTXcomm.jar # for Mac
 else
   CP=${CP}:/usr/share/java/RXTXcomm.jar   # For Raspberry Pi
@@ -67,8 +64,7 @@ REMOTE_DEBUG_FLAGS=
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
-if [ "$MACHINE" = "Mac" ]
-then
+if [[ "$MACHINE" = "Mac" ]]; then
   # No need to use sudo on Mac
   java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp ${CP} nmea.mux.GenericNMEAMultiplexer
 else

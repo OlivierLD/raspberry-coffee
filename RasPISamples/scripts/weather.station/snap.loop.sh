@@ -11,8 +11,7 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 #
 WEATHER_STATION_IP=192.168.42.18
 #
-while true
-do
+while true ; do
   # If needed, add rot parameter (default is 0)
   # Send HTTP request to take the snapshot
   curl http://${WEATHER_STATION_IP}:8080/snap?rot=270

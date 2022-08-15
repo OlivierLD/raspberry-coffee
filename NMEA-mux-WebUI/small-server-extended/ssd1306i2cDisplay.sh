@@ -7,8 +7,7 @@ SUDO=
 # DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
 #
-if [[ "$DARWIN" != "" ]]
-then
+if [[ "$DARWIN" != "" ]]; then
 	echo Running on Mac
 else
 	echo Assuming Linux/Raspberry Pi
@@ -24,17 +23,14 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dled.color=white"
 #
 # Separate the lines with a pipe |
 #
-if [[ "$1" = "IP" ]]
-then
+if [[ "$1" = "IP" ]]; then
   _IP=$(hostname -I) || true
-	if [[ "$_IP" ]]
-	then
+	if [[ "$_IP" ]]; then
 	  printf "My IP address is %s\n" "$_IP"
 	fi
 	#
 	_OLED=`i2cdetect -y 1 | grep 3c`
-	if [[ "$_OLED" ]]
-	then
+	if [[ "$_OLED" ]]; then
 	  printf "+---------------+\n"
 	  printf "| OLED Detected |\n"
 	  printf "+---------------+\n"

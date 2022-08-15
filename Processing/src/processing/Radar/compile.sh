@@ -2,8 +2,7 @@
 #
 # Compile and run the EXPORTED PApplet
 #
-if [ ! -d classes ]
-then
+if [[ ! -d classes ]]; then
   mkdir classes
 fi
 #

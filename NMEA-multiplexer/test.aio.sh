@@ -2,8 +2,7 @@
 echo Usage:
 echo  $0 [AIO Key]
 echo like $0 abc8736hgfd78638620ngs
-if [[ $# -eq 1 ]]
-then
+if [[ $# -eq 1 ]]; then
   CP=./build/libs/NMEA-multiplexer-1.0-all.jar
   #
   JAVA_OPTS="-Daio.key=$1"

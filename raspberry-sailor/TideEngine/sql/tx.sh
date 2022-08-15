@@ -1,9 +1,7 @@
 #!/bin/bash
-while read one_line
-do
+while read one_line ; do
 	# starts with "select '" and does NOT end with "';"
-    if [[ ${one_line} =~ ^(select \') && ! ${one_line} =~ (\';)$ ]]
-    then
+    if [[ ${one_line} =~ ^(select \') && ! ${one_line} =~ (\';)$ ]]; then
         echo "Found it in [${one_line}]"
         echo -e "${one_line}';"
     else

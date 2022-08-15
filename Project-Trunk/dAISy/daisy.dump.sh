@@ -15,8 +15,7 @@ SUDO=
 # DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
 #
-if [[ "$DARWIN" != "" ]]
-then
+if [[ "$DARWIN" != "" ]]; then
 	echo Running on Mac
   JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/Library/Java/Extensions"  # for Mac
 else

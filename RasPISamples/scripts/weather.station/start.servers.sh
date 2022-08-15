@@ -3,8 +3,7 @@
 # Stop the processes using kill.servers.sh
 #
 STARTED=`ps -ef | grep EmailWatcher | grep -v grep | awk '{ print $2 }'`
-if [ "$STARTED" == "" ]
-then
+if [[ "$STARTED" == "" ]]; then
   cd raspberry-coffee
   echo Starting multiplexer
   cd NMEA-multiplexer

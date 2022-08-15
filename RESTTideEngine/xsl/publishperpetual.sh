@@ -18,8 +18,7 @@ export CP=${CP}:${HOME}/libs/xdo-0301.jar
 #
 echo -en "Generate Data [y]|n ? > "
 read genData
-if [ "$genData" = "y" ] || [ "$genData" = "" ]
-then
+if [[ "$genData" = "y" ]] || [[ "$genData" = "" ]]; then
 	echo -en "From Year > "
 	read from
 	echo -en "To Year   > "
@@ -30,8 +29,7 @@ fi
 publishData=
 echo -en "Publish Data  [y]|n ? >"
 read publishData
-if [ "$publishData" = "y" ] || [ "$publishData" = "" ]
-then
+if [[ "$publishData" = "y" ]] || [[ "$publishData" = "" ]]; then
 	echo Processing PDF file
 	# TODO Get option(s) here
 	echo Publishing

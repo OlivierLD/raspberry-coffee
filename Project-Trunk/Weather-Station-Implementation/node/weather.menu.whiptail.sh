@@ -4,8 +4,7 @@
 #
 clear
 
-while [ 1 ]
-do
+while [ 1 ]; do
   CHOICE=$(
    whiptail --title "Weather Station" --menu "Choose option" 16 100 9 \
 	"1" "Start Node.js server."   \
@@ -18,8 +17,7 @@ do
   case $CHOICE in
 	"1")
 		cd ../node
-		if [ -f node.log ]
-		then
+		if [[ -f node.log ]]; then
       rm node.log
     fi
     nohup node weather.server.js > node.log &
@@ -28,8 +26,7 @@ do
 		;;
 	"2")
 	  MESSAGE="Make sure you have started the WebSocket server (Option 1)."
-	  if [ -f weather.station.log ]
-	  then
+	  if [[ -f weather.station.log ]]; then
       rm weather.station.log
     fi
     # ./weather.station.reader.sh > weather.station.log
@@ -47,15 +44,13 @@ do
 	"3")
 		MESSAGE=
 	  PID=`ps -ef | grep -v grep | grep weatherstation.ws.HomeWeatherStation | awk '{ print $2 }'`
-    if [ "$PID" != "" ]
-    then
+    if [[ "$PID" != "" ]]; then
       MESSAGE="HomeWeatherStation $PID"
     else
       MESSAGE="Found no HomeWeatherStation..."
     fi
     PID=`ps -ef | grep -v grep | grep node-weather | awk '{ print $2 }'`
-    if [ "$PID" != "" ]
-    then
+    if [[ "$PID" != "" ]]; then
       MESSAGE="$MESSAGE\nNode server $PID"
     else
       MESSAGE="$MESSAGE\nFound no node-weather..."

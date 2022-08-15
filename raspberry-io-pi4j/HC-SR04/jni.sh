@@ -4,8 +4,7 @@
 JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt
 echo JavaH compilation, then run
 echo Uses WiringPI
-if [ ! -d ./classes ]
-then
+if [[ ! -d ./classes ]]; then
   mkdir classes
 fi
 #

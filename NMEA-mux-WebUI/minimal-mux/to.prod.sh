@@ -18,8 +18,7 @@ echo -e "+----------------------------------------------------------------------
 #
 echo -en "Do we re-build the Java part ? > "
 read REPLY
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-then
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo -e "Ok, moving on."
 else
   ../../gradlew shadowJar
@@ -30,8 +29,7 @@ fi
 echo -en "Which (non existent) folder should we create the distribution in ? > "
 # Directory name, that will become the archive name.
 read distdir
-if [[ -d "${distdir}" ]]
-then
+if [[ -d "${distdir}" ]]; then
 	echo -e "Folder ${distdir} exists. Please drop it or choose another name"
 	echo -e "Exiting now."
 	exit 1
@@ -50,8 +48,7 @@ mkdir ${distdir}/logged
 # Web resources ?
 echo -en "Do we include web resources ? > "
 read REPLY
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-then
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo -e "Ok, moving on."
 else
   ARCHIVE_NAME=web.zip
@@ -102,19 +99,16 @@ echo -e "+----------------------------------------------------------------------
 #
 echo -en "Deploy ${distdir}.tar.gz to ${HOME} ? > "
 read REPLY
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-then
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo -e "Ok, you'll do it yourself."
   echo -e "Bye."
 else
   cp ${distdir}.tar.gz ${HOME}
   cd ${HOME}
-  if [[ -d "${distdir}" ]]
-  then
+  if [[ -d "${distdir}" ]]; then
     echo -en "Folder ${distdir} already exists in ${HOME}. Do we drop it ? > "
     read REPLY
-    if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
-    then
+    if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
       echo -e "Ok, aborting. "
       exit 1
     else

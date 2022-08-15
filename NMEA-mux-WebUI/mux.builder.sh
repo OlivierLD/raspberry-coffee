@@ -3,8 +3,7 @@
 # Mux Builder.
 #
 LOOP=true
-while [[ "$LOOP" == "true" ]]
-do
+while [[ "$LOOP" == "true" ]]; do
 	clear
   echo -e "+---------------------------------------------------------+"
   echo -e "| Customize your own NMEA Multiplexer / Navigation Server |"

@@ -8,8 +8,7 @@ echo -e "+----------------------------------------------------------------------
 #
 echo -e "Open http://localhost:8080/index.html in a browser..."
 DARWIN=$(uname -a | grep Darwin)
-if [ "$DARWIN" != "" ]
-then
+if [[ "$DARWIN" != "" ]]; then
 	echo Running on Mac
   open http://localhost:8080/index.html
 else

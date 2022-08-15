@@ -1,8 +1,7 @@
 #!/bin/bash
 echo Reads an ADC, feeds a WebSocket server, drives a relay, sends and receives SMSs.
 #
-if [ "${PI4J_HOME}" = "" ]
-then
+if [[ "${PI4J_HOME}" = "" ]]; then
   PI4J_HOME=/opt/pi4j
 fi
 #

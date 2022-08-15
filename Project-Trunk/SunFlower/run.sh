@@ -8,18 +8,15 @@ CP=./build/libs/SunFlower-1.0-all.jar
 echo Try $0 -help or $0 --help
 #
 # Set ASK_ABOUT_DATE=false to skip the date check below
-if [[ ${ASK_ABOUT_DATE} != false ]]
-then
+if [[ ${ASK_ABOUT_DATE} != false ]]; then
 	echo -en "Date is "
 	date
 	echo -en "Is that OK [Y]|n ? > "
 	read resp
-	if [[ "$resp" == "n" ]] || [[ "$resp" == "N" ]]
-	then
+	if [[ "$resp" == "n" ]] || [[ "$resp" == "N" ]]; then
 	  echo -en "Enter new date, format '10 NOV 2018 08:55:00' > "
 	  read newDate
-	  if [[ "$newDate" != "" ]]
-	  then
+	  if [[ "$newDate" != "" ]]; then
 	    sudo date -s "$newDate"
 	   fi
 	fi
@@ -52,12 +49,10 @@ JAVA_OPTS="${JAVA_OPTS} -Dtilt.offset=0"
 #
 OPTION=-help
 WITH_HELP=false
-if [[ $# -gt 0 ]]
-then
+if [[ $# -gt 0 ]]; then
   OPTION=$1
 fi
-if [[ ${OPTION} = "-help" || ${OPTION} = "--help" ]] && [[ $# -gt 1 ]]
-then
+if [[ ${OPTION} = "-help" || ${OPTION} = "--help" ]] && [[ $# -gt 1 ]]; then
   OPTION=$2
   WITH_HELP=true
 fi
@@ -70,8 +65,7 @@ displayHelp() {
   echo -e "=============================================================================="
 }
 #
-if [[ ${WITH_HELP} = true ]]
-then
+if [[ ${WITH_HELP} = true ]]; then
   echo -e "+-----------------------------"
   echo -e "| Explaining option $OPTION"
   echo -e "+-----------------------------"
@@ -179,8 +173,7 @@ case "$OPTION" in
     ;;
 esac
 #
-if [[ ${WITH_HELP} = false ]]
-then
+if [[ ${WITH_HELP} = false ]]; then
 	MISO=9
 	MOSI=10
 	CLK=11
@@ -196,8 +189,7 @@ then
   sudo ${COMMAND}
 else
   opts=$(echo ${JAVA_OPTS} | tr ";" "\n")
-  for opt in $opts
-  do
+  for opt in $opts; do
     echo -e "| $opt"
   done
   echo -e "+-----------------------------"

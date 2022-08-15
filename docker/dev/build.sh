@@ -4,21 +4,20 @@ echo -e "  . $0 [false]|true"
 echo "- true means 'skip the first part' (ic-components cloning and yarning)"
 echo "Make sure you've set the proxies if running inside a firewall"
 #
-if [ "$(uname)" == "Darwin" ]; then
+if [[ "$(uname)" == "Darwin" ]]; then
   _home=$(greadlink -f ${BASH_SOURCE[0]})
 else
   _home=$(readlink -f ${BASH_SOURCE[0]})
 fi
 
-if [ -z "$(echo $0 | grep bash)" ]; then
+if [[ -z "$(echo $0 | grep bash)" ]]; then
   echo "You MUST run . ${_home}"
   exit 1;
 fi
 #
 SKIP_FIRST=$1
 #
-if [ "$SKIP_FIRST" != "true" ]
-then
+if [[ "$SKIP_FIRST" != "true" ]]; then
   echo "Dropping previous directory..."
   rm -rf ic-components
   git clone https://orahub.oraclecorp.com/fmw-bpm-composer/ic-components.git

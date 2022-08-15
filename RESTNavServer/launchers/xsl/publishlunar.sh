@@ -22,8 +22,7 @@ export CP=${CP}:${HOME}/libs/xdo-0301.jar
 #
 XSL_STYLESHEET=./lunar2fop.xsl
 LANG=$1
-if [ $LANG = "FR" ]
-then
+if [[ $LANG = "FR" ]]; then
   echo On parle francais
   PRM_OPTION="-docconf ./lang_fr.cfg"
   cp literals_fr.xsl literals.xsl

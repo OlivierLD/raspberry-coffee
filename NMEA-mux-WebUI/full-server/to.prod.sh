@@ -21,8 +21,7 @@ echo -e "+----------------------------------------------------------------------
 # 2 - Create new dir
 #
 distdir=
-if [[ "$1" != "" ]]
-then
+if [[ "$1" != "" ]]; then
 	distdir=$1
 	echo -e "Will create distribution in ${distdir}"
 else
@@ -30,8 +29,7 @@ else
   # Directory name, that will become the archive name.
   read distdir
 fi
-if [[ -d "${distdir}" ]]
-then
+if [[ -d "${distdir}" ]]; then
 	echo -e "Folder ${distdir} exists. Please drop it or choose another name"
 	exit 1
 fi

@@ -27,15 +27,13 @@ echo "Done"
 # To see the processes:
 #
 PID=`ps -ef | grep -v grep | grep weatherstation.ws.HomeWeatherStation | awk '{ print $2 }'`
-if [ "$PID" != "" ]
-then
+if [[ "$PID" != "" ]]; then
   echo -e "HomeWeatherStation $PID"
 else
   echo Found no HomeWeatherStation...
 fi
 PID=`ps -ef | grep -v grep | grep node-weather | awk '{ print $2 }'`
-if [ "$PID" != "" ]
-then
+if [[ "$PID" != "" ]]; then
   echo -e "Node server $PID"
 else
   echo Found no node-weather...

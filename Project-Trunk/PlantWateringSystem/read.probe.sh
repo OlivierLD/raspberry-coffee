@@ -21,8 +21,7 @@ WAIT=false
 SUDO=
 DARWIN=$(uname -a | grep Darwin)
 #
-if [ "$DARWIN" != "" ]
-then
+if [[ "$DARWIN" != "" ]]; then
 	echo Running on Mac
   JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/Library/Java/Extensions"  # for Mac
 else
@@ -31,23 +30,17 @@ else
   SUDO="sudo "
 fi
 #
-for ARG in "$@"
-do
+for ARG in "$@"; do
 	echo -e "Managing prm $ARG"
-	if [ "$ARG" == "verbose" ]
-	then
+	if [[ "$ARG" == "verbose" ]]; then
 	  VERBOSE=true
-	elif [ "$ARG" == "ansi" ]
-	then
+	elif [[ "$ARG" == "ansi" ]]; then
 	  ANSI=true
-	elif [ "$ARG" == "wait" ]
-	then
+	elif [[ "$ARG" == "wait" ]]; then
 	  WAIT=true
-	elif [ "$ARG" == "debug" ]
-	then
+	elif [[ "$ARG" == "debug" ]]; then
 	  DEBUG=true
-	elif [ "$ARG" == "remote-debug" ]
-	then
+	elif [[ "$ARG" == "remote-debug" ]]; then
 	  REMOTE_DEBUG=true
 	fi
 done
@@ -55,8 +48,7 @@ done
 JAVA_OPTIONS="-Dsth.debug=$DEBUG"
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dmcp3008.debug=$DEBUG"
 #
-if [ "$REMOTE_DEBUG" == "true" ]
-then
+if [[ "$REMOTE_DEBUG" == "true" ]]; then
   # For remote debugging:
   JAVA_OPTIONS="${JAVA_OPTIONS} -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
 fi
@@ -65,8 +57,7 @@ fi
 #
 # Use program argument --help for help.
 #
-if [ "$VERBOSE" == "true" ]
-then
+if [[ "$VERBOSE" == "true" ]]; then
   # java ${JAVA_OPTIONS} -cp ${CP} main.STH10 --help
   java ${JAVA_OPTIONS} -cp ${CP} main.MCP3008 --help
   #
@@ -75,11 +66,9 @@ then
 fi
 #
 # verbose: ANSI, STDOUT, NONE
-if [ "$VERBOSE" == "true" ]
-then
+if [[ "$VERBOSE" == "true" ]]; then
   USER_PRM="--verbose:STDOUT"
-elif [ "$ANSI" == "true" ]
-then
+elif [[ "$ANSI" == "true" ]]; then
   USER_PRM="--verbose:ANSI"
 else
   USER_PRM="--verbose:NONE"
@@ -138,14 +127,12 @@ LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
 #
 # COMMAND="${SUDO}java ${JAVA_OPTIONS} -cp ${CP} main.STH10 $USER_PRM"
 COMMAND="${SUDO}java ${JAVA_OPTIONS} -cp ${CP} $LOGGING_FLAG main.MCP3008 $USER_PRM $PIN_MAPPING"
-if [ "$DEBUG" == "true" ]
-then
+if [[ "$DEBUG" == "true" ]]; then
 	 echo "COMMAND is: ${COMMAND}"
 	 echo -n "Hit return... "
 	 read a
 fi
-if [ "$WAIT" == "true" ]
-then
+if [[ "$WAIT" == "true" ]]; then
 	echo Waiting 10 sec
   sleep 10
 fi

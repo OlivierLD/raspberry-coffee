@@ -2,8 +2,7 @@
 #
 # Script Parameters -send:google -receive:google -verbose -help
 #
-if [[ $# = 0 ]]
-then
+if [[ $# = 0 ]]; then
   echo ">>> Need parameters, like -send:google -receive:yahoo -verbose -help"
   echo ">>> exiting."
   exit 1

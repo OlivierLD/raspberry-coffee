@@ -12,8 +12,7 @@ MESSAGE="Bye! ✋\n"
 #
 # Make sure docker is available
 DOCKER=$(which docker)
-if [[ "${DOCKER}" == "" ]]
-then
+if [[ "${DOCKER}" == "" ]]; then
   echo -e "Docker not available on this machine, exiting."
   echo -e "To install Docker, see https://store.docker.com/search?type=edition&offering=community"
   exit 1
@@ -21,8 +20,7 @@ else
   echo -e "Using $(docker -v)"
 fi
 #
-while [[ "${OK}" = "false" ]]
-do
+while [[ "${OK}" = "false" ]]; do
   # Menu
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
   echo -e "+----------------- Build 🏗️  and run 🏃 a docker image. ----------------+"
@@ -146,8 +144,7 @@ do
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [[ "${IP_ADDR}" = "" ]]
-			then
+			if [[ "${IP_ADDR}" = "" ]]; then
 			  IP_ADDR="localhost"
 			fi
       MESSAGE="---------------------------------------------------\n"
@@ -167,8 +164,7 @@ do
 			#                      tcp port as seen from outside (this machine)
 			#
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [[ "${IP_ADDR}" = "" ]]
-			then
+			if [[ "${IP_ADDR}" = "" ]]; then
 			  IP_ADDR="localhost"
 			fi
       MESSAGE="---------------------------------------------------\n"
@@ -192,8 +188,7 @@ do
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [[ "${IP_ADDR}" = "" ]]
-			then
+			if [[ "${IP_ADDR}" = "" ]]; then
 			  IP_ADDR="localhost"
 			fi
       MESSAGE="---------------------------------------------------\n"
@@ -320,8 +315,7 @@ do
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [[ "${IP_ADDR}" = "" ]]
-			then
+			if [[ "${IP_ADDR}" = "" ]]; then
 			  IP_ADDR="localhost"
 			fi
       MESSAGE="---------------------------------------------------\n"
@@ -339,16 +333,14 @@ do
 done
 #
 #
-if [[ "${DOCKER_FILE}" != "" ]]
-then
+if [[ "${DOCKER_FILE}" != "" ]]; then
   #
   # Proxies, if needed
   # export HTTP_PROXY=http://www-proxy.us.oracle.com:80
   # export HTTPS_PROXY=http://www-proxy.us.oracle.com:80
   #
   EXTRA=
-  if [[ "${EXTRA_PRM}" != "" ]]
-  then
+  if [[ "${EXTRA_PRM}" != "" ]]; then
     EXTRA="with ${EXTRA_PRM}"
   fi
   echo -e "---------------------------------------------------"
@@ -361,8 +353,7 @@ then
   echo -e "To create a container, run ${RUN_CMD} ..."
   echo -en "Do you want to run it y|n ? > "
   read REPLY
-  if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]
-  then
+  if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]; then
 #    CONTAINER_ID=`$RUN_CMD`
     CONTAINER_ID=$(${RUN_CMD})
     echo -e "Running container ID ${CONTAINER_ID}"
@@ -370,20 +361,17 @@ then
 fi
 printf "%b" "${MESSAGE}"
 # Prompt for export
-if [[ "${DOCKER_FILE}" != "" ]] && [[ "${CONTAINER_ID}" != "" ]]
-then
+if [[ "${DOCKER_FILE}" != "" ]] && [[ "${CONTAINER_ID}" != "" ]]; then
   echo -en "== Do you want to export this container ${CONTAINER_ID} ? [n]|y > "
   read choice
   # choice=N
-  if [[ "${choice}" == "Y" ]]  || [[ "${choice}" == "y" ]]
-  then
+  if [[ "${choice}" == "Y" ]]  || [[ "${choice}" == "y" ]]; then
     echo -e "\nLast generated one is ${IMAGE_NAME}:latest, its ID is ${CONTAINER_ID}"
     echo -en "== Please enter the name of the tar file to generate (like export.tar) > "
     read fName
     echo -en "Will export container ${CONTAINER_ID} into ${fName} - Is that correct ? [n]|y > "
     read choice
-    if [[ "${choice}" == "Y" ]]  || [[ "${choice}" == "y" ]]
-    then
+    if [[ "${choice}" == "Y" ]]  || [[ "${choice}" == "y" ]]; then
       docker export --output ${fName} ${CONTAINER_ID}
     fi
   fi

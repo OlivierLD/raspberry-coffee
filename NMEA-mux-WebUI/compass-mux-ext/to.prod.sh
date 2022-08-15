@@ -23,8 +23,7 @@ echo -e "+----------------------------------------------------------------------
 echo -en "Which (non existent) folder should we create the distribution in ? > "
 # Directory name, that will become the archive name.
 read distdir
-if [[ -d "${distdir}" ]]
-then
+if [[ -d "${distdir}" ]]; then
 	echo -e "Folder ${distdir} exists. Please drop it or choose another name"
 	echo -e "Exiting now."
 	exit 1

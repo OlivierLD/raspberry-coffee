@@ -10,14 +10,11 @@ echo -e "Starting the Math Rest Server"
 USE_PROXY=false
 HTTP_PORT=2345
 #
-for ARG in "$@"
-do
+for ARG in "$@"; do
 	# echo "Managing prm $ARG"
-  if [ "$ARG" == "-px" ] || [ "$ARG" == "--proxy" ]
-  then
+  if [[ "$ARG" == "-px" ]] || [[ "$ARG" == "--proxy" ]]; then
     USE_PROXY=true
-  elif [[ $ARG == -p:* ]] || [[ $ARG == --port:* ]] # !! No quotes !!
-  then
+  elif [[ $ARG == -p:* ]] || [[ $ARG == --port:* ]]; then # !! No quotes !!
     HTTP_PORT=${ARG#*:}
     echo -e "Detected port $HTTP_PORT"
   fi
@@ -33,13 +30,11 @@ JAVA_OPTS="${JAVA_OPTS} -Dhttp.verbose=$HTTP_VERBOSE"
 JAVA_OPTS="${JAVA_OPTS} -Dmath.rest.verbose=$MATH_REST_VERBOSE"
 JAVA_OPTS="${JAVA_OPTS} -Dsystem.verbose=$SYSTEM_VERBOSE"
 #
-if [ "$USE_PROXY" == "true" ]
-then
+if [[ "$USE_PROXY" == "true" ]]; then
   echo Using proxy
   JAVA_OPTS="${JAVA_OPTS} -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80"
 fi
-if [ "$HTTP_PORT" != "" ]
-then
+if [[ "$HTTP_PORT" != "" ]]; then
   JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=$HTTP_PORT"
 fi
 #

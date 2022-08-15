@@ -22,8 +22,7 @@ export CP=${CP}:${HOME}/libs/xdo-0301.jar
 #
 XSL_STYLESHEET=./lunar2fop.xsl
 LANG=S1
-if [ $LANG = "FR" ]
-then
+if [[ $LANG = "FR" ]]; then
   echo On parle francais
   PRM_OPTION="-docconf ./lang_fr.cfg"
   cp literals_fr.xsl literals.xsl
@@ -33,7 +32,6 @@ else
   cp literals_en.xsl literals.xsl
 fi
 echo Publishing, be patient.
-java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor ${PRM_OPTION} -xml $2 -xsl $XSL_STYLESHEET
--pdf $3
+java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor ${PRM_OPTION} -xml $2 -xsl $XSL_STYLESHEET -pdf $3
 echo Done calculating, $3 is ready.
 #

@@ -6,8 +6,7 @@
 OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
-if [[ $# -gt 0 ]]
-then
+if [[ $# -gt 0 ]]; then
   MUX_PROP_FILE=$1
 fi
 #
@@ -17,12 +16,10 @@ JAVA_OPTIONS="${JAVA_OPTIONS}" # From parent script, possibly
 #
 echo -e "In $0, inherited JAVA_OPTIONS: ${JAVA_OPTIONS}"
 #
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
@@ -32,8 +29,7 @@ fi
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [[ "${PROCESS_ON_START}" == "false" ]]
-then
+if [[ "${PROCESS_ON_START}" == "false" ]]; then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
@@ -63,8 +59,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dscreen.verbose=true" # Unit changes for SSD1306 
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.sun.flower=true"
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
 #
-if [[ "${PROCESS_ON_START}" != "" ]]
-then
+if [[ "${PROCESS_ON_START}" != "" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
 fi
 #
@@ -80,12 +75,10 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.date.offset=7168"
 #
 CP=$(ls ./build/libs/*.jar)
 SUDO=
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   CP=${CP}:./libs/RXTXcomm.jar          # for Mac, could need to be tweaked
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi

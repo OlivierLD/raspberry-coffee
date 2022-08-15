@@ -14,17 +14,14 @@
 PIN_VALUES=(2 3 4 17 27 22 10 9 11 0 5 6 13 19 26 21 20 16 12 1 7 8 25 24 23 18 15 14)
 #
 PIN=18
-if [[ $# -gt 0 ]]
-then
+if [[ $# -gt 0 ]]; then
   PIN=$1
 fi
 # Validate pin #
 FOUND=false
-for pin in ${PIN_VALUES[@]}
-do
+for pin in ${PIN_VALUES[@]} ; do
   # echo -e "Testing pin $pin vs $PIN"
-  if [[ "$PIN" == "$pin" ]]
-  then
+  if [[ "$PIN" == "$pin" ]]; then
     # echo -e "Good!"
     FOUND=true
     break
@@ -32,8 +29,7 @@ do
 done
 #
 # echo -e "Found: $FOUND"
-if [[ "$FOUND" == "false" ]]
-then
+if [[ "$FOUND" == "false" ]]; then
   echo -e "Pin $PIN is not valid."
   echo -e "Value values are ${PIN_VALUES[@]}"
   exit 1
@@ -43,8 +39,7 @@ echo -e "Using pin #$PIN"
 #
 $(gpio readall) || EXIT_CODE=$?
 echo -e "readall returned $EXIT_CODE"
-if [[ $EXIT_CODE -ne 0 ]]
-then
+if [[ $EXIT_CODE -ne 0 ]]; then
   echo -e "Moving on..."
 fi
 #

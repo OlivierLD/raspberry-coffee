@@ -13,20 +13,17 @@ then
 else
 	echo Assuming Linux/Raspberry Pi
   # No sudo require if running as root, in Docker for example.
-  if [[ "$(whoami)" != "root" ]]
-  then
+  if [[ "$(whoami)" != "root" ]]; then
     SUDO="sudo "
   fi
 fi
 #
 ps -ef | grep WebcamTemplate | grep -v grep | awk '{ print $2 }' > km
 NB_L=`cat km | wc -l`
-if [[ ${NB_L} == 0 ]]
-then
+if [[ ${NB_L} == 0 ]]; then
   echo No Java snapshot server process found.
 fi
-for pid in `cat km`
-do
+for pid in `cat km`; do
   echo Killing process ${pid}
   ${SUDO} kill -15 ${pid}
 done

@@ -8,17 +8,14 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dssd1306.verbose=false "
 #
 # Separate the lines with a pipe |
 #
-if [[ "$1" = "IP" ]]
-then
+if [[ "$1" = "IP" ]]; then
   _IP=$(hostname -I) || true
-	if [[ "$_IP" ]]
-	then
+	if [[ "$_IP" ]]; then
 	  printf "My IP address is %s\n" "${_IP}"
 	fi
 	#
 	_OLED=`i2cdetect -y 1 | grep 3c`
-	if [[ "${_OLED}" ]]
-	then
+	if [[ "${_OLED}" ]]; then
 	  printf "+---------------+\n"
 	  printf "| OLED Detected |\n"
 	  printf "+---------------+\n"

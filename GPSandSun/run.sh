@@ -2,8 +2,7 @@
 echo Read serial port, parse the RMC String
 echo Usage $0 [BaudRate] \(default 9600\)
 echo Try 2400, 4800, 9600, 19200, 38400, 57600, 115200, ...
-if [ "${PI4J_HOME}" = "" ]
-then
+if [[ "${PI4J_HOME}" = "" ]]; then
   PI4J_HOME=/opt/pi4j
 fi
 CP=./classes

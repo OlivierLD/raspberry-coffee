@@ -2,8 +2,7 @@
 CP=./build/libs/Bluetooth-1.0-all.jar
 JAVA_OPTS=
 DARWIN=$(uname -a | grep Darwin)
-if [[ "${DARWIN}" != "" ]]
-then
+if [[ "${DARWIN}" != "" ]]; then
 	echo Running on Mac
   JAVA_OPTS="${JAVA_OPTS} -Djava.library.path=/Library/Java/Extensions"  # for Mac
 else

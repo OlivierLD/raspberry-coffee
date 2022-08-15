@@ -80,8 +80,7 @@ JAVA_OPTIONS=
 #JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.client.verbose=true"
 #JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.super.verbose=true"
 #
-for ARG in "$@"
-do
+for ARG in "$@"; do
 	echo -e "Managing prm $ARG"
   if [[ "$ARG" == "-p" ]] || [[ "$ARG" == "--proxy" ]]; then
     USE_PROXY=true

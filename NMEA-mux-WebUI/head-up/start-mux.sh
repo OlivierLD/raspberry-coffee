@@ -2,8 +2,7 @@
 #
 # to be invoked from /etc/rc.local
 #
-if [[ "$1" == "-w" ]] # To wait for everything to start?
-then
+if [[ "$1" == "-w" ]]; then # To wait for everything to start?
 	echo -e ""
 	echo -e "+-------------------------------+"
 	echo -e "| Giving Multiplexer some slack |"
@@ -11,8 +10,7 @@ then
 	sleep 20
 fi
 #
-if [[ -f "to.mux.sh" ]]
-then
+if [[ -f "to.mux.sh" ]]; then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"

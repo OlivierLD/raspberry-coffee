@@ -6,8 +6,7 @@
 OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
-if [[ $# -gt 0 ]]
-then
+if [[ $# -gt 0 ]]; then
   MUX_PROP_FILE=$1
 fi
 #
@@ -23,8 +22,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.sun.flower=false"  # Default
 # It would be 9999 by default. You can also set it explicitly.
 WITH_HTTP_SERVER=`cat ${MUX_PROP_FILE} | grep with.http.server=`
 WITH_HTTP_SERVER=${WITH_HTTP_SERVER#*with.http.server=}
-if [[ "$WITH_HTTP_SERVER" == "yes" ]]
-then
+if [[ "$WITH_HTTP_SERVER" == "yes" ]]; then
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
 #  PORT=$(expr $PORT + 1)
@@ -33,12 +31,10 @@ else
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=8888"
 fi
 #
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
@@ -48,8 +44,7 @@ fi
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [[ "$PROCESS_ON_START" == "false" ]]
-then
+if [[ "$PROCESS_ON_START" == "false" ]]; then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
@@ -81,8 +76,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dbutton.verbose=false"
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.sun.flower=true"
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
 #
-if [[ "${PROCESS_ON_START}" != "" ]]
-then
+if [[ "${PROCESS_ON_START}" != "" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
 fi
 #
@@ -102,12 +96,10 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -DdeltaT=AUTO" # 01-Jan-2019
 # CP=$(ls ./build/libs/*.jar)
 CP=./build/libs/full-server-extended-v2-1.0-all.jar
 SUDO=
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   CP=${CP}:./libs/RXTXcomm.jar          # for Mac, could need to be tweaked
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi

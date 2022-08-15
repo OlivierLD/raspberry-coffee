@@ -7,6 +7,7 @@ import java.io.*;
  *
  * @deprecated Use XMLtoJSON instead.
  */
+@Deprecated
 public class KMLtoJSON {
     public static void main(String... args) {
         String fileName = "/Users/olivierlediouris/oliv/web.site/donpedro/journal/trip/GPX/the.full.trip.kml";

@@ -3,8 +3,7 @@ JAVAC_OPTIONS="-sourcepath ./src/main/java"
 JAVAC_OPTIONS="${JAVAC_OPTIONS} -d ./classes"
 echo ${JAVAC_OPTIONS}
 CP=./classes
-if [ "${PI4J_HOME}" = "" ]
-then
+if [[ "${PI4J_HOME}" = "" ]]; then
   PI4J_HOME=/opt/pi4j
 fi
 CP=${CP}:${PI4J_HOME}/lib/pi4j-core.jar

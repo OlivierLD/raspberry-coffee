@@ -1,7 +1,6 @@
 #!/bin/bash
 # On Mac, for JAVA_HOME, use something like /Library/Java/JavaVirtualMachines/jdk1.8.0_144.jdk/Contents/Home
-if [ "${JAVA_HOME}" = "" ]
-then
+if [[ "${JAVA_HOME}" = "" ]]; then
   JAVA_HOME=/opt/jdk/jdk1.8.0_112
 fi
 PATH=${JAVA_HOME}/bin:$PATH
@@ -16,15 +15,13 @@ cd C
 echo \>\> Library must be named libHelloWorld.so and not only HelloWorld.so
 echo \>\> Compiling C
 RPI=`uname -a | grep arm`
-if [ "$RPI" != "" ]
-then
+if [[ "$RPI" != "" ]]; then
   # For Raspberry Pi. -lwiringPi is not mandatory in this case...
   echo C compilation on the Raspberry Pi
   g++ -Wall -shared -I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
 else
   DARWIN=`uname -a | grep Darwin`
-  if [ "$DARWIN" != "" ]
-  then
+  if [[ "$DARWIN" != "" ]]; then
     # For Mac OS
     echo C Compilation on Mac OS
     gcc -Wall -shared -fPIC -I${JAVA_HOME}/include -I${JAVA_HOME}/include/darwin HelloWorld.c -o libHelloWorld.jnilib

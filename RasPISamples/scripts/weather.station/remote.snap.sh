@@ -15,20 +15,15 @@ WIDTH=640
 HEIGHT=480
 NAME="snap-test"
 #
-for prm in $*
-do
+for prm in $* ; do
   echo "Processing $prm ..."
-  if [[ $prm == "-rot:"* ]]
-  then
+  if [[ $prm == "-rot:"* ]]; then
     ROT=${prm#*:}
-  elif [[ $prm == "-width:"* ]]
-  then
+  elif [[ $prm == "-width:"* ]]; then
     WIDTH=${prm#*:}
-  elif [[ $prm == "-height:"* ]]
-  then
+  elif [[ $prm == "-height:"* ]]; then
     HEIGHT=${prm#*:}
-  elif [[ $prm == "-name:"* ]]
-  then
+  elif [[ $prm == "-name:"* ]]; then
     NAME=${prm#*:}
   else
     echo "Unsupported parameter $prm"

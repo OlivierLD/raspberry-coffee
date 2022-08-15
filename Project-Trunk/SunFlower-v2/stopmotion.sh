@@ -11,8 +11,7 @@ mkdir pix
 #
 keepLooping=true
 i=0
-while [[ "$keepLooping" = "true" ]]
-do
+while [[ "$keepLooping" = "true" ]]; do
   fname=`printf "./pix/snap_%05d.png" $i`
   echo Taking snapshot ${fname}
   # raspistill -rot 270 --timeout 1 --nopreview --output ${fname}

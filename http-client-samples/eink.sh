@@ -4,12 +4,10 @@ echo -e "Requests will be POSTed to ${REST_URL}"
 #
 KEEP_LOOPING=true
 #
-while [[ "$KEEP_LOOPING" == "true" ]]
-do
+while [[ "$KEEP_LOOPING" == "true" ]]; do
   echo -n "You say ? ('Q' to quit) > "
   read text
-  if [[ "$text" == "Q" ]]
-  then
+  if [[ "$text" == "Q" ]]; then
     KEEP_LOOPING=false
   else
     curl --location --request POST "${REST_URL}" \

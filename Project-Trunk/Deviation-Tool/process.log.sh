@@ -11,18 +11,15 @@ OUTPUT="data.json"
 # Below is the default declination to use if not returned by the NMEA sentences.
 DECLINATION="14"
 #
-if [[ $# -gt 0 ]]
-then
+if [[ $# -gt 0 ]]; then
   FILE_NAME=$1
 fi
 #
-if [[ $# -gt 1 ]]
-then
+if [[ $# -gt 1 ]]; then
   OUTPUT=$2
 fi
 #
-if [[ $# -gt 2 ]]
-then
+if [[ $# -gt 2 ]]; then
   DECLINATION=$3
 fi
 #

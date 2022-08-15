@@ -6,20 +6,17 @@
 OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.properties
-if [ $# -gt 0 ]
-then
+if [[ $# -gt 0 ]]; then
   MUX_PROP_FILE=$1
 fi
 #
 echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS=
-if [ "$OS" == "Darwin" ]
-then
+if [[ "$OS" == "Darwin" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [ "${OS}" == "Linux" ]
-then
+if [[ "${OS}" == "Linux" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
@@ -29,8 +26,7 @@ fi
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [ "$PROCESS_ON_START" == "false" ]
-then
+if [[ "$PROCESS_ON_START" == "false" ]]; then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat $MUX_PROP_FILE | grep http.port=`
   PORT=${PORT#*http.port=}
@@ -72,12 +68,10 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -DdeltaT=AUTO" # 01-Jan-2019
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=./build/libs/NMEA.mux.extensions-1.0-all.jar
-if [ "$OS" == "Darwin" ]
-then
+if [[ "$OS" == "Darwin" ]]; then
   CP=${CP}:./libs/RXTXcomm.jar          # for Mac
 fi
-if [ "$OS" == "Linux" ]
-then
+if [[ "$OS" == "Linux" ]]; then
   CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
 fi
 #

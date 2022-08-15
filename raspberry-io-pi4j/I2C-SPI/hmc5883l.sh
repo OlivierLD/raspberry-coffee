@@ -7,8 +7,7 @@ CP=./build/libs/I2C-SPI-1.0-all.jar
 # Comment/Uncomment as needed
 #
 CALIBRATION=
-if [[ "$1" == "CAL" ]]
-then
+if [[ "$1" == "CAL" ]]; then
   CALIBRATION=true
 else
   CALIBRATION=false

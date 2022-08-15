@@ -3,14 +3,12 @@
 # Note: Serial ports on MacOS:
 # may require Prolific drivers: https://plugable.com/drivers/prolific/
 #
-OS=`uname -a | awk '{ print $1 }'`
+OS=`uname -a | awk '{ print $1 }'`   # TODO Use uname -s
 #
 MUX_PROP_FILE=nmea.mux.rpi.demo.properties
 CLI_PRMS=
-if [[ $# -gt 0 ]]
-then
-  if [[ "$1" != "--interactive-config" ]]
-  then
+if [[ $# -gt 0 ]]; then
+  if [[ "$1" != "--interactive-config" ]]; then
     MUX_PROP_FILE=$1
   else
     CLI_PRMS=$1      # "--interactive-config"
@@ -20,14 +18,12 @@ fi
 echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS=
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   # Copy the jnilib file where it belongs, if it is not there.
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/Library/Java/Extensions"       # for Mac
   # JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=../Serial.IO/libs" # for Mac
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
@@ -37,8 +33,7 @@ fi
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [[ "$PROCESS_ON_START" == "false" ]]
-then
+if [[ "$PROCESS_ON_START" == "false" ]]; then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
@@ -83,13 +78,11 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dtry.to.speak=true"
 #
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 SUDO=
-if [[ "$OS" == "Darwin" ]]
-then
+if [[ "$OS" == "Darwin" ]]; then
   # CP=${CP}:./libs/RXTXcomm.jar          # for Mac
   CP=${CP}:../Serial.IO/libs/RXTXcomm.jar # for Mac
 fi
-if [[ "$OS" == "Linux" ]]
-then
+if [[ "$OS" == "Linux" ]]; then
   CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi
