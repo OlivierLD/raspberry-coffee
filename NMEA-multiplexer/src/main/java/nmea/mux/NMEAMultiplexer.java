@@ -14,6 +14,7 @@ import nmea.consumers.reader.TCPReader;
  *
  * @deprecated Use {@link GenericNMEAMultiplexer} instead (for production or real implementation).
  */
+@Deprecated
 public class NMEAMultiplexer implements Multiplexer {
 	@Override
 	public synchronized void onData(String mess) {
