@@ -25,7 +25,7 @@ public class OledTest {
         System.setProperty("http.port", String.valueOf(HTTP_PORT));
         System.setProperty("with.ssd1306", "true");
         try {
-            /* SunFlowerServer sunFlowerServer = */ new SunFlowerServer(); // Also starts the server
+            SunFlowerServer sunFlowerServer = new SunFlowerServer(); // Also starts the server
             try {
                 Thread.sleep(10_000L); // Wait a bit.
             } catch (InterruptedException ie) {
