@@ -122,7 +122,7 @@ object SerialPI4J {
     sys addShutdownHook {
       println("Shutdown hook caught.")
       me synchronized {
-        me notify()
+        me notify
       }
       println("Closing")
       serial.closeSerial()
@@ -132,7 +132,7 @@ object SerialPI4J {
     me = Thread currentThread
 
     me synchronized {
-      me wait()
+      me wait
     }
     System.exit(0)
   }
