@@ -1,11 +1,11 @@
 package pgcd_kt
 
-import pgcd_kt.PGCD
+// import pgcd_kt.PGCD
 
 object PGCD {
-    fun pgcd(n1: Int, n2: Int): Int {
-        var n1 = n1
-        var n2 = n2
+    fun pgcd(num1: Int, num2: Int): Int {
+        var n1 = num1
+        var n2 = num2
         while (n1 != n2) {
             if (n1 > n2) {
                 n1 -= n2
