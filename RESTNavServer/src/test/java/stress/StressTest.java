@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * requires the REST server to be up and running.
  * See url below.
- * From the launchers folder, run ./demoLauncher.sh --option:1
+ * From the 'launchers' folder, run ./demoLauncher.sh --option:1
  */
 public class StressTest {
 
