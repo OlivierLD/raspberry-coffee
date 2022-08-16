@@ -34,7 +34,7 @@ public class AISClientV2 {
 			int serverPort = 80;
 			if (true) { // Override, from Brittany.
 				serverName = "sinagot.net";
-				serverPort = 2947;
+				serverPort = 2_947;
 			}
 
 			nmeaClient = new TCPClient() {

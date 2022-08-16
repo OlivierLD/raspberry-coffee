@@ -75,7 +75,7 @@ public class JoyBonnet {
 						this.gain,
 						this.sps);
 //  System.out.println("Voltage Value:" + value);
-		voltage = value / 1000f;
+		voltage = value / 1_000f;
 		return voltage;
 	}
 

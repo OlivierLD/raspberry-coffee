@@ -12,7 +12,7 @@ import static org.junit.Assert.fail;
 public class TCPMultiTests {
 
 	private TCPServer server;
-	private final int PORT = 5555;
+	private final int PORT = 5_555;
 
 	@Before
 	public void setup() {

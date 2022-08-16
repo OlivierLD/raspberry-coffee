@@ -159,7 +159,7 @@ public class TCPClient {
 	public static void main(String... args) {
 		System.setProperty("verbose", "true");
 		String host = "localhost";
-		int port = 2947;
+		int port = 2_947;
 		try {
 			boolean keepTrying = true;
 			while (keepTrying) {

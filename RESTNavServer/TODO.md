@@ -38,5 +38,6 @@ $ sudo apt install screen
 ```
 $ screen -S sleepy -dm sleep 60
 $ screen -S sleepy -X quit
+$ screen -XS <id> quit
 $ screen -S navserver -dm bash -c 'sleep 5; exec sh'
 ```

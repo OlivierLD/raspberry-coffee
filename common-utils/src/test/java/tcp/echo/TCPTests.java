@@ -13,7 +13,7 @@ public class TCPTests {
 
 	TCPEchoClient client;
 	TCPServer server;
-	private final int port = 4444;
+	private final int port = 4_444;
 
 	@Before
 	public void setup() {

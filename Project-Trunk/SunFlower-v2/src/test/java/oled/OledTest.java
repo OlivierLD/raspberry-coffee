@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 public class OledTest {
 
 //    private SunFlowerServer sunFlowerServer; // now a local variable in the setup.
-    private final static int HTTP_PORT = 1234;
+    private final static int HTTP_PORT = 1_234;
     private final static boolean FORCE_SUBSTITUTE_SHUTDOWN = false;
 
     @Before
@@ -62,7 +62,7 @@ public class OledTest {
             e.printStackTrace();
         }
         try {
-            Thread.sleep(2_000); // Wait a bit.
+            Thread.sleep(2_000L); // Wait a bit.
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }

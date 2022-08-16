@@ -233,7 +233,7 @@ public class WebSocketFeeder implements MindWaveCallbacks,
 		final MindWaveController mwc = new MindWaveController(c1, c1);
 		System.out.println("Connection...");
 
-		serial.open("/dev/ttyUSB0", 115200);
+		serial.open("/dev/ttyUSB0", 115_200);
 
 		Thread serialReader = new Thread() {
 			private byte[] serialBuffer = new byte[256];

@@ -124,7 +124,7 @@ public class BtPi4j101 {
 				}
 
 				// wait 1 second before continuing
-				Thread.sleep(1000);
+				Thread.sleep(1_000L);
 			}
 
 		}

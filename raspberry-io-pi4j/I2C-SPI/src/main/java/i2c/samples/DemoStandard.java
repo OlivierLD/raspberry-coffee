@@ -68,7 +68,7 @@ public class DemoStandard {
 				int pwm = degreeToPWM(servoMin, servoMax, f);
 				System.out.println(f + " degrees (" + pwm + ")");
 				servoBoard.setPWM(servo, 0, pwm);
-				delay(1500);
+				delay(1_500);
 			}
 		} finally {
 			servoBoard.setPWM(servo, 0, 0);   // Stop the standard one

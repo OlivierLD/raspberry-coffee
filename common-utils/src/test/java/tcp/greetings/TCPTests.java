@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 public class TCPTests {
 
 	TCPGreetingsClient client;
-	int tcpPort = 6666;
+	int tcpPort = 6_666;
 
 	@Before
 	public void setup() {
