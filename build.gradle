@@ -92,5 +92,5 @@ build.doFirst () {
 }
 
 build.doLast() {
-    println "Build is finished"
+    println "Build is finished. Really?"
 }
