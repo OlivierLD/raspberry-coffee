@@ -1,4 +1,4 @@
-import utils.SwingStaticUtil;
+package utils;
 
 public class TestOpenInBrowser {
 

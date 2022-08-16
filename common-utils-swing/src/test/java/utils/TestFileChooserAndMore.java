@@ -1,4 +1,4 @@
-import utils.SwingStaticUtil;
+package utils;
 
 import javax.swing.*;
 import java.awt.*;
