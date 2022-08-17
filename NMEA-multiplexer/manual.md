@@ -61,6 +61,7 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 > If the loaded class does not extend the right `superclass` or implement the right `interface`, an error
 > will be raised.
 
+#### YAML
 > _Note_: Since October 2019, a `yaml` format is also supported for the properties of the multiplexer.
 > It's a bit easier than the `properties` syntax.
 >

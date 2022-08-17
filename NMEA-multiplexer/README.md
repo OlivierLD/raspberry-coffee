@@ -1,6 +1,22 @@
 # NMEA Multiplexer
 
-> This project was tested and used at sea, in the real world.
+---
+_Summary of the links used in this document:_
+- [Get started, fast](./getstarted.md)
+- [Manual](./manual.md)
+- [Note on WebSockets](./WebSockets.md)
+- [Demos](./demos.md)
+- [Examples](./examples.md)
+- [Case Study](./casestudy.md). Comparison with Node-RED
+
+_Scripts_:  
+The scripts you will need to run the Multiplexer are `tomux.sh`, and `mux.sh`. You might need to tweak them to fit your context.
+Some pre-built examples are given in the `RESTNavServer` module, which is itself based on this Multiplexer.
+
+---
+
+
+> _**Note**_: This project was tested and used at sea, in the real world.
 
 The `main` method is in `nmea.mux.GenericNMEAMultiplexer`.
 
@@ -32,21 +48,22 @@ For example:
 > Here we chose _not_ to convert anything. NMEA remains NMEA, which everyone understands. And everyone's happy.
 > 
 > NMEA Parsers are available in OpenSource, in several languages. In this project, you'll find
-> at least one in Java, and for ES6.
+> at least one in Java, and for ES6. Plus one in Python (WiP), in the `Python.101` folder, called `NMEASerialTest.py`.
 > 
 > > This being said... You will see in this project that there is a data-cache that can be used,
 > > at least, in the case of the REST Server (also part of this project, and heavily used in the `RESTNavServer`).
 > > This cache can be pinged and used from REST requests; as such, it has a JSON format...,
-> > the requirements sound a lot like the ones SignalK is addressing.   
-> > The remaining point would be to agree on the JSON Schema to use, and there no standard about that yet.
+> > the requirements sound a lot like the ones SignalK is addressing.
+> >
+> > **The remaining point would be to agree on the JSON Schema to use, and there no standard about that yet.**
 
 --------
-Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
+This NMEAMultiplexer can use any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), produce any output (File, Serial, TCP, UDP, WebSockets...), and use a REST API on top of that.
 
-Designed to run on _very small_ boards, like a Raspberry Pi Zero, and with possibly _no_ Internet access.
-> Warning: It is not designed to scale as an enterprise server!
+At the heart of this lies a small http server ([part of this project](../http-tiny-server/README.md)), designed to run on _very small_ boards, like a Raspberry Pi Zero, and with possibly _no_ Internet access.
+> _Warning ⚠️_: It is not designed to scale as an enterprise server!
 
-The operations on the Serial port require `libRxTx`. This is included in the gradle dependencies.
+The operations on the Serial port(s) require `libRxTx`. This is included in the gradle dependencies.
 To be able to use it outside gradle, run (on Linux/Debian/Raspberry Pi):
 ```bash
  sudo apt-get install librxtx-java
