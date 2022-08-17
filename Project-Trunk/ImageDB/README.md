@@ -10,10 +10,12 @@ See [here](./SQLITE.md) for some first details about SQLite.
 ```
 $ sqlite3 sql/utah_trip.db < sql/image_db.sql
 ```
+The line above can produce errors as it drops tables that may not exist.
 
 - Then your DB is ready for the GUI
+<!-- $ ./gui.sh --db-location:utah_trip.db -->
 ```
-$ ./gui.sh --db-location:utah_trip.db
+$ ./gui.sh sql/utah_trip.db
 ```
 
 Use the small help [?] icon to get some doc...
