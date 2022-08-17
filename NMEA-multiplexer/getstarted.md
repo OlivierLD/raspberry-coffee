@@ -18,7 +18,6 @@ We will clone the git repository. From a place of your choice (like your home di
 in a terminal, do a 
 ```
 $ git clone https://github.com/OlivierLD/raspberry-coffee.git
-$ git submodule update --init
 ```
 This can take several minutes...  
 Now, we compile the NMEA Multiplexer. In a terminal, do this:
