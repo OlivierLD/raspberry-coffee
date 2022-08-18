@@ -9,4 +9,5 @@ fi
 echo -e "Using DB ${DB_LOCATION}"
 MAIN_CLASS=dnd.gui.splash.Splasher
 # MAIN_CLASS=dnd.gui.MainGUI
-java -cp ${CP} -Ddb.location=${DB_LOCATION} ${MAIN_CLASS} $*
+# java -cp ${CP} -Ddb.location=${DB_LOCATION} ${MAIN_CLASS} $*
+java -cp ${CP} -Ddb.location=${DB_LOCATION} ${MAIN_CLASS} --db-location:$1

@@ -3,6 +3,7 @@
 See:
 - <https://pimylifeup.com/raspberry-pi-sqlite/>
 - <https://sqlite.org/docs.html>
+- <https://www.sqlitetutorial.net/>
 - <https://www.sqlitetutorial.net/sqlite-java/>
 ---
 - [SQLite for Python](https://www.pythoncentral.io/introduction-to-sqlite-in-python/)
@@ -83,12 +84,18 @@ sqlite> .read oliv.sql
 ```
 
 ## A GUI for SQLite
-
+Cool stuff, easy to use, perfect!
 - <https://sqlitebrowser.org/>
   - Works on Linux, Mac, and Windows.
+  - On a Raspberry Pi, do a 
+    ```
+    $ sudo apt-get update
+    $ sudo apt-get install sqlitebrowser
+    ```
   
+
 ### Initialize a new SQLite DB for images
-1. Initialize (create the DB and the required tables)
+1. Initialize (create the DB and the required objects - tables, views, etc)
 ```
 $ sqlite3 sql/the_new_db.db < sql/image_db.sql
 ```
@@ -97,14 +104,15 @@ $ sqlite3 sql/the_new_db.db < sql/image_db.sql
 $ ./gui.sh sql/the_new_db.db
 ```
 
-... Or more simply, just run `./init.db.sh`
+... Or more simply, just run `./init.db.sh`. You will be prompted for the required data.
 
-> For the image creation date, use
+### Query examples
+> On the image DB (created above), for the image creation date, use
 > ```
-> $ sqlite3 images.db
+> $ sqlite3 <images.db>
 > sqlite> .mode columns
 > sqlite> .headers on
-> select name, imagetype, datetime(created / 1000,  'unixepoch', 'localtime') as created from images limit 5;
+> sqlite> select name, imagetype, datetime(created / 1000,  'unixepoch', 'localtime') as created from images limit 5;
 > name          imagetype   created
 > ------------  ----------  -------------------
 > IMG_3804.jpg  jpg         2020-05-30 16:21:32
@@ -131,4 +139,5 @@ $ ./gui.sh sql/the_new_db.db
 > sqlite>
 > ```
   
+
 ---

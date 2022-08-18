@@ -169,13 +169,9 @@ public class ImageTable
 		this.removeButton.addActionListener(e -> removeSelectedRows());
 		add(this.bottomPanel, BorderLayout.SOUTH);
 		this.topPanel.add(this.filterLabel, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
 		this.topPanel.add(this.filterTextField, new GridBagConstraints(1, 0, 2, 1, 1.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-
 		this.topPanel.add(this.orCheckBox, new GridBagConstraints(0, 1, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 4, 0, 0), 0, 0));
-
 		this.topPanel.add(this.andCheckBox, new GridBagConstraints(1, 1, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
 		this.topPanel.add(this.untaggedCheckBox, new GridBagConstraints(2, 1, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
 
 		this.untaggedCheckBox.setSelected(false);
@@ -213,7 +209,6 @@ public class ImageTable
 		initTable();
 
 		SelectionListener listener = new SelectionListener(this.table) {
-
 		};
 
 //		this.table.getModel().addTableModelListener(new TableModelListener() {

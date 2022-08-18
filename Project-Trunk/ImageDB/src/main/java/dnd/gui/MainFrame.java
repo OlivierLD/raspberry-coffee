@@ -1,14 +1,11 @@
 package dnd.gui;
 
 import dnd.gui.ctx.AppContext;
-import dnd.gui.utils.ImageDBUtils;
-import dnd.gui.utils.ImageDefinition;
-import dnd.gui.utils.ImagePanel;
-import dnd.gui.utils.ImageTable;
+import dnd.gui.utils.*;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,6 +26,7 @@ public class MainFrame
 	private JPanel panelCenter = new JPanel();
 	private JMenuBar menuBar = new JMenuBar();
 	private JMenu menuFile = new JMenu();
+	private JMenuItem menuFileShowLabels = new JMenuItem();
 	private JMenuItem menuFileExit = new JMenuItem();
 	private JMenu menuHelp = new JMenu();
 	private JMenuItem menuHelpAbout = new JMenuItem();
@@ -61,8 +59,11 @@ public class MainFrame
 		setSize(new Dimension(1162, 742));
 		setTitle("Image DB");
 		this.menuFile.setText("File");
+		this.menuFileShowLabels.setText("Show used labels...");
+		this.menuFileShowLabels.addActionListener(ae -> fileShowLabels_ActionPerformed(ae));
 		this.menuFileExit.setText("Exit");
 		this.menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
+
 		this.menuHelp.setText("Help");
 		this.menuHelpAbout.setText("About");
 		this.menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
@@ -76,8 +77,10 @@ public class MainFrame
 								MainFrame.this.instance,
 								"<html><b>Drag & drop</b> images on the right pane to insert them in the database.<br>Then update the <b>tags</b>, separated with a comma.<br>The <b>filter</b> field searches the tags. As well, use comma to separated them.<br>Like \"<i>ugly, horrible, disgusting</i>\".<br>Joker character is '%'<br>The <b>and</b> radio button combines the search criteria (tags), the <b>or</b> decombines them.</html>",
 								"Help!", JOptionPane.INFORMATION_MESSAGE));
+		this.menuFile.add(this.menuFileShowLabels);
 		this.menuFile.add(this.menuFileExit);
 		this.menuBar.add(this.menuFile);
+
 		this.menuHelp.add(this.menuHelpAbout);
 		this.menuBar.add(this.menuHelp);
 		getContentPane().add(this.statusBar, BorderLayout.SOUTH);
@@ -102,6 +105,13 @@ public class MainFrame
 		System.exit(0);
 	}
 
+	private void fileShowLabels_ActionPerformed(ActionEvent e) {
+		final List<LabelDefinition> imageTagList = ImageDBUtils.getImageTagList(AppContext.getInstance().getConn());
+		// Spit it out
+		System.out.println("Do it");
+		// imageTagList.forEach(System.out::println);
+		JOptionPane.showMessageDialog(this, new LabelTable(imageTagList), "Labels", JOptionPane.PLAIN_MESSAGE);
+	}
 	private void helpAbout_ActionPerformed(ActionEvent e) {
 		JOptionPane.showMessageDialog(this, new MainFrame_AboutBoxPanel(), "About", JOptionPane.PLAIN_MESSAGE);
 	}
