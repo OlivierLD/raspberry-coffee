@@ -12,7 +12,7 @@ _Summary of the links used in this document:_
 _Scripts_:  
 The scripts you will need to run the Multiplexer are `tomux.sh`, and `mux.sh`. You might need to tweak them to fit your context.
 Some pre-built examples are given in the `RESTNavServer` module, which is itself based on this Multiplexer.  
-Do also see the section [Build, package, run](#build-package-run).
+Do also see the section [Build, package, run](#build-package-run), in this document.
 
 ---
 
@@ -233,9 +233,9 @@ like with `nohup ./mux.sh &`. If you do so, then you will need to kill
 the Multiplexer process to stop it. This can be achieved by running `killmx.sh`.
 
 
-##### Filtering
+#### Filtering
 The Channels - aka Consumers - support sentence filtering.
-Filtering can be applied on Device ID, and on Sentence ID. Filters can be positive or negative.
+Filtering can be applied on NMEA Device ID, and on NMEA Sentence ID. Filters can be positive (inclusive) or negative (exclusive).
 
 Positive filters are linked with an <b>or</b>, Negative ones with an <b>and</b>.
 
@@ -243,7 +243,7 @@ A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
 ```
 (HDM or GLL) and (not RMC and not XDR)
 ```
-> Note: the filter above is meaningless, this is just an example.
+> _**Note**_: the filter above is <u>meaningless</u>, this is just an example.
 > If the sentence has to start with `HDM` or `GLL`, there is no point in excluding `RMC` or `XDR`... 🙄. They are already implicitly excluded.   
 > - `"HDM", "GLL"` would mean "Only HDM or GLL"  
 > - `"~RMC", "~XDR"` would mean "Everything, but RMC and XDR"
