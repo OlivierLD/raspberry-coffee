@@ -1,3 +1,6 @@
+buildscript {
+    ext.scala_version = '2.13.8'
+}
 plugins {
     id 'java'
     id 'scala'
@@ -27,8 +30,8 @@ compileJava {
 dependencies {
     implementation 'com.pi4j:pi4j-core:1.2' // 2.1.1' Warning: 'com.pi4j.io.i2c.I2CFactory' seems not to be inversion 2.1.1
     implementation 'org.rxtx:rxtx:2.1.7'
-    implementation 'org.scala-lang:scala-library:2.13.8'
-    implementation 'org.scala-lang:scala-compiler:2.13.8'
+    implementation "org.scala-lang:scala-library:$scala_version"
+    implementation "org.scala-lang:scala-compiler:$scala_version"
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
     // implementation 'org.java-websocket:Java-WebSocket:1.3.7'
     implementation 'org.java-websocket:Java-WebSocket:1.5.2'
