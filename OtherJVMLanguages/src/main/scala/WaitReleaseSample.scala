@@ -28,7 +28,7 @@ object WaitReleaseSample {
       case Success(value) => {
         println(s"Got the callback${ if (inTime) "" else " (finally!)"}, meaning = $value")
       }
-      case Failure(e) => e.printStackTrace()
+      case Failure(e) => e.printStackTrace
     }
 
     var i = 0
@@ -39,7 +39,7 @@ object WaitReleaseSample {
           me wait(500)
         } catch {
           case ex: Exception =>
-            ex printStackTrace()
+            ex printStackTrace
         }
       })
       i += 1
@@ -53,7 +53,7 @@ object WaitReleaseSample {
           me wait(1000) // Just to finish the printouts
         } catch {
           case ex: Exception =>
-            ex printStackTrace()
+            ex printStackTrace
         }
       })
     } else {
@@ -63,7 +63,7 @@ object WaitReleaseSample {
           me wait
         } catch {
           case ex: Exception =>
-            ex printStackTrace()
+            ex printStackTrace
         }
       }
     }

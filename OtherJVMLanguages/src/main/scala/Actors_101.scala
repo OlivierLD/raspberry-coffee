@@ -12,7 +12,7 @@ case object AskNameMessage
 class TestActor extends Actor {
   def receive: Receive = {
     case AskNameMessage => // respond to the 'ask' request
-      try { Thread.sleep(2000L); } catch { case ex: Exception => ex.printStackTrace() }
+      try { Thread.sleep(2000L); } catch { case ex: Exception => ex.printStackTrace }
       println("Now releasing.")
       sender() ! "Oliv"
     case _ => println("that was unexpected")

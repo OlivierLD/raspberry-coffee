@@ -38,7 +38,7 @@ object LeastSquares {
       br.close()
     } catch {
       case ioe: IOException =>
-        ioe.printStackTrace()
+        ioe.printStackTrace
     }
 
     if (data.nonEmpty) { // Then we're good

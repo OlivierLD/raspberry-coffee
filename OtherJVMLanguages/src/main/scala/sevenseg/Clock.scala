@@ -17,7 +17,7 @@ object Clock {
         println("\nBye")
       } catch {
         case ioe: IOException => {
-          ioe.printStackTrace()
+          ioe.printStackTrace
         }
       }
     }

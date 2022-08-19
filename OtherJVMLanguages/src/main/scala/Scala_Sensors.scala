@@ -27,7 +27,7 @@ object Scala_Sensors {
     } catch {
       case ex: Exception =>
 //    println(ex.toString)
-        ex.printStackTrace()
+        ex.printStackTrace
     }
   }
 }

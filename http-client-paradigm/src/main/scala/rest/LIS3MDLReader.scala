@@ -51,7 +51,7 @@ object LIS3MDLReader {
         println(s"Heading: ${heading} Pitch: ${pitch}, Roll: ${roll}")
       } catch {
         case ex: Exception =>
-          ex.printStackTrace()
+          ex.printStackTrace
       }
     }
   }

@@ -49,7 +49,7 @@ class ScalaHttpRequestManager extends RESTRequestManager {
       channel = adcChannelStr.toInt
     } catch {
       case nfe: NumberFormatException =>
-        nfe.printStackTrace()
+        nfe.printStackTrace
     }
 
     this.relayManager = new RelayManager(relayMap)

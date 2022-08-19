@@ -102,7 +102,7 @@ object SampleOne extends App {
     } catch {
       case e: Exception => {
         Console.err.println("Compute exception:")
-        e.printStackTrace()
+        e.printStackTrace
       }
     }
     println("Done!")

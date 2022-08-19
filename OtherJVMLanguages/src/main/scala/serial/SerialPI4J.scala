@@ -10,7 +10,7 @@ class SerialPI4J {
   def delay(t: Float): Unit = {
     try { Thread.sleep((t * 1000).asInstanceOf[Long]) }
     catch {
-      case ie: InterruptedException => ie.printStackTrace()
+      case ie: InterruptedException => ie.printStackTrace
     }
   }
   def init(operation: (String) => Unit): Unit = {  // Send a block here
@@ -116,7 +116,7 @@ object SerialPI4J {
       serial.openSerial("/dev/ttyS0", 9_600) // TODO Those prms as System variables.
     } catch {
       case ex: Exception =>
-        ex.printStackTrace()
+        ex.printStackTrace
     }
     println("Adding shutdown hook")
     sys addShutdownHook {

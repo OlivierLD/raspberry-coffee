@@ -31,7 +31,7 @@ object ScalaHttpRequestServer {
         newHttpServer.startServer()
       } catch {
         case e: Exception =>
-          e.printStackTrace()
+          e.printStackTrace
       }
       newHttpServer
     }

@@ -91,7 +91,7 @@ object ScalaSimulator {
             logger.pushMessage(windObj)
           } catch {
             case ex: Exception =>
-              ex.printStackTrace()
+              ex.printStackTrace
           }
         })
       } else {
@@ -109,7 +109,7 @@ object ScalaSimulator {
         Thread.sleep(1000)
       catch {
         case ex: Exception =>
-          ex.printStackTrace()
+          ex.printStackTrace
       }
     }
     println("Done.")

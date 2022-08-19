@@ -134,7 +134,7 @@ class ScalaRESTImplementation {
           response.setPayload(content.getBytes)
         } catch {
           case ex1: Exception =>
-            ex1.printStackTrace()
+            ex1.printStackTrace
             response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload().errorCode("RELAY-0003").errorMessage(ex1.toString))
             return response
         }
@@ -168,7 +168,7 @@ class ScalaRESTImplementation {
       response
     } catch {
       case ex1: Exception =>
-        ex1.printStackTrace()
+        ex1.printStackTrace
         response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload().errorCode("RELAY-0004").errorMessage(ex1.toString))
         response
     }
@@ -186,7 +186,7 @@ class ScalaRESTImplementation {
       response
     } catch {
       case ex1: Exception =>
-        ex1.printStackTrace()
+        ex1.printStackTrace
         response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload().errorCode("LIGHT-0001").errorMessage(ex1.toString))
         response
     }
