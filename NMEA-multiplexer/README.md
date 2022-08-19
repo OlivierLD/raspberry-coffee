@@ -68,7 +68,7 @@ To be able to use it outside gradle, run (on Linux/Debian/Raspberry Pi):
 ```bash
  sudo apt-get install librxtx-java
 ```
-See how this is used and referred to in `mux.sh`.
+See how this is used and referred to in `mux.sh` (the launching script).
 
 ---
 
@@ -200,13 +200,37 @@ Those settings can be modified once the mux is started, through the REST API.
 
 To compile and build:
 ```
- $> ../gradlew [--daemon] shadowJar
+ $> ../gradlew shadowJar
 ```
 To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
+The script above can take the name of the `properties` (or `yaml`) file as a parameter,
+like in `$> ./mux.sh nmea.mux.gps.log.properties`. The default name for the
+configuration file is `nmea.mux.properties`, as seen in `nmea.mux.GenericNMEAMultiplexer.java`, where it is the default value for the
+system variable named `mux.properties`.
+
 See the [Manual](./manual.md) for more technical details.
+
+#### Build, package, run
+The **_build_** is done as said above, with a 
+```
+ $> ../gradlew shadowJar
+```
+This produces a fat jar (in the `build/libs` folder), that can be used to run the Multiplexer.  
+
+You can also _**package**_ for production, using the script `to.prod.sh` from a terminal (you will be prompted for input).
+This will produce a `tar.gz` file, containing everything needed to run smoothly (jar-files, scripts, sample config files).
+This archive can be exported to wherever it is needed, and it will _not_ require any source file, or git repository.
+
+To _**start**_ the Multiplexer, you need to eventually run the script `mux.sh`. This script will
+refer to the right jar-file, and use the right java command to start the Multiplexer. It can also take the
+name of the `properties` (or `yaml`) file as a parameter. The script `to.mux.sh` can help you as well, as it can take
+care of some cleanup before running `mux.sh`. Those two scripts can be run in batch mode,
+like with `nohup ./mux.sh &`. If you do so, then you will need to kill
+the Multiplexer process to stop it. This can be achieved by running `killmx.sh`.
+
 
 ##### Filtering
 The Channels - aka Consumers - support sentence filtering.

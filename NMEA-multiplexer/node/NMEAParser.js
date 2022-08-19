@@ -35,7 +35,7 @@ var validate = function (str) {
             data: str
         });
     }
-    var checksumStr = str.substring(starIdx + 1).replace(/\n$/, "").replace(/\r$/, "");
+    var checksumStr = str.substring(starIdx + 1).replace(/\n$/, "").replace(/\r$/, ""); // trim
     var nmea = str.substring(1, starIdx);
     var cs = checksum(nmea);
     if (checksumStr !== cs) {
@@ -89,7 +89,7 @@ var parseRMC = function (str) {
      */
     var data = getChunks(str).data;
 
-    if (data[2] === 'V') {
+    if (data[2] === 'V') { // Void
         return;
     }
     var latDeg = data[3].substring(0, 2);

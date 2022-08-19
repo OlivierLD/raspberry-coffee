@@ -5,7 +5,8 @@
 #
 OS=`uname -a | awk '{ print $1 }'`   # TODO Use uname -s
 #
-MUX_PROP_FILE=nmea.mux.rpi.demo.properties
+# MUX_PROP_FILE=nmea.mux.properties  # Default value
+# MUX_PROP_FILE=nmea.mux.rpi.demo.properties
 CLI_PRMS=
 if [[ $# -gt 0 ]]; then
   if [[ "$1" != "--interactive-config" ]]; then

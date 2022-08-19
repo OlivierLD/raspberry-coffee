@@ -16,7 +16,7 @@ JAVA_OPTS="-Dserial.port=${SERIAL_PORT} -Dbaud.rate=${BAUD_RATE}"
 #
 SUDO=
 # DARWIN=`uname -a | grep Darwin`
-DARWIN=$(uname -a | grep Darwin)
+DARWIN=$(uname -a | grep Darwin)  # TODO Use uname -s
 #
 if [[ "${DARWIN}" != "" ]]; then
 	echo Running on Mac
