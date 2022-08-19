@@ -11,7 +11,8 @@ _Summary of the links used in this document:_
 
 _Scripts_:  
 The scripts you will need to run the Multiplexer are `tomux.sh`, and `mux.sh`. You might need to tweak them to fit your context.
-Some pre-built examples are given in the `RESTNavServer` module, which is itself based on this Multiplexer.
+Some pre-built examples are given in the `RESTNavServer` module, which is itself based on this Multiplexer.  
+Do also see the section [Build, package, run](#build-package-run).
 
 ---
 

@@ -112,7 +112,7 @@ we need to use. You will find this info in the documentation of your GPS. It is 
 be something like `4800`.
 
 #### Good to start
-We will execute the `NMEA-multiplexer`, driven by the config file `nmea.mux.1st.test.yaml`:
+We will execute the `NMEA-multiplexer`, driven by the config file `nmea.mux.1st.test.yaml` (created by you):
 ```yaml
 #
 # MUX definition.
@@ -135,7 +135,7 @@ It cannot be any simpler, it tells the Multiplexer (aka `mux`) to:
 
 > Note: Change the port name to fit your settings, if needed.
 
-Actually, it **_could be_** simpler 😊 :
+Actually, it **_could be_** simpler 😊, by using the `verbose` property on the `serial` channel :
 ```yaml
 name: "First test"
 context:
