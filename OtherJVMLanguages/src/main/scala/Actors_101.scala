@@ -10,9 +10,9 @@ import scala.language.postfixOps
 case object AskNameMessage
 
 class TestActor extends Actor {
-  def receive = {
+  def receive: Receive = {
     case AskNameMessage => // respond to the 'ask' request
-      try { Thread.sleep(2000L); } catch { case ex: Exception => ex.printStackTrace }
+      try { Thread.sleep(2000L); } catch { case ex: Exception => ex.printStackTrace() }
       println("Now releasing.")
       sender() ! "Oliv"
     case _ => println("that was unexpected")
@@ -26,7 +26,7 @@ object Actors_101 extends App {
   val olivActor = system.actorOf(Props[TestActor](), name = "olivActor")
 
   // (1) this is one way to "ask" another actor for information
-  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout: Timeout = Timeout(5 seconds)
   val future = olivActor ? AskNameMessage
 
 //val result = Await.result(future, timeout.duration).asInstanceOf[String]

@@ -22,12 +22,12 @@ object Scala_Sensors {
     try {
       htu21df.begin
       val hum = htu21df.readHumidity
-      htu21df.close
+      htu21df.close()
       println(s"Humidity:$hum %")
     } catch {
       case ex: Exception =>
 //    println(ex.toString)
-        ex.printStackTrace
+        ex.printStackTrace()
     }
   }
 }

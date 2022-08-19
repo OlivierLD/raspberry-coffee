@@ -11,7 +11,7 @@ import scala.language.postfixOps
 // Good reading at http://doc.akka.io/docs/akka/snapshot/scala/actors.html
 
 class HelloActor extends Actor {
-  def receive = {
+  def receive: Receive = {
     case "hello"      => println("hello back at you!")                                   // Object
     case x: String    => println(s"Unexpected String: $x")
     case Whatever(id) => println(s"Whatever message : $id")
@@ -41,7 +41,7 @@ object HelloActor extends App {
   helloActor ! Bullshit("Moo!")
 
   // Now, expect a response.
-  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout: Timeout = Timeout(5 seconds)
   val future = helloActor ? TellMeSomething("Miom", 4)
   val result = Await.result(future, Duration.Inf).asInstanceOf[String] // Wait forever
   println(">> Result is: " + result)
