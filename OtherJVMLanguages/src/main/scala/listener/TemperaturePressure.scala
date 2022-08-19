@@ -75,9 +75,10 @@ object Main {
           println("\nShutting down")
           subscribers.foreach(act => {
             println(s"Sending stop request to $act")
+            context.stop(act)  //  shutdown()
             act ! new ExitMsg
           })
-          context.shutdown()
+          // context.shutdown()
           println("If needed, free resources here.") // Free resources here
         }) // ,
     // "Shutdown Hook")

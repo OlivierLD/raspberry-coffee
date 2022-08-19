@@ -78,7 +78,7 @@ object utils {
         lineRight += (if (isAsciiPrintable(str.charAt(c))) str.charAt(c) else ".")
       })
       lineLeft = rpad(lineLeft, 3 * LINE_LEN, " ") + " "
-      result(l) = s"${lineLeft}    ${lineRight}"
+      result(l) = s"${lineLeft}    ${lineRight}"  // <- Scala 2.13.8 produces an error, related to akka...
     })
     result
   }

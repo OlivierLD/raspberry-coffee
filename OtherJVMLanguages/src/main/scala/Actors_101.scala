@@ -36,5 +36,5 @@ object Actors_101 extends App {
   val result2 = Await.result(future2, 3 seconds)
   println(">> Second attempt: " + result2)
 
-  system.shutdown()
+  system.stop(olivActor)   // .shutdown()
 }

@@ -47,5 +47,5 @@ object HelloActor extends App {
   println(">> Result is: " + result)
 
   // Done!
-  system.shutdown()
+  system.stop(helloActor)   // shutdown()
 }
