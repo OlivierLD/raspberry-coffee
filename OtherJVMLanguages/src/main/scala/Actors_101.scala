@@ -5,6 +5,8 @@ import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
+// Do check https://doc.akka.io/docs/akka/current/typed/actors.html
+
 case object AskNameMessage
 
 class TestActor extends Actor {
