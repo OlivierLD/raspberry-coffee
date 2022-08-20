@@ -49,7 +49,7 @@ public class SwingTemperatureMonitor {
 
     private final static int DEFAULT_BUFFER_LEN = 900;
     private final List<DataHolder> displayData = new ArrayList<>();
-    private final List<Long> absissa = new ArrayList<>();
+    private final List<Long> abscissa = new ArrayList<>();
 
     private double minValue = Double.MAX_VALUE;
     private double maxValue = -Double.MAX_VALUE;
@@ -76,7 +76,10 @@ public class SwingTemperatureMonitor {
             String value = tempValue.substring(tempValue.indexOf("=") + 1, tempValue.indexOf("'"));
             temperature = Double.parseDouble(value);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            // ex.printStackTrace();
+            if (verbose) {
+                System.err.printf("Temp, Exception: %s, randomizing CPU temperature value. Not on a Pi?\n", ex.getMessage());
+            }
             temperature = 100d * Math.random();
         }
 
@@ -89,7 +92,10 @@ public class SwingTemperatureMonitor {
             // TODO Check if that is right...
             cpuLoad = (Double.parseDouble(cpuLoadValue) * 100.0) / Double.parseDouble(nbCPU); // In %
         } catch (Exception ex) {
-            ex.printStackTrace();
+            // ex.printStackTrace();
+            if (verbose) {
+                System.err.printf("Load, Exception: %s, randomizing CPU load value. Not on a Pi?\n", ex.getMessage());
+            }
             cpuLoad = 100d * Math.random();
         }
 
@@ -196,12 +202,12 @@ public class SwingTemperatureMonitor {
             while (true) {
                 DataHolder dh = this.dataGrabber.get();
                 this.displayData.add(dh);
-                this.absissa.add(System.currentTimeMillis());
+                this.abscissa.add(System.currentTimeMillis());
                 this.maxValue = Math.max(maxValue, dh.temperature);
                 this.minValue = Math.min(minValue, dh.temperature);
                 while (this.displayData.size() > bufferLength) {
                     this.displayData.remove(0);
-                    this.absissa.remove(0);
+                    this.abscissa.remove(0);
                 }
                 this.refreshData();
                 try {
@@ -237,10 +243,10 @@ public class SwingTemperatureMonitor {
         this.frame.getContentPane().setLayout(new BorderLayout());
         this.menuFile.setText("File");
         this.menuFileExit.setText("Exit");
-        this.menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
+        this.menuFileExit.addActionListener(this::fileExit_ActionPerformed);
         this.menuHelp.setText("Help");
         this.menuHelpAbout.setText("About");
-        this.menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
+        this.menuHelpAbout.addActionListener(this::helpAbout_ActionPerformed);
         this.menuFile.add(menuFileExit);
         this.menuBar.add(menuFile);
         this.menuHelp.add(menuHelpAbout);
@@ -261,7 +267,7 @@ public class SwingTemperatureMonitor {
 
         whiteBoard.setFrameGraphic(false);
         // x labels generator. The abscissa contains System.currentTimeMillis. Here we convert it into a date, formatted mm:ss.
-        whiteBoard.setXLabelGenerator(x -> SDF.format(new Date(absissa.get(x))));
+        whiteBoard.setXLabelGenerator(x -> SDF.format(new Date(abscissa.get(x))));
 
         // >> HERE: Add the WitheBoard to the JFrame
         this.frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
