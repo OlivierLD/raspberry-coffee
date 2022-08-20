@@ -10,5 +10,6 @@ $ ../../gradlew shadowJar
 ```
 and then a 
 ```
-$ ./run.sh --verbose:true|false --buffer-length:900
+$ ./run.sh --verbose:true|false|y|n --buffer-length:900
 ```
+---

@@ -292,7 +292,7 @@ public class SwingTemperatureMonitor {
 
         for (String arg : args) {
             if (arg.startsWith(VERBOSE_PREFIX)) {
-                verbose = "true".equals(arg.substring(VERBOSE_PREFIX.length()));
+                verbose = ("true".equalsIgnoreCase(arg.substring(VERBOSE_PREFIX.length())) || "y".equalsIgnoreCase(arg.substring(VERBOSE_PREFIX.length())));
             } else if (arg.startsWith(BUFFER_LENGTH_PREFIX)) {
                 bufferLength = Integer.parseInt(arg.substring(BUFFER_LENGTH_PREFIX.length()));
             }
