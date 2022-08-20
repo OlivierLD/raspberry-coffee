@@ -43,11 +43,12 @@ public class SwingTemperatureMonitor {
     private final static int HEIGHT = 400;
 
     private static boolean verbose = false;
+    private final static int DEFAULT_BUFFER_LEN = 900;
+    private final static int DEFAULT_BETWEEN_LOOPS = 1_000; // in ms
 
     // The WhiteBoard instantiation
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
-    private final static int DEFAULT_BUFFER_LEN = 900;
     private final List<DataHolder> displayData = new ArrayList<>();
     private final List<Long> abscissa = new ArrayList<>();
 
@@ -55,6 +56,7 @@ public class SwingTemperatureMonitor {
     private double maxValue = -Double.MAX_VALUE;
 
     private static int bufferLength = DEFAULT_BUFFER_LEN;
+    private static long betweenLoops = DEFAULT_BETWEEN_LOOPS;
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.printf("Exit requested, %s\n", ae);
@@ -211,7 +213,7 @@ public class SwingTemperatureMonitor {
                 }
                 this.refreshData();
                 try {
-                    Thread.sleep(1_000L);
+                    Thread.sleep(1_000L); // Slow down !
                 } catch (InterruptedException ie) {
                     // Oops
                 }
@@ -267,7 +269,15 @@ public class SwingTemperatureMonitor {
 
         whiteBoard.setFrameGraphic(false);
         // x labels generator. The abscissa contains System.currentTimeMillis. Here we convert it into a date, formatted mm:ss.
-        whiteBoard.setXLabelGenerator(x -> SDF.format(new Date(abscissa.get(x))));
+        whiteBoard.setXLabelGenerator(x -> {
+            long epoch = 0L;
+            try {
+                epoch = abscissa.get(x);
+            } catch (IndexOutOfBoundsException iobe) {
+                System.err.println("Oops");
+            }
+            return SDF.format(new Date(epoch));
+        });
 
         // >> HERE: Add the WitheBoard to the JFrame
         this.frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
@@ -279,6 +289,7 @@ public class SwingTemperatureMonitor {
 
     private final static String VERBOSE_PREFIX = "--verbose:";
     private final static String BUFFER_LENGTH_PREFIX = "--buffer-length:";
+    private final static String BETWEEN_LOOPS_PREFIX = "--between-loops:";
 
     public static void main(String... args) {
 
@@ -295,6 +306,10 @@ public class SwingTemperatureMonitor {
                 verbose = ("true".equalsIgnoreCase(arg.substring(VERBOSE_PREFIX.length())) || "y".equalsIgnoreCase(arg.substring(VERBOSE_PREFIX.length())));
             } else if (arg.startsWith(BUFFER_LENGTH_PREFIX)) {
                 bufferLength = Integer.parseInt(arg.substring(BUFFER_LENGTH_PREFIX.length()));
+            } else if (arg.startsWith(BETWEEN_LOOPS_PREFIX)) {
+                betweenLoops = Long.parseLong(arg.substring(BETWEEN_LOOPS_PREFIX.length()));
+            } else {
+                System.err.printf("Un-managed prefix: %s\n", arg);
             }
         }
 
@@ -323,7 +338,7 @@ public class SwingTemperatureMonitor {
 
         thisThing.refreshData();
         try {
-            Thread.sleep(1_000L);
+            Thread.sleep(betweenLoops);
         } catch (InterruptedException ie) {
             // Absorb
         }
