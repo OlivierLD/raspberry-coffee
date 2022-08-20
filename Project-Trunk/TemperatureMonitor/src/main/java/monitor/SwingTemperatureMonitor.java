@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 public class SwingTemperatureMonitor {
 
     //    private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
-    private final static SimpleDateFormat SDF = new SimpleDateFormat("mm:ss");
+    private final static SimpleDateFormat SDF = new SimpleDateFormat("mm:ss"); // Minutes and seconds
 
     private final static String TITLE = "CPU Temperature and Load over time";
 //    private final static String TITLE = "CPU Temperature over time";
@@ -318,6 +318,10 @@ public class SwingTemperatureMonitor {
         System.out.println("----------------------------------------------");
         System.out.printf("Running from folder %s\n", System.getProperty("user.dir"));
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
+        System.out.println("----------------------------------------------");
+        System.out.printf("Verbose: %b\n", verbose);
+        System.out.printf("Buffer Length: %d element(s)\n", bufferLength);
+        System.out.printf("Between Loops: %d milliseconds\n", betweenLoops);
         System.out.println("----------------------------------------------");
 
         SwingTemperatureMonitor thisThing = new SwingTemperatureMonitor();  // This one has instantiated the white board
