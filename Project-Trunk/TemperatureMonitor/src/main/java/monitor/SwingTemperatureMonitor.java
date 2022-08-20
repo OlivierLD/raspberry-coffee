@@ -213,7 +213,7 @@ public class SwingTemperatureMonitor {
                 }
                 this.refreshData();
                 try {
-                    Thread.sleep(1_000L); // Slow down !
+                    Thread.sleep(betweenLoops); // Slow down !
                 } catch (InterruptedException ie) {
                     // Oops
                 }
@@ -344,11 +344,12 @@ public class SwingTemperatureMonitor {
 
         thisThing.refreshData();
         try {
-            Thread.sleep(betweenLoops);
+            Thread.sleep(1_000L);
         } catch (InterruptedException ie) {
             // Absorb
         }
-        // May require a delay... Hence the wait above.
+        System.out.println("Let's go!");
+        // May require a delay to start correctly... Hence the wait above.
         thisThing.show();
     }
 }
