@@ -1,6 +1,6 @@
 # Monitor
 An example: Monitor CPU temperature and CPU load, with a Swing GUI, on a Raspberry Pi.  
-Uses components from the `Algebra` module.
+Uses visual components from the `Algebra` module.
 
 
 ## Build and run

@@ -24,6 +24,7 @@ public class SwingTemperatureMonitor {
     private final static SimpleDateFormat SDF = new SimpleDateFormat("mm:ss"); // Minutes and seconds
 
     private final static String TITLE = "CPU Temperature and Load over time";
+    private final static String HELP_CONTENT = "CPU Temperature and Load over time.\n\nUses the WhiteBoardPanel visual component\nfrom the Algebra module.";
 //    private final static String TITLE = "CPU Temperature over time";
 
     private final static class DataHolder {
@@ -65,7 +66,7 @@ public class SwingTemperatureMonitor {
 
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.printf("Help requested, %s\n", ae);
-        JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(whiteBoard, HELP_CONTENT, "GSG Help", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private final Supplier<DataHolder> dataGrabber = () -> {
