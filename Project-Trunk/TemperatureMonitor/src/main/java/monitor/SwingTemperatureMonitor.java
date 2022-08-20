@@ -272,7 +272,9 @@ public class SwingTemperatureMonitor {
         whiteBoard.setXLabelGenerator(x -> {
             long epoch = 0L;
             try {
-                epoch = abscissa.get(x);
+                if (x < abscissa.size()) {
+                    epoch = abscissa.get(x); // Corner case...
+                }
             } catch (IndexOutOfBoundsException iobe) {
                 System.err.println("Oops");
             }
