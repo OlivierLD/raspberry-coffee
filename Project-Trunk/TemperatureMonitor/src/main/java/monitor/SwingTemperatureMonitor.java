@@ -278,7 +278,7 @@ public class SwingTemperatureMonitor {
             } catch (IndexOutOfBoundsException iobe) {
                 System.err.println("Oops");
             }
-            return SDF.format(new Date(epoch));
+            return epoch == 0L ? "" : SDF.format(new Date(epoch));
         });
 
         // >> HERE: Add the WitheBoard to the JFrame
@@ -349,7 +349,7 @@ public class SwingTemperatureMonitor {
             // Absorb
         }
         System.out.println("Let's go!");
-        // May require a delay to start correctly... Hence the wait above.
+        // May require a delay to start correctly (initialize buffers, etc)... Hence the wait above.
         thisThing.show();
     }
 }
