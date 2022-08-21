@@ -16,6 +16,7 @@ import java.util.Properties;
  * <li>Requires a table <code>NMEA_DATA</code> created like this:<br/>
  * <code>CREATE TABLE NMEA_DATA(id INTEGER PRIMARY KEY AUTOINCREMENT, sentence_id VARCHAR2(3), data VARCHAR2, date DATETIME);</code>
  * </li>
+ * <li>See the script nmea.sql</li>
  * </ul>
  *
  * Requires the following dep in gradle:<br/>
