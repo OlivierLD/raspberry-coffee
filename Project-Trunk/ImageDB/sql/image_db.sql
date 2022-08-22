@@ -2,9 +2,9 @@
 -- Migrating from HyperSonic SQL to SQLite
 -- DB Schema here
 --
-drop table tags;
-drop table images;
-drop table img_types;
+drop table if exists tags;
+drop table if exists images;
+drop table if exists img_types;
 
 create table img_types (
     name text primary key,
