@@ -623,13 +623,15 @@ public class SSD1306Processor implements Forwarder {
 		return len;
 	}
 
+	private final static NumberFormat ANGLE_MASK = new DecimalFormat("000");
+
 	private void displayAngleAndValue(String label, int value) {
 		int centerX = 80, centerY = 16, radius = 15;
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(String.valueOf(value) + "\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(ANGLE_MASK.format(value) + "\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Circle
 			sb.circle(centerX, centerY, radius);

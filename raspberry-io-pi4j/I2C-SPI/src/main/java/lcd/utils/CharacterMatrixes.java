@@ -313,7 +313,7 @@ public class CharacterMatrixes {
 
 		characters.put("|", new String[]{
 				"      ",
-				"      ",
+				"  X   ",
 				"  X   ",
 				"  X   ",
 				"  X   ",
