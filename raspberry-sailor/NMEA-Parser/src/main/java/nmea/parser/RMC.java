@@ -9,8 +9,8 @@ import java.util.TimeZone;
 
 public class RMC extends NMEAComposite implements Serializable {
 	private GeoPos gp = null;
-	private double sog = 0D;
-	private double cog = 0D;
+	private double sog = -1D;
+	private double cog = -1D;
 
 	private boolean valid = false; // False means warning.
 

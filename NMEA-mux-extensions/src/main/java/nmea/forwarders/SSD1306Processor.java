@@ -69,8 +69,8 @@ public class SSD1306Processor implements Forwarder {
 
 		private double log;
 		private double dayLog;
-		private int cog;
-		private double sog;
+		private int cog = -1;
+		private double sog = -1d;
 
 		private int awa;
 		private double aws;
@@ -396,7 +396,7 @@ public class SSD1306Processor implements Forwarder {
 							bean.d2wp = ((Distance)d2wp).getValue();
 						}
 						Object cog = cache.get(NMEADataCache.COG);
-						if (cog != null) {
+						if (cog != null && ((Angle360)cog).getValue() != -1) {
 							bean.cog = (int)Math.round(((Angle360)cog).getValue());
 						}
 						Object sog = cache.get(NMEADataCache.SOG);
@@ -554,10 +554,18 @@ public class SSD1306Processor implements Forwarder {
 								displayTemp("WATER ", bean.wtemp);
 								break;
 							case COG_OPTION:
-								displayAngleAndValue("COG ", bean.cog);
+								if (bean.cog != -1) {
+									displayAngleAndValue("COG ", bean.cog);
+								} else{
+									displayDummyValue("COG");
+								}
 								break;
 							case SOG_OPTION:
-								displaySpeed("SOG ", bean.sog);
+								if (bean.sog != -1) {
+									displaySpeed("SOG ", bean.sog);
+								} else{
+									displayDummyValue("SOG");
+								}
 								break;
 							case HDG_OPTION:
 								displayAngleAndValue("HDG ", bean.hdg);
@@ -783,6 +791,22 @@ public class SSD1306Processor implements Forwarder {
 			} else {
 				System.out.println("WARNING!!! ScreenBuffer is null");
 			}
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private boolean status = true;
+	private void displayDummyValue(String label) {
+		try {
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text((status ? "+ " : "- ") + "No Data", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			status = !status;
+
+			// Display
+			display();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}

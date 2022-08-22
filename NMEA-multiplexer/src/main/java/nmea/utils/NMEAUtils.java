@@ -129,8 +129,8 @@ public class NMEAUtils {
         int twd = 0;
 
         double sog = 0d,
-                cog = 0d,
-                aws = -1d;
+               cog = 0d,
+               aws = -1d;
         int awa = 0;
         try {
             sog = ((Speed) cache.get(NMEADataCache.SOG)).getValue();
