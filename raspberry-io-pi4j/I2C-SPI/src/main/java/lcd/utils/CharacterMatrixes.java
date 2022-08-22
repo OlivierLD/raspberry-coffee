@@ -98,15 +98,15 @@ public class CharacterMatrixes {
 				"     "});
 
 		characters.put("-", new String[]{
-				"       ",
-				"       ",
-				"       ",
-				"       ",
-				" XXXXX ",
-				"       ",
-				"       ",
-				"       ",
-				"       "});
+				"      ",
+				"      ",
+				"      ",
+				"      ",
+				" XXXX ",
+				"      ",
+				"      ",
+				"      ",
+				"      "});
 
 		characters.put("+", new String[]{
 				"        ",
