@@ -796,14 +796,16 @@ public class SSD1306Processor implements Forwarder {
 		}
 	}
 
-	private boolean status = true;
+	private int status = 0;
+	private final static String[] DUMMY_DATA_PREFIX = { "|", "/", "-", "\\"};
+
 	private void displayDummyValue(String label) {
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text((status ? "+ " : "- ") + "No Data", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			status = !status;
+			sb.text(DUMMY_DATA_PREFIX[status] + "No Data", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			status = (status + 1) % DUMMY_DATA_PREFIX.length;
 
 			// Display
 			display();
