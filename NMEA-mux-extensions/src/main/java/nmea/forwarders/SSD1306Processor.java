@@ -292,14 +292,14 @@ public class SSD1306Processor implements Forwarder {
 								speedUnit = SpeedUnit.KNOTS;
 								break;
 							default:
-								System.err.println(String.format("Un-managed speed unit [%s]", unit.toString()));
+								System.err.printf("Un-managed speed unit [%s]\n", unit.toString());
 								break;
 						}
 					} else {
 						System.err.println("Expected member [speed-unit] not found in the payload.");
 					}
 				} else {
-					System.err.println(String.format("Un-expected payload type [%s]", payload.getClass().getName()));
+					System.err.printf("Un-expected payload type [%s]\n", payload.getClass().getName());
 				}
 			}
 		});
@@ -940,8 +940,8 @@ public class SSD1306Processor implements Forwarder {
 	}
 
 	public static class OLEDSSD1306Bean {
-		private String cls; // Class
-		private String type = "oled-ssd1306";
+		private final String cls; // Class
+		private final String type = "oled-ssd1306";
 
 		public OLEDSSD1306Bean(SSD1306Processor instance) {
 			cls = instance.getClass().getName();
