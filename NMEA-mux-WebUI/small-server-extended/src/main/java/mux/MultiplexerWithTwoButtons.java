@@ -36,6 +36,8 @@ import java.util.function.Consumer;
  * - buttonTwo, default 40 (Physical pin #)
  * - http.port, default 9999
  *
+ * If simulating (no physical devices, screen or buttons), buttons can be simulated too,
+ * - Button 1: Ctrl, Button 2: Shift
  */
 public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 
@@ -689,7 +691,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			boolean simulating = oledForwarder.isSimulating();
 
 			final int SHFT_KEY = 16,
-								CTRL_KEY = 17;
+					  CTRL_KEY = 17;
 
 			System.out.printf("SSD1306 was loaded! (%s)\n", simulating ? "simulating" : "for real");
 			if (simulating) {

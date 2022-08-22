@@ -1,0 +1,30 @@
+#
+# For simulation. No logging
+#
+name: "Minimal logger, extended. For simulation."
+context:
+  with.http.server: true
+  http.port: 8888
+  init.cache: true
+  # default.declination: 14.0
+  default.declination: 0.0
+  max.leeway: 10.0
+  bsp.factor: 1.0
+  aws.factor: 1.0
+  hdg.offset: 0.0
+  awa.offset: 0.0
+  damping: 30
+# 3 Channels
+channels:
+  - type: file
+    filename: ./logged/2022-08-04.nmea
+    zip: false
+    # path.in.zip: data.nmea
+    verbose: false
+# 2 Forwarders
+forwarders:
+  - type: tcp
+    port: 7001
+  - class: nmea.forwarders.SSD1306Processor
+    properties: ssd1306.properties
+# No Computer

@@ -83,7 +83,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dlsm303.pitch.roll.adjust=false"
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.data.verbose=true"
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dmux.infra.verbose=true"
-JAVA_OPTIONS="${JAVA_OPTIONS} -Dbutton.verbose=false"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dbutton.verbose=false"  # Tells you more about the two buttons...
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dscreen.verbose=true" #now in ssd1306.properties
 #
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dwith.sun.flower=true"
@@ -122,7 +122,10 @@ JFR_FLAGS=
 # JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
 # For remote debugging
 REMOTE_DEBUG_FLAGS=
-# REMOTE_DEBUG_FLAGS="$REMOTE_DEBUG_FLAGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+# JDK 9 and up
+# REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005"
+# JDK 5-8
+# REMOTE_DEBUG_FLAGS="${REMOTE_DEBUG_FLAGS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
 #
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
