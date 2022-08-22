@@ -5,18 +5,16 @@ import com.google.gson.JsonParser;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
-import utils.*;
-import utils.gpio.PushButtonController;
 import nmea.forwarders.SSD1306Processor;
 import nmea.mux.GenericNMEAMultiplexer;
+import utils.PinUtil;
+import utils.StaticUtil;
+import utils.SystemUtils;
+import utils.TimeUtil;
+import utils.gpio.PushButtonController;
 
-import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.File;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +41,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 
 	private final static boolean buttonVerbose = "true".equals(System.getProperty("button.verbose"));
 
-	private SSD1306Processor oledForwarder = null;
+	private SSD1306Processor oledForwarder;
 
 	// ----- Local Menu Operations, one Runnable for each operation -----
 	private final Runnable muxConfig = () -> {
@@ -52,6 +50,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		List<String> config = new ArrayList<>();
 		if (muxProperties == null) {
 			// TODO http://localhost:port/mux/mux-config,
+			System.err.println("No muxProperties !!");
 		} else {
 //			System.out.println(muxProperties.stringPropertyNames()
 //					.stream()
@@ -612,6 +611,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 
 		// Help display here
 		System.out.println("+-----------------------------------------------------------------------------------------+");
+		System.out.println("|                                U S A G E                                                |");
+		System.out.println("+-----------------------------------------------------------------------------------------+");
 		System.out.println("| Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds) |");
 		System.out.println("| DoubleClick on Button-1: Show local menu                                                |");
 		System.out.println("| DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.                 |");
@@ -680,7 +681,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			error.printStackTrace();
 		}
 
-		System.out.println(">> Buttons provisioned!");
+		System.out.println(">> Buttons provisioned.");
 
 		// Was the SSD1306 loaded? This is loaded by the properties file.
 		// Use the SSD1306Processor, SPI version.
@@ -694,8 +695,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 					  CTRL_KEY = 17;
 
 			System.out.printf("SSD1306 was loaded! (%s)\n", simulating ? "simulating" : "for real");
-			if (simulating) {
-				oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift");
+			if (simulating) { // Add buttons, to simulate clicks.
+				oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift"); // For user's info.
 				// Simulator led color
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
 				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.
@@ -705,7 +706,9 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				// Runnables for the simulator
 				oledForwarder.setSimulatorKeyPressedConsumer((keyEvent) -> {
-//					System.out.println("KeyPressed:" + keyEvent);
+					if (buttonVerbose) {
+						System.out.println("KeyPressed:" + keyEvent);
+					}
 					if (keyEvent.getKeyCode() == SHFT_KEY) { // Shift, left or right
 						buttonTwo.manageButtonState(PushButtonController.ButtonStatus.HIGH);
 					} else if (keyEvent.getKeyCode() == CTRL_KEY) {
@@ -713,7 +716,9 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 					}
 				});
 				oledForwarder.setSimulatorKeyReleasedConsumer((keyEvent) -> {
-//					System.out.println("KeyReleased:" + keyEvent);
+					if (buttonVerbose) {
+						System.out.println("KeyReleased:" + keyEvent);
+					}
 					if (keyEvent.getKeyCode() == SHFT_KEY) { // Shift, left or right
 						buttonTwo.manageButtonState(PushButtonController.ButtonStatus.LOW);
 					} else if (keyEvent.getKeyCode() == CTRL_KEY) {
@@ -762,9 +767,10 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 				ex.printStackTrace();
 			}
 		}
-		System.out.println("Nav Server fully initialized");
+		System.out.println(">> Nav Server fully initialized");
 
 		lastButtonInteraction = System.currentTimeMillis(); // used to know when to start the screen saver
+		// This one starts the screen saver after a given time of inactivity
 		Thread sleeper = new Thread(() -> {
 			while (true) {
 				if (!screenSaverMode && (System.currentTimeMillis() - lastButtonInteraction) > GO_TO_SLEEP_AFTER) {

@@ -150,6 +150,7 @@ public class SwingLedPanel
 		this.add(bottomPanel, java.awt.BorderLayout.SOUTH);
 		this.pack();
 
+		this.setFocusable(true); // For the keyListener to work.
 		// Key listener
 		this.addKeyListener(new KeyListener() {
 
