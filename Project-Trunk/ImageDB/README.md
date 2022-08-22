@@ -10,10 +10,13 @@ See [here](./SQLITE.md) for some first details about SQLite.
 ```
 $ sqlite3 sql/utah_trip.db < sql/image_db.sql
 ```
-The line above is dropping the tables before re-building them. Make sure you do not do this on data you want to keep!
+The line above is dropping the tables before re-building them. Make sure you do not do this on data you want to keep!  
+To get some more guidance during the DB creation process, do a
+```
+$ ./init.db.sh
+```
 
 - Then your DB is ready for the GUI
-<!-- $ ./gui.sh --db-location:utah_trip.db -->
 ```
 $ ./gui.sh sql/utah_trip.db
 ```
