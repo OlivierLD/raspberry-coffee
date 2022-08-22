@@ -1,16 +1,10 @@
 package nmea.utils;
 
-import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
-import nmea.parser.Angle180LR;
-import nmea.parser.Angle360;
 import nmea.parser.HDG;
 import nmea.parser.OverGround;
 import nmea.parser.RMC;
-import nmea.parser.Speed;
 import nmea.parser.StringParsers;
-import nmea.parser.TrueWindDirection;
-import nmea.parser.TrueWindSpeed;
 import utils.StringUtils;
 
 import java.io.BufferedReader;
@@ -25,8 +19,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
+// TODO Merge with NMEA-multiplexer's nmea.utils.NMEAUtils
 public class NMEAUtils {
     public final static int ALL_IN_HEXA = 0;
     public final static int CR_NL = 1;
