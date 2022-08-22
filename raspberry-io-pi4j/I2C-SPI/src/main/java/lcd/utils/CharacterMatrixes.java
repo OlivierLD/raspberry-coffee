@@ -312,16 +312,16 @@ public class CharacterMatrixes {
 				"      "});
 
 		characters.put("|", new String[]{
-				"     ",
-				"     ",
-				"  X  ",
-				"  X  ",
-				"  X  ",
-				"  X  ",
-				"  X  ",
-				"  X  ",
-				"  X  ",
-				"     "});
+				"      ",
+				"      ",
+				"  X   ",
+				"  X   ",
+				"  X   ",
+				"  X   ",
+				"  X   ",
+				"  X   ",
+				"  X   ",
+				"      "});
 
 		characters.put("[", new String[]{
 				"      ",
