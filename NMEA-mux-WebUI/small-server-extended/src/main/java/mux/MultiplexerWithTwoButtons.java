@@ -355,7 +355,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	}
 
-	private final static List<String> HELP_CONTENT = List.of(
+	private final static List<String> HELP_CONTENT = Arrays.asList(  // Java 8 does not like List.of...
 			"Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds)",
 			"DoubleClick on Button-1: Show local menu",
 			"DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume."
