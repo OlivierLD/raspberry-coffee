@@ -10,6 +10,7 @@ import nmea.mux.context.Context;
 import nmea.parser.*;
 import utils.PinUtil;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
@@ -915,6 +916,10 @@ public class SSD1306Processor implements Forwarder {
 
 	public boolean isSimulating() {
 		return (oled == null && substitute != null);
+	}
+
+	public JFrame getSwingLedPanel() {
+		return this.substitute;
 	}
 
 	public void setSimutatorLedColor(Color c) {

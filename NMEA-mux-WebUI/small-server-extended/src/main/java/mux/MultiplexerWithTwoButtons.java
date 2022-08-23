@@ -7,19 +7,16 @@ import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
 import nmea.forwarders.SSD1306Processor;
 import nmea.mux.GenericNMEAMultiplexer;
-import utils.PinUtil;
-import utils.StaticUtil;
-import utils.SystemUtils;
-import utils.TimeUtil;
+import utils.*;
 import utils.gpio.PushButtonController;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Shows how to add two push buttons to interact with the NavServer
@@ -358,6 +355,24 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		}
 	}
 
+	private final static List<String> HELP_CONTENT = List.of(
+			"Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds)",
+			"DoubleClick on Button-1: Show local menu",
+			"DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume."
+	);
+
+	private void displayHelp() {
+		final String HEADER = "U S A G E";
+		int maxLineLength = HELP_CONTENT.stream().map(line -> line.length()).max(Comparator.comparing(i -> i)).get();
+		System.out.println("+-" + StringUtils.rpad("-", maxLineLength, "-") + "-+" );
+		System.out.println("| " + StringUtils.rpad(StringUtils.lpad("", ((maxLineLength - HEADER.length()) / 2)) + HEADER, maxLineLength) + " |");
+		System.out.println("+-" + StringUtils.rpad("-", maxLineLength, "-") + "-+" );
+		HELP_CONTENT.forEach(line -> {
+			System.out.println("| " + StringUtils.rpad(line, maxLineLength) + " |");
+		});
+		System.out.println("+-" + StringUtils.rpad("-", maxLineLength, "-") + "-+" );
+	}
+
 	private void releaseScreenSaver() {
 		if (buttonVerbose) {
 			System.out.println("Releasing screen saver");
@@ -610,13 +625,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		System.out.printf("Also try http://%s:%d/web/index.html from a browser\n", machineName, serverPort);
 
 		// Help display here
-		System.out.println("+-----------------------------------------------------------------------------------------+");
-		System.out.println("|                                U S A G E                                                |");
-		System.out.println("+-----------------------------------------------------------------------------------------+");
-		System.out.println("| Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds) |");
-		System.out.println("| DoubleClick on Button-1: Show local menu                                                |");
-		System.out.println("| DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.                 |");
-		System.out.println("+-----------------------------------------------------------------------------------------+");
+		displayHelp();
 
 		try {
 			// Provision buttons here
@@ -692,19 +701,21 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			boolean simulating = oledForwarder.isSimulating();
 
 			final int SHFT_KEY = 16,
-					  CTRL_KEY = 17;
+					  CTRL_KEY = 17,
+			          H_KEY    = 72;
 
 			System.out.printf("SSD1306 was loaded! (%s)\n", simulating ? "simulating" : "for real");
 			if (simulating) { // Add buttons, to simulate clicks.
-				oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift"); // For user's info.
+				oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift, H: Help"); // For user's info.
 				// Simulator led color
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
 				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.
 				// Buttons simulator
-				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-				System.out.println(">> Simulating buttons: Button 1: Ctrl, Button 2: Shift");
-				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+				System.out.println(">> Simulating buttons: Button 1: Ctrl, Button 2: Shift, H: Help");
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				// Runnables for the simulator
+				// Buttons pushed:
 				oledForwarder.setSimulatorKeyPressedConsumer((keyEvent) -> {
 					if (buttonVerbose) {
 						System.out.println("KeyPressed:" + keyEvent);
@@ -713,8 +724,16 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 						buttonTwo.manageButtonState(PushButtonController.ButtonStatus.HIGH);
 					} else if (keyEvent.getKeyCode() == CTRL_KEY) {
 						buttonOne.manageButtonState(PushButtonController.ButtonStatus.HIGH);
+					} else if (keyEvent.getKeyCode() == H_KEY) {
+//						displayHelp(); // raw output, console.
+						JFrame substitute = oledForwarder.getSwingLedPanel();
+						JOptionPane.showMessageDialog(substitute,
+								HELP_CONTENT.stream().collect(Collectors.joining("\n")),
+								"Help!",
+								JOptionPane.PLAIN_MESSAGE);
 					}
 				});
+				// Buttons released:
 				oledForwarder.setSimulatorKeyReleasedConsumer((keyEvent) -> {
 					if (buttonVerbose) {
 						System.out.println("KeyReleased:" + keyEvent);
