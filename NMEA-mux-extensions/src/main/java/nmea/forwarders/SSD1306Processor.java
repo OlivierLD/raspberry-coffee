@@ -48,6 +48,8 @@ public class SSD1306Processor implements Forwarder {
 		SDF_TIME.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 		SDF_TIME_NO_Z.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
+	private final static SimpleDateFormat LOCAL_SDF_DATE = new SimpleDateFormat("E dd MMM yyyy");
+	private final static SimpleDateFormat LOCAL_SDF_TIME = new SimpleDateFormat("HH:mm:ss Z");
 
 	private static class CacheBean {
 		private long gpsTime;
@@ -171,6 +173,7 @@ public class SSD1306Processor implements Forwarder {
 	private final static int GPS_OPTION = 16;
 	private final static int SOL_OPTION = 17;
 	// etc...
+	private final static int SYS_OPTION = 18;
 
 	private static final List<Integer> optionList = new ArrayList<>();
 //	{
@@ -192,6 +195,7 @@ public class SSD1306Processor implements Forwarder {
 //					PRS_OPTION, // Atmospheric Pressure (PRMSL).
 //          GPS_OPTION  // GPS Date & Time
 //          SOL_OPTION  // SOLAR Date & Time
+//          . . .
 //	};
 
 	private int currentOption = 0;
@@ -361,6 +365,7 @@ public class SSD1306Processor implements Forwarder {
 		};
 		scrollThread.start();
 
+		// This is the loop providong the data to display, from the cache (when needed)
 		Thread cacheThread = new Thread("SSD1306Processor CacheThread") {
 			public void run() {
 				while (keepWorking) {
@@ -589,6 +594,9 @@ public class SSD1306Processor implements Forwarder {
 							case SOL_OPTION:
 								displaySolarDateTime(bean.gpsSolarDate);
 								break;
+							case SYS_OPTION:
+								displaySystemDateTime(System.currentTimeMillis()); // Not from the cache, obviously.
+								break;
 							case PRS_OPTION:
 								displayPRMSL(bean.prmsl);
 								break;
@@ -762,6 +770,25 @@ public class SSD1306Processor implements Forwarder {
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	private void displaySystemDateTime(long sysEpoch) {
+		Date sysDate = new Date(sysEpoch);
+		try {
+
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text("SYSTEM Date and Time", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(LOCAL_SDF_DATE.format(sysDate), 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(LOCAL_SDF_TIME.format(sysDate), 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			// Display
+			display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+
 	}
 
 	private void displayCurrent(int dir, double speed) {
@@ -1018,6 +1045,9 @@ public class SSD1306Processor implements Forwarder {
 						break;
 					case "SOL": // Solar Date & Time
 						optionList.add(SOL_OPTION);
+						break;
+					case "SYS": // System Date & Time
+						optionList.add(SYS_OPTION);
 						break;
 					case "BSP":
 						optionList.add(BSP_OPTION);
