@@ -11,9 +11,12 @@ echo -e "| just what is needed to run the NMEA Multiplexer - in several configur
 echo -e "+----------------------------------------------------------------------------------------------------+"
 echo -e "| Now starting a fresh build...                                                                      |"
 echo -e "| Make sure the java version is compatible with your target. Current version:                        |"
-echo
-java -version
-echo
+echo -e "+----------------------------------------------------------------------------------------------------+"
+java -version > jvers.txt 2>&1
+while read line; do
+  echo -e "| $line"
+done < jvers.txt
+rm jvers.txt
 echo -e "+----------------------------------------------------------------------------------------------------+"
 #
 # 1 - Build
