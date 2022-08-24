@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # Warning: Run the process on the target machine. That will avoid unwanted version mismatch (java class version...)
+# It might work though, if you know what you're doing.
 #
 echo -e "+----------------------------------------------------------------------------------------------------+"
 echo -e "|                          P A C K A G E   f o r   D I S T R I B U T I O N                           |"
@@ -9,8 +10,10 @@ echo -e "| This is an example showing how to generate a 'production' version, wi
 echo -e "| just what is needed to run the NMEA Multiplexer - in several configurations - and its web clients. |"
 echo -e "+----------------------------------------------------------------------------------------------------+"
 echo -e "| Now starting a fresh build...                                                                      |"
-echo -e "| Make sure the java version is compatible with your target                                          |"
+echo -e "| Make sure the java version is compatible with your target. Current version:                        |"
+echo
 java -version
+echo
 echo -e "+----------------------------------------------------------------------------------------------------+"
 #
 # 1 - Build
@@ -27,7 +30,7 @@ fi
 #
 # 2 - Create new dir
 #
-echo -en "Which (non existent) folder should we create the distribution in ? > "
+echo -en "Which (non existent) folder should we create the distribution in (this dir name will be used in the tar) ? > "
 # Directory name, that will become the archive name.
 read distdir
 if [[ -d "${distdir}" ]]; then
@@ -92,7 +95,7 @@ echo -e "+----------------------------------------------------------------------
 #
 # 6 - Deploy?
 #
-echo -en "Deploy ${distdir}.tar.gz to ${HOME} ? > "
+echo -en "Deploy ${distdir}.tar.gz to ${HOME} on $(hostname) ? > "
 read REPLY
 if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
   echo -e "Ok, you'll do it yourself."
