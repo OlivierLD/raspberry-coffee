@@ -39,7 +39,7 @@ public class SQLitePublisher implements Forwarder {
 
 	private Properties props;
 
-	public SQLitePublisher() throws Exception {
+	public SQLitePublisher() {
 		super();
 	}
 
@@ -68,6 +68,7 @@ public class SQLitePublisher implements Forwarder {
 			}
 
 		} catch (Exception e) {
+			System.err.println(("Argh!"));
 			throw e;
 		}
 	}
@@ -115,9 +116,9 @@ public class SQLitePublisher implements Forwarder {
 	}
 
 	public static class SQLiteBean {
-		private String cls;
-		private String dbURL;
-		private String type = "sqlite";
+		private final String cls;
+		private final String dbURL;
+		private final String type = "sqlite";
 
 		public SQLiteBean(SQLitePublisher instance) {
 			cls = instance.getClass().getName();
