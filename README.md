@@ -465,6 +465,8 @@ And [this too](https://learn.sparkfun.com/tutorials/setting-up-a-raspberry-pi-3-
 As we said above, to enable `hostapd` to have your Raspberry Pi acting as a WiFi hotspot, you can follow
 <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
 
+Also take a look at [that one](https://github.com/OlivierLD/AllLanguagesScratchPad/blob/master/rpi.networking/setup.md).
+
 > _**Warning**_: Since Raspbian's Stretch release, **a lot** of things have changed for the network config. See [here](http://www.raspberryconnect.com/network/item/333-raspberry-pi-hotspot-access-point-dhcpcd-method).
 
 **>>> Skip to the next section if you run Stretch or later** (as I am). Consider the Ethernet option ;)

@@ -93,7 +93,7 @@ public class ExtraDataComputer extends Computer {
 						RMC rmc = StringParsers.parseRMC(sentence);
 						if (rmc != null && rmc.isValid()) {
 							Map<String, Object> rmcMap = new HashMap<>(5);
-							rmcMap.put(NMEADataCache.SOG, new Speed(rmc.getSog()));
+							rmcMap.put(NMEADataCache.SOG, rmc.getSog() == -1 ? null : new Speed(rmc.getSog()));
 							rmcMap.put(NMEADataCache.POSITION, rmc.getGp());
 							Date date = rmc.getRmcDate();
 							if (date != null) {
@@ -106,7 +106,7 @@ public class ExtraDataComputer extends Computer {
 							if (time != null && "true".equals(System.getProperty("rmc.time.ok", "true"))) {
 								rmcMap.put(NMEADataCache.GPS_TIME, new UTCTime(time));
 							}
-							rmcMap.put(NMEADataCache.COG, new Angle360(rmc.getCog()));
+							rmcMap.put(NMEADataCache.COG, rmc.getCog() == -1 ? null : new Angle360(rmc.getCog()));
 							rmcMap.put(NMEADataCache.DECLINATION, new Angle180EW(rmc.getDeclination()));
 
 							// Compute Solar Time here

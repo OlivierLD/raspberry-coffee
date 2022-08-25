@@ -54,7 +54,7 @@ import calc.GeomUtil;
  * - XDR (Transducers Measurement, Various Sensors)
  * - ZDA (UTC DCate and Time)
  *
- * @See #Dispatcher, #listDispatchers
+ * See {@link StringParsers.Dispatcher}, {@link #listDispatchers(PrintStream)}
  *
  * TASK Implement the following:
  *
@@ -75,7 +75,7 @@ public class StringParsers {
 
 	public static List<StringGenerator.XDRElement> parseXDR(String data) {
 		List<StringGenerator.XDRElement> lxdr = new ArrayList<>();
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		if ((sa.length - 1) % 4 != 0) { // Mismatch
 			System.out.println("XDR String invalid (" + sa.length + " element(s) found, expected a multiple of 4)");
 			return lxdr;
@@ -165,7 +165,7 @@ public class StringParsers {
 		 *
 		 * Example: $WIMDA,29.4473,I,0.9972,B,17.2,C,,,,,,,,,,,,,,*3E
 		 */
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		MDA mda = new MDA();
 		for (int i = 0; i < sa.length; i++) {
 			//  System.out.println(sa[i]);
@@ -233,7 +233,7 @@ public class StringParsers {
 		 *                     Pressure in inches of Hg
 		 */
 		double d = 0d;
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			d = Double.parseDouble(sa[3]);
 			d *= 1_000d;
@@ -251,7 +251,7 @@ public class StringParsers {
 		 *                     Temperature in Celcius
 		 */
 		double d = 0d;
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			d = Double.parseDouble(sa[1]);
 		} catch (NumberFormatException nfe) {
@@ -272,7 +272,7 @@ public class StringParsers {
 		 *                     True Dir
 		 */
 		Current current = null;
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			double speed = Double.parseDouble(sa[5]);
 			float dir = Float.parseFloat(sa[1]);
@@ -293,7 +293,7 @@ public class StringParsers {
 		 *                     Voltage
 		 */
 		float v = -1f;
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			v = Float.parseFloat(sa[1]);
 		} catch (NumberFormatException nfe) {
@@ -309,7 +309,7 @@ public class StringParsers {
 		 *                     Cache Age in ms
 		 */
 		long age = 0L;
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			age = Long.parseLong(sa[1]);
 		} catch (NumberFormatException nfe) {
@@ -347,7 +347,7 @@ public class StringParsers {
 		int nbMess = -1;
 		int messNum = -1;
 
-		String sa[] = data.substring(0, data.indexOf("*")).split(",");
+		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			nbMess = Integer.parseInt(sa[1]);
 			messNum = Integer.parseInt(sa[2]);
@@ -448,7 +448,7 @@ public class StringParsers {
 		 *         |         Latitude
 		 *         UTC of position
 		 */
-		String sa[] = s.substring(0, s.indexOf("*")).split(",");
+		String[] sa = s.substring(0, s.indexOf("*")).split(",");
 		double utc = 0L, lat = 0L, lng = 0L;
 		int nbsat = 0;
 		try {
@@ -683,23 +683,23 @@ public class StringParsers {
 		// We're interested only in Speed in knots.
 		Wind aw = null;
 		try {
-			if (s.indexOf("A*") == -1) { // Data invalid
+			if (!s.contains("A*")) { // Data invalid
 				return aw;
 			} else {
 				String speed = "", angle = "";
-				if (s.indexOf("MWV,") > -1 && s.indexOf(",R,") > -1) { // Apparent
+				if (s.contains("MWV,") && s.contains(",R,")) { // Apparent
 					flavor = APPARENT_WIND;
 					angle = s.substring(s.indexOf("MWV,") + "MWV,".length(), s.indexOf(",R,"));
 				}
-				if (s.indexOf(",R,") > -1 && s.indexOf(",N,") > -1) {
+				if (s.contains(",R,") && s.contains(",N,")) {
 					speed = s.substring(s.indexOf(",R,") + ",R,".length(), s.indexOf(",N,"));
 				}
 				if (speed.trim().isEmpty() && angle.trim().isEmpty()) {
-					if (s.indexOf("MWV,") > -1 && s.indexOf(",T,") > -1) {
+					if (s.contains("MWV,") && s.contains(",T,")) {
 						flavor = TRUE_WIND;
 						angle = s.substring(s.indexOf("MWV,") + "MWV,".length(), s.indexOf(",T,"));    // True
 					}
-					if (s.indexOf(",T,") > -1 && s.indexOf(",N,") > -1) {
+					if (s.contains(",T,") && s.contains(",N,")) {
 						speed = s.substring(s.indexOf(",T,") + ",T,".length(), s.indexOf(",N,"));
 					}
 				}
@@ -803,7 +803,7 @@ public class StringParsers {
 		// We're interested only in Speed in knots.
 		ApparentWind aw = null;
 		try {
-			if (false && s.indexOf("K*") == -1) { // Data invalid // Watafok???
+			if (false && !s.contains("K*")) { // Data invalid // Watafok???
 				return aw;
 			} else {
 				String speed = "", angle = "", side = "";
@@ -869,7 +869,7 @@ public class StringParsers {
 		 */
 		// We're interested only in Speed in knots.
 		try {
-			if (false && s.indexOf("A*") == -1) { // Data invalid, only for NMEA 2.3 and later
+			if (false && !s.contains("A*")) { // Data invalid, only for NMEA 2.3 and later
 				return og;
 			} else {
 				String speed = "", angle = "";
@@ -902,8 +902,9 @@ public class StringParsers {
 				og = new OverGround(sog, cog);
 			}
 		} catch (Exception e) {
-			if ("true".equals(System.getProperty("nmea.parser.verbose", "false")))
+			if ("true".equals(System.getProperty("nmea.parser.verbose", "false"))) {
 				System.err.println("parseVTG for " + s + ", " + e.toString());
+			}
 //    e.printStackTrace();
 		}
 		return og;
@@ -932,7 +933,7 @@ public class StringParsers {
 		GeoPos ll = null;
 		Date date = null;
 		try {
-			if (s.indexOf("A*") == -1) { // Not Active, Data invalid (void)
+			if (!s.contains("A*")) { // Not Active, Data invalid (void)
 				return (GLL) null;
 			} else {
 				int i = s.indexOf(",");
@@ -976,7 +977,7 @@ public class StringParsers {
 					Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
 //					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 					local.set(Calendar.YEAR, 1_970);
-					local.set(Calendar.MONDAY, Calendar.JANUARY);
+					local.set(Calendar.MONTH, Calendar.JANUARY);
 					local.set(Calendar.DAY_OF_MONTH, 1);
 					local.set(Calendar.HOUR_OF_DAY, h);
 					local.set(Calendar.MINUTE, mn);
@@ -1015,7 +1016,7 @@ public class StringParsers {
 
 		String[] elmts = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			if (elmts[KEY_POS].indexOf("HDT") > -1) {
+			if (elmts[KEY_POS].contains("HDT")) {
 				if ("T".equals(elmts[MT_POS])) {
 					hdg = Math.round(parseNMEAFloat(elmts[HDG_POS]));
 				} else {
@@ -1050,7 +1051,7 @@ public class StringParsers {
 
 		String[] elmts = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			if (elmts[KEY_POS].indexOf("HDM") > -1) {
+			if (elmts[KEY_POS].contains("HDM")) {
 				if ("M".equals(elmts[MT_POS])) {
 					hdg = Math.round(parseNMEAFloat(elmts[HDG_POS]));
 				} else {
@@ -1123,6 +1124,20 @@ public class StringParsers {
 	}
 
 	// RMB Recommended Minimum Navigation Information
+	public final static int RMB_STATUS = 1;
+	public final static int RMB_XTE = 2;
+	public final static int RMB_STEER = 3;
+	public final static int RMB_ORIGIN_WP = 4;
+	public final static int RMB_DEST_WP = 5;
+	public final static int RMB_DEST_WP_LAT = 6;
+	public final static int RMB_DEST_WP_LAT_SIGN = 7;
+	public final static int RMB_DEST_WP_LNG = 8;
+	public final static int RMB_DEST_WP_LNG_SIGN = 9;
+	public final static int RMB_RANGE_TO_DEST = 10;
+	public final static int RMB_BEARING_TO_DEST = 11;
+	public final static int RMB_DEST_CLOSING = 12;
+	public final static int RMB_INFO = 13;
+
 	public static RMB parseRMB(String str) {
 		/*        1 2   3 4    5    6       7 8        9 10  11  12  13
 		 * $GPRMB,A,x.x,a,c--c,d--d,llll.ll,e,yyyyy.yy,f,g.g,h.h,i.i,j*kk
@@ -1147,60 +1162,60 @@ public class StringParsers {
 			return null;
 		}
 		try {
-			if (s.indexOf("RMB,") > -1) {
+			if (s.contains("RMB,")) {
 				rmb = new RMB();
 				String[] data = str.substring(0, str.indexOf("*")).split(",");
-				if (data[1].equals("V")) { // Void
+				if (data[RMB_STATUS].equals("V")) { // Void
 					return null;
 				}
 				double xte = 0d;
 				try {
-					xte = parseNMEADouble(data[2]);
+					xte = parseNMEADouble(data[RMB_XTE]);
 				} catch (Exception ex) {
 				}
 				rmb.setXte(xte);
-				rmb.setDts(data[3]);
-				rmb.setOwpid(data[4]);
-				rmb.setDwpid(data[5]);
+				rmb.setDts(data[RMB_STEER]);
+				rmb.setOwpid(data[RMB_ORIGIN_WP]);
+				rmb.setDwpid(data[RMB_DEST_WP]);
 
 				double _lat = 0d;
 				try {
-					_lat = parseNMEADouble(data[6]);
+					_lat = parseNMEADouble(data[RMB_DEST_WP_LAT]);
 				} catch (Exception ex) {
 				}
 				double lat = (int) (_lat / 100d) + ((_lat % 100d) / 60d);
-				if ("S".equals(data[7])) {
+				if ("S".equals(data[RMB_DEST_WP_LAT_SIGN])) {
 					lat = -lat;
 				}
 				double _lng = 0d;
 				try {
-					_lng = parseNMEADouble(data[8]);
+					_lng = parseNMEADouble(data[RMB_DEST_WP_LNG]);
 				} catch (Exception ex) {
 				}
 				double lng = (int) (_lng / 100d) + ((_lng % 100d) / 60d);
-				if ("W".equals(data[9])) {
+				if ("W".equals(data[RMB_DEST_WP_LNG_SIGN])) {
 					lng = -lng;
 				}
 				rmb.setDest(new GeoPos(lat, lng));
 				double rtd = 0d;
 				try {
-					rtd = parseNMEADouble(data[10]);
+					rtd = parseNMEADouble(data[RMB_RANGE_TO_DEST]);
 				} catch (Exception ex) {
 				}
 				rmb.setRtd(rtd);
 				double btd = 0d;
 				try {
-					btd = parseNMEADouble(data[11]);
+					btd = parseNMEADouble(data[RMB_BEARING_TO_DEST]);
 				} catch (Exception ex) {
 				}
 				rmb.setBtd(btd);
 				double dcv = 0d;
 				try {
-					dcv = parseNMEADouble(data[12]);
+					dcv = parseNMEADouble(data[RMB_DEST_CLOSING]);
 				} catch (Exception ex) {
 				}
 				rmb.setDcv(dcv);
-				rmb.setAs(data[13]);
+				rmb.setAs(data[RMB_INFO]);
 			}
 		} catch (Exception e) {
 			System.err.println("parseRMB for " + s + ", " + e.toString());
@@ -1209,10 +1224,23 @@ public class StringParsers {
 	}
 
 	// RMC Recommended minimum specific GPS/Transit data
+	public final static int RMC_UTC = 1;
+	public final static int RMC_ACTIVE_VOID = 2;
+	public final static int RMC_LATITUDE_VALUE = 3;
+	public final static int RMC_LATITUDE_SIGN = 4;
+	public final static int RMC_LONGITUDE_VALUE = 5;
+	public final static int RMC_LONGITUDE_SIGN = 6;
+	public final static int RMC_SOG = 7;
+	public final static int RMC_COG = 8;
+	public final static int RMC_DDMMYY = 9;
+	public final static int RMC_VARIATION_VALUE = 10;
+	public final static int RMC_VARIATION_SIGN = 11;
+	public final static int RMC_TYPE = 12;
+
 	public static RMC parseRMC(String str) {
 		RMC rmc = null;
 //		String str = StringUtils.removeNullsFromString(strOne.trim()); // TODO Do it at the consumer level
-		if (str.length() < 6 || str.indexOf("*") < 0) {
+		if (str.length() < 6 || !str.contains("*")) {
 			return null;
 		}
 		if (!validCheckSum(str)) {
@@ -1238,15 +1266,15 @@ public class StringParsers {
 		 *         UTC
 		 */
 		try {
-			if (s.indexOf("RMC,") > -1) {
+			if (s.contains("RMC,")) {
 				rmc = new RMC();
 
 				String[] data = s.split(",");
-				rmc = rmc.setValid(data[2].equals("A")); // Active. Does not prevent the date and time to be available.
-				if (data[1].length() > 0) { // Time and Date
+				rmc = rmc.setValid(data[RMC_ACTIVE_VOID].equals("A")); // Active. Does not prevent the date and time from being available.
+				if (data[RMC_UTC].length() > 0) { // Time and Date
 					double utc = 0D;
 					try {
-						utc = parseNMEADouble(data[1]);
+						utc = parseNMEADouble(data[RMC_UTC]);
 					} catch (Exception ex) {
 						System.out.println("data[1] in StringParsers.parseRMC");
 					}
@@ -1262,20 +1290,20 @@ public class StringParsers {
 					local.set(Calendar.MINUTE, m);
 					local.set(Calendar.SECOND, (int) Math.round(sec));
 					local.set(Calendar.MILLISECOND, 0);
-					if (data[9].length() > 0) {
+					if (data[RMC_DDMMYY].length() > 0) {
 						int d = 1;
 						try {
-							d = Integer.parseInt(data[9].substring(0, 2));
+							d = Integer.parseInt(data[RMC_DDMMYY].substring(0, 2));
 						} catch (Exception ex) {
 						}
 						int mo = 0;
 						try {
-							mo = Integer.parseInt(data[9].substring(2, 4)) - 1;
+							mo = Integer.parseInt(data[RMC_DDMMYY].substring(2, 4)) - 1;
 						} catch (Exception ex) {
 						}
 						int y = 0;
 						try {
-							y = Integer.parseInt(data[9].substring(4));
+							y = Integer.parseInt(data[RMC_DDMMYY].substring(4));
 						} catch (Exception ex) {
 						}
 						if (y > 50) {
@@ -1294,11 +1322,11 @@ public class StringParsers {
 							try {
 								int offset = Integer.parseInt(gpsOffset);
 								if ("true".equals(System.getProperty("rmc.date.offset.verbose"))) {
-									System.out.println(String.format(">>> Adding %d days to %s", offset, local.getTime().toString()));
+									System.out.printf(">>> Adding %d days to %s\n", offset, local.getTime().toString());
 								}
 								local.add(Calendar.DATE, offset); // Add in Days
 								if ("true".equals(System.getProperty("rmc.date.offset.verbose"))) {
-									System.out.println(String.format(">>>   that becomes %s", local.getTime().toString()));
+									System.out.printf(">>>   that becomes %s\n", local.getTime().toString());
 								}
 							} catch (NumberFormatException nfe) {
 								nfe.printStackTrace();
@@ -1313,49 +1341,49 @@ public class StringParsers {
 						System.out.println(String.format("RMC: From [%s], GPS date: %s, GPS Time: %s", str, SDF_UTC.format(rmc.getRmcDate()), SDF_UTC.format(rmcTime)));
 					}
 				}
-				if (data[3].length() > 0 && data[5].length() > 0) {
-					String deg = data[3].substring(0, 2);
-					String min = data[3].substring(2);
+				if (data[RMC_LATITUDE_VALUE].length() > 0 && data[RMC_LONGITUDE_VALUE].length() > 0) {
+					String deg = data[RMC_LATITUDE_VALUE].substring(0, 2);
+					String min = data[RMC_LATITUDE_VALUE].substring(2);
 					double l = GeomUtil.sexToDec(deg, min);
-					if ("S".equals(data[4])) {
+					if ("S".equals(data[RMC_LATITUDE_SIGN])) {
 						l = -l;
 					}
-					deg = data[5].substring(0, 3);
-					min = data[5].substring(3);
+					deg = data[RMC_LONGITUDE_VALUE].substring(0, 3);
+					min = data[RMC_LONGITUDE_VALUE].substring(3);
 					double g = GeomUtil.sexToDec(deg, min);
-					if ("W".equals(data[6])) {
+					if ("W".equals(data[RMC_LONGITUDE_SIGN])) {
 						g = -g;
 					}
 					rmc = rmc.setGp(new GeoPos(l, g));
 				}
-				if (data[7].length() > 0) {
+				if (data[RMC_SOG].length() > 0) {
 					double speed = 0;
 					try {
-						speed = parseNMEADouble(data[7]);
+						speed = parseNMEADouble(data[RMC_SOG]);
 					} catch (Exception ex) {
 					}
 					rmc.setSog(speed);
 				}
-				if (data[8].length() > 0) {
+				if (data[RMC_COG].length() > 0) {
 					double cog = 0;
 					try {
-						cog = parseNMEADouble(data[8]);
+						cog = parseNMEADouble(data[RMC_COG]);
 					} catch (Exception ex) {
 					}
 					rmc.setCog(cog);
 				}
-				if (data[10].length() > 0 && data[11].length() > 0) {
+				if (data[RMC_VARIATION_VALUE].length() > 0 && data[RMC_VARIATION_SIGN].length() > 0) {
 					double d = -Double.MAX_VALUE;
 					try {
-						d = parseNMEADouble(data[10]);
+						d = parseNMEADouble(data[RMC_VARIATION_VALUE]);
 					} catch (Exception ex) {
 					}
-					if ("W".equals(data[11]))
+					if ("W".equals(data[RMC_VARIATION_SIGN]))
 						d = -d;
 					rmc = rmc.setDeclination(d);
 				}
-				if (data.length > 12) {
-					switch (data[12]) {
+				if (data.length > 12) { // Can be missing
+					switch (data[RMC_TYPE]) {
 						case "A":
 							rmc = rmc.setRmcType(RMC.RMC_TYPE.AUTONOMOUS);
 							break;
@@ -1462,6 +1490,13 @@ public class StringParsers {
 	}
 
 	// ZDA Time & Date - UTC, day, month, year and local time zone
+	public final static int ZDA_UTC = 1;
+	public final static int ZDA_DAY = 2;
+	public final static int ZDA_MONTH = 3;
+	public final static int ZDA_YEAR = 4;
+	public final static int ZDA_LOCAL_ZONE_HOURS = 5;
+	public final static int ZDA_LOCAL_ZONE_MINUTES = 6;
+
 	public static UTCDate parseZDA(String str) {
     /* Structure is
      * $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
@@ -1479,23 +1514,23 @@ public class StringParsers {
 
 		Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
 //		local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-		local.set(Calendar.HOUR_OF_DAY, Integer.parseInt(data[1].substring(0, 2)));
-		local.set(Calendar.MINUTE, Integer.parseInt(data[1].substring(2, 4)));
-		local.set(Calendar.SECOND, (int) Math.round(Float.parseFloat(data[1].substring(4))));
+		local.set(Calendar.HOUR_OF_DAY, Integer.parseInt(data[ZDA_UTC].substring(0, 2)));
+		local.set(Calendar.MINUTE, Integer.parseInt(data[ZDA_UTC].substring(2, 4)));
+		local.set(Calendar.SECOND, (int) Math.round(Float.parseFloat(data[ZDA_UTC].substring(4))));
 		local.set(Calendar.MILLISECOND, 0); // TODO Something nicer
 		int d = 1;
 		try {
-			d = Integer.parseInt(data[2]);
+			d = Integer.parseInt(data[ZDA_DAY]);
 		} catch (Exception ex) {
 		}
 		int mo = 0;
 		try {
-			mo = Integer.parseInt(data[3]) - 1;
+			mo = Integer.parseInt(data[ZDA_MONTH]) - 1;
 		} catch (Exception ex) {
 		}
 		int y = 0;
 		try {
-			y = Integer.parseInt(data[4]);
+			y = Integer.parseInt(data[ZDA_YEAR]);
 		} catch (Exception ex) {
 		}
 		local.set(Calendar.DATE, d);
@@ -1602,7 +1637,7 @@ public class StringParsers {
 		try {
 			first = "DBT,";
 			last = ",f,";
-			if (s.indexOf(first) > -1 && s.indexOf(last) > -1) {
+			if (s.contains(first) && s.contains(last)) {
 				if (s.indexOf(first) < s.indexOf(last)) {
 					str = s.substring(s.indexOf(first) + first.length(), s.indexOf(last));
 				}
@@ -1610,7 +1645,7 @@ public class StringParsers {
 			feet = parseNMEAFloat(str);
 			first = ",f,";
 			last = ",M,";
-			if (s.indexOf(first) > -1 && s.indexOf(last) > -1) {
+			if (s.contains(first) && s.contains(last)) {
 				if (s.indexOf(first) < s.indexOf(last)) {
 					str = s.substring(s.indexOf(first) + first.length(), s.indexOf(last));
 				}
@@ -1618,7 +1653,7 @@ public class StringParsers {
 			meters = parseNMEAFloat(str);
 			first = ",M,";
 			last = ",F";
-			if (s.indexOf(first) > -1 && s.indexOf(last) > -1) {
+			if (s.contains(first) && s.contains(last)) {
 				if (s.indexOf(first) < s.indexOf(last)) {
 					str = s.substring(s.indexOf(first) + first.length(), s.indexOf(last));
 				}
@@ -1665,7 +1700,7 @@ public class StringParsers {
 		 * Pending questions: what are 01,01,02 ?
 		 */
 		String s = sentence.trim();
-		if (s.length() < 6 || s.indexOf("*") < 0) {
+		if (s.length() < 6 || !s.contains("*")) {
 			return null;
 		}
 		if (!validCheckSum(sentence)) {
@@ -1737,7 +1772,7 @@ public class StringParsers {
 	public static String getSentenceID(String sentence) {
 		String id = "";
 		if (sentence == null || sentence.length() < 7) {
-			throw new RuntimeException(String.format("Invalid NMEA Sentence", sentence));
+			throw new RuntimeException(String.format("Invalid NMEA Sentence [%s]", sentence));
 		}
 		id = sentence.substring(3, 6);
 		return id;
@@ -1815,15 +1850,15 @@ public class StringParsers {
 		float utcOffset = 0F;
 
 		String trailer = duration.substring(19);
-		if (trailer.indexOf("+") >= 0 || trailer.indexOf("-") >= 0) {
+		if (trailer.contains("+") || trailer.contains("-")) {
 //    System.out.println(trailer);
-			if (trailer.indexOf("+") >= 0) {
+			if (trailer.contains("+")) {
 				trailer = trailer.substring(trailer.indexOf("+") + 1);
 			}
-			if (trailer.indexOf("-") >= 0) {
+			if (trailer.contains("-")) {
 				trailer = trailer.substring(trailer.indexOf("-"));
 			}
-			if (trailer.indexOf(":") > -1) {
+			if (trailer.contains(":")) {
 				String hours = trailer.substring(0, trailer.indexOf(":"));
 				String mins = trailer.substring(trailer.indexOf(":") + 1);
 				utcOffset = (float) Integer.parseInt(hours) + (float) (Integer.parseInt(mins) / 60f);
@@ -1856,7 +1891,7 @@ public class StringParsers {
 			calendar.set(Calendar.MILLISECOND, milliSec);
 			if (false) {
 				Date date = calendar.getTime();
-				System.out.println(String.format(">> Date: %s", SDF_UTC.format(date)));
+				System.out.printf(">> Date: %s\n", SDF_UTC.format(date));
 			}
 		} catch (NumberFormatException nfe) {
 			throw new RuntimeException("durationToDate, for [" + duration + "] : " + nfe.getMessage());
@@ -1974,7 +2009,7 @@ public class StringParsers {
 		Optional<Dispatcher> first = Arrays.asList(Dispatcher.values()).stream()
 				.filter(disp -> key.equals(disp.key()))
 				.findFirst();
-		return first.isPresent() ? first.get() : null;
+		return first.orElse(null);
 	}
 	/**
 	 * Lists available parsers, key and description.
@@ -1984,7 +2019,7 @@ public class StringParsers {
 	}
 	public static void listDispatchers(PrintStream out) {
 		Arrays.asList(Dispatcher.values()).stream()
-				.forEach(dispatcher -> out.println(String.format("%s: %s", dispatcher.key(), dispatcher.description())));
+				.forEach(dispatcher -> out.printf("%s: %s\n", dispatcher.key(), dispatcher.description()));
 	}
 
 	public static ParsedData autoParse(String data) {

@@ -477,8 +477,12 @@ public class NMEADataCache
 									this.put(SMALL_DISTANCE, smallDist);
 								}
 								this.previousPosition = rmc.getGp();
-								this.put(COG, new Angle360(rmc.getCog()));
-								this.put(SOG, new Speed(rmc.getSog()));
+								if (rmc.getCog() != -1) {
+									this.put(COG, new Angle360(rmc.getCog()));
+								}
+								if (rmc.getSog() != -1) {
+									this.put(SOG, new Speed(rmc.getSog()));
+								}
 								if (rmc.getDeclination() != -Double.MAX_VALUE) {
 //									System.out.printf("RMC: Decl in cache => %f %n", rmc.getDeclination());
 									this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));

@@ -128,8 +128,8 @@ public class NMEAUtils {
         double twa = 0d, tws = 0d;
         int twd = 0;
 
-        double sog = 0d,
-               cog = 0d,
+        double sog = -1d,
+               cog = -1d,
                aws = -1d;
         int awa = 0;
         try {
@@ -207,15 +207,17 @@ public class NMEAUtils {
             bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
         } catch (Exception ex) {
         }
-        double[] cr = calculateCurrent(bsp,
-                bspCoeff,
-                heading,
-                hdgOffset,
-                leeway,
-                sog,
-                cog);
-        cache.put(NMEADataCache.CDR, new Angle360(cr[0]));
-        cache.put(NMEADataCache.CSP, new Speed(cr[1]));
+        if (cog != -1 && sog != -1) {
+            double[] cr = calculateCurrent(bsp,
+                    bspCoeff,
+                    heading,
+                    hdgOffset,
+                    leeway,
+                    sog,
+                    cog);
+            cache.put(NMEADataCache.CDR, new Angle360(cr[0]));
+            cache.put(NMEADataCache.CSP, new Speed(cr[1]));
+        }
     }
 
     public static double[] calculateTWwithGPS(double aws, double awsCoeff,
@@ -611,7 +613,7 @@ public class NMEAUtils {
                                             if (rmc.getDeclination() != -Double.MAX_VALUE) {
                                                 decl = rmc.getDeclination();
                                             }
-                                            cog = rmc.getCog();
+                                            cog = rmc.getCog(); // TODO Case where cog = -1
                                         } catch (Exception ex) {
                                         }
                                     }
@@ -630,7 +632,7 @@ public class NMEAUtils {
                 } else if (counter.get("VTG").intValue() > 0 &&
                         counter.get("GLL").intValue() > 0 &&
                         (counter.get("HDM").intValue() > 0 || counter.get("HDG").intValue() > 0)) {
-                    ret = new ArrayList<double[]>(counter.get("GLL").intValue());
+                    ret = new ArrayList<>(counter.get("GLL").intValue());
                     System.out.println("VTG, GLL, (HDG or HDM), good enough");
                     // Is there a Declination?
                     double decl = -Double.MAX_VALUE;

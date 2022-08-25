@@ -72,8 +72,8 @@ public class SSD1306Processor implements Forwarder {
 
 		private double log;
 		private double dayLog;
-		private int cog = -1;
-		private double sog = -1d;
+		private int cog = -1;     // -1: not initialized yet
+		private double sog = -1d; // -1: not initialized yet
 
 		private int awa;
 		private double aws;
