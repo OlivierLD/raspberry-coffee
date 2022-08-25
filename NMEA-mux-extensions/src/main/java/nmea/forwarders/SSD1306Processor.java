@@ -53,9 +53,7 @@ public class SSD1306Processor implements Forwarder {
 
 	private static class CacheBean {
 		private long gpsTime;
-//	private String gpsTimeFmt;
 		private long gpsDateTime;
-//	private String gpsDateTimeFmt;
 
 		private String wp;
 		private double d2wp;
@@ -154,6 +152,7 @@ public class SSD1306Processor implements Forwarder {
 	protected boolean mirror = false; // Screen is to be seen in a mirror. (left-right mirror, not up-down, for now)
 	protected boolean verbose = false;
 
+	// Matching with the following values done in #setProperties below.
 	private final static int TWD_OPTION =  0;
 	private final static int BSP_OPTION =  1;
 	private final static int TWS_OPTION =  2;
