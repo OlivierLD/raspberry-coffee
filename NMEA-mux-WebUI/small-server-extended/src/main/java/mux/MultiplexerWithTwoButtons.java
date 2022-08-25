@@ -646,27 +646,27 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			}
 
 			// Pin mapping display for info
-			String[] map = new String[13];
-			map[0]  = (PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button 1 Hot Wire";
-			map[1]  = (PinUtil.findByPin(buttonTwoPin).pinNumber()) + ":Button 2 Hot Wire";
+			List<String> pinList = new ArrayList<>();
+			pinList.add((PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button 1 Hot Wire");
+			pinList.add((PinUtil.findByPin(buttonTwoPin).pinNumber()) + ":Button 2 Hot Wire");
 
-			map[2]  = (PinUtil.GPIOPin.PWR_1.pinNumber())   + ":3v3";
-			map[3]  = (PinUtil.GPIOPin.PWR_2.pinNumber())   + ":5v0";
+			pinList.add((PinUtil.GPIOPin.PWR_1.pinNumber())   + ":3v3");
+			pinList.add((PinUtil.GPIOPin.PWR_2.pinNumber())   + ":5v0");
 
-			map[4]  = (PinUtil.GPIOPin.GPIO_15.pinNumber()) + ":Tx";
-			map[5]  = (PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":Rx";
+			pinList.add((PinUtil.GPIOPin.GPIO_15.pinNumber()) + ":Tx");
+			pinList.add((PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":Rx");
 
-			map[6]  = (PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":Clock";
-			map[7]  = (PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":Data"; // Aka MOSI. Slave is the Screen, Master the RPi
-			map[8]  = (PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":CS";
-			map[9]  = (PinUtil.GPIOPin.GPIO_5.pinNumber())  + ":Rst";
-			map[10] = (PinUtil.GPIOPin.GPIO_4.pinNumber())  + ":DC";
+			pinList.add((PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":Clock");
+			pinList.add((PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":Data"); // Aka MOSI. Slave is the Screen, Master the RPi
+			pinList.add((PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":CS");
+			pinList.add((PinUtil.GPIOPin.GPIO_5.pinNumber())  + ":Rst");
+			pinList.add((PinUtil.GPIOPin.GPIO_4.pinNumber())  + ":DC");
 
-			map[11] = (PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":SDA";
-			map[12] = (PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":SLC";
+			pinList.add((PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":SDA");
+			pinList.add((PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":SLC");
 
 			System.out.println("---------------------------- P I N   M A P P I N G ------------------------------------------");
-			PinUtil.print(map);
+			PinUtil.print(pinList.toArray(new String[pinList.size()]));
 			System.out.println("> Buttons, Screen and GPS are powered with 5.0, 3v3 is used by the BME280.");
 			System.out.println("---------------------------------------------------------------------------------------------\n");
 

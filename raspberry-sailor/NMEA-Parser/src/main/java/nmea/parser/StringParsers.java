@@ -2062,6 +2062,7 @@ public class StringParsers {
 		return result;
 	}
 
+	// Used by autoParse
 	public enum Dispatcher {
 
 		RMC("RMC", "Recommended Minimum Navigation Information, C", StringParsers::parseRMC, RMC.class),
