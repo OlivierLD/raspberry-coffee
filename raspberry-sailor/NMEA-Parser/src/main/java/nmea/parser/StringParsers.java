@@ -240,6 +240,9 @@ public class StringParsers {
 			d = Double.parseDouble(sa[PR_BARS]);
 			d *= 1_000d;
 		} catch (NumberFormatException nfe) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				nfe.printStackTrace();
+			}
 		}
 		return d;
 	}
@@ -258,6 +261,9 @@ public class StringParsers {
 		try {
 			d = Double.parseDouble(sa[TEMP_CELCIUS]);
 		} catch (NumberFormatException nfe) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				nfe.printStackTrace();
+			}
 		}
 		return d;
 	}
@@ -281,13 +287,17 @@ public class StringParsers {
 		try {
 			double speed = Double.parseDouble(sa[SPEED]);
 			float dir = Float.parseFloat(sa[DIR]);
-			current = new Current((int) Math.round(dir), speed);
+			current = new Current(Math.round(dir), speed);
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 		return current;
 	}
 
 	public static float parseBAT(String data) {
+		final int VOLTAGE = 1;
 		/*
 		 * NOT STANDARD !!!
 		 * Structure is $XXBAT,14.82,V,1011,98*20
@@ -300,13 +310,17 @@ public class StringParsers {
 		float v = -1f;
 		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			v = Float.parseFloat(sa[1]);
+			v = Float.parseFloat(sa[VOLTAGE]);
 		} catch (NumberFormatException nfe) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				nfe.printStackTrace();
+			}
 		}
 		return v;
 	}
 
 	public static long parseSTD(String data) {
+		final int VALUE = 1;
 		/*
 		 * NOT STANDARD !!!
 		 * Structure is $XXSTD,77672*5C
@@ -316,8 +330,11 @@ public class StringParsers {
 		long age = 0L;
 		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			age = Long.parseLong(sa[1]);
+			age = Long.parseLong(sa[VALUE]);
 		} catch (NumberFormatException nfe) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				nfe.printStackTrace();
+			}
 		}
 		return age;
 	}
@@ -376,18 +393,30 @@ public class StringParsers {
 					try {
 						svNum = Integer.parseInt(sa[DATA_OFFSET + ((indexInSentence - 1) * NB_DATA) + 1]);
 					} catch (Exception pex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							pex.printStackTrace();
+						}
 					}
 					try {
 						elev = Integer.parseInt(sa[DATA_OFFSET + ((indexInSentence - 1) * NB_DATA) + 2]);
 					} catch (Exception pex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							pex.printStackTrace();
+						}
 					}
 					try {
 						z = Integer.parseInt(sa[DATA_OFFSET + ((indexInSentence - 1) * NB_DATA) + 3]);
 					} catch (Exception pex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							pex.printStackTrace();
+						}
 					}
 					try {
 						snr = Integer.parseInt(sa[DATA_OFFSET + ((indexInSentence - 1) * NB_DATA) + 4]);
 					} catch (Exception pex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							pex.printStackTrace();
+						}
 					}
 					SVData svd = new SVData(svNum, elev, z, snr);
 					if (gsvMap != null) {
@@ -462,6 +491,9 @@ public class StringParsers {
 		try {
 			utc = parseNMEADouble(sa[UTC_POS]);
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 
 		try {
@@ -474,6 +506,9 @@ public class StringParsers {
 				lat = -lat;
 			}
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 		try {
 			double g = parseNMEADouble(sa[LONG_POS]);
@@ -485,10 +520,16 @@ public class StringParsers {
 				lng = -lng;
 			}
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 		try {
 			nbsat = Integer.parseInt(sa[NBSAT_POS]);
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 
 //  System.out.println("UTC:" + utc + ", lat:" + lat + ", lng:" + lng + ", nbsat:" + nbsat);
@@ -504,6 +545,9 @@ public class StringParsers {
 		try {
 			alt = parseNMEADouble(sa[ANTENNA_ALT]);
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 
 		al = new ArrayList<Object>(4);
@@ -584,7 +628,7 @@ public class StringParsers {
 
 		String s = data.trim();
 		if (s.length() < 6) {
-			return (VHW) null;
+			return null;
 		}
 		/* Structure is
 		 *         1   2 3   4 5   6 7   8
@@ -605,18 +649,27 @@ public class StringParsers {
 			try {
 				speed = parseNMEADouble(nmeaElements[SPEED_IN_KN]);
 			} catch (Exception ex) {
+				if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+					ex.printStackTrace();
+				}
 			}
 			try {
 				hdm = parseNMEADouble(nmeaElements[HDG_IN_DEG_MAG]);
 			} catch (Exception ex) {
+				if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+					ex.printStackTrace();
+				}
 			}
 			try {
 				hdg = parseNMEADouble(nmeaElements[HDG_IN_DEG_TRUE]);
 			} catch (Exception ex) {
+				if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+					ex.printStackTrace();
+				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return (VHW) null;
+			return null;
 		}
 
 		return new VHW().bsp(speed).hdm(hdm).hdg(hdg);
@@ -648,7 +701,7 @@ public class StringParsers {
 			sinceReset = parseNMEADouble(nmeaElements[SINCE_RESET]);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return (VLW) null;
+			return null;
 		}
 		return new VLW().log(cumulative).daily(sinceReset);
 	}
@@ -729,10 +782,16 @@ public class StringParsers {
 				try {
 					awa = parseNMEAFloat(angle);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				try {
 					aws = parseNMEADouble(speed);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				if (flavor == APPARENT_WIND) {
 					aw = new ApparentWind(Math.round(awa), aws);
@@ -848,11 +907,17 @@ public class StringParsers {
 				try {
 					ws = parseNMEADouble(speed);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				int wa = 0;
 				try {
 					wa = Integer.parseInt(angle);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				if (side.equals("L")) {
 					wa = 360 - wa;
@@ -1007,6 +1072,9 @@ public class StringParsers {
 					try {
 						date = local.getTime();
 					} catch (Exception ex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							ex.printStackTrace();
+						}
 					}
 				}
 			}
@@ -1120,22 +1188,31 @@ public class StringParsers {
 			try {
 				hdg = parseNMEADouble(nmeaElements[1]);
 			} catch (Exception ex) {
+				if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+					ex.printStackTrace();
+				}
 			}
 			try {
 				dev = parseNMEADouble(nmeaElements[2]);
 			} catch (Exception ex) {
+				if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+					ex.printStackTrace();
+				}
 			}
 			if (nmeaElements.length > 3 && nmeaElements[3] != null && "W".equals(nmeaElements[3]))
 				dev = -dev;
 			try {
 				var = parseNMEADouble(nmeaElements[4]);
 			} catch (Exception ex) {
+				if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+					ex.printStackTrace();
+				}
 			}
 			if (nmeaElements.length > 5 && nmeaElements[5] != null && "W".equals(nmeaElements[5]))
 				var = -var;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return (HDG) null;
+			return null;
 		}
 		ret = new HDG().heading(hdg).deviation(dev).variation(var);
 
@@ -1191,6 +1268,9 @@ public class StringParsers {
 				try {
 					xte = parseNMEADouble(data[RMB_XTE]);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				rmb.setXte(xte);
 				rmb.setDts(data[RMB_STEER]);
@@ -1201,6 +1281,9 @@ public class StringParsers {
 				try {
 					_lat = parseNMEADouble(data[RMB_DEST_WP_LAT]);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				double lat = (int) (_lat / 100d) + ((_lat % 100d) / 60d);
 				if ("S".equals(data[RMB_DEST_WP_LAT_SIGN])) {
@@ -1210,6 +1293,9 @@ public class StringParsers {
 				try {
 					_lng = parseNMEADouble(data[RMB_DEST_WP_LNG]);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				double lng = (int) (_lng / 100d) + ((_lng % 100d) / 60d);
 				if ("W".equals(data[RMB_DEST_WP_LNG_SIGN])) {
@@ -1220,18 +1306,27 @@ public class StringParsers {
 				try {
 					rtd = parseNMEADouble(data[RMB_RANGE_TO_DEST]);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				rmb.setRtd(rtd);
 				double btd = 0d;
 				try {
 					btd = parseNMEADouble(data[RMB_BEARING_TO_DEST]);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				rmb.setBtd(btd);
 				double dcv = 0d;
 				try {
 					dcv = parseNMEADouble(data[RMB_DEST_CLOSING]);
 				} catch (Exception ex) {
+					if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+						ex.printStackTrace();
+					}
 				}
 				rmb.setDcv(dcv);
 				rmb.setAs(data[RMB_INFO]);
@@ -1314,16 +1409,25 @@ public class StringParsers {
 						try {
 							d = Integer.parseInt(data[RMC_DDMMYY].substring(0, 2));
 						} catch (Exception ex) {
+							if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+								ex.printStackTrace();
+							}
 						}
 						int mo = 0;
 						try {
 							mo = Integer.parseInt(data[RMC_DDMMYY].substring(2, 4)) - 1;
 						} catch (Exception ex) {
+							if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+								ex.printStackTrace();
+							}
 						}
 						int y = 0;
 						try {
 							y = Integer.parseInt(data[RMC_DDMMYY].substring(4));
 						} catch (Exception ex) {
+							if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+								ex.printStackTrace();
+							}
 						}
 						if (y > 50) {
 							y += 1900;
@@ -1380,6 +1484,9 @@ public class StringParsers {
 					try {
 						speed = parseNMEADouble(data[RMC_SOG]);
 					} catch (Exception ex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							ex.printStackTrace();
+						}
 					}
 					rmc.setSog(speed);
 				}
@@ -1388,6 +1495,9 @@ public class StringParsers {
 					try {
 						cog = parseNMEADouble(data[RMC_COG]);
 					} catch (Exception ex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							ex.printStackTrace();
+						}
 					}
 					rmc.setCog(cog);
 				}
@@ -1396,6 +1506,9 @@ public class StringParsers {
 					try {
 						d = parseNMEADouble(data[RMC_VARIATION_VALUE]);
 					} catch (Exception ex) {
+						if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+							ex.printStackTrace();
+						}
 					}
 					if ("W".equals(data[RMC_VARIATION_SIGN]))
 						d = -d;
@@ -1541,16 +1654,25 @@ public class StringParsers {
 		try {
 			d = Integer.parseInt(data[ZDA_DAY]);
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 		int mo = 0;
 		try {
 			mo = Integer.parseInt(data[ZDA_MONTH]) - 1;
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 		int y = 0;
 		try {
 			y = Integer.parseInt(data[ZDA_YEAR]);
 		} catch (Exception ex) {
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				ex.printStackTrace();
+			}
 		}
 		local.set(Calendar.DATE, d);
 		local.set(Calendar.MONTH, mo);
@@ -1584,6 +1706,8 @@ public class StringParsers {
 	}
 	// Depth
 	public static float parseDPT(String data, short unit) {
+		final int IN_METERS = 1;
+		final int OFFSET = 2;
 		String s = data.trim();
 		if (s.length() < 6) {
 			return -1F;
@@ -1600,15 +1724,18 @@ public class StringParsers {
 		float fathoms = 0.0F;
 		String[] array = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			meters = parseNMEAFloat(array[1]);
+			meters = parseNMEAFloat(array[IN_METERS]);
 			try {
-				String strOffset = array[2].trim();
+				String strOffset = array[OFFSET].trim();
 				if (strOffset.startsWith("+")) {
 					strOffset = strOffset.substring(1);
 				}
 				float offset = parseNMEAFloat(strOffset);
 				meters += offset;
 			} catch (Exception ex) {
+				if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+					ex.printStackTrace();
+				}
 			}
 			feet = meters * (float) METERS_TO_FEET;
 			fathoms = feet / 6F;
