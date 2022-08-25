@@ -134,21 +134,21 @@ public class StringParsers {
 		public Double windSpeedMS = null;
 	}
 
-	private final static int PRESS_INCH = 1;
-	private final static int PRESS_BAR = 3;
-	private final static int AIR_T = 5;
-	private final static int WATER_T = 7;
-	private final static int REL_HUM = 9;
-	private final static int ABS_HUM = 10;
-	private final static int DEW_P_C = 11;
-	private final static int WD_T = 13;
-	private final static int WD_M = 15;
-	private final static int WS_KNOTS = 17;
-	private final static int WS_MS = 19;
-
 	// MDA Meteorological Composite
 	public static MDA parseMDA(String data) {
-	    /*
+		final int PRESS_INCH = 1;
+		final int PRESS_BAR = 3;
+		final int AIR_T = 5;
+		final int WATER_T = 7;
+		final int REL_HUM = 9;
+		final int ABS_HUM = 10;
+		final int DEW_P_C = 11;
+		final int WD_T = 13;
+		final int WD_M = 15;
+		final int WS_KNOTS = 17;
+		final int WS_MS = 19;
+
+		/*
 		 * $--MDA,x.x,I,x.x,B,x.x,C,x.x,C,x.x,x.x,x.x,C,x.x,T,x.x,M,x.x,N,x.x,M*hh<CR><LF>
 		 *        |     |     |     |     |   |   |     |     |     |     |
 		 *        |     |     |     |     |   |   |     |     |     |     19-Wind speed, m/s
@@ -224,6 +224,8 @@ public class StringParsers {
 	 * @return Pressure in Mb / hPa
 	 */
 	public static double parseMMB(String data) {
+		final int PR_IN_HG = 1;
+		final int PR_BARS = 3;
 		/*
 		 * Structure is $IIMMB,29.9350,I,1.0136,B*7A
 		 *                     |       | |      |
@@ -235,7 +237,7 @@ public class StringParsers {
 		double d = 0d;
 		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			d = Double.parseDouble(sa[3]);
+			d = Double.parseDouble(sa[PR_BARS]);
 			d *= 1_000d;
 		} catch (NumberFormatException nfe) {
 		}
@@ -244,6 +246,7 @@ public class StringParsers {
 
 	// MTA Air Temperature
 	public static double parseMTA(String data) {
+		final int TEMP_CELCIUS = 1;
 		/*
 		 * Structure is $IIMTA,020.5,C*30
 		 *                     |     |
@@ -253,7 +256,7 @@ public class StringParsers {
 		double d = 0d;
 		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			d = Double.parseDouble(sa[1]);
+			d = Double.parseDouble(sa[TEMP_CELCIUS]);
 		} catch (NumberFormatException nfe) {
 		}
 		return d;
@@ -261,6 +264,8 @@ public class StringParsers {
 
 	// VDR Current Speed and Direction
 	public static Current parseVDR(String data) {
+		final int DIR = 1;
+		final int SPEED = 5;
 		/*
 		 * Structure is $IIVDR,00.0,T,00.0,M,00.0,N*XX
 		 *                     |    | |    | |    |
@@ -274,8 +279,8 @@ public class StringParsers {
 		Current current = null;
 		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			double speed = Double.parseDouble(sa[5]);
-			float dir = Float.parseFloat(sa[1]);
+			double speed = Double.parseDouble(sa[SPEED]);
+			float dir = Float.parseFloat(sa[DIR]);
 			current = new Current((int) Math.round(dir), speed);
 		} catch (Exception ex) {
 		}
@@ -323,6 +328,9 @@ public class StringParsers {
 	}
 	// GSV Detailed Satellite data
 	public static Map<Integer, SVData> parseGSV(String data) {
+		final int NB_MESS = 1;
+		final int MESS_NUM = 2;
+
 		String s = data.trim();
 		if (s.length() < 6) {
 			return gsvMap;
@@ -330,16 +338,16 @@ public class StringParsers {
 //  	System.out.println("String [" + s + "]");
 		/* Structure is $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
 		 *                     | | |  |  |  |   |  |            |            |
-		 *                     | | |  |  |  |   |  |            |            Fourth SV...
-		 *                     | | |  |  |  |   |  |            Third SV...
-		 *                     | | |  |  |  |   |  Second SV...
-		 *                     | | |  |  |  |   SNR (0-99 db)
-		 *                     | | |  |  |  Azimuth in degrees (0-359)
-		 *                     | | |  |  Elevation in degrees (0-90)
-		 *                     | | |  First SV PRN Number
-		 *                     | | Total number of SVs in view
-		 *                     | Message Number
-		 *                     Number of messages in this cycle
+		 *                     | | |  |  |  |   |  |            |            10 - Fourth SV...
+		 *                     | | |  |  |  |   |  |            9 - Third SV...
+		 *                     | | |  |  |  |   |  8 - Second SV...
+		 *                     | | |  |  |  |   7 - SNR (0-99 db)
+		 *                     | | |  |  |  6 - Azimuth in degrees (0-359)
+		 *                     | | |  |  5 - Elevation in degrees (0-90)
+		 *                     | | |  4 - First SV PRN Number
+		 *                     | | 3 - Total number of SVs in view, and other meanings.
+		 *                     | 2 - Message Number
+		 *                     1 - Number of messages in this cycle
 		 */
 		final int DATA_OFFSET = 3; // num of mess, mess num, Total num of SVs.
 		final int NB_DATA = 4; // SV num, elev, Z, SNR
@@ -349,9 +357,9 @@ public class StringParsers {
 
 		String[] sa = data.substring(0, data.indexOf("*")).split(",");
 		try {
-			nbMess = Integer.parseInt(sa[1]);
-			messNum = Integer.parseInt(sa[2]);
-			int nbSVinView = Integer.parseInt(sa[3]);
+			nbMess = Integer.parseInt(sa[NB_MESS]);
+			messNum = Integer.parseInt(sa[MESS_NUM]);
+			int nbSVinView = Integer.parseInt(sa[DATA_OFFSET]);
 			if (messNum == 1) { // Reset
 				gsvMap = new HashMap<>(nbSVinView);
 				gsvData = new ArrayList<>();
@@ -509,6 +517,11 @@ public class StringParsers {
 
 	// GSA GPS DOP and active satellites
 	public static GSA parseGSA(String data) {
+		final int MODE_1 = 1;
+		final int MODE_2 = 2;
+		final int PDOP = 15;
+		final int HDOP = 16;
+		final int VDOP = 17;
 		/*
 		 * $GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*35
 		 *        | | |                           |   |   |
@@ -523,21 +536,21 @@ public class StringParsers {
 		GSA gsa = new GSA();
 		String[] elements = data.substring(0, data.indexOf("*")).split(",");
 		if (elements.length >= 2) {
-			if ("M".equals(elements[1])) {
+			if ("M".equals(elements[MODE_1])) {
 				gsa.setMode1(GSA.ModeOne.Manual);
 			}
-			if ("A".equals(elements[1])) {
+			if ("A".equals(elements[MODE_1])) {
 				gsa.setMode1(GSA.ModeOne.Auto);
 			}
 		}
 		if (elements.length >= 3) {
-			if ("1".equals(elements[2])) {
+			if ("1".equals(elements[MODE_2])) {
 				gsa.setMode2(GSA.ModeTwo.NoFix);
 			}
-			if ("2".equals(elements[2])) {
+			if ("2".equals(elements[MODE_2])) {
 				gsa.setMode2(GSA.ModeTwo.TwoD);
 			}
-			if ("3".equals(elements[2])) {
+			if ("3".equals(elements[MODE_2])) {
 				gsa.setMode2(GSA.ModeTwo.ThreeD);
 			}
 		}
@@ -548,13 +561,13 @@ public class StringParsers {
 			}
 		}
 		if (elements.length >= 16) {
-			gsa.setPDOP(Float.parseFloat(elements[15]));
+			gsa.setPDOP(Float.parseFloat(elements[PDOP]));
 		}
 		if (elements.length >= 17) {
-			gsa.setHDOP(Float.parseFloat(elements[16]));
+			gsa.setHDOP(Float.parseFloat(elements[HDOP]));
 		}
 		if (elements.length >= 18) {
-			gsa.setVDOP(Float.parseFloat(elements[17]));
+			gsa.setVDOP(Float.parseFloat(elements[VDOP]));
 		}
 		return gsa;
 	}
@@ -565,6 +578,10 @@ public class StringParsers {
 	}
 
 	public static VHW parseVHW(String data, double defaultBSP) {
+		final int HDG_IN_DEG_TRUE = 1;
+		final int HDG_IN_DEG_MAG = 3;
+		final int SPEED_IN_KN = 5;
+
 		String s = data.trim();
 		if (s.length() < 6) {
 			return (VHW) null;
@@ -586,15 +603,15 @@ public class StringParsers {
 		try {
 			String[] nmeaElements = data.substring(0, data.indexOf("*")).split(",");
 			try {
-				speed = parseNMEADouble(nmeaElements[5]);
+				speed = parseNMEADouble(nmeaElements[SPEED_IN_KN]);
 			} catch (Exception ex) {
 			}
 			try {
-				hdm = parseNMEADouble(nmeaElements[3]);
+				hdm = parseNMEADouble(nmeaElements[HDG_IN_DEG_MAG]);
 			} catch (Exception ex) {
 			}
 			try {
-				hdg = parseNMEADouble(nmeaElements[1]);
+				hdg = parseNMEADouble(nmeaElements[HDG_IN_DEG_TRUE]);
 			} catch (Exception ex) {
 			}
 		} catch (Exception ex) {
@@ -607,6 +624,9 @@ public class StringParsers {
 
 	// VLW Distance Traveled through Water
 	public static VLW parseVLW(String data) {
+		final int CUM_DIST = 1;
+		final int SINCE_RESET = 3;
+
 		String s = data.trim();
 		if (s.length() < 6) {
 			return (VLW) null;
@@ -624,8 +644,8 @@ public class StringParsers {
 		 */
 		try {
 			String[] nmeaElements = data.substring(0, data.indexOf("*")).split(",");
-			cumulative = parseNMEADouble(nmeaElements[1]);
-			sinceReset = parseNMEADouble(nmeaElements[3]);
+			cumulative = parseNMEADouble(nmeaElements[CUM_DIST]);
+			sinceReset = parseNMEADouble(nmeaElements[SINCE_RESET]);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return (VLW) null;
@@ -635,6 +655,7 @@ public class StringParsers {
 
 	// MTW Water Temperature
 	public static double parseMTW(String data) {
+		final int TEMP_CELCIUS = 1;
 		/* Structure
 		 * $xxMTW,+18.0,C*hh
 		 *
@@ -647,7 +668,7 @@ public class StringParsers {
 		double temp = 0d;
 		try {
 			String[] nmeaElements = data.substring(0, data.indexOf("*")).split(",");
-			String _s = nmeaElements[1];
+			String _s = nmeaElements[TEMP_CELCIUS];
 			if (_s.startsWith("+")) {
 				_s = _s.substring(1);
 			}
@@ -989,10 +1010,8 @@ public class StringParsers {
 					}
 				}
 			}
-//    System.out.println(str);
 		} catch (Exception e) {
 			System.err.println("parseGLL for [" + s + "] " + e.toString());
-//    e.printStackTrace();
 		}
 		return new GLL().gllPos(ll).gllDate(date);
 	}
@@ -1124,21 +1143,21 @@ public class StringParsers {
 	}
 
 	// RMB Recommended Minimum Navigation Information
-	public final static int RMB_STATUS = 1;
-	public final static int RMB_XTE = 2;
-	public final static int RMB_STEER = 3;
-	public final static int RMB_ORIGIN_WP = 4;
-	public final static int RMB_DEST_WP = 5;
-	public final static int RMB_DEST_WP_LAT = 6;
-	public final static int RMB_DEST_WP_LAT_SIGN = 7;
-	public final static int RMB_DEST_WP_LNG = 8;
-	public final static int RMB_DEST_WP_LNG_SIGN = 9;
-	public final static int RMB_RANGE_TO_DEST = 10;
-	public final static int RMB_BEARING_TO_DEST = 11;
-	public final static int RMB_DEST_CLOSING = 12;
-	public final static int RMB_INFO = 13;
-
 	public static RMB parseRMB(String str) {
+		final int RMB_STATUS = 1;
+		final int RMB_XTE = 2;
+		final int RMB_STEER = 3;
+		final int RMB_ORIGIN_WP = 4;
+		final int RMB_DEST_WP = 5;
+		final int RMB_DEST_WP_LAT = 6;
+		final int RMB_DEST_WP_LAT_SIGN = 7;
+		final int RMB_DEST_WP_LNG = 8;
+		final int RMB_DEST_WP_LNG_SIGN = 9;
+		final int RMB_RANGE_TO_DEST = 10;
+		final int RMB_BEARING_TO_DEST = 11;
+		final int RMB_DEST_CLOSING = 12;
+		final int RMB_INFO = 13;
+
 		/*        1 2   3 4    5    6       7 8        9 10  11  12  13
 		 * $GPRMB,A,x.x,a,c--c,d--d,llll.ll,e,yyyyy.yy,f,g.g,h.h,i.i,j*kk
 		 *        | |   | |    |    |       | |        | |   |   |   |
@@ -1224,20 +1243,20 @@ public class StringParsers {
 	}
 
 	// RMC Recommended minimum specific GPS/Transit data
-	public final static int RMC_UTC = 1;
-	public final static int RMC_ACTIVE_VOID = 2;
-	public final static int RMC_LATITUDE_VALUE = 3;
-	public final static int RMC_LATITUDE_SIGN = 4;
-	public final static int RMC_LONGITUDE_VALUE = 5;
-	public final static int RMC_LONGITUDE_SIGN = 6;
-	public final static int RMC_SOG = 7;
-	public final static int RMC_COG = 8;
-	public final static int RMC_DDMMYY = 9;
-	public final static int RMC_VARIATION_VALUE = 10;
-	public final static int RMC_VARIATION_SIGN = 11;
-	public final static int RMC_TYPE = 12;
-
 	public static RMC parseRMC(String str) {
+		final int RMC_UTC = 1;
+		final int RMC_ACTIVE_VOID = 2;
+		final int RMC_LATITUDE_VALUE = 3;
+		final int RMC_LATITUDE_SIGN = 4;
+		final int RMC_LONGITUDE_VALUE = 5;
+		final int RMC_LONGITUDE_SIGN = 6;
+		final int RMC_SOG = 7;
+		final int RMC_COG = 8;
+		final int RMC_DDMMYY = 9;
+		final int RMC_VARIATION_VALUE = 10;
+		final int RMC_VARIATION_SIGN = 11;
+		final int RMC_TYPE = 12;
+
 		RMC rmc = null;
 //		String str = StringUtils.removeNullsFromString(strOne.trim()); // TODO Do it at the consumer level
 		if (str.length() < 6 || !str.contains("*")) {
@@ -1338,7 +1357,7 @@ public class StringParsers {
 					Date rmcTime = local.getTime();
 					rmc = rmc.setRmcTime(rmcTime);
 					if ("true".equals(System.getProperty("RMC.verbose"))) {
-						System.out.println(String.format("RMC: From [%s], GPS date: %s, GPS Time: %s", str, SDF_UTC.format(rmc.getRmcDate()), SDF_UTC.format(rmcTime)));
+						System.out.printf("RMC: From [%s], GPS date: %s, GPS Time: %s\n", str, SDF_UTC.format(rmc.getRmcDate()), SDF_UTC.format(rmcTime));
 					}
 				}
 				if (data[RMC_LATITUDE_VALUE].length() > 0 && data[RMC_LONGITUDE_VALUE].length() > 0) {
@@ -1490,26 +1509,26 @@ public class StringParsers {
 	}
 
 	// ZDA Time & Date - UTC, day, month, year and local time zone
-	public final static int ZDA_UTC = 1;
-	public final static int ZDA_DAY = 2;
-	public final static int ZDA_MONTH = 3;
-	public final static int ZDA_YEAR = 4;
-	public final static int ZDA_LOCAL_ZONE_HOURS = 5;
-	public final static int ZDA_LOCAL_ZONE_MINUTES = 6;
-
 	public static UTCDate parseZDA(String str) {
-    /* Structure is
-     * $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
-     *        1         2  3  4
-     * $GPZDA,201530.00,04,07,2002,00,00*60
-     *        |         |  |  |    |  |
-     *        |         |  |  |    |  local zone minutes 0..59
-     *        |         |  |  |    local zone hours -13..13
-     *        |         |  |  year
-     *        |         |  month
-     *        |         day
-     *        HrMinSec(UTC)
-     */
+		final int ZDA_UTC = 1;
+		final int ZDA_DAY = 2;
+		final int ZDA_MONTH = 3;
+		final int ZDA_YEAR = 4;
+		final int ZDA_LOCAL_ZONE_HOURS = 5;
+		final int ZDA_LOCAL_ZONE_MINUTES = 6;
+
+		/* Structure is
+		 * $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
+		 *        1         2  3  4
+		 * $GPZDA,201530.00,04,07,2002,00,00*60
+		 *        |         |  |  |    |  |
+		 *        |         |  |  |    |  local zone minutes 0..59
+		 *        |         |  |  |    local zone hours -13..13
+		 *        |         |  |  year
+		 *        |         |  month
+		 *        |         day
+		 *        HrMinSec(UTC)
+		 */
 		String[] data = str.substring(0, str.indexOf("*")).split(",");
 
 		Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
@@ -1569,13 +1588,13 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return -1F;
 		}
-    /* Structure is
-     *  $xxDPT,XX.XX,XX.XX,XX.XX*hh<0D><0A>
-     *         |     |     |
-     *         |     |     Max depth in meters
-     *         |     offset
-     *         Depth in meters
-     */
+		/* Structure is
+		 *  $xxDPT,XX.XX,XX.XX,XX.XX*hh<0D><0A>
+		 *         |     |     |
+		 *         |     |     Max depth in meters
+		 *         |     offset
+		 *         Depth in meters
+		 */
 		float feet = 0.0F;
 		float meters = 0.0F;
 		float fathoms = 0.0F;
@@ -1619,16 +1638,16 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return -1F;
 		}
-    /* Structure is
-     *  $aaDBT,011.0,f,03.3,M,01.8,F*18(CR)(LF)
-     *         |     | |    | |    |
-     *         |     | |    | |    F for fathoms
-     *         |     | |    | Depth in fathoms
-     *         |     | |    M for meters
-     *         |     | Depth in meters
-     *         |     f for feet
-     *         Depth in feet
-     */
+		/* Structure is
+		 *  $aaDBT,011.0,f,03.3,M,01.8,F*18(CR)(LF)
+		 *         |     | |    | |    |
+		 *         |     | |    | |    F for fathoms
+		 *         |     | |    | Depth in fathoms
+		 *         |     | |    M for meters
+		 *         |     | Depth in meters
+		 *         |     f for feet
+		 *         Depth in feet
+		 */
 		float feet = 0.0F;
 		float meters = 0.0F;
 		float fathoms = 0.0F;
@@ -2006,7 +2025,7 @@ public class StringParsers {
 	}
 
 	public static Dispatcher findDispatcherByKey(String key) {
-		Optional<Dispatcher> first = Arrays.asList(Dispatcher.values()).stream()
+		Optional<Dispatcher> first = Arrays.stream(Dispatcher.values())
 				.filter(disp -> key.equals(disp.key()))
 				.findFirst();
 		return first.orElse(null);
@@ -2018,7 +2037,7 @@ public class StringParsers {
 		listDispatchers(System.out);
 	}
 	public static void listDispatchers(PrintStream out) {
-		Arrays.asList(Dispatcher.values()).stream()
+		Arrays.stream(Dispatcher.values())
 				.forEach(dispatcher -> out.printf("%s: %s\n", dispatcher.key(), dispatcher.description()));
 	}
 
