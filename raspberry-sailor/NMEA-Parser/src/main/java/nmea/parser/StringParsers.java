@@ -1000,10 +1000,10 @@ public class StringParsers {
 	public static GLL parseGLL(String data) {
 		String s = data.trim();
 		if (s.length() < 6) {
-			return (GLL) null;
+			return null;
 		}
 		if (!validCheckSum(s)) {
-			return (GLL) null;
+			return null;
 		}
 		/* Structure is
 		 *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A,D*hh
@@ -1020,7 +1020,7 @@ public class StringParsers {
 		Date date = null;
 		try {
 			if (!s.contains("A*")) { // Not Active, Data invalid (void)
-				return (GLL) null;
+				return null;
 			} else {
 				int i = s.indexOf(",");
 				if (i > -1) {
@@ -2169,11 +2169,10 @@ public class StringParsers {
 	}
 
 	public static ParsedData autoParse(String data) {
-		ParsedData parsedData = null;
 		if (!validCheckSum(data)) {
 			throw new RuntimeException(String.format("Invalid NMEA Sentence CheckSum [%s]", data));
 		}
-		parsedData = new ParsedData().fullSentence(data);
+		ParsedData parsedData = new ParsedData().fullSentence(data);
 		String key = getSentenceID(data);
 		parsedData.sentenceId(key).deviceID(getDeviceID(data));
 		for (Dispatcher dispatcher : Dispatcher.values()) {

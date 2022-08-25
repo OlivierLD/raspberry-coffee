@@ -12,18 +12,18 @@ public class AutoParser {
 			Arrays.asList(args)
 					.stream()
 					.forEach(nmea -> {
-						try {
-							System.out.println(String.format("Parsing [%s]", nmea));
-							StringParsers.ParsedData obj = StringParsers.autoParse(nmea);
-							if (obj != null) {
-								System.out.println(String.format(">> Parsed >> %s", obj.getParsedData().toString()));
-							} else {
-								System.out.println(">> null");
-							}
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					});
+				try {
+					System.out.printf("Parsing [%s]\n", nmea);
+					StringParsers.ParsedData obj = StringParsers.autoParse(nmea);
+					if (obj != null) {
+						System.out.printf(">> Parsed >> %s\n", obj.getParsedData().toString());
+					} else {
+						System.out.println(">> null");
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			});
 		}
 	}
 }
