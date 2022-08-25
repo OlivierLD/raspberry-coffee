@@ -9,20 +9,29 @@ import java.sql.Statement;
 import java.util.Properties;
 
 /**
- * <b>For dynamic loading</b> (non standard, as an example)<br/>
+ * <b>For dynamic loading</b> (non-standard, as an example)<br/>
  * --------------------------<br/>
  * <ul>
  * <li>Requires a file like <code>sqlite.properties</code> to provide the broker url.</li>
  * <li>Requires a table <code>NMEA_DATA</code> created like this:<br/>
- * <code>CREATE TABLE NMEA_DATA(id INTEGER PRIMARY KEY AUTOINCREMENT, sentence_id VARCHAR2(3), data VARCHAR2, date DATETIME);</code>
+ * <pre>
+ * CREATE TABLE NMEA_DATA(
+ * 		id INTEGER PRIMARY KEY AUTOINCREMENT,
+ * 		sentence_id VARCHAR2(3),
+ * 		data VARCHAR2,
+ * 		date DATETIME
+ * );
+ * </pre>
  * </li>
- * <li>See the script nmea.sql</li>
+ * <li>See the script <code>nmea.sql</code></li>
  * </ul>
  *
  * Requires the following dep in gradle:<br/>
- * <code>implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'</code>
+ * <code>implementation 'org.xerial:sqlite-jdbc:3.34.0'</code>
  * <br/>
- * SQLite doc at https://sqlite.org/lang_select.html
+ * SQLite doc <a href="https://sqlite.org/lang_select.html">here</a>.
+ * <br/>
+ * --------------------------<br/>
  */
 public class SQLitePublisher implements Forwarder {
 	private Connection dbConnection = null;

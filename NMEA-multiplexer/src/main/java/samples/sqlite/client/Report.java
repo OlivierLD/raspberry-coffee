@@ -20,9 +20,7 @@ public class Report {
      * dbURL like jdbc:sqlite:/path/to/db.db
      */
     private final static String DEFAULT_DB_URL = "jdbc:sqlite:nmea.db";
-
-    private Connection dbConnection = null;
-    private String dbURL = DEFAULT_DB_URL;
+    private final String dbURL = System.getProperty("db.url", DEFAULT_DB_URL);
 
     /**
      * All values in degrees
@@ -31,15 +29,14 @@ public class Report {
     private static double getDistance(double fromL, double fromG, double toL, double toG) {
         double cos = (Math.sin(Math.toRadians(fromL)) * Math.sin(Math.toRadians(toL))) +
                 (Math.cos(Math.toRadians(fromL)) * Math.cos(Math.toRadians(toL)) * Math.cos(Math.toRadians(toG - fromG)));
-        double inRadians = Math.acos(Math.min(cos, 1.0)); // Trick
+        double inRadians = Math.acos(Math.min(cos, 1.0)); // Ugly trick..
         return Math.toDegrees(inRadians);
     }
 
     public void report() throws Exception {
         try {
-
-            this.dbConnection = DriverManager.getConnection(dbURL);
-            if (true || "true".equals(System.getProperty("verbose"))) {
+            Connection dbConnection = DriverManager.getConnection(dbURL);
+            if ("true".equals(System.getProperty("verbose", "true"))) {
                 DatabaseMetaData dm = dbConnection.getMetaData();
                 System.out.println("Driver name: " + dm.getDriverName());
                 System.out.println("Driver version: " + dm.getDriverVersion());
@@ -54,13 +51,13 @@ public class Report {
             Date firstDate = null;
             Date lastDate = null;
 
-            Statement statement = this.dbConnection.createStatement();
+            Statement statement = dbConnection.createStatement();
             final ResultSet resultSet = statement.executeQuery(SQLStatement);
             while (resultSet.next()) {
                 final String rmc = resultSet.getString(1);
 //                System.out.println(rmc);
                 final RMC parsedRMC = StringParsers.parseRMC(rmc);
-                if (parsedRMC.isValid()) {
+                if (parsedRMC != null && parsedRMC.isValid()) {
                     if (firstDate == null) {
                         firstDate = parsedRMC.getRmcDate();
                     }
@@ -76,15 +73,21 @@ public class Report {
                     prevPos = parsedRMC.getGp();
                 }
             }
-            System.out.printf("Total distance: %.02f nm, in %d sec\n", dist, (lastDate.getTime() - firstDate.getTime()) / 1_000);
-
+            if (lastDate != null && firstDate != null) {
+                System.out.printf("Total distance: %.02f nm, in %d sec\n", dist, (lastDate.getTime() - firstDate.getTime()) / 1_000);
+            }
+            System.out.println("Freeing everything.");
             resultSet.close();
             statement.close();
 
+            dbConnection.close();
+            System.out.println("Done freeing.");
         } catch (Exception e) {
+            System.err.println("Oops");
             throw e;
+        } finally {
+            System.out.println("Bye!");
         }
-
     }
 
     public static void main(String... args) throws Exception {
