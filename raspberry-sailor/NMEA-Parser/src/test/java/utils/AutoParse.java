@@ -16,13 +16,13 @@ public class AutoParse {
             "$IIGLL,0906.455,S,14012.519,W,220714,A,A*5D",
             "$GPRMC,170002.00,A,3744.79681,N,12223.30435,W,0.228,,200621,,,D*68",
             "$IIGLL,0906.458,S,14012.521,W,220716,A,A*59",
-            "$GPRMC,170003.00,A,3744.79677,N,12223.30440,W,0.035,,200621,,,D*6C"
+            "$GPRMC,170003.00,A,3744.79677,N,12223.30440,W,0.035,,200621,,,D*6C",
+            "$BMXDR,H,48.1,P,0,C,23.8,C,1,P,101775,P,2*6B"
     };
 
     @Test
     public void autoParser() {
-        Arrays.asList(NMEA_DATA_SAMPLE)
-                .stream()
+        Arrays.stream(NMEA_DATA_SAMPLE)
                 .forEach(nmea -> {
                     try {
                         System.out.printf("Parsing [%s]\n", nmea);
