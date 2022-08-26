@@ -73,6 +73,7 @@ public class RandomClient extends NMEAClient {
 		return new RandomBean(this);
 	}
 
+	// For tests. TODO Externalize in the test section.
 	public static void main(String... args) {
 		System.out.println("RandomClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args) {

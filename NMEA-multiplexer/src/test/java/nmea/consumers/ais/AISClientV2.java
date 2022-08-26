@@ -1,7 +1,8 @@
-package nmea.consumers.client;
+package nmea.consumers.ais;
 
 import nmea.ais.AISParser;
 import nmea.api.NMEAEvent;
+import nmea.consumers.client.TCPClient;
 import nmea.consumers.reader.TCPReader;
 
 import java.util.HashMap;

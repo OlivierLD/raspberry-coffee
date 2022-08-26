@@ -59,7 +59,7 @@ public class RESTPublisher implements Forwarder {
 	 * Note: This can be sub-classed to filter the sentences,
 	 *       and send a formatted message to a Screen Server (for example)...
 	 *       See https://github.com/OlivierLD/raspberry-coffee/tree/master/http-client-samples
-	 * @param message The NMEA sentence
+	 * @param message The NMEA sentence (or whatever you want to send)
 	 */
 	@Override
 	public void write(byte[] message) {

@@ -166,6 +166,7 @@ public class MuxInitializer {
                                 e.printStackTrace();
                             }
                             break;
+                        case "rest":  // TODO Implement it
                         case "tcp":
                             try {
                                 String tcpPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
