@@ -95,6 +95,7 @@ public class RESTPublisher implements Forwarder {
 								httpResponse.getCode(),
 								httpResponse.getPayload());
 					}
+					// TODO return the response message/status ?
 					break;
 				case "PUT": // TODO See if that's needed...
 				default:
