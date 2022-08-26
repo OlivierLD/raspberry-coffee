@@ -3,8 +3,9 @@
 # Requires:
 # ---------
 # pip3 install http (already in python3.7, no need to install it)
+# See in the README.md for the right pip3 install commands.
 #
-# Provides REST access to the cache, try GET http://localhost:8080/lis3mdl/cache
+# Provides REST access to the e-ink screen, try POST http://localhost:8080/eink2_13/display
 #
 import json
 import sys
