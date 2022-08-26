@@ -6,9 +6,12 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Properties;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 /**
  * Run it like in
- * ./gradlew test --tests "nmea.publisher.RESTPublisherTest.testRESTEInk"
+ * ../gradlew test --tests "nmea.publisher.RESTPublisherTest.testRESTEInk"
  */
 public class RESTPublisherTest {
 
@@ -32,10 +35,10 @@ public class RESTPublisherTest {
             props.put("http.headers", "Content-Type:plain/text");
             restPublisher.setProperties(props);
 
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 10; i++) {
                 System.out.println(DATA_TO_SEND.get(i % DATA_TO_SEND.size()));
                 try {
-                    wpl = DATA_TO_SEND.get(i % DATA_TO_SEND.size());
+                    wpl = DATA_TO_SEND.get(i % DATA_TO_SEND.size()); // Comment that one if needed.
                     restPublisher.write(wpl.getBytes());
                 } catch (Exception ex) {
                     System.err.println(ex.getLocalizedMessage());
@@ -48,6 +51,8 @@ public class RESTPublisherTest {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            fail("Oops");
         }
+        assertTrue("Argh!", true);
     }
 }
