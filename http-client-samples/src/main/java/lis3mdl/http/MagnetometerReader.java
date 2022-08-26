@@ -6,8 +6,10 @@ import org.json.JSONObject;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Read raw mag data from an HTTP Server
+ * Read raw mag data from an HTTP Server, using REST.
  * That one happens to be in Python, polling an LIS3MDL breakout board
+ *
+ * Notice that there is here NO code related to the device to be read.
  *
  * TODO Introduce calibration
  *

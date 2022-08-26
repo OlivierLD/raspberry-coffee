@@ -2299,7 +2299,7 @@ public class RESTImplementation {
 			// Calculate VMG(s)
 			if (cache != null) {
 				synchronized (cache) {
-					NMEAUtils.calculateVMGs(cache);
+				// 	NMEAUtils.calculateVMGs(cache);
 					Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create(); // To avoid NaN/Double issues
 					final JsonElement _jsonElement = gson.toJsonTree(cache); // I know, ah shit!
 					//	String str = new Gson().toJson(cache);

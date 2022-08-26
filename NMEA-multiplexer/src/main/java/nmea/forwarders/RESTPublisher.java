@@ -4,6 +4,7 @@ import http.client.HTTPClient;
 import nmea.ais.AISParser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -71,7 +72,7 @@ public class RESTPublisher implements Forwarder {
 					String strContent = new String(message).trim();
 //					System.out.println("Verbose: [" + this.props.getProperty("verbose") + "]");
 					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
-						System.out.println(String.format("%s\n%s", postRequest, strContent));
+						System.out.printf("%s\n%s\n", postRequest, strContent);
 						if ("true".equals(System.getProperty("parse.ais"))) {
 							if (strContent.startsWith(AISParser.AIS_PREFIX)) {
 								if (aisParser == null) {
@@ -87,13 +88,14 @@ public class RESTPublisher implements Forwarder {
 					}
 					HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(postRequest, headers, strContent);
 					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
-						System.out.println(String.format("POST %s with %s: Response code %d, message: %s",
+						System.out.printf("POST %s with %s: Response code %d, message: %s\n",
 								postRequest,
 								strContent,
 								httpResponse.getCode(),
-								httpResponse.getPayload()));
+								httpResponse.getPayload());
 					}
 					break;
+				case "PUT": // TODO See if that's needed...
 				default:
 					break;
 			}
@@ -112,13 +114,13 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	public static class RESTBean {
-		private String cls;
-		private String protocol;
-		private int port;
-		private String serverName;
-		private String verb;
-		private String resource;
-		private String type = "rest";
+		private final String cls;
+		private final String protocol;
+		private final int port;
+		private final String serverName;
+		private final String verb;
+		private final String resource;
+		private final String type = "rest";
 
 		public String getProtocol() {
 			return protocol;
@@ -171,6 +173,7 @@ public class RESTPublisher implements Forwarder {
 					String[] nv = h.split(":");
 					if (nv.length != 2) {
 						// Oops! TODO Honk!
+						System.err.println("WTFrench!");
 					} else {
 						if (this.headers == null) {
 							this.headers = new HashMap<>();
@@ -182,22 +185,33 @@ public class RESTPublisher implements Forwarder {
 		}
 	}
 
+	private final static List<String> DATA_TO_SEND = List.of(
+		"Ping",
+		"Pong",
+		"Paf",
+		"Bing",
+		"Boom",
+		"Bang"
+	);
+
 	public static void main(String... args) {
 		String wpl = "$GPWPL,3739.856,N,12222.812,W,OPMRNA*59";
 		try {
 			RESTPublisher restPublisher = new RESTPublisher();
 
 			Properties props = new Properties();
-			props.put("server.name", "192.168.42.6");
+			props.put("server.name", "localhost"); // That one must be up and running for this main to work.
 			props.put("server.port", "8080");
-			props.put("rest.resource", "/rest/endpoint?qs=prm");
+//			props.put("rest.resource", "/rest/endpoint?qs=prm");
+			props.put("rest.resource", "/eink2_13/display");
 			props.put("rest.verb", "POST");
 			props.put("http.headers", "Content-Type:plain/text");
 			restPublisher.setProperties(props);
 
 			for (int i = 0; i < 50; i++) {
-				System.out.println("Ping...");
+				System.out.println(DATA_TO_SEND.get(i % DATA_TO_SEND.size()));
 				try {
+					wpl = DATA_TO_SEND.get(i % DATA_TO_SEND.size());
 					restPublisher.write(wpl.getBytes());
 				} catch (Exception ex) {
 					System.err.println(ex.getLocalizedMessage());
