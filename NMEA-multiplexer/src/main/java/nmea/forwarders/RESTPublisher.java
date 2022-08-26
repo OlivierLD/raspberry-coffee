@@ -186,12 +186,8 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private final static List<String> DATA_TO_SEND = List.of(
-		"Ping",
-		"Pong",
-		"Paf",
-		"Bing",
-		"Boom",
-		"Bang"
+		"Ping", "Pong", "Paf",
+		"Bing", "Boom", "Bang"
 	);
 
 	public static void main(String... args) {
