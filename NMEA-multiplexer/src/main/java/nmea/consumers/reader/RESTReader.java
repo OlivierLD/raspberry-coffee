@@ -1,14 +1,14 @@
 package nmea.consumers.reader;
 
 import http.client.HTTPClient;
-import nmea.ais.AISParser;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
-import nmea.api.NMEAParser;
 import nmea.api.NMEAReader;
+import utils.TimeUtil;
 
-import java.io.InputStream;
-import java.net.*;
+import java.net.BindException;
+import java.net.ConnectException;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +49,6 @@ public class RESTReader extends NMEAReader {
 		this.queryString = qs;
 	}
 
-//	private Socket skt = null; // TODO HTTPClient
-	private HTTPClient restClient;
-
 	public String getProtocol() {
 		return this.protocol;
 	}
@@ -81,10 +78,7 @@ public class RESTReader extends NMEAReader {
 				this.queryPath,
 				this.queryString);
 		try {
-			Map<String, String> headers = new HashMap<>();
-			if (restClient == null) {
-				restClient = new HTTPClient();
-			}
+			Map<String, String> headers = new HashMap<>(); // Empty
 			while (this.canRead()) {
 				try {
 					String httpResponse = HTTPClient.doGet(restURL, headers);
@@ -131,7 +125,8 @@ public class RESTReader extends NMEAReader {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				// TODO Wait like 1 sec.
+				// Wait like 1 sec.
+				TimeUtil.delay(1_000L);
 			}
 			System.out.println("Stop Reading REST server.");
 		} catch (Exception e) {
@@ -144,10 +139,7 @@ public class RESTReader extends NMEAReader {
 	public void closeReader() throws Exception {
 //  System.out.println("(" + this.getClass().getName() + ") Stop Reading TCP Port");
 		try {
-			if (restClient != null) {
-				this.goRead = false;
-				restClient = null;
-			}
+			this.goRead = false;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

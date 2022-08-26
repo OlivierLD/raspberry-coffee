@@ -6,7 +6,7 @@ import utils.TimeUtil;
 
 /**
  * Run it like in
- * ../gradlew test --tests "nmea.consumers.reader.RESTReaderTest.RESTReaderTest"
+ * ../gradlew test --tests "nmea.consumers.reader.RESTReaderTest.RESTReader"
  */
 public class RESTReaderTest {
 
@@ -28,7 +28,7 @@ public class RESTReaderTest {
                 "http",
                 serverNameOrIP,
                 8_080,
-                "/oplist/",
+                "/eink2_13/oplist",
                 ""));
         nmeaClient.startWorking();
 
