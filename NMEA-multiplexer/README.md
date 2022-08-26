@@ -232,6 +232,10 @@ care of some cleanup before running `mux.sh`. Those two scripts can be run in ba
 like with `nohup ./mux.sh &`. If you do so, then you will need to kill
 the Multiplexer process to stop it. This can be achieved by running `killmx.sh`.
 
+> _**Note**_: During the packaging tep above, the script is also archiving some web resources.
+> The Multiplexer this page is about can be exposed through a small REST/HTTP server.  
+> This way to expose the Multiplexer's features is indeed part of the Multiplexer, hence those Web examples.
+> But those pages do not mean to be seen _**as anything but examples**_ !!
 
 #### Filtering
 The Channels - aka Consumers - support sentence filtering.

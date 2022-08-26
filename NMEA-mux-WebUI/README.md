@@ -1,19 +1,23 @@
 # Building and Customizing your own Nav Server
 
 #### How to customize, extend, enrich the base classes of the `NMEA-multiplexer`.
-Those different versions may come with some WebUI, but this is obviously not mandatory.  
-By WebUI, we mean web pages, and REST services able to communicate with the server.
+Those different versions may come with some WebUI, but this is obviously not mandatory,
+and given here as example.
+By WebUI, we mean web pages, and REST services able to communicate with the server.  
+
+At the bottom of those HTTP and REST features in the module of this project named `tiny-http-server`.   
+
 
 ---
 
 We want to have a Nav Server:
 - Able to read from different sources (NMEA Serial port, TCP, whatever)
-- Able to compute data
+- Able to compute data (like True Wind with the GPS (COG, SOG), current, etc)
 - Able to send or broadcast data on several channels
-- Able to run even if no WiFi network is available
+- Able to run even if no Internet is available
 - Able to provide a Web Graphical User Interface, accessing server side REST Services
   - From external devices (laptop, tablet, cell-phone) connected on the same network
-  - The network can be the one emitted by the server itself, no Internet required, just WiFi. 
+  - The network can be the one emitted by the server itself, _**no**_ Internet required, just WiFi. 
 
 The [`NMEA-multiplexer`](../NMEA-multiplexer/README.md) is able to read, compute, and broadcast data, also accessible from a REST client.
 
@@ -164,7 +168,8 @@ The examples list contains
   - An `HMC5883L` magnetometer, a small `SSD1306` OLED Screen, broadcasting its data on TCP.  
     With a push button for the user to interact with it.
 
-> _Note_: Those examples can be built from the script `mux.builder.sh`. 
+> _Note_: Those examples can be _built_ from the script `mux.builder.sh` (under `NMEA-mux-WebUI`). 
+> It will go into the appropriate directory, and run the correspondent script named `./to.prod.sh`.
 
 ### Full Nav Server 
 All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
@@ -504,7 +509,7 @@ In the `NMEA-mux-WebUI` project, `logged` folder
 |:----------:|:------------------:|
 | ![HAT](./full-server-extended-v2/docimg/08.jpg) | ![USB GPS](./full-server-extended-v2/docimg/perma-hat/perma-hat.02.jpg) |
 
-See [here](../Project-Trunk/REST-clients/TCP-Watch.01#raspberry-pi-zero-w-and-ssd1306-128x64) for the wiring diagrams,
+See [here](../Project-Trunk/REST-clients/TCP-Watch-01#raspberry-pi-zero-w-and-ssd1306-128x64) for the wiring diagrams,
 and [here](./small-server-extended/README.md) for more details and pictures.
 
 ---
