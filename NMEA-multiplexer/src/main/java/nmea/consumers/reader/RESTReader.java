@@ -93,6 +93,7 @@ public class RESTReader extends NMEAReader {
 					}
 					// TODO return the response message/status ?
 					NMEAEvent n = new NMEAEvent(this, httpResponse);
+					System.out.println(httpResponse);
 					super.fireDataRead(n);
 				} catch (BindException be) {
 					System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + httpPort);

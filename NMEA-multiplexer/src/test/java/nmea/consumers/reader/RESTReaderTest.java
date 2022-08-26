@@ -6,14 +6,14 @@ import utils.TimeUtil;
 
 /**
  * Run it like in
- * ../gradlew test --tests "nmea.consumeres.reader.RESTReaderTest.RESTReaderTest"
+ * ../gradlew test --tests "nmea.consumers.reader.RESTReaderTest.RESTReaderTest"
  */
 public class RESTReaderTest {
 
     @Test
-    public void RESTReaderTest() {
+    public void RESTReader() {
 
-        String serverNameOrIP = "192.168.1.102";
+        String serverNameOrIP = "localhost"; // ""192.168.1.102";
 
         RESTClient nmeaClient = new RESTClient();
 
