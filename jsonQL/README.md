@@ -1,5 +1,5 @@
 # A JSON Utility, WiP
-> Note: might not be necessary... Look into `jq`.
+> Note: might not be necessary... Look into `jq`, and `jackson-jq`.
 
 To use like 
 ```text

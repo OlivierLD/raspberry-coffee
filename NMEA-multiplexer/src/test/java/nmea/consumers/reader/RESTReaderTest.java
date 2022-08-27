@@ -29,7 +29,8 @@ public class RESTReaderTest {
                 serverNameOrIP,
                 8_080,
                 "/eink2_13/oplist",
-                ""));
+                "",
+                null));
         nmeaClient.startWorking();
 
         TimeUtil.delay(10_000L);

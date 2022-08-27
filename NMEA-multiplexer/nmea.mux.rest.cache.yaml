@@ -22,6 +22,7 @@ channels:
 #    http-port: 8080
 #    query-path: /eink2_13/oplist
     # query-string:     # Would include the ?, and subsequent &...
+    # jqs: ".NMEA_AS_IS.RMC"  # jq-like exception
     verbose: true
 forwarders:
   - type: console

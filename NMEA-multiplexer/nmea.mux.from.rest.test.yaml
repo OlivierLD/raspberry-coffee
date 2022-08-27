@@ -14,6 +14,7 @@ channels:
     http-port: 8080
     query-path: /eink2_13/oplist
     # query-string:     # Would include the ?, and subsequent &...
+    jqs: .
     verbose: true
 forwarders:
   - type: console

@@ -1,21 +1,30 @@
 package nmea.consumers.reader;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import http.HTTPServer;
 import http.client.HTTPClient;
+import net.thisptr.jackson.jq.JsonQuery;
+import net.thisptr.jackson.jq.Scope;
+import net.thisptr.jackson.jq.Versions;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
 import nmea.api.NMEAReader;
 import utils.TimeUtil;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.net.BindException;
 import java.net.ConnectException;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
+ * Assumes JSON Output from the REST service invoked with GET
+ *
  * REST reader. WiP
  * - filters ?
  * - verbs ?
@@ -32,27 +41,30 @@ public class RESTReader extends NMEAReader {
 	private String protocol = DEFAULT_PROTOCOL;
 	private String queryPath = DEFAULT_QUERY_PATH;
 	private String queryString = DEFAULT_QUERY_STRING;
+	private String jqsString = null;
 
 	private ObjectMapper mapper = new ObjectMapper();
+	private final Scope ROOT_SCOPE = Scope.newEmptyScope();  // TODO Move to top
 
 	public RESTReader(List<NMEAListener> al) {
-		this(null, al, DEFAULT_PROTOCOL, DEFAULT_HOST_NAME, DEFAULT_HTTP_PORT, DEFAULT_QUERY_PATH, DEFAULT_QUERY_STRING);
+		this(null, al, DEFAULT_PROTOCOL, DEFAULT_HOST_NAME, DEFAULT_HTTP_PORT, DEFAULT_QUERY_PATH, DEFAULT_QUERY_STRING, null);
 	}
 
 	public RESTReader(List<NMEAListener> al, int http) {
-		this(null, al, DEFAULT_PROTOCOL, DEFAULT_HOST_NAME, http, DEFAULT_QUERY_PATH, DEFAULT_QUERY_STRING);
+		this(null, al, DEFAULT_PROTOCOL, DEFAULT_HOST_NAME, http, DEFAULT_QUERY_PATH, DEFAULT_QUERY_STRING, null);
 	}
 
 	public RESTReader(List<NMEAListener> al, String host, int http) {
-		this(null, al, DEFAULT_PROTOCOL, host, http, DEFAULT_QUERY_PATH, DEFAULT_QUERY_STRING);
+		this(null, al, DEFAULT_PROTOCOL, host, http, DEFAULT_QUERY_PATH, DEFAULT_QUERY_STRING, null);
 	}
-	public RESTReader(String threadName, List<NMEAListener> al, String protocol, String host, int http, String path, String qs) {
+	public RESTReader(String threadName, List<NMEAListener> al, String protocol, String host, int http, String path, String qs, String jqs) {
 		super(threadName != null ? threadName : "rest-thread", al);
 		this.protocol = protocol;
 		this.hostName = host;
 		this.httpPort = http;
 		this.queryPath = path;
 		this.queryString = qs;
+		this.jqsString = jqs;
 	}
 
 	public String getProtocol() {
@@ -70,6 +82,9 @@ public class RESTReader extends NMEAReader {
 	public String getQueryString() {
 		return this.queryString;
 	}
+	public String getJQString() {
+		return this.jqsString;
+	}
 
 	private String restURL;
 
@@ -86,25 +101,34 @@ public class RESTReader extends NMEAReader {
 		try {
 			while (this.canRead()) {
 				try {
-					// TODO Get verb and protocol from the props
+					// TODO Get verb and protocol from the props ?
 					HTTPServer.Request request = new HTTPServer.Request("GET", restURL, "HTTP/1.1");
 					Map<String, String> reqHeaders = new HashMap<>();
 					request.setHeaders(reqHeaders);
 					final HTTPServer.Response response = HTTPClient.doRequest(request);
 					String payload = new String(response.getPayload());
-					// TODO return the response message/status ?
-					// TODO Apply a filter on the JSON payload (like jq ?), like NMEA_AS_IS/RMC. See jackson-jq
+					// See jackson-jq
 					if (response.getHeaders() != null) {
 						String contentType = response.getHeaders().get("Content-Type"); // TODO Upper/lower case
-						Object objPayload = payload;
+						AtomicReference<String> objPayload = new AtomicReference<>(payload);
 						if ("application/json".equals(contentType)) {
-							Map<String, Object> map = mapper.readValue(payload, Map.class);
-							// Hard-coded for now
-							Map<String, Object> nmeaAsIs = (Map) map.get("NMEA_AS_IS");
-							if (nmeaAsIs != null) {
-								objPayload = nmeaAsIs.get("RMC");
+							String jqString = getJQString();
+							if (jqString != null) {
+								JsonQuery jq = JsonQuery.compile(jqString /*".NMEA_AS_IS.RMC" */, Versions.JQ_1_6);
+								JsonNode jsonNode = mapper.readTree(new StringReader(payload));
+								jq.apply(ROOT_SCOPE, jsonNode, (out) -> {
+									if (out.isTextual() /*&& command.hasOption(OPT_RAW.getOpt()) */) {
+										objPayload.set(out.asText());
+									} else {
+										try {
+											objPayload.set(mapper.writeValueAsString(out));
+										} catch (IOException e) {
+											throw new RuntimeException(e);
+										}
+									}
+								});
 							}
-							payload = mapper.writeValueAsString(objPayload);
+							payload = objPayload.get(); // mapper.writeValueAsString(objPayload.get());
 						}
 					}
 					if (verbose) {

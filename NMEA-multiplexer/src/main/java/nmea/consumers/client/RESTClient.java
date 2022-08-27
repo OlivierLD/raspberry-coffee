@@ -116,7 +116,8 @@ public class RESTClient extends NMEAClient {
 				serverNameOrIP,
 				8_080,
 				"/oplist/",
-				""));
+				"",
+				null));
 		nmeaClient.startWorking();
 	}
 }
