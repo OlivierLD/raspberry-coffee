@@ -1,5 +1,7 @@
 package nmea.consumers.reader;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import http.HTTPServer;
 import http.client.HTTPClient;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
@@ -15,6 +17,8 @@ import java.util.Map;
 
 /**
  * REST reader. WiP
+ * - filters ?
+ * - verbs ?
  */
 public class RESTReader extends NMEAReader {
 	private final static String DEFAULT_HOST_NAME = "localhost";
@@ -78,44 +82,31 @@ public class RESTReader extends NMEAReader {
 				this.queryPath,
 				this.queryString != null ? this.queryString : "" );
 		try {
-			Map<String, String> headers = new HashMap<>(); // Empty
 			while (this.canRead()) {
 				try {
-					String httpResponse = HTTPClient.doGet(restURL, headers);
-					String payload = httpResponse;
-					if (true) { // Distinct headers and payload...
-						String[] split = httpResponse.split("\n");
-						if (split.length > 0) {
-							if (split[0].startsWith("HTTP")) {
-								String[] splitStatus = split[0].split(" ");
-								System.out.printf("Status: %s\n", splitStatus[1]);
+					// TODO Get verb and protocol from the props
+					HTTPServer.Request request = new HTTPServer.Request("GET", restURL, "HTTP/1.1");
+					Map<String, String> reqHeaders = new HashMap<>();
+					request.setHeaders(reqHeaders);
+					final HTTPServer.Response response = HTTPClient.doRequest(request);
+					String payload = new String(response.getPayload());
+					// TODO return the response message/status ?
+					// TODO Apply a filter on the JSON payload (like jq ?), like NMEA_AS_IS/RMC
+					if (response.getHeaders() != null) {
+						String contentType = response.getHeaders().get("Content-Type"); // TODO Upper/lower case
+						if ("application/json".equals(contentType)) {
+							ObjectMapper mapper = new ObjectMapper();
+							Map<String, Object> map = mapper.readValue(payload, Map.class);
+							// Hard-coded for now
+							Map<String, Object> nmeaAsIs = (Map) map.get("NMEA_AS_IS");
+							if (nmeaAsIs != null) {
+								payload = (String) nmeaAsIs.get("RMC");
 							}
-							Map<String, Object> responseHeaders = new HashMap<>();
-							for (int i = 1; i < split.length; i++) {
-								System.out.printf("Idx %d, Len %d, %s\n", i, split[i].trim().length(), split[i]);
-								if (split[i].contains(":")) {
-									String[] nameValue = split[i].split(":");
-									responseHeaders.put(nameValue[0].trim(), nameValue[1].trim());
-								} else {
-									if (split[i].trim().length() == 0) { // End of headers
-										System.out.printf(">> i=%d, len: %d\n", i, split.length);
-										if ((split.length - 1) > i) {
-											payload = split[i + 1];
-											System.out.printf("Payload becomes: %s\n", payload);
-											break;
-										}
-									}
-								}
-							}
-							System.out.println("--- Response Headers ---");
-							responseHeaders.forEach((key, value) -> System.out.printf("%s: %s\n", key, value));
-							System.out.println("------------------------");
 						}
 					}
 					if (verbose) {
-						System.out.println(payload);
+						System.out.printf(">> REST Reader: %s\n", payload);
 					}
-					// TODO return the response message/status ?
 					NMEAEvent n = new NMEAEvent(this, payload);
 					super.fireDataRead(n);
 				} catch (BindException be) {

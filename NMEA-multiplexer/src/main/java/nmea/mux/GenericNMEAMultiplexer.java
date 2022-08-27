@@ -258,6 +258,8 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
      * WiP.
      * Triggered from the main, if a CLI parameter "--interactive-config" is present.
      *
+     * TODO Update that one !!! REST & Cie...
+     *
      * @return the generated Properties Object.
      */
     private static Properties interactiveConfig() {

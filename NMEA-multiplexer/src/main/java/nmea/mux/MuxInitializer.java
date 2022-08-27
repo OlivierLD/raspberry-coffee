@@ -166,9 +166,9 @@ public class MuxInitializer {
                                 e.printStackTrace();
                             }
                             break;
-                        case "rest":  // TODO Finish to implement it
+                        case "rest":  // TODO WiP
                             try {
-                                System.out.printf("REST Consumer required here (#%d), come back soon! (See above)\n", muxIdx);
+//                                System.out.printf("REST Consumer required here (#%d), come back soon! (See above)\n", muxIdx);
                                 String machineName = muxProps.getProperty(String.format("mux.%s.machine-name", MUX_IDX_FMT.format(muxIdx)));
                                 String protocol = muxProps.getProperty(String.format("mux.%s.protocol", MUX_IDX_FMT.format(muxIdx)));
                                 String httPort = muxProps.getProperty(String.format("mux.%s.http-port", MUX_IDX_FMT.format(muxIdx)));
