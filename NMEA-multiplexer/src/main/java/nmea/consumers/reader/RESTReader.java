@@ -91,7 +91,7 @@ public class RESTReader extends NMEAReader {
 					if (split.length > 0) {
 						if (split[0].startsWith("HTTP")) {
 							String[] splitStatus = split[0].split(" ");
-							System.out.printf("Status: %d\n", splitStatus[1]);
+							System.out.printf("Status: %s\n", splitStatus[1]);
 						}
 						Map<String, Object> responseHeaders = new HashMap<>();
 						for (int i=1; i<split.length; i++) {
