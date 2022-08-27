@@ -87,31 +87,33 @@ public class RESTReader extends NMEAReader {
 					}
 					// Distinct headers and payload...
 					String payload = httpResponse;
-					String[] split = httpResponse.split("\n");
-					if (split.length > 0) {
-						if (split[0].startsWith("HTTP")) {
-							String[] splitStatus = split[0].split(" ");
-							System.out.printf("Status: %s\n", splitStatus[1]);
-						}
-						Map<String, Object> responseHeaders = new HashMap<>();
-						for (int i=1; i<split.length; i++) {
-							System.out.printf("Idx %d, Len %d, %s\n", i, split[i].trim().length(), split[i]);
-							if (split[i].contains(":")) {
-								String[] nameValue = split[i].split(":");
-								responseHeaders.put(nameValue[0].trim(), nameValue[1].trim());
-							} else {
-								if (split[i].trim().length() == 0) { // End of headers
-									System.out.printf(">> i=%d, len: %d\n", i, split.length);
-									if (split.length > i) {
-										payload = split[i + 1];
-										break;
+					if (true) {
+						String[] split = httpResponse.split("\n");
+						if (split.length > 0) {
+							if (split[0].startsWith("HTTP")) {
+								String[] splitStatus = split[0].split(" ");
+								System.out.printf("Status: %s\n", splitStatus[1]);
+							}
+							Map<String, Object> responseHeaders = new HashMap<>();
+							for (int i = 1; i < split.length; i++) {
+								System.out.printf("Idx %d, Len %d, %s\n", i, split[i].trim().length(), split[i]);
+								if (split[i].contains(":")) {
+									String[] nameValue = split[i].split(":");
+									responseHeaders.put(nameValue[0].trim(), nameValue[1].trim());
+								} else {
+									if (split[i].trim().length() == 0) { // End of headers
+										System.out.printf(">> i=%d, len: %d\n", i, split.length);
+										if (split.length > i) {
+											payload = split[i + 1];
+											break;
+										}
 									}
 								}
 							}
+							System.out.println("--- Response Headers ---");
+							responseHeaders.forEach((key, value) -> System.out.printf("%s: %s\n", key, value));
+							System.out.println("------------------------");
 						}
-						System.out.println("--- Response Headers ---");
-						responseHeaders.forEach((key, value) -> System.out.printf("%s: %s\n", key, value));
-						System.out.println("------------------------");
 					}
 
 					// TODO return the response message/status ?
