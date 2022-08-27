@@ -82,12 +82,8 @@ public class RESTReader extends NMEAReader {
 			while (this.canRead()) {
 				try {
 					String httpResponse = HTTPClient.doGet(restURL, headers);
-					if (verbose) {
-						System.out.println(">> Bing!");
-					}
-					// Distinct headers and payload...
 					String payload = httpResponse;
-					if (true) {
+					if (true) { // Distinct headers and payload...
 						String[] split = httpResponse.split("\n");
 						if (split.length > 0) {
 							if (split[0].startsWith("HTTP")) {
@@ -103,8 +99,9 @@ public class RESTReader extends NMEAReader {
 								} else {
 									if (split[i].trim().length() == 0) { // End of headers
 										System.out.printf(">> i=%d, len: %d\n", i, split.length);
-										if (split.length > i) {
+										if ((split.length - 1) > i) {
 											payload = split[i + 1];
+											System.out.printf("Payload becomes: %s\n", payload);
 											break;
 										}
 									}
@@ -115,10 +112,11 @@ public class RESTReader extends NMEAReader {
 							System.out.println("------------------------");
 						}
 					}
-
+					if (verbose) {
+						System.out.println(payload);
+					}
 					// TODO return the response message/status ?
 					NMEAEvent n = new NMEAEvent(this, payload);
-					System.out.println(httpResponse);
 					super.fireDataRead(n);
 				} catch (BindException be) {
 					System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + httpPort);
