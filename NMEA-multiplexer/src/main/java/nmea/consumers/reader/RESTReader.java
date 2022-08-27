@@ -101,6 +101,7 @@ public class RESTReader extends NMEAReader {
 								responseHeaders.put(nameValue[0].trim(), nameValue[1].trim());
 							} else {
 								if (split[i].trim().length() == 0) { // End of headers
+									System.out.printf(">> i=%d, len: %d\n", i, split.length);
 									if (split.length > i) {
 										payload = split[i + 1];
 										break;
@@ -108,8 +109,9 @@ public class RESTReader extends NMEAReader {
 								}
 							}
 						}
-						System.out.println("Response Headers:");
+						System.out.println("--- Response Headers ---");
 						responseHeaders.forEach((key, value) -> System.out.printf("%s: %s\n", key, value));
+						System.out.println("------------------------");
 					}
 
 					// TODO return the response message/status ?
