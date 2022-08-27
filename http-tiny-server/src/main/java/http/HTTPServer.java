@@ -108,7 +108,7 @@ public class HTTPServer {
 		);
 
 		private String verb;
-		private String path;
+		private String path;      // FULL query URL, http://machine:port/path/path2?qs1=a&qs2=B
 		private String protocol;
 		private byte[] content;
 		private Map<String, String> headers;
@@ -143,7 +143,7 @@ public class HTTPServer {
 			return content;
 		}
 
-		public void setContent(byte[] content) {
+		public void setContent(byte[] content) { // Aka payload
 			this.content = content;
 		}
 

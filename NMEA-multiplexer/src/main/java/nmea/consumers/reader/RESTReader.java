@@ -33,6 +33,8 @@ public class RESTReader extends NMEAReader {
 	private String queryPath = DEFAULT_QUERY_PATH;
 	private String queryString = DEFAULT_QUERY_STRING;
 
+	private ObjectMapper mapper = new ObjectMapper();
+
 	public RESTReader(List<NMEAListener> al) {
 		this(null, al, DEFAULT_PROTOCOL, DEFAULT_HOST_NAME, DEFAULT_HTTP_PORT, DEFAULT_QUERY_PATH, DEFAULT_QUERY_STRING);
 	}
@@ -91,17 +93,18 @@ public class RESTReader extends NMEAReader {
 					final HTTPServer.Response response = HTTPClient.doRequest(request);
 					String payload = new String(response.getPayload());
 					// TODO return the response message/status ?
-					// TODO Apply a filter on the JSON payload (like jq ?), like NMEA_AS_IS/RMC
+					// TODO Apply a filter on the JSON payload (like jq ?), like NMEA_AS_IS/RMC. See jackson-jq
 					if (response.getHeaders() != null) {
 						String contentType = response.getHeaders().get("Content-Type"); // TODO Upper/lower case
+						Object objPayload = payload;
 						if ("application/json".equals(contentType)) {
-							ObjectMapper mapper = new ObjectMapper();
 							Map<String, Object> map = mapper.readValue(payload, Map.class);
 							// Hard-coded for now
 							Map<String, Object> nmeaAsIs = (Map) map.get("NMEA_AS_IS");
 							if (nmeaAsIs != null) {
-								payload = (String) nmeaAsIs.get("RMC");
+								objPayload = nmeaAsIs.get("RMC");
 							}
+							payload = mapper.writeValueAsString(objPayload);
 						}
 					}
 					if (verbose) {

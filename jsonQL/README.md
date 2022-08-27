@@ -7,7 +7,7 @@ curl [--silent] -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/li
 ```
 also try
 ```text
-curl [--silent]  -X GET http://192.168.42.19:8989/sf/status | java -Djson.debug=true -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL "--query:.*/(elevation|azimuth)"
+curl [--silent] -X GET http://192.168.42.19:8989/sf/status | java -Djson.debug=true -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL "--query:.*/(elevation|azimuth)"
 ```
 
 ### RegEx support (WiP)
