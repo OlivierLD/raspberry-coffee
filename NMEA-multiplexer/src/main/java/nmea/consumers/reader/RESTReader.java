@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TCP reader
+ * REST reader. WiP
  */
 public class RESTReader extends NMEAReader {
 	private final static String DEFAULT_HOST_NAME = "localhost";
@@ -95,18 +95,25 @@ public class RESTReader extends NMEAReader {
 						}
 						Map<String, Object> responseHeaders = new HashMap<>();
 						for (int i=1; i<split.length; i++) {
-							System.out.printf("Len %d, %s\n", split[i].length(), split[i]);
+							System.out.printf("Idx %d, Len %d, %s\n", i, split[i].trim().length(), split[i]);
 							if (split[i].contains(":")) {
 								String[] nameValue = split[i].split(":");
 								responseHeaders.put(nameValue[0].trim(), nameValue[1].trim());
 							} else {
-								// ...
+								if (split[i].trim().length() == 0) { // End of headers
+									if (split.length > i) {
+										payload = split[i + 1];
+										break;
+									}
+								}
 							}
 						}
+						System.out.println("Response Headers:");
+						responseHeaders.forEach((key, value) -> System.out.printf("%s: %s\n", key, value));
 					}
 
 					// TODO return the response message/status ?
-					NMEAEvent n = new NMEAEvent(this, httpResponse);
+					NMEAEvent n = new NMEAEvent(this, payload);
 					System.out.println(httpResponse);
 					super.fireDataRead(n);
 				} catch (BindException be) {
