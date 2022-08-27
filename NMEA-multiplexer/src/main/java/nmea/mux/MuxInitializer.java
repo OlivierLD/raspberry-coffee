@@ -166,7 +166,28 @@ public class MuxInitializer {
                                 e.printStackTrace();
                             }
                             break;
-                        case "rest":  // TODO Implement it
+                        case "rest":  // TODO Finish to implement it
+                            try {
+                                System.out.printf("REST Consumer required here (#%d), come back soon! (See above)\n", muxIdx);
+                                String machineName = muxProps.getProperty(String.format("mux.%s.machine-name", MUX_IDX_FMT.format(muxIdx)));
+                                String protocol = muxProps.getProperty(String.format("mux.%s.protocol", MUX_IDX_FMT.format(muxIdx)));
+                                String httPort = muxProps.getProperty(String.format("mux.%s.http-port", MUX_IDX_FMT.format(muxIdx)));
+                                String queryPath = muxProps.getProperty(String.format("mux.%s.query-path", MUX_IDX_FMT.format(muxIdx)));
+                                String queryString = muxProps.getProperty(String.format("mux.%s.query-string", MUX_IDX_FMT.format(muxIdx)));
+                                deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+                                sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+                                RESTClient restClient = new RESTClient(
+                                        !deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
+                                        !sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
+                                        mux);
+                                restClient.initClient();
+                                restClient.setReader(new RESTReader("MUX-RESTReader", restClient.getListeners(), protocol, machineName, Integer.parseInt(httPort), queryPath, queryString));
+                                restClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
+                                nmeaDataClients.add(restClient);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            break;
                         case "tcp":
                             try {
                                 String tcpPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
@@ -966,7 +987,7 @@ public class MuxInitializer {
                         int nb = nbChannels.incrementAndGet();
                         channel.keySet().forEach(channelKey -> {
                             String propName = String.format("mux.%02d.%s", nb, channelKey);
-                            properties.setProperty(propName, channel.get(channelKey).toString());
+                            properties.setProperty(propName, channel.get(channelKey) == null ? null : channel.get(channelKey).toString());
                             if ("yes".equals(System.getProperty("yaml.tx.verbose", "no"))) {
                                 System.out.printf("Setting [%s] to [%s]\n", propName, channel.get(channelKey).toString());
                             }

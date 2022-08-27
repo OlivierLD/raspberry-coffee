@@ -76,7 +76,7 @@ public class RESTReader extends NMEAReader {
 				this.hostName,
 				this.httpPort,
 				this.queryPath,
-				this.queryString);
+				this.queryString != null ? this.queryString : "" );
 		try {
 			Map<String, String> headers = new HashMap<>(); // Empty
 			while (this.canRead()) {
