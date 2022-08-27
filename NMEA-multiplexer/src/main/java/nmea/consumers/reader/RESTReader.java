@@ -82,9 +82,29 @@ public class RESTReader extends NMEAReader {
 			while (this.canRead()) {
 				try {
 					String httpResponse = HTTPClient.doGet(restURL, headers);
-					if (verbose) { // TODO A parameter
-						System.out.println("Bing!");
+					if (verbose) {
+						System.out.println(">> Bing!");
 					}
+					// Distinct headers and payload...
+					String payload = httpResponse;
+					String[] split = httpResponse.split("\n");
+					if (split.length > 0) {
+						if (split[0].startsWith("HTTP")) {
+							String[] splitStatus = split[0].split(" ");
+							System.out.printf("Status: %d\n", splitStatus[1]);
+						}
+						Map<String, Object> responseHeaders = new HashMap<>();
+						for (int i=1; i<split.length; i++) {
+							System.out.printf("Len %d, %s\n", split[i].length(), split[i]);
+							if (split[i].contains(":")) {
+								String[] nameValue = split[i].split(":");
+								responseHeaders.put(nameValue[0].trim(), nameValue[1].trim());
+							} else {
+								// ...
+							}
+						}
+					}
+
 					// TODO return the response message/status ?
 					NMEAEvent n = new NMEAEvent(this, httpResponse);
 					System.out.println(httpResponse);

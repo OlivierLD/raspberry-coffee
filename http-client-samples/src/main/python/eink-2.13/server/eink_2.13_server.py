@@ -140,7 +140,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
     # GET Method Definition
     def do_GET(self):
         if REST_DEBUG:
-            print("GET methods")
+            print("GET method")
         # defining all the headers
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
