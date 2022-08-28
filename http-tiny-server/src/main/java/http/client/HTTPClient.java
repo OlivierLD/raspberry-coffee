@@ -112,7 +112,7 @@ public class HTTPClient {
 					long delta = now - started;
 					double rate = (double) content.length / ((double) delta / 1_000D);
 					if (DEBUG) {
-						System.out.println(String.format("Downloading at %.02f bytes per second.", rate));
+						System.out.printf("Downloading at %.02f bytes per second.\n", rate);
 					}
 					nbLoop++;
 				}
