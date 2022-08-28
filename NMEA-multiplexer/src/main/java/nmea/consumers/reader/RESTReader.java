@@ -100,6 +100,7 @@ public class RESTReader extends NMEAReader {
 	 * @param response The response tpo process
 	 * @throws Exception Oops.
 	 */
+	@SuppressWarnings("unchecked")
 	private void manageRESTResponse(HTTPServer.Response response) {
 		try {
 			String payload = new String(response.getPayload());
@@ -175,7 +176,7 @@ public class RESTReader extends NMEAReader {
 		try {
 			while (this.canRead()) {
 				try {
-					// TODO Get verb and protocol from the props ?
+					// Hard-coded verb and protocol for now.
 					HTTPServer.Request request = new HTTPServer.Request("GET", restURL, "HTTP/1.1");
 					Map<String, String> reqHeaders = new HashMap<>();
 					request.setHeaders(reqHeaders);
