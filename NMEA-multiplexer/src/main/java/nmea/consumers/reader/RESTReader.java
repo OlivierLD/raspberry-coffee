@@ -201,7 +201,7 @@ public class RESTReader extends NMEAReader {
 							if ("true".equals(System.getProperty("verbose.data.verbose"))) {
 								System.out.println("Will try again (2)");
 							}
-						} else if (se instanceof SocketException && se.getMessage().startsWith("Network is unreachable (connect ")) {
+						} else if (/*se instanceof SocketException &&*/ se.getMessage().startsWith("Network is unreachable (connect ")) {
 							if ("true".equals(System.getProperty("verbose.data.verbose"))) {
 								System.out.println("Will try again (3)");
 							}
