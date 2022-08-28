@@ -188,10 +188,10 @@ public class RESTReader extends NMEAReader {
 					be.printStackTrace();
 					manageError(be);
 				} catch (final SocketException se) {
-					if (se.getMessage().indexOf("Connection refused") > -1) {
+					if (se.getMessage().contains("Connection refused")) {
 						System.out.println("Refused (1)");
 //						se.printStackTrace();
-					} else if (se.getMessage().indexOf("Connection reset") > -1) {
+					} else if (se.getMessage().contains("Connection reset")) {
 						System.out.println("Reset (2)");
 					} else {
 						if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage())) {
