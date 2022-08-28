@@ -47,7 +47,7 @@ public class RESTReader extends NMEAReader {
 	private String queryString = DEFAULT_QUERY_STRING;
 	private String jqsString = null; // jq syntax doc: https://lzone.de/cheat-sheet/jq
 
-	private ObjectMapper mapper = new ObjectMapper();
+	private final ObjectMapper mapper = new ObjectMapper();
 	private final Scope ROOT_SCOPE = Scope.newEmptyScope(); // jq scope
 
 	public RESTReader(List<NMEAListener> al) {
@@ -94,6 +94,7 @@ public class RESTReader extends NMEAReader {
 
 	/**
 	 * Processes the REST response. Designed in case it needs to be overridden.
+	 * Used as responseProcessor (see above)
 	 * (TODO Illustrate)
 	 *
 	 * @param response The response tpo process
@@ -193,12 +194,10 @@ public class RESTReader extends NMEAReader {
 					} else if (se.getMessage().indexOf("Connection reset") > -1) {
 						System.out.println("Reset (2)");
 					} else {
-						boolean tryAgain = false;
 						if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage())) {
 							if ("true".equals(System.getProperty("verbose.data.verbose"))) {
 								System.out.println("Will try again (1)");
 							}
-							tryAgain = true;
 							if ("true".equals(System.getProperty("verbose.data.verbose"))) {
 								System.out.println("Will try again (2)");
 							}
@@ -206,12 +205,9 @@ public class RESTReader extends NMEAReader {
 							if ("true".equals(System.getProperty("verbose.data.verbose"))) {
 								System.out.println("Will try again (3)");
 							}
-							tryAgain = true;
 						} else if (se instanceof ConnectException) { // Et hop!
-							tryAgain = false;
 							System.err.println("REST :" + se.getMessage());
 						} else {
-							tryAgain = false;
 							System.err.println("REST Server:" + se.getMessage());
 						}
 					}
