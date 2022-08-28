@@ -1,5 +1,6 @@
 package nmea.consumers.reader;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import http.HTTPServer;
@@ -24,12 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * Assumes JSON Output from the REST service invoked with GET
  *
  * REST reader. WiP
- * - filters ?
  * - verbs ?
  */
 public class RESTReader extends NMEAReader {
@@ -89,6 +90,8 @@ public class RESTReader extends NMEAReader {
 		return this.jqsString;
 	}
 
+	public Consumer<HTTPServer.Response> responseProcessor = this::manageRESTResponse;
+
 	/**
 	 * Processes the REST response. Designed in case it needs to be overridden.
 	 * (TODO Illustrate)
@@ -96,56 +99,66 @@ public class RESTReader extends NMEAReader {
 	 * @param response The response tpo process
 	 * @throws Exception Oops.
 	 */
-	private void manageRESTResponse(HTTPServer.Response response) throws Exception {
-		String payload = new String(response.getPayload());
-		// See jackson-jq
-		if (response.getHeaders() != null) {
-			String contentType = response.getHeaders().get("Content-Type"); // TODO Upper/lower case
-			AtomicReference<String> objPayload = new AtomicReference<>(payload);
-			if ("application/json".equals(contentType)) {
-				String jqString = getJQString();
-				if (jqString != null) {
-					try {
-						JsonQuery jq = JsonQuery.compile(jqString /*".NMEA_AS_IS.RMC" */, Versions.JQ_1_6);
-						JsonNode jsonNode = mapper.readTree(new StringReader(payload));
-						jq.apply(ROOT_SCOPE, jsonNode, (out) -> {
-							if (out.isTextual() /*&& command.hasOption(OPT_RAW.getOpt()) */) {
-								objPayload.set(out.asText());
-							} else {
-								try {
-									objPayload.set(mapper.writeValueAsString(out));
-								} catch (IOException e) {
-									throw new RuntimeException(e);
+	private void manageRESTResponse(HTTPServer.Response response) {
+		try {
+			String payload = new String(response.getPayload());
+			// See jackson-jq
+			if (response.getHeaders() != null) {
+				String contentType = response.getHeaders().get("Content-Type"); // TODO Upper/lower case
+				AtomicReference<String> objPayload = new AtomicReference<>(payload);
+				if ("application/json".equals(contentType)) {
+					String jqString = getJQString();
+					if (jqString != null) {
+						try {
+							JsonQuery jq = JsonQuery.compile(jqString /*".NMEA_AS_IS.RMC" */, Versions.JQ_1_6);
+							JsonNode jsonNode = mapper.readTree(new StringReader(payload));
+							jq.apply(ROOT_SCOPE, jsonNode, (out) -> {
+								if (out.isTextual() /*&& command.hasOption(OPT_RAW.getOpt()) */) {
+									objPayload.set(out.asText());
+								} else {
+									try {
+										objPayload.set(mapper.writeValueAsString(out));
+									} catch (IOException e) {
+										throw new RuntimeException(e);
+									}
 								}
-							}
-						});
-					} catch (JsonQueryException jqe) {
-						// Query cannot be parsed.
-						jqe.printStackTrace();
+							});
+						} catch (JsonQueryException jqe) {
+							// Query cannot be parsed.
+							jqe.printStackTrace();
+						}
 					}
+					payload = objPayload.get(); // mapper.writeValueAsString(objPayload.get());
 				}
-				payload = objPayload.get(); // mapper.writeValueAsString(objPayload.get());
 			}
-		}
-		if (verbose) {
-			System.out.printf(">> REST Reader: %s\n", payload);
-		}
-		// Multi-node result here? Re-parse.
-		Object finalObject = mapper.readValue(payload, Object.class);
-		final List<String> dataToFire = new ArrayList<>();
-		if (finalObject instanceof Map) {
-			((Map<String, String>)finalObject).forEach((k, v) -> dataToFire.add(v));
-		} else {
-			dataToFire.add(payload);
-		}
-		// Loop on all data to fire.
-		dataToFire.forEach(data -> {
-			if (!data.endsWith(NMEAParser.NMEA_SENTENCE_SEPARATOR)) {
-				data += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+			if (verbose) {
+				System.out.printf(">> REST Reader: %s\n", payload);
 			}
-			NMEAEvent n = new NMEAEvent(this, data);
-			super.fireDataRead(n);
-		});
+			final List<String> dataToFire = new ArrayList<>();
+			// Multi-node result here? Re-parse.
+			try {
+				Object finalObject = mapper.readValue(payload, Object.class);
+				if (finalObject instanceof Map) {
+					((Map<String, String>) finalObject).forEach((k, v) -> dataToFire.add(v));
+				} else {
+					dataToFire.add(payload);
+				}
+			} catch (JsonParseException jpe) {
+				// Not an Object, consider it a String.
+				dataToFire.add(payload);
+			}
+
+			// Loop on all data to fire.
+			dataToFire.forEach(data -> {
+				if (!data.endsWith(NMEAParser.NMEA_SENTENCE_SEPARATOR)) {
+					data += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+				}
+				NMEAEvent n = new NMEAEvent(this, data);
+				super.fireDataRead(n);
+			});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	@Override
@@ -167,7 +180,7 @@ public class RESTReader extends NMEAReader {
 					request.setHeaders(reqHeaders);
 					final HTTPServer.Response response = HTTPClient.doRequest(request);
 
-					manageRESTResponse(response); // That one can be overridden
+					responseProcessor.accept(response);
 
 				} catch (BindException be) {
 					System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + httpPort);

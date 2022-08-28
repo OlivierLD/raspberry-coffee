@@ -18,6 +18,7 @@ channels:
 #    query-path: /eink2_13/oplist
     # query-string:     # Would include the ?, and subsequent &...
     jqs: ".NMEA_AS_IS | { RMC, GLL }"  # jq-like expression
+    # jqs: ".NMEA_AS_IS .RMC"  # jq-like expression
     # sentence.filters: RMC,GLL
     # device.filters: II
     verbose: false
