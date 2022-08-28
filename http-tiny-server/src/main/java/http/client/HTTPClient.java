@@ -26,6 +26,59 @@ public class HTTPClient {
 
 	private final static boolean DEBUG = "true".equals(System.getProperty("http.client.verbose", "false"));
 
+	public static HTTPServer.Response doRequest(HTTPServer.Request request) throws Exception {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		URL url = new URL(request.getPath(true));
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(request.getVerb());
+		for (String h : request.getHeaders().keySet()) {
+			conn.setRequestProperty(h, request.getHeaders().get(h));
+		}
+		conn.setUseCaches(false);
+		if (!"GET".equals(request.getVerb())) { // TODO May need tweaks...
+			conn.setDoOutput(true);
+			OutputStream os = conn.getOutputStream();
+			os.write(request.getContent());
+			os.flush();
+			os.close();
+		}
+		response.setStatus(conn.getResponseCode());
+
+		Map<String, List<String>> headerFields = conn.getHeaderFields();
+		Map<String, String> map = new HashMap<>();
+		headerFields.keySet().forEach(key -> {
+			if (key != null) { // Case of the HTTP/1.1 200 OK, for example.
+				map.put(key, String.join(",", headerFields.get(key)));
+			}
+		});
+		response.setHeaders(map);
+
+		// Response payload
+		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+		StringBuilder sb = new StringBuilder();
+		String output;
+		if (DEBUG) {
+			System.out.println("Output from Server .... \n");
+		}
+		while ((output = br.readLine()) != null) {
+			if (DEBUG) {
+				System.out.println(output);
+			}
+			sb.append(output);
+		}
+		response.setPayload(sb.toString().getBytes());
+		conn.disconnect();
+
+		return response;
+	}
+
+	/**
+	 * Simplified version for GET. Use {@link #doRequest(HTTPServer.Request)} for a more exhaustive implementation.
+	 * @param urlStr The full URL, like httpX://machine:port/the/path?query=string
+	 * @param headers Map of headers
+	 * @return the returned payload
+	 * @throws Exception Oops
+	 */
 	public static String doGet(String urlStr, Map<String, String> headers) throws Exception {
 		int responseCode = 0;
 		String getContent = "";
@@ -81,48 +134,14 @@ public class HTTPClient {
 		return getContent;
 	}
 
-	public static HTTPServer.Response doRequest(HTTPServer.Request request) throws Exception {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		URL url = new URL(request.getPath(true));
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod(request.getVerb());
-		for (String h : request.getHeaders().keySet()) {
-			conn.setRequestProperty(h, request.getHeaders().get(h));
-		}
-		conn.setUseCaches(false);
-		if (!"GET".equals(request.getVerb())) { // TODO May need tweaks...
-			conn.setDoOutput(true);
-			OutputStream os = conn.getOutputStream();
-			os.write(request.getContent());
-			os.flush();
-			os.close();
-		}
-		response.setStatus(conn.getResponseCode());
-
-		Map<String, List<String>> headerFields = conn.getHeaderFields();
-		Map<String, String> map = new HashMap<>();
-		headerFields.keySet().forEach(key -> map.put(key, String.join(",", headerFields.get(key))));
-		response.setHeaders(map);
-
-		// Response payload
-		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-		StringBuilder sb = new StringBuilder();
-		String output;
-	  if (DEBUG) {
-	  	System.out.println("Output from Server .... \n");
-	  }
-		while ((output = br.readLine()) != null) {
-			if (DEBUG) {
-				System.out.println(output);
-			}
-			sb.append(output);
-		}
-		response.setPayload(sb.toString().getBytes());
-		conn.disconnect();
-
-		return response;
-	}
-
+	/**
+	 * Simplified version for POST. Use {@link #doRequest(HTTPServer.Request)} for a more exhaustive implementation.
+	 * @param urlStr The full URL, like httpX://machine:port/the/path?query=string
+	 * @param headers Map of headers
+	 * @param payload The payload, as a String
+	 * @return the simplified HTTPResponse (in this class, NOT HTTPServer.Response)
+	 * @throws Exception Oops
+	 */
 	public static HTTPResponse doPost(String urlStr, Map<String, String> headers, String payload) throws Exception {
 		int responseCode = 0;
 		URL url = new URL(urlStr);
@@ -176,6 +195,14 @@ public class HTTPClient {
 		return response;
 	}
 
+	/**
+	 * Simplified version for PUT. Use {@link #doRequest(HTTPServer.Request)} for a more exhaustive implementation.
+	 * @param urlStr The full URL, like httpX://machine:port/the/path?query=string
+	 * @param headers Map of headers
+	 * @param payload The payload, as a String
+	 * @return the simplified HTTPResponse (in this class, NOT HTTPServer.Response)
+	 * @throws Exception Oops
+	 */
 	public static HTTPResponse doPut(String urlStr, Map<String, String> headers, String payload) throws Exception {
 		int responseCode = 0;
 		URL url = new URL(urlStr);
@@ -225,7 +252,7 @@ public class HTTPClient {
 		return response;
 	}
 
-	// This should NOT work.
+	// This should NOT work. This is for experiment.
 	public static int doCustomVerb(String verb, String urlStr, Map<String, String> headers, String payload) throws Exception {
 		int responseCode = 0;
 		URL url = new URL(urlStr);
@@ -307,5 +334,4 @@ public class HTTPClient {
 			return this.response;
 		}
 	}
-
 }

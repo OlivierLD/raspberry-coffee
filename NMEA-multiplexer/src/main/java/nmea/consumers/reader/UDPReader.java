@@ -94,8 +94,9 @@ public class UDPReader extends NMEAReader {
 					if (s.endsWith(NMEAParser.NMEA_SENTENCE_SEPARATOR))
 						s = s.substring(0, s.length() - NMEAParser.NMEA_SENTENCE_SEPARATOR.length());
 				}
-				if (!s.endsWith(NMEAParser.NMEA_SENTENCE_SEPARATOR))
+				if (!s.endsWith(NMEAParser.NMEA_SENTENCE_SEPARATOR)) {
 					s += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+				}
 				NMEAEvent n = new NMEAEvent(this, s);
 				super.fireDataRead(n);
 			}

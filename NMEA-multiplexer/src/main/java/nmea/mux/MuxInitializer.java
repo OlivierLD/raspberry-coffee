@@ -166,7 +166,7 @@ public class MuxInitializer {
                                 e.printStackTrace();
                             }
                             break;
-                        case "rest":  // TODO WiP
+                        case "rest":  // TODO WiP. Document
                             try {
 //                                System.out.printf("REST Consumer required here (#%d), come back soon! (See above)\n", muxIdx);
                                 String machineName = muxProps.getProperty(String.format("mux.%s.machine-name", MUX_IDX_FMT.format(muxIdx)));

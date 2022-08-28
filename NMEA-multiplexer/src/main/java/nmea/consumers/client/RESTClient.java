@@ -46,6 +46,7 @@ public class RESTClient extends NMEAClient {
 		private int port;
 		private String queryPath = "/";
 		private String queryString = "";
+		private String jsonQueryString;
 		private String verb = "GET"; // TODO See if more verbs are needed.
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
@@ -56,6 +57,9 @@ public class RESTClient extends NMEAClient {
 			protocol = ((RESTReader) instance.getReader()).getProtocol();
 			hostname = ((RESTReader) instance.getReader()).getHostname();
 			port = ((RESTReader) instance.getReader()).getPort();
+			queryPath = ((RESTReader) instance.getReader()).getQueryPath();
+			queryString = ((RESTReader) instance.getReader()).getQueryString();
+			jsonQueryString = ((RESTReader) instance.getReader()).getJQString();
 			verbose = instance.isVerbose();
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();

@@ -240,7 +240,23 @@ channels:
     mux.01.device.prefix=01
     mux.01.verbose=false
     ```
-- _Note_: there is an "Implicit" REST input 
+- `rest`
+  - For `GET` queries only (...for now)  
+    ```properties
+    mux.01.type=rest
+    mux.01.protocol=http
+    mux.01.machine-name=192.168.1.102
+    mux.01.http-port=8080
+    mux.01.query-path=/mux/cache
+    mux.01.query-string=?query=string  # Would include the ?, and subsequent &...
+    mux.01.jqs=".NMEA_AS_IS | { RMC, GLL }"  # jq-like expression
+    mux.01.verbose=false
+    ```
+    This one is more designed to be extended. More samples to come.  
+    The tricky point is that this has to generate a _valid_ NMEA String, and that requires
+    a knowledge of the structure of the payload returned by the service, if not some post-processing.
+  
+- _Note_: there is an "Implicit" REST input (to feed the cache)
     - Like a `rest` input channel (consumer)
     - If the `with.http.server` is running, then there is REST resource
     ```

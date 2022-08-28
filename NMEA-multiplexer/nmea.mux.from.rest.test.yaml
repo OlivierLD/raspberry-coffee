@@ -11,10 +11,10 @@ channels:
   - type: rest  # Just for tests of the rest consumer
     protocol: http
     machine-name: 192.168.1.102
-    http-port: 8080
+    http-port: 8888
     query-path: /eink2_13/oplist
     # query-string:     # Would include the ?, and subsequent &...
-    jqs: .
+    # jqs:
     verbose: true
 forwarders:
   - type: console
