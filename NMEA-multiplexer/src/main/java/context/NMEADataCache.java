@@ -142,7 +142,7 @@ public class NMEADataCache
 
 	// End of keys
 
-	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new ConcurrentHashMap<>();
+	private final Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new ConcurrentHashMap<>();
 	private final static long AIS_MAX_AGE =     600_000L; // Ten minutes. TODO A parameter
 	private final static long AIS_CLEANUP_FREQ = 60_000L; // One minute
 
@@ -151,7 +151,7 @@ public class NMEADataCache
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
 
-	private transient static List<String> NOT_TO_RESET = Arrays.asList(
+	private final transient static List<String> NOT_TO_RESET = Arrays.asList(
 					BSP_FACTOR,
 					AWS_FACTOR,
 					AWA_OFFSET,
@@ -163,7 +163,7 @@ public class NMEADataCache
 					DAMPING); /*,
 					CALCULATED_CURRENT); */
 
-	private transient HashMap<String, List<Object>> dampingMap = new HashMap<>();
+	private final transient HashMap<String, List<Object>> dampingMap = new HashMap<>();
 
 	private transient long started = 0L;
 
@@ -171,7 +171,7 @@ public class NMEADataCache
 	private transient double minAlt =  Double.MAX_VALUE;
 	private transient GeoPos previousPosition = null;
 
-	private AISParser aisParser = new AISParser();
+	private final AISParser aisParser = new AISParser();
 
 	public NMEADataCache() {
 		super();
@@ -240,7 +240,7 @@ public class NMEADataCache
 										if (type != 21 && type != 4) {
 											AISParser.AISRecord aisRecord = typesMap.get(type);
 											if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-												System.out.println(String.format("=== Cleanup: Removing AIS Record type %d from %d ===", type, mmsi));
+												System.out.printf("=== Cleanup: Removing AIS Record type %d from %d ===\n", type, mmsi);
 												typesMap.remove(type);
 											}
 										}
@@ -270,7 +270,7 @@ public class NMEADataCache
 			this.keySet()
 							.stream()
 							.filter(k -> !NOT_TO_RESET.contains(k))
-							.forEach(k -> this.remove(k));
+							.forEach(this::remove);
 //			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
 //			if (currentMap != null) {
 //				synchronized (currentMap) {
@@ -346,8 +346,8 @@ public class NMEADataCache
 				latitude,
 				longitude);
 		sru.calculate();
-		double he = sru.getHe().doubleValue();
-		double z = sru.getZ().doubleValue();  // TODO Push those 2 in the cache?
+		double he = sru.getHe(); // .doubleValue();
+		double z = sru.getZ(); // .doubleValue();  // TODO Push those 2 in the cache?
 		// Get Equation of time, used to calculate solar time.
 		double eot = acv2.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
 
@@ -358,7 +358,7 @@ public class NMEADataCache
 
 	/**
 	 * Close to AutoParse. Could be more widely used!
-	 * @param nmeaSentence
+	 * @param nmeaSentence As it is.
 	 */
 	@SuppressWarnings("unchecked")
 	public void parseAndFeed(String nmeaSentence) {
@@ -410,11 +410,11 @@ public class NMEADataCache
 							}
 							//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 							if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
-								System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
+								System.out.printf(">> AIS %s, type %s goes into cache: %s\n", rec.getMMSI(), rec.getMessageType(), rec.toString());
 							}
 							if (System.getProperty("ais.cache.verbose", "false").equals("true")) { // Debug
 								if (rec.getMessageType() == 5) {
-									System.out.println(String.format(">>> \tAIS Mess Type 5: %s, %s", nmeaSentence.trim(), rec.toString()));
+									System.out.printf(">>> \tAIS Mess Type 5: %s, %s\n", nmeaSentence.trim(), rec.toString());
 								}
 							}
 						}
@@ -425,10 +425,10 @@ public class NMEADataCache
 						}
 					} catch (AISParser.AISException aisExc) {
 						if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
-							System.err.println(String.format(">> AIS %s, %s", nmeaSentence, aisExc.toString()));
+							System.err.printf(">> AIS %s, %s\n", nmeaSentence, aisExc.toString());
 						}
 					} catch (Exception ex) {
-						System.err.println(String.format("\nFor AIS Sentence [%s]", nmeaSentence));
+						System.err.printf("\nFor AIS Sentence [%s]\n", nmeaSentence);
 						ex.printStackTrace();
 					}
 				}
@@ -494,7 +494,7 @@ public class NMEADataCache
 									this.put(GPS_TIME, new UTCTime(rmc.getRmcTime()));
 								}
 								if ("true".equals(System.getProperty("rmc.verbose"))) {
-									System.out.println(String.format("RMC: From [%s], GPS date: %s, GPS Time: %s", nmeaSentence.trim(), StringParsers.SDF_UTC.format(rmc.getRmcDate()), StringParsers.SDF_UTC.format(rmc.getRmcTime())));
+									System.out.printf("RMC: From [%s], GPS date: %s, GPS Time: %s\n", nmeaSentence.trim(), StringParsers.SDF_UTC.format(rmc.getRmcDate()), StringParsers.SDF_UTC.format(rmc.getRmcTime()));
 								}
 								if ((rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null) {
 									long solarTime = -1L;
@@ -503,14 +503,14 @@ public class NMEADataCache
 										this.put(GPS_SOLAR_TIME, new SolarDate(solarDateFromEOT));
 										// Debug
 										if (false) { // For comparison
-											System.out.println(String.format("Solar Date with EoT: %s", SolarDate.FMT.format(solarDateFromEOT)));
+											System.out.printf("Solar Date with EoT: %s\n", SolarDate.FMT.format(solarDateFromEOT));
 											if (rmc.getRmcDate() != null) {
 												solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
 											} else {
 												solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
 											}
 											Date solarDate = new Date(solarTime);
-											System.out.println(String.format("Solar Date from G  : %s", SolarDate.FMT.format(solarDate)));
+											System.out.printf("Solar Date from G  : %s\n", SolarDate.FMT.format(solarDate));
 											System.out.println("-----------------------------------------");
 										}
 									} else {
@@ -531,7 +531,7 @@ public class NMEADataCache
 									this.put(GPS_TIME, new UTCTime(rmc.getRmcTime()));
 								} else {
 									if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
-										System.out.println(String.format("RMC not valid yet [%s]", nmeaSentence));
+										System.out.printf("RMC not valid yet [%s]\n", nmeaSentence);
 									}
 								}
 							}
@@ -545,7 +545,7 @@ public class NMEADataCache
 							this.put(GPS_TIME, utcTime);
 
 							if ("true".equals(System.getProperty("zda.verbose"))) {
-								System.out.println(String.format("ZDA: From [%s], GPS date: %s, GPS Time: %s", nmeaSentence, StringParsers.SDF_UTC.format(utc.getValue()), StringParsers.SDF_UTC.format(utcTime.getValue())));
+								System.out.printf("ZDA: From [%s], GPS date: %s, GPS Time: %s\n", nmeaSentence, StringParsers.SDF_UTC.format(utc.getValue()), StringParsers.SDF_UTC.format(utcTime.getValue()));
 							}
 							GeoPos pos = (GeoPos) this.get(POSITION);
 							if (pos != null) {
@@ -796,7 +796,7 @@ public class NMEADataCache
 						break;
 					default:
 						if (System.getProperty("verbose", "false").equals("true")) {
-							System.out.println(String.format("NMEA Sentence [%s] not managed by parseAndFeed.", id));
+							System.out.printf("NMEA Sentence [%s] not managed by parseAndFeed.\n", id);
 						}
 						break;
 				}
@@ -902,13 +902,13 @@ public class NMEADataCache
 	}
 
 	public static class CurrentDefinition implements Serializable {
-		private long bufferLength; // in ms
-		private Speed speed;
-		private Angle360 direction;
-		private int nbPoints = 0;
-		private String oldest = "";
-		private String latest = "";
-		private long len = 0L; // Len in ms
+		private final long bufferLength; // in ms
+		private final Speed speed;
+		private final Angle360 direction;
+		private final int nbPoints;
+		private final String oldest;
+		private final String latest;
+		private final long len; // Len in ms
 
 		public long getBufferLength() {
 			return bufferLength;
