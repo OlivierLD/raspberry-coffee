@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>NMEA Weather Station Console</title>
+
+    <link rel="icon" type="image/ico" href="icons/hammerhead.02.ico">
+
+    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+
+    <script type="text/javascript" src="js/pub.sub.js"></script>
+    <script type="text/javascript" src="js/ajax.manager.js"></script>
+
+		<link rel="stylesheet" href="css/web-components.css">
+
+		<!-- Firefox does NOT like modules... Safari OK -->
+		<script type="module" src="webcomponents/Pluviometer.js"></script>
+		<script type="module" src="webcomponents/Thermometer.js"></script>
+		<script type="module" src="webcomponents/DirectionDisplay.js"></script>
+		<script type="module" src="webcomponents/AnalogDisplay.js"></script>
+		<script type="module" src="webcomponents/AnalogWatch.js"></script>
+
+		<script type="text/javascript">
+
+	var status = 'tick';
+
+	var setCurrentTime = function() {
+		let date = new Date();
+
+		let tzo = date.getTimezoneOffset() / 60; // in hours
+//	console.log("TimeZoneOffset:" + tzo);
+
+		let now = (date.getTime() / 1000) % 86400;
+		// One day = 86,400 sec,
+		let seconds = now % 60;
+		let minutes = ((now - seconds) / 60) % 60;
+		let hours = Math.floor(now / 3600) - tzo;
+		// Compose the string HH:MM:SS
+		let timeValue = hours.toFixed(0) + ":" + minutes.toFixed(0) + ":" + seconds.toFixed(0);
+
+//	console.log("Time: %d, => %s", watchValue, timeValue);
+
+		document.getElementById('watch-01').value = timeValue;
+	};
+
+  window.onload = function() {
+    initAjax(false);
+    // Subscribers here
+    events.subscribe('at', function(val) {
+    	if (status === 'tick') {
+    		status = 'tock';
+    		document.getElementById('working').style.color = 'red';
+			} else {
+		    status = 'tick';
+		    document.getElementById('working').style.color = 'green';
+			}
+      console.log("Air Temperature : %f", val);
+	    setData(val, 'thermometer-01');
+	    // Set time (from client)
+	    setCurrentTime();
+    });
+	  events.subscribe('dew', function(val) {
+		  console.log("Dew Point Temperature : %f", val);
+		  setData(val, 'thermometer-02');
+	  });
+    events.subscribe('prmsl', function(val) {
+      console.log("Atm Pressure : %f", val);
+	    setData(val, 'prmsl-01');
+    });
+    events.subscribe('hum', function(val) {
+	    console.log("Relative Humidity : %f", val);
+	    setData(val, 'hum-01');
+    });
+    events.subscribe('tws', function(val) {
+	    console.log("Wind Speed : %f", val);
+	    setData(val, 'tws-01');
+    });
+    events.subscribe('twd', function(val) {
+	    console.log("Wind Direction : %f", val);
+	    setData(val, 'twd-01');
+    });
+	  events.subscribe('prate', function(val) {
+		  console.log("Precipitation Rate : %f", val);
+		  setData(val, 'rain-01');
+	  });
+  };
+
+  var displayErr = function(err) {
+    if (err !== undefined)
+      document.getElementById("err-mess").innerHTML = ("<small>" + err + "</small>");
+  };
+
+  window.onresize = function() {
+//  console.log("Re-evaluating window size");
+    resizeComponents();
+  };
+
+  var resizeComponents = function() {
+    var ww = window.innerWidth;
+    var wh = window.innerHeight;
+
+  };
+
+  /**
+   * Set data to the WebComponents
+   * Assume that they all have a 'value' member.
+   *
+   * @param from The field containing the value to set
+   * @param to The WebComponent to set the value to
+   */
+  function setData(val, to) {
+	  let elem = document.getElementById(to);
+		elem.value = val;                            // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
+  }
+
+  function setElementBorder(display, border) {
+	  display.withBorder = border;
+	  display.repaint();
+	}
+
+  function setBorder(border) {
+		let displays = document.getElementsByTagName('analog-display');
+		for (let i=0; i<displays.length; i++) { // forEach does not work?
+			setElementBorder(displays[i], border);
+		}
+	  displays = document.getElementsByTagName('analog-watch');
+	  for (let i=0; i<displays.length; i++) { // forEach does not work?
+		  setElementBorder(displays[i], border);
+	  }
+	  displays = document.getElementsByTagName('direction-display');
+	  for (let i=0; i<displays.length; i++) { // forEach does not work?
+		  setElementBorder(displays[i], border);
+	  }
+	}
+
+	function setElementStyle(widget, style) {
+		widget.className = style;
+		widget.repaint();
+	}
+
+	function setElementsStyle(
+			analogStyle,
+			directionStyle,
+			tempStyle,
+			rainStyle) {
+		let displays = document.getElementsByTagName('analog-display');
+		for (let i=0; i<displays.length; i++) {
+			setElementStyle(displays[i], analogStyle);
+		}
+		displays = document.getElementsByTagName('direction-display');
+		for (let i=0; i<displays.length; i++) {
+			setElementStyle(displays[i], directionStyle);
+		}
+		displays = document.getElementsByTagName('analog-watch');
+		for (let i=0; i<displays.length; i++) {
+			setElementStyle(displays[i], analogStyle);
+		}
+		displays = document.getElementsByTagName('thermo-meter');
+		for (let i=0; i<displays.length; i++) {
+			setElementStyle(displays[i], tempStyle);
+		}
+		displays = document.getElementsByTagName('pluvio-meter');
+		for (let i=0; i<displays.length; i++) {
+			setElementStyle(displays[i], rainStyle);
+		}
+	}
+
+	function changeBG(value) {
+		let bodyStyle = document.getElementsByTagName("body")[0].style;
+		if (value === 'WHITE') {
+			bodyStyle.background = 'white';
+		} else if (value === 'LIGHT') {
+			bodyStyle.background = 'radial-gradient(at top, white -8%, lightgrey 55%)';
+		} else if (value === 'DARK') {
+			bodyStyle.background = 'radial-gradient(at top, DarkGrey -8%, black 55%)';
+		} else if (value === 'BLACK') {
+			bodyStyle.background = 'black';
+		}
+	}
+
+	function setStyle(style) {
+		console.log("Style:" + style);
+		switch (style) {
+			case 'orange':
+				setElementsStyle(
+						'analogdisplay-monochrome-orange',
+						'analogdisplay-monochrome-orange',
+						'thermometer-orange',
+						'pluviometer-orange');
+				break;
+			case 'cyan':
+				setElementsStyle(
+						'analogdisplay-monochrome-cyan',
+						'analogdisplay-monochrome-cyan',
+						'thermometer-cyan',
+						'pluviometer-cyan');
+				break;
+			case 'white':
+				setElementsStyle(
+						'analogdisplay-monochrome-white',
+						'analogdisplay-monochrome-white',
+						'thermometer-white',
+						'pluviometer-white');
+				break;
+			case 'white-red':
+				setElementsStyle(
+						'analogdisplay-monochrome-white-red',
+						'analogdisplay-monochrome-white-red',
+						'thermometer-white',
+						'pluviometer-white');
+				break;
+			case 'yellow':
+				setElementsStyle(
+						'analogdisplay-monochrome-yellow',
+						'analogdisplay-monochrome-yellow',
+						'thermometer-yellow',
+						'pluviometer-yellow');
+				break;
+			case 'day':
+				setElementsStyle(
+						'analogdisplay-day',
+						'analogdisplay-day',
+						'thermometer-day',
+						'pluviometer-day');
+				break;
+			case 'night':
+				setElementsStyle(
+						'analogdisplay-night',
+						'analogdisplay-night',
+						'thermometer-night',
+						'pluviometer-night');
+				break;
+			case 'flat-gray':
+				setElementsStyle(
+						'analogdisplay-flat-gray',
+						'analogdisplay-flat-gray',
+						'thermometer-day',
+						'pluviometer-day');
+				break;
+			case 'flat-black':
+				setElementsStyle(
+						'analogdisplay-flat-black',
+						'analogdisplay-flat-black',
+						'thermometer-night',
+						'pluviometer-night');
+				break;
+			default:
+				break;
+		}
+	}
+
+	function toggleHeadsUp() {
+	  document.body.classList.toggle('mirror-upside-down');
+	}
+
+	function setPerspective(e) {
+		var v = this.value;
+		document.body.style.setProperty("--perspective", v + "em");
+	}
+
+	function setRotateX(e) {
+		var v = this.value;
+		document.body.style.setProperty("--rotateX", v + "deg");
+	}
+		</script>
+		<style>
+			:root {
+				--perspective: 50em;
+				--rotateX: -40deg;
+			}
+
+			html {
+				height: 100%;
+				background-color: black;
+			}
+
+			body {
+				background-color: black;
+				color: silver;
+				font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+				/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+				background: radial-gradient(at top, DarkGrey -8%, black 55%);
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+			}
+
+			.mirror-upside-down {
+				display: block;
+				-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+				-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+				-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+				transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+			}
+
+		</style>
+
+  </head>
+  <body>
+		<table style="margin: auto; border: 1px solid silver; border-radius: 5px;">
+			<tr>
+				<td align="left">
+					<table>
+						<tr>
+							<td><h3>Web Components UI&nbsp;&nbsp;&nbsp;</h3></td>
+							<td>
+								<!-- Traffic witness -->
+								<span id="working" title="Traffic">&#11044;</span>
+							</td>
+							<td>
+								<!-- Display Style -->
+								Widget Style:
+								<select onchange="setStyle(this.value);">
+									<option value="orange" selected>Orange</option>
+									<option value="yellow">Yellow</option>
+									<option value="white">White</option>
+									<option value="white-red">White, red hand</option>
+									<option value="cyan">Cyan</option>
+									<option value="day">Day</option>
+									<option value="night">Night</option>
+									<option value="flat-gray">Flat gray</option>
+									<option value="flat-black">Flat black</option>
+								</select>
+								<!-- Display Border -->
+								<input type="checkbox" checked onchange="setBorder(this.checked);"/>Border
+								&nbsp;&nbsp;
+								<!-- Page BG -->
+								Page Background:
+								<input type="radio" name="page-bg" value="BLACK" onchange="changeBG(this.value);">Black
+								<input type="radio" name="page-bg" value="DARK" checked onchange="changeBG(this.value);">Dark
+								<input type="radio" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
+								<input type="radio" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
+								&nbsp;&nbsp;
+								<button onclick="toggleHeadsUp();" style="border-radius: 5px;">Head Up</button>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<table>
+						<tr>
+							<td align="center">
+								<!-- True Wind Speed in knots<br/ -->
+								<analog-display class="analogdisplay-monochrome-orange"
+																title="True Wind Speed in knots"
+																id="tws-01"
+																min-value="0"
+																max-value="60"
+																value="0"
+																major-ticks="10"
+																minor-ticks="1"
+																with-border="true"
+																overlap="40"
+																label="TWS"
+																width="200"
+																height="200"></analog-display>
+							</td>
+							<td align="center">
+								<!-- Wind Direction in &deg;<br/ -->
+								<direction-display class="analogdisplay-monochrome-orange"
+																	 title="TWD"
+																	 id="twd-01"
+																	 value="0"
+																	 major-ticks="45"
+																	 minor-ticks="5"
+																	 with-rose="true"
+																	 with-border="true"
+																	 label="TWD"
+																	 width="200"
+																	 height="200"></direction-display>
+
+							</td>
+							<td align="center">
+								<!-- Air Temperature in &deg;C<br/ -->
+								<thermo-meter id="thermometer-01"
+															class="thermometer-orange"
+															title="Air, Celcius"
+															min-value="-10"
+															max-value="60"
+															major-ticks="10"
+															minor-ticks="1"
+															value="0"
+															width="100"
+															height="220"></thermo-meter>
+							</td>
+							<td align="center">
+								<!-- Dew point Temperature in &deg;C<br/ -->
+								<thermo-meter id="thermometer-02"
+															class="thermometer-orange"
+															title="Dew point, Celcius"
+															min-value="-10"
+															max-value="60"
+															major-ticks="10"
+															minor-ticks="1"
+															value="0"
+															width="100"
+															height="220"></thermo-meter>
+							</td>
+							<td align="center">
+								<!-- Station Time<br/ -->
+								<analog-watch class="analogdisplay-monochrome-orange"
+															title="Station Time"
+															id="watch-01"
+															value="00:00:00"
+															hours-ticks="1"
+															minutes-ticks="1"
+															with-second-hand="true"
+															with-border="true"
+															width="200"
+															height="200"></analog-watch>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<table>
+						<tr>
+							<td align="center">
+								<!-- Atm Pressure in hPa<br/ -->
+								<analog-display class="analogdisplay-monochrome-orange analog-for-prmsl"
+																title="Pressure in hPa"
+																id="prmsl-01"
+																min-value="983"
+																max-value="1043"
+																value="1013.6"
+																major-ticks="10"
+																minor-ticks="1"
+																with-border="true"
+																overlap="40"
+																label="PRMSL"
+																width="200"
+																height="200"></analog-display>
+							</td>
+							<td align="center">
+								<!-- Relative Humidity in %<br/ -->
+								<analog-display class="analogdisplay-monochrome-orange"
+																title="Humidity in %"
+																id="hum-01"
+																min-value="0"
+																max-value="100"
+																value="50"
+																major-ticks="10"
+																minor-ticks="1"
+																with-border="true"
+																overlap="40"
+																label="HUM"
+																width="200"
+																height="200"></analog-display>
+							</td>
+							<td align="center">
+								<!-- Precipitation Rate in mm/h<br/ -->
+								<pluvio-meter id="rain-01"
+															class="pluviometer-orange"
+															title="m/m per hour"
+															min-value="0"
+															max-value="5"
+															major-ticks="1"
+															minor-ticks="0.10"
+															value="0"
+															width="80"
+															height="220"></pluvio-meter>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<!-- Perspective sliders -->
+					<table width="100%">
+						<tr>
+							<td width="50%">
+								<h5>Perspective</h5>
+								<input type="range" value="50" min="0" max="100" style="width: 90%;" oninput="setPerspective.call(this, event); perspective01.value = this.value;" />
+								<output name="perspective" id="perspective01"></output>
+							</td>
+							<td width="50%">
+								<h5>Rotate X</h5>
+								<input type="range" value="-50" min="-100" max="100" style="width: 90%;" oninput="setRotateX.call(this, event); perspective02.value = this.value;" />
+								<output name="perspective" id="perspective02"></output>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+    <div id="err-mess"></div>
+		<hr/>
+    <address>Oliv did it</address>
+  </body>
+</html>

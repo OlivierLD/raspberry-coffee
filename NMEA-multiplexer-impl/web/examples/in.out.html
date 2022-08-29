@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--meta charset="windows-1252"-->
+    <!--meta charset="iso-8859-1"-->
+    <!--meta charset="utf-8"-->
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>In and Out</title>
+
+    <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
+
+    <link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
+    <style type="text/css">
+      td {
+        border: 1px solid #CCC;
+        border-radius: 5px;
+        padding: 3px;
+      }
+    </style>
+    <link rel="stylesheet" href="../css/black.css" type="text/css" id="theme"/>
+    <script type="text/javascript" src="../js/date.proto.js"></script>
+    <script type="text/javascript" src="../widgets/AnalogDisplay.js"></script>
+    <script type="text/javascript" src="../widgets/Thermometer.js"></script>
+    <script type="text/javascript" src="../js/cache.client.js"></script>
+    <script type="text/javascript">
+
+        var displayInsideTemp, displayOutsideTemp, displayInsideHum, displayOutsideHum, displayPRMSL;
+
+        var init = function () {
+            displayInsideTemp = new Thermometer('inTmpCanvas', 200);
+            displayOutsideTemp = new Thermometer('outTmpCanvas', 200);
+            displayPRMSL = new AnalogDisplay('baroCanvas', 100, 1040, 10, 1, true, 40, 980);
+            displayInsideHum = new AnalogDisplay('inHumCanvas', 100, 100, 10, 1, true, 40);
+            displayOutsideHum = new AnalogDisplay('outHumCanvas', 100, 100, 10, 1, true, 40);
+        };
+
+        var changeBorder = function (b) {
+            displayInsideHum.setBorder(b);
+            displayOutsideHum.setBorder(b);
+            displayPRMSL.setBorder(b);
+        };
+
+        var TOTAL_WIDTH = 1200;
+
+        var resizeComponents = function (width) {
+            displayInsideTemp.setDisplaySize(200 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
+            displayOutsideTemp.setDisplaySize(200 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
+            displayPRMSL.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
+            displayInsideHum.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
+            displayOutsideHum.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
+        };
+
+        var lpad = function (str, pad, len) {
+            while (str.length < len)
+                str = pad + str;
+            return str;
+        };
+
+        var blinkHeader = function(divName) {
+            var elmt = document.getElementById(divName);
+            if (elmt !== undefined) {
+                var original = elmt.style.backgroundColor;
+                elmt.style.backgroundColor = 'lightgreen';
+                setTimeout(function() {
+                    elmt.style.backgroundColor = original;
+                }, 100);
+            }
+        };
+
+        var onMessage = function (json) {
+
+            if (json["x.inside.temp"] !== undefined) {
+                displayInsideTemp.setValue(json["x.inside.temp"]);
+                blinkHeader('in-tmp-head');
+            }
+            if (json["x.outside.temp"] !== undefined) {
+                displayOutsideTemp.setValue(json["x.outside.temp"]);
+                blinkHeader('out-tmp-head');
+            }
+            if (json["Barometric Pressure"] !== undefined) {
+                displayPRMSL.setValue(json["Barometric Pressure"]["pressure"]);
+            }
+            if (json["x.inside.hum"] !== undefined) {
+                displayInsideHum.setValue(json["x.inside.hum"]);
+                blinkHeader('in-hum-head');
+            }
+            if (json["x.outside.hum"] !== undefined) {
+                displayOutsideHum.setValue(json["x.outside.hum"]);
+                blinkHeader('out-hum-head');
+            }
+        };
+
+        var flavor = 'Ajax'; // Default, WebSocket not implemented yet.
+
+        var getQSPrm = function(prm) {
+            var value;
+            var loc = document.location.toString();
+            if (loc.indexOf("?") > -1) {
+                var qs = loc.substring(loc.indexOf("?") + 1);
+                var prms = qs.split('&');
+                for (var i=0; i<prms.length; i++) {
+                    var nv = prms[i].split('=');
+                    if (nv.length === 2) {
+                        if (nv[0] === prm) {
+                            return nv[1];
+                        }
+                    }
+                }
+            }
+            return value;
+        };
+
+        window.onload = function () {
+            init(); // init UI
+
+            document.getElementById("console-type").innerHTML = 'The HTML5 ' + flavor + ' Console.';
+            resizeComponents(window.innerWidth);
+            var theme = getQSPrm('theme');
+            if (theme !== undefined) {
+                changeTheme(theme);
+                var rb = document.getElementsByName('theme');
+                for (var i = 0; i < rb.length; i++) {
+                    rb[i].checked = (rb[i].value === theme);
+                }
+            }
+            var border = getQSPrm('border');
+            if (border !== undefined) {
+                changeBorder(border === 'Y');
+                var cb = document.getElementById('with-border');
+                cb.checked = (border === 'Y');
+            }
+        };
+
+        var displayErr = function (err) {
+            if (err !== undefined)
+                document.getElementById("err-mess").innerHTML = ("<small>" + err + "</small>");
+        };
+
+        window.onresize = function () {
+            resizeComponents(window.innerWidth);
+        };
+
+        var changeTheme = function (value) {
+            var cssLink = document.getElementById("theme");
+            var selected;
+            if (value === undefined) {
+                var themeList = document.getElementById("theme-select");
+                selected = themeList.options[themeList.selectedIndex].value;
+            } else {
+                selected = value;
+            }
+            cssLink.href = '../css/' + selected + '.css';
+            // Repaint the displays
+
+            setTimeout(function () {
+                displayBaro.repaint();
+                displayInsideHum.repaint();
+                displayOutsideHum.repaint();
+                displayInsideTemp.repaint();
+                displayOutsideTemp.repaint();
+            }, 1000);
+        };
+  
+    </script>
+  </head>
+  <body bgcolor="white">
+    &nbsp;&nbsp;Color Scheme:&nbsp;
+    <input type="radio" name="theme" value="black" checked onclick="changeTheme(this.value);">Night&nbsp;
+    <input type="radio" name="theme" value="white" onclick="changeTheme(this.value);">Day&nbsp;
+    &nbsp;&nbsp;
+    <input type="checkbox" id="with-border" checked onclick="changeBorder(this.checked);">With Border
+    <hr>
+    <h2>Inside &amp; Outside</h2>
+    <hr>
+    <div id="displays" style="display: inline;">
+      <!-- Analog Displays -->
+      <table align="center" border="0">
+        <tr>
+          <td align="center" colspan="2">Inside</td>
+          <td align="center" colspan="2">Outside</td>
+        </tr>
+        <tr>
+          <td align="center"><div id="in-hum-head">Humidity in %</div></td>
+          <td align="center"><div id="in-tmp-head">Temp in &deg;C</div></td>
+          <td align="center"><div id="out-hum-head">Humidity in %</div></td>
+          <td align="center"><div id="out-tmp-head">Temp in &deg;C</div></td>
+          <td align="center">Pressure in hPa</td>
+        </tr>
+        <tr>
+          <td align="center"><canvas id="inHumCanvas" width="240" height="220" title="Relative Humidity in %"></canvas></td>
+          <td align="center" valign="top" rowspan="1"><canvas id="inTmpCanvas" width="100" height="240" title="Inside Temperature in Celcius"></canvas></td>
+          <td align="center"><canvas id="outHumCanvas" width="240" height="220" title="Relative Humidity in %"></canvas></td>
+          <td align="center" valign="top" rowspan="1"><canvas id="outTmpCanvas" width="100" height="240" title="Outside Temperature in Celcius"></canvas></td>
+          <td align="center"><canvas id="baroCanvas" width="240" height="220" title="Atmospheric Pressure in hPa"></canvas></td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <a href="http://localhost:9999/web/admin.html" target="Master">Admin, Master</a>
+      &nbsp;
+      <!-- The 2 URLs below are subject to change... -->
+      <a href="http://192.168.1.166:9999/web/admin.html" target="First">Admin, RPi One</a>
+      &nbsp;
+      <a href="http://192.168.1.136:9999/web/admin.html" target="Second">Admin, RPi Two</a>
+    </div>
+    <hr>
+    <div id="err-mess"></div>
+    <address><span id="console-type"></span></address>
+    <script type="text/javascript">
+
+      // Ping the cache every second
+      var cacheClient = new cacheClient(onMessage);
+
+    </script>
+  </body>
+</html>
+  

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>GPS</title>
+    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+    <link rel="icon" type="image/ico" href="icons/hammerhead.ico">
+    <style type="text/css">
+      @font-face {
+        font-family: "Digi Font";
+    /*  src: url(fonts/ds-digi.ttf) format("truetype"); */
+        src: url(fonts/ledbdrev.ttf) format("truetype");
+      }
+      .digifont {
+        font-family: "Digi Font", Verdana, Tahoma;
+    /*  color: yellow; */
+        color: orangered;
+        background-color: black;
+      }
+    </style>
+    <script type="text/javascript">
+  var statusFld;
+
+  var resetStatus = function() {
+    statusFld.innerHTML = "";
+  };
+
+  window.onload = function() {
+    statusFld  = document.getElementById('status');
+  };
+
+  var decToSex = function (val, ns_ew) {
+      var absVal = Math.abs(val);
+      var intValue = Math.floor(absVal);
+      var dec = absVal - intValue;
+      var i = intValue;
+      dec *= 60;
+//    var s = i + "°" + dec.toFixed(2) + "'";
+//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+      var s = "";
+      if (val < 0) {
+          s += (ns_ew === 'NS' ? 'S' : 'W');
+      } else {
+          s += (ns_ew === 'NS' ? 'N' : 'E');
+      }
+      s += " ";
+      s += i + "\"" + dec.toFixed(2) + "'";
+
+      return s;
+  };
+    </script>
+  </head>
+  <body>
+    <!--table width="600px" border="0"-->
+    <table width="800px" border="0">
+      <tr style="margin-bottom: 10px;">
+        <td valign="top"><h2>Digital GPS Data</h2></td>
+        <td>From the GPS: Position, Speed, Heading, Altitude.</td>
+      </tr>
+      <tr>
+        <td valign="top" colspan="2">
+          <table width="100%" border="0">
+            <tr>
+              <td colspan="3">Position</td>
+            </tr>
+            <tr>
+              <td colspan="3" align="right">
+                <b><div id="lat"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">N 00"00.00'</div></b>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" align="right">
+                <b><div id="lon"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">W 000"00.00'</div></b>
+              </td>
+            </tr>
+            <tr>
+              <td width="33%" align="center">COG in &deg;</td>
+              <td width="33%" align="center">SOG in knots</td>
+              <td width="33%" align="center">Altitude in meters</td>
+            </tr>
+            <tr>
+              <td width="33%" align="center">
+                <b><div id="cog" class="digifont"
+                     style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
+              </td>
+              <td width="33%" align="center">
+                <b><div id="sog"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">00.00</div></b>
+              </td>
+              <td width="33%" align="center">
+                <b><div id="alt"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">00.00</div></b>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2">
+          <div id="status" style="display: none; padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;"><i>Status will go here when needed...</i></div>
+        </td>
+      </tr>
+      <!--tr>
+        <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
+      </tr-->
+    </table>  
+    <hr>
+    <address>&copy; Oliv did it.</address>
+    <script src="js/cache.client.js"></script>
+    <script>
+      let onMessage = (json) => {
+    //    console.log(JSON.stringify(json, null, 2));
+          if (json["Altitude"] !== undefined) {
+              let altitude = json["Altitude"];
+              document.getElementById('alt').innerText = altitude.toFixed(2);
+          }
+          if (json["COG"] !== undefined) {
+              var cog = json["COG"].angle;
+              document.getElementById('cog').innerText = cog.toFixed(0);
+          }
+          if (json["SOG"] !== undefined) {
+              let sog = json["SOG"].speed;
+              document.getElementById('sog').innerText = sog.toFixed(2);
+          }
+          if (json["Position"] !== undefined) {
+              let lat = json["Position"].lat;
+              let lon = json["Position"].lng;
+              document.getElementById('lat').innerText = decToSex(lat, 'NS');
+              document.getElementById('lon').innerText = decToSex(lon, 'EW');
+          }
+      };
+      var cacheClient = new cacheClient(onMessage);
+    </script>
+  </body>
+</html>

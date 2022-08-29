@@ -260,7 +260,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
      *
      * TODO Update that one !!! REST & Cie...
      *
-     * @return the generated Properties Object.
+     * @return the generated Properties Object used at runtime.
      */
     private static Properties interactiveConfig() {
         Properties props;

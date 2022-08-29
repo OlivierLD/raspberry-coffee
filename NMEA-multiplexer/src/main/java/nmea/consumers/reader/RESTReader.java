@@ -45,7 +45,7 @@ public class RESTReader extends NMEAReader {
 	private String protocol = DEFAULT_PROTOCOL;
 	private String queryPath = DEFAULT_QUERY_PATH;
 	private String queryString = DEFAULT_QUERY_STRING;
-	private String jqsString = null; // jq syntax doc: https://lzone.de/cheat-sheet/jq
+	private String jqsString = null; // jq syntax doc: https://lzone.de/cheat-sheet/jq, jackson-jq repo: https://github.com/eiiches/jackson-jq
 
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final Scope ROOT_SCOPE = Scope.newEmptyScope(); // jq scope

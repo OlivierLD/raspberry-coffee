@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+	<title>NMEA-mux - Basics</title>
+
+	<link rel="icon" type="image/ico" href="icons/hammerhead.02.ico">
+
+	<style type="text/css">
+		html {
+			font-family: "Courier New"
+		}
+		#position {
+			font-size: 40px;
+			width: 50%;
+			text-align: right;
+		}
+		#gps-date-time {
+			font-size: 40px;
+			margin: 5px;
+			padding: 5px;
+		}
+		#full-data {
+			height: 200px;
+			overflow-y: scroll;
+			border: 1px solid black;
+			border-radius: 5px;
+			margin: 5px;
+			padding: 5px;
+		}
+	</style>
+	<script type="text/javascript" src="js/pub.sub.js"></script>
+	<script type="text/javascript" src="js/ajax.manager.js"></script>
+	<script type="text/javascript">
+
+		window.onload = () => {
+
+			initAjax(true); // true: use displayErr to display errors.
+
+			// Subscribers here
+			/*
+			 * 'events' are defined in pub.sub.js.
+			 * event names are defined in ajax.mnanager.js
+			 * ajax.mnanager.js contains functions to ping the cache, and trigger the subscribed events.
+			 */
+			 events.subscribe('full', function (val) {
+				// console.log(val);
+				document.getElementById('full-data').innerHTML = '<pre>' + JSON.stringify(val, null, 2) + '</pre>';
+			});
+
+			events.subscribe('pos', function (val) {
+				// console.log(val);
+				document.getElementById('position').innerHTML = 
+					decToSex(val.lat, 'NS') + '<br/>' + 
+					decToSex(val.lng, 'EW');
+			});
+			events.subscribe('gps-time', function (val) {
+				// console.log(val);
+				document.getElementById('gps-date-time').innerText = val;
+			});
+		};
+
+		function displayErr(err) {
+			if (err !== undefined) {
+				document.getElementById("err-mess").innerHTML = ("<small>" + err + "</small>");
+			}
+		}
+
+		function decToSex(val, ns_ew) {
+			let absVal = Math.abs(val);
+			let intValue = Math.floor(absVal);
+			let dec = absVal - intValue;
+			let i = intValue;
+			dec *= 60;
+			let s = i + "&deg;" + dec.toFixed(2) + "'";
+
+			if (val < 0) {
+				s += (ns_ew === 'NS' ? 'S' : 'W');
+			} else {
+				s += (ns_ew === 'NS' ? 'N' : 'E');
+			}
+			return s;
+		}
+
+	</script>
+</head>
+<body>
+	<h1>Basic Web-UI Demo</h1>
+	<div>
+		<small>
+			This page shows the basic mechanisms used to get data from the NMEA cache, and display them.<br/>
+			No fancy UI, CSS, or Components.<br/>
+			See the code of the page for details.
+		</small>
+		<br/>
+		<div id="position"></div>
+		<div id="gps-date-time"></div>
+		<div id="full-data"></div>
+	</div>
+	<hr/>
+	<div id="err-mess"></div>
+</body>
+</html>

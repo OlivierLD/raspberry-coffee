@@ -10,6 +10,7 @@ include 'WeatherStation'
 include 'OtherJVMLanguages'
 include "RMI-sample"
 include "NMEA-multiplexer"
+include "NMEA-multiplexer-impl"
 include "NMEA-mux-extensions"
 // include "NMEA-mux-WebUI"
 include "Monitor-Battery"

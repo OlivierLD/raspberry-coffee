@@ -170,5 +170,10 @@ Received from Serial (/dev/ttyS80): $GNGLL,3744.93536,N,12230.42034,W,101754.00,
 
 ## Push to a Screen Server
 - Using REST Forwarder, display some selected data on a TFT, OLED, or E-Ink
+  - See in module `http-client-samples`, in the `src/main/python` folder.
+
+## Clean the samples
+- Move them to the module `NMEA-multiplexer-impl`.
+
 
 ---

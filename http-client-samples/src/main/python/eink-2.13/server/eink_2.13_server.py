@@ -7,6 +7,8 @@
 #
 # Provides REST access to the e-ink screen, try POST http://localhost:8080/eink2_13/display
 #
+# ... Looks like headers and payload are sent back together...
+#
 import json
 import sys
 import threading
