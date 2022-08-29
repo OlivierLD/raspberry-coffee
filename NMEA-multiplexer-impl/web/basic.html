@@ -50,6 +50,10 @@
 			 * 'events' are defined in pub.sub.js.
 			 * event names are defined in ajax.mnanager.js
 			 * ajax.mnanager.js contains functions to ping the cache, and trigger the subscribed events.
+			 * 
+			 * The subscribe function has 2 parameters:
+			 * - the name of the event to subscribe to
+			 * - the callback function to be invoked on event publication
 			 */
 			 events.subscribe('full', function (val) {
 				// console.log(val);
