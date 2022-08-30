@@ -341,15 +341,15 @@ public class RESTImplementation {
 
 		try {
 			List<String> portList = getSerialPortList();
-			Object[] portArray = portList.toArray(new Object[0]);
-			String content = new Gson().toJson(portArray).toString();
-//					mapper.writeValueAsString(portList);
+//			Object[] portArray = portList.toArray(new Object[0]);
+			String content = // new Gson().toJson(portArray).toString();
+					mapper.writeValueAsString(portList);
 
 			System.out.println(">> Port list:" + content);
 
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
-		} catch (Error /*| JsonProcessingException*/ error) {
+		} catch (Error | JsonProcessingException error) {
 			response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload()
 					.errorCode("MUX-0001")
 					.errorMessage(error.toString()));
