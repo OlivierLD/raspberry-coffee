@@ -79,12 +79,38 @@ function fetch() {
 	});
 }
 
+const EVENT_FULL     = 'full';
+const EVENT_POS      = 'pos';
+const EVENT_BSP      = 'bsp';
+const EVENT_LOG      = 'log';
+const EVENT_GPS_TIME = 'gps-time';
+const EVENT_HDG      = 'hdg';
+const EVENT_TWD      = 'twd';
+const EVENT_TWA      = 'twa';
+const EVENT_TWS      = 'tws';
+const EVENT_WT       = 'wt';
+const EVENT_AT       = 'at';
+const EVENT_PRMSL    = 'prmsl';
+const EVENT_HUM      = 'hum';
+const EVENT_AWS      = 'aws';
+const EVENT_AWA      = 'awa';
+const EVENT_CDR      = 'cdr';
+const EVENT_COG      = 'cog';
+const EVENT_SOG      = 'sog';
+const EVENT_CMG      = 'cmg';
+const EVENT_LEEWAY   = 'leeway';
+const EVENT_CSP      = 'csg';
+const EVENT_WP       = 'wp';
+const EVENT_VMG      = 'vmg';
+const EVENT_PRATE    = 'prate';
+const EVENT_DEW      = 'dew';
+
 function onMessage(json) {
 	try {
 		let errMess = "";
 
 		try {
-			events.publish('full', json);
+			events.publish(EVENT_FULL, json);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "full data");
 		}
@@ -94,7 +120,7 @@ function onMessage(json) {
 //          console.log("latitude:" + latitude)
 			let longitude = json.Position.lng;
 //          console.log("Pt:" + latitude + ", " + longitude);
-			events.publish('pos', {
+			events.publish(EVENT_POS, {
 				'lat': latitude,
 				'lng': longitude
 			});
@@ -104,58 +130,58 @@ function onMessage(json) {
 		// Publishes
 		try {
 			let bsp = json.BSP.speed;
-			events.publish('bsp', bsp);
+			events.publish(EVENT_BSP, bsp);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "boat speed");
 		}
 		try {
 			let log = json.Log.distance;
-			events.publish('log', log);
+			events.publish(EVENT_LOG, log);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "log (" + err + ")");
 		}
 		try {
 			let gpsDate = json["GPS Date & Time"].date;
-			events.publish('gps-time', gpsDate);
+			events.publish(EVENT_GPS_TIME, gpsDate);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
 		}
 
 		try {
 			let hdg = json["HDG true"].angle;
-			events.publish('hdg', hdg);
+			events.publish(EVENT_HDG, hdg);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "heading");
 		}
 		try {
 			let twd = json.TWD.angle;
-			events.publish('twd', twd);
+			events.publish(ENEVT_TWD, twd);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWD");
 		}
 		try {
 			let twa = json.TWA.angle;
-			events.publish('twa', twa);
+			events.publish(EVENT_TWA, twa);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWA");
 		}
 		try {
 			let tws = json.TWS.speed;
-			events.publish('tws', tws);
+			events.publish(EVENT_TWS, tws);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWS");
 		}
 
 		try {
 			let waterTemp = json["Water Temperature"].temperature;
-			events.publish('wt', waterTemp);
+			events.publish(EVENT_WT, waterTemp);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "water temperature");
 		}
 
 		try {
 			let airTemp = json["Air Temperature"].temperature;
-			events.publish('at', airTemp);
+			events.publish(EVENT_AT, airTemp);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "air temperature");
 		}
@@ -163,7 +189,7 @@ function onMessage(json) {
 		try {
 			let baro = json["Barometric Pressure"].pressure;
 			if (baro != 0) {
-				events.publish('prmsl', baro);
+				events.publish(EVENT_PRMSL, baro);
 			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "PRMSL");
@@ -171,57 +197,57 @@ function onMessage(json) {
 		try {
 			let hum = json["Relative Humidity"];
 			if (hum > 0) {
-				events.publish('hum', hum);
+				events.publish(EVENT_HUM, hum);
 			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Relative_Humidity");
 		}
 		try {
 			let aws = json.AWS.speed;
-			events.publish('aws', aws);
+			events.publish(EVENT_AWS, aws);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "AWS");
 		}
 		try {
 			let awa = json.AWA.angle;
-			events.publish('awa', awa);
+			events.publish(EVENT_AWA, awa);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "AWA");
 		}
 		try {
 			let cdr = json.CDR.angle;
-			events.publish('cdr', cdr);
+			events.publish(EVENT_CDR, cdr);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR");
 		}
 
 		try {
 			let cog = json.COG.angle;
-			events.publish('cog', cog);
+			events.publish(EVENT_COG, cog);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "COG");
 		}
 		try {
 			let cmg = json.CMG.angle;
-			events.publish('cmg', cmg);
+			events.publish(EVENT_CMG, cmg);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CMG");
 		}
 		try {
 			let leeway = json.Leeway.angle;
-			events.publish('leeway', leeway);
+			events.publish(EVENT_LEEWAY, leeway);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Leeway");
 		}
 		try {
 			let csp = json.CSP.speed;
-			events.publish('csp', csp);
+			events.publish(EVENT_CSP, csp);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP");
 		}
 		try {
 			let sog = json.SOG.speed;
-			events.publish('sog', sog);
+			events.publish(EVGENT_SOG, sog);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "SOG");
 		}
@@ -229,7 +255,7 @@ function onMessage(json) {
 		try {
 			let to_wp = json["To Waypoint"];
 			let b2wp = json["Bearing to WP"].angle;
-			events.publish('wp', {
+			events.publish(EVENT_WP, {
 				'to_wp': to_wp,
 				'b2wp': b2wp
 			});
@@ -237,7 +263,7 @@ function onMessage(json) {
 		}
 
 		try {
-			events.publish('vmg', {
+			events.publish(EVENT_VMG, {
 				'onwind': json["VMG on Wind"],
 				'onwp': json["VMG to Waypoint"]
 			});
@@ -247,13 +273,13 @@ function onMessage(json) {
 
 		try {
 			let prate = json.prate;
-			events.publish('prate', prate);
+			events.publish(EVENT_PRATE, prate);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "prate");
 		}
 		try {
 			let dew = json.dewpoint;
-			events.publish('dew', dew);
+			events.publish(EVENT_DEW, dew);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "dew");
 		}

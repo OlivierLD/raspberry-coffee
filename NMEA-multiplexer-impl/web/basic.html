@@ -45,7 +45,7 @@
 
 			initAjax(true); // true: use displayErr to display errors.
 
-			// Subscribers here
+			// Event Subscribers here
 			/*
 			 * 'events' are defined in pub.sub.js.
 			 * event names are defined in ajax.manager.js
@@ -55,18 +55,18 @@
 			 * - the name of the event to subscribe to
 			 * - the callback function to be invoked on event publication
 			 */
-			 events.subscribe('full', function (val) {
+			 events.subscribe(EVENT_FULL, function (val) {
 				// console.log(val);
 				document.getElementById('full-data').innerHTML = '<pre>' + JSON.stringify(val, null, 2).trim() + '</pre>';
 			});
 
-			events.subscribe('pos', function (val) {
+			events.subscribe(EVENT_POS, function (val) {
 				// console.log(val);
 				document.getElementById('position').innerHTML = 
 					decToSex(val.lat, 'NS') + '<br/>' + 
 					decToSex(val.lng, 'EW');
 			});
-			events.subscribe('gps-time', function (val) {
+			events.subscribe(EVENT_GPS_TIME, function (val) {
 				// console.log(val);
 				document.getElementById('gps-date-time').innerText = val;
 			});
