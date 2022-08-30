@@ -1,5 +1,7 @@
 package nmea.mux;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -68,6 +70,8 @@ import java.util.stream.Collectors;
  * have the required requests processed.
  */
 public class RESTImplementation {
+
+	private final ObjectMapper mapper = new ObjectMapper();
 
 	private final List<NMEAClient> nmeaDataClients;
 	private final List<Forwarder> nmeaDataForwarders;
@@ -339,9 +343,13 @@ public class RESTImplementation {
 			List<String> portList = getSerialPortList();
 			Object[] portArray = portList.toArray(new Object[0]);
 			String content = new Gson().toJson(portArray).toString();
+//					mapper.writeValueAsString(portList);
+
+			System.out.println(">> Port list:" + content);
+
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
-		} catch (Error error) {
+		} catch (Error /*| JsonProcessingException*/ error) {
 			response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload()
 					.errorCode("MUX-0001")
 					.errorMessage(error.toString()));
