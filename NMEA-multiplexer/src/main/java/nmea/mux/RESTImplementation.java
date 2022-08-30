@@ -1,6 +1,5 @@
 package nmea.mux;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -69,8 +68,6 @@ import java.util.stream.Collectors;
  * have the required requests processed.
  */
 public class RESTImplementation {
-
-	private final ObjectMapper mapper = new ObjectMapper();
 
 	private final List<NMEAClient> nmeaDataClients;
 	private final List<Forwarder> nmeaDataForwarders;
@@ -340,12 +337,11 @@ public class RESTImplementation {
 
 		try {
 			List<String> portList = getSerialPortList();
-//			Object[] portArray = portList.toArray(new Object[0]);
-			String content = // new Gson().toJson(portArray).toString();
-					mapper.writeValueAsString(portList);
+			Object[] portArray = portList.toArray(new Object[0]);
+			String content = new Gson().toJson(portArray).toString();
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
-		} catch (Error | JsonProcessingException error) {
+		} catch (Error error) {
 			response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload()
 					.errorCode("MUX-0001")
 					.errorMessage(error.toString()));
@@ -357,15 +353,14 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 		List<Object> channelList = getInputChannelList();
-//		Object[] channelArray = channelList.stream()
-//				.collect(Collectors.toList())
-//				.toArray(new Object[channelList.size()]);
+		Object[] channelArray = channelList.stream()
+				.collect(Collectors.toList())
+				.toArray(new Object[channelList.size()]);
 		try {
-			String content = // new Gson().toJson(channelArray);
-					mapper.writeValueAsString(channelList);
+			String content = new Gson().toJson(channelArray);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
-		} catch (JsonProcessingException jpe) {
+		} catch (Exception jpe) {
 			response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload()
 					.errorCode("MUX-0001")
 					.errorMessage(jpe.toString()));
@@ -2012,7 +2007,7 @@ public class RESTImplementation {
 				list.add(line.trim());
 			}
 			stdout.close();
-			System.out.println(String.format("Find script completed, status %d, found %d files", exitStatus, list.size()));
+			System.out.printf("Find script completed, status %d, found %d files\n", exitStatus, list.size());
 
 			String content = new Gson().toJson(list);
 			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
@@ -2547,7 +2542,7 @@ public class RESTImplementation {
 				Map data = gson.fromJson(stringReader, Map.class);
 				Double cog = (Double)((Map)data.get("cog")).get("cog");
 				Double sog = (Double)((Map)data.get("sog")).get("sog");
-//				System.out.println(String.format(">> Setting COG: %f, SOG: %f", cog, sog));
+//				System.out.printf(">> Setting COG: %f, SOG: %f\n", cog, sog);
 				ApplicationContext.getInstance().getDataCache().put(NMEADataCache.COG, new Angle360(cog));
 				ApplicationContext.getInstance().getDataCache().put(NMEADataCache.SOG, new Speed(sog));
 			} catch (Exception ex) {
@@ -2751,7 +2746,7 @@ public class RESTImplementation {
 				try {
 					// Verbose
 					if ("true".equals(System.getProperty("rest.feeder.verbose"))) {
-						System.out.println(String.format("REST Feed: %s", payload));
+						System.out.printf("REST Feed: %s\n", payload);
 					}
 					// Parse NMEA/AIS Data. See System variable put.ais.in.cache
 					// Push UTC Date in the cache
