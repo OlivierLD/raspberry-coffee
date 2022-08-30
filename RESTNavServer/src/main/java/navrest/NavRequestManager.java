@@ -7,10 +7,10 @@ import java.util.List;
 
 public class NavRequestManager implements RESTRequestManager {
 
-	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
-	private RESTImplementation restImplementation;
+	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private final RESTImplementation restImplementation;
 
-	private NavServer navServer = null;
+	private final NavServer navServer;
 
 	/**
 	 *
@@ -26,7 +26,7 @@ public class NavRequestManager implements RESTRequestManager {
 	 *
 	 * @param request incoming request
 	 * @return as defined in the {@link RESTImplementation}
-	 * @throws UnsupportedOperationException
+	 * @throws UnsupportedOperationException Oops.
 	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
