@@ -19,7 +19,6 @@ public class NavRequestManager implements RESTRequestManager {
 	public NavRequestManager(NavServer parent) {
 		this.navServer = parent;
 		restImplementation = new RESTImplementation(this);
-
 	}
 
 	/**
