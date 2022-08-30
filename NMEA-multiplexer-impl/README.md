@@ -24,6 +24,7 @@ $ ./mux.sh --interactive-config
 ```
 This previous one was developed for tests, it requires some polishing, several values are hard-coded..., 
 as you would see in the code (`GenericNMEAMultiplexer.interactiveConfig()`). 
+
 ## How it works (in short)
 As it depends on the `http-tiny-server` module, the `NMEA-multiplexer` can also act as an HTTP Server (not only WebServer). When the configuration property `with.http.server` is set to `true`, the multiplexer can also serve:
 - static Web pages

@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!--
+ | This is just an example, kept small on purpose.
+ +-->
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
@@ -41,33 +44,42 @@
 	<script type="text/javascript" src="js/ajax.manager.js"></script>
 	<script type="text/javascript">
 
+		const VERBOSE = true;
+
 		window.onload = () => {
 
 			initAjax(true); // true: use displayErr to display errors.
 
-			// Event Subscribers here
 			/*
+			 * Choose and set Event Subscribers here
+			 *
 			 * 'events' are defined in pub.sub.js.
 			 * event names are defined in ajax.manager.js
-			 * ajax.mnanager.js contains functions to ping the cache, and trigger the subscribed events.
+			 * ajax.mnanager.js contains functions to ping the cache, and trigger the subscribed events (event publication).
 			 * 
 			 * The subscribe function has 2 parameters:
 			 * - the name of the event to subscribe to
 			 * - the callback function to be invoked on event publication
 			 */
 			 events.subscribe(EVENT_FULL, function (val) {
-				// console.log(val);
+				if (VERBOSE) {
+					console.log(val);
+				}
 				document.getElementById('full-data').innerHTML = '<pre>' + JSON.stringify(val, null, 2).trim() + '</pre>';
 			});
 
 			events.subscribe(EVENT_POS, function (val) {
-				// console.log(val);
+				if (VERBOSE) {
+					console.log(val);
+				}
 				document.getElementById('position').innerHTML = 
 					decToSex(val.lat, 'NS') + '<br/>' + 
 					decToSex(val.lng, 'EW');
 			});
 			events.subscribe(EVENT_GPS_TIME, function (val) {
-				// console.log(val);
+				if (VERBOSE) {
+					console.log(val);
+				}
 				document.getElementById('gps-date-time').innerText = val;
 			});
 		};
@@ -97,16 +109,16 @@
 	</script>
 </head>
 <body>
-	<h1>
-		Basic Web-UI Demo - REST <img src="icons/REST.jpeg" style="height: 40px; vertical-align: middle;"/>,
-		                    Ajax <img src="icons/AJAX.jpeg" style="height: 40px; vertical-align: middle;"/>,
-		                    HTML <img src="icons/HTML5.png" style="height: 40px; vertical-align: middle;"/>
+	<h1 style="border: 1px solid silver; border-radius: 5px; padding: 10px;">
+		Basic Web-UI Demo - REST <img src="./icons/REST.jpeg" style="height: 40px; vertical-align: middle;"/>,
+		                    Ajax <img src="./icons/AJAX.jpeg" style="height: 40px; vertical-align: middle;"/>,
+		                    HTML <img src="./icons/HTML5.png" style="height: 40px; vertical-align: middle;"/>
 	</h1>
 	<div>
 		<small>
-			This page shows the basic mechanisms used to get data from the NMEA cache, and display them.<br/>
+			This page implements and shows the basic mechanisms used to get data from the server-side NMEA data cache, and display some.<br/>
 			No fancy UI, CSS, or Components.<br/>
-			See the code of the page for details.
+			See the code of the page for details. It's been kept small on purpose.
 		</small>
 		<br/>
 		<p>
