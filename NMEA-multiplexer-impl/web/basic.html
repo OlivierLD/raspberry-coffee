@@ -48,7 +48,7 @@
 			// Subscribers here
 			/*
 			 * 'events' are defined in pub.sub.js.
-			 * event names are defined in ajax.mnanager.js
+			 * event names are defined in ajax.manager.js
 			 * ajax.mnanager.js contains functions to ping the cache, and trigger the subscribed events.
 			 * 
 			 * The subscribe function has 2 parameters:
@@ -97,7 +97,11 @@
 	</script>
 </head>
 <body>
-	<h1>Basic Web-UI Demo</h1>
+	<h1>
+		Basic Web-UI Demo - REST <img src="icons/REST.jpeg" style="height: 40px; vertical-align: middle;"/>,
+		                    Ajax <img src="icons/AJAX.jpeg" style="height: 40px; vertical-align: middle;"/>,
+		                    HTML <img src="icons/HTML5.png" style="height: 40px; vertical-align: middle;"/>
+	</h1>
 	<div>
 		<small>
 			This page shows the basic mechanisms used to get data from the NMEA cache, and display them.<br/>
@@ -106,7 +110,7 @@
 		</small>
 		<br/>
 		<p>
-			<div id="position" title="Position"></div>
+			<div id="position" title="GPS Position"></div>
 		</p>
 		<div id="gps-date-time" title="GPS Date &amp; Time"></div>
 		<p>
