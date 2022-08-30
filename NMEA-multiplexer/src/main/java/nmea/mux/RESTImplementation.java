@@ -45,7 +45,6 @@ import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.mux.context.Context.StringAndTimeStamp;
 import nmea.parser.*;
-import nmea.utils.NMEAUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -344,9 +343,6 @@ public class RESTImplementation {
 //			Object[] portArray = portList.toArray(new Object[0]);
 			String content = // new Gson().toJson(portArray).toString();
 					mapper.writeValueAsString(portList);
-
-			System.out.println(">> Port list:" + content);
-
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Error | JsonProcessingException error) {
@@ -361,14 +357,19 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 		List<Object> channelList = getInputChannelList();
-		Object[] channelArray = channelList.stream()
-				.collect(Collectors.toList())
-				.toArray(new Object[channelList.size()]);
-
-		String content = new Gson().toJson(channelArray);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-
+//		Object[] channelArray = channelList.stream()
+//				.collect(Collectors.toList())
+//				.toArray(new Object[channelList.size()]);
+		try {
+			String content = // new Gson().toJson(channelArray);
+					mapper.writeValueAsString(channelList);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (JsonProcessingException jpe) {
+			response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload()
+					.errorCode("MUX-0001")
+					.errorMessage(jpe.toString()));
+		}
 		return response;
 	}
 
