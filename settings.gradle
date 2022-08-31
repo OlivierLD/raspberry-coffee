@@ -42,6 +42,7 @@ include "Bluetooth"
 include "Joystick"
 //include "jsonQL"
 include "diozero-101"
+include "pi4j_v2-101"
 // Astro Computer
 include(':astro-computer:AstroComputer')
 // Raspberry IO Pi4J
