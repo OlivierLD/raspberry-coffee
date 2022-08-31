@@ -134,7 +134,7 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 > _Example_:  
 > The `NMEA-multiplexer` project has many dependencies, remote ones, and local ones:
 > ```
->    implementation 'com.pi4j:pi4j-core:1.2'
+>    implementation "com.pi4j:pi4j-core:$pi4j_version"
 >    implementation 'org.rxtx:rxtx:2.1.7'
 >    implementation 'org.scala-lang:scala-library:2.13.3'
 >    implementation "org.scala-lang:scala-compiler:2.13.3"

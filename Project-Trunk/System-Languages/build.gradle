@@ -1,7 +1,7 @@
 buildscript {
   ext.kotlin_version = '1.6.0'  // '1.4.0'  // '1.3.72'
   ext.scala_version = '2.13.8'
-  ext.shadowVersion='6.0.0'
+  ext.shadowVersion = '6.0.0'
   repositories {
     mavenCentral()
     maven {

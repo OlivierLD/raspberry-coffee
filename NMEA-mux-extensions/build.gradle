@@ -1,3 +1,6 @@
+buildscript {
+    ext.pi4j_version = '1.2'
+}
 plugins {
     id 'java'
     id 'scala'
@@ -27,7 +30,7 @@ compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 //}
 
 dependencies {
-    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation "com.pi4j:pi4j-core:$pi4j_version"
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation group: 'org.json', name: 'json', version: '20190722'

@@ -1,3 +1,6 @@
+buildscript {
+    ext.pi4j_version = '1.2'
+}
 plugins {
     id 'java'
     id 'idea'
@@ -18,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation "com.pi4j:pi4j-core:$pi4j_version"
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation project(':common-utils')
     implementation project(':raspberry-io-pi4j:Serial-IO')

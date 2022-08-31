@@ -1,3 +1,6 @@
+buildscript {
+  ext.pi4j_version = '1.2'
+}
 plugins {
   id 'java'
   id 'idea'
@@ -20,7 +23,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation "com.pi4j:pi4j-core:$pi4j_version"
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'org.java-websocket:Java-WebSocket:1.3.7'
   implementation project(':common-utils')

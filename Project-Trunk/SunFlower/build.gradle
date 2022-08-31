@@ -1,3 +1,6 @@
+buildscript {
+  ext.pi4j_version = '1.2'
+}
 plugins {
   id 'java'
 //id 'scala'
@@ -21,7 +24,7 @@ repositories {
 dependencies {
   implementation 'com.google.code.gson:gson:2.8.0'
   implementation 'org.fusesource.jansi:jansi:1.11'
-  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation "com.pi4j:pi4j-core:$pi4j_version"
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
 //  implementation 'astro.computer:astro.computer:1.0'

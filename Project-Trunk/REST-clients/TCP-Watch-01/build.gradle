@@ -1,3 +1,6 @@
+buildscript {
+  ext.pi4j_version = '1.2'
+}
 plugins {
   id 'java'
   id 'maven'
@@ -22,7 +25,7 @@ repositories {
 
 dependencies {
   implementation 'com.google.code.gson:gson:2.8.0'
-  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation "com.pi4j:pi4j-core:$pi4j_version"
 
   implementation project(':http-tiny-server')
   implementation project(':common-utils')

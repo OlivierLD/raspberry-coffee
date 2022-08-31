@@ -1,3 +1,7 @@
+buildscript {
+  ext.pi4j_version = '1.2'
+}
+
 import java.text.SimpleDateFormat
 
 plugins {
@@ -25,7 +29,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.pi4j:pi4j-core:1.2'
+  implementation "com.pi4j:pi4j-core:$pi4j_version"
   implementation 'com.google.code.gson:gson:2.8.0'
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'oracle:xmlparser:2.0'

@@ -1,3 +1,6 @@
+buildscript {
+    ext.pi4j_version = '1.2'
+}
 plugins {
     id 'java'
     id 'idea'
@@ -17,7 +20,7 @@ compileJava.options.compilerArgs += ["-Xlint:unchecked"]
 
 dependencies {
 //implementation 'comm:rxtx:1.0'
-    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation "com.pi4j:pi4j-core:$pi4j_version"
     implementation 'org.fusesource.jansi:jansi:1.11'
     implementation 'org.json:json:20141113'
     implementation 'org.rxtx:rxtx:2.1.7'

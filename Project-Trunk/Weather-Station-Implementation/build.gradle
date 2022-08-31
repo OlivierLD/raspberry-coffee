@@ -1,6 +1,6 @@
 buildscript {
   ext.scala_version = '2.13.8'
-  ext.shadowVersion='6.0.0'
+  ext.shadowVersion = '6.0.0'
   repositories {
     mavenCentral()
     maven {

@@ -52,8 +52,8 @@ public class SerialReader {
 						serial.write("CURRENT TIME: %s", new Date().toString());
 
 						// write a individual bytes to the serial transmit buffer
-						serial.write((byte) 13);
-						serial.write((byte) 10);
+						serial.write((byte) 13); // CR
+						serial.write((byte) 10); // NL
 
 						// write a simple string to the serial transmit buffer
 						serial.write("Second Line");
