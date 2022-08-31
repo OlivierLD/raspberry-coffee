@@ -63,7 +63,7 @@ public class TideForOneMonth {
 	public final static int TEXT_FLAVOR = 0;
 	public final static int XML_FLAVOR = 1;
 
-//	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public static void tideForOneMonth(PrintStream out,
 	                                   String timeZone,
 	                                   int year,
@@ -397,7 +397,7 @@ public class TideForOneMonth {
 		return timeAL;
 	}
 
-//	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation")
 	public static void sunForOneMonth(PrintStream out,
 									  String timeZone,
 									  int year,

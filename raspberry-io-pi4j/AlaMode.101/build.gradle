@@ -1,5 +1,5 @@
 buildscript {
-  ext.pi4j_version = '1.2'
+  // ext.pi4j_version = '1.2'
 }
 plugins {
   id 'java'
