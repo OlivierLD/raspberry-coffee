@@ -1,7 +1,7 @@
 package utils;
 
-//import com.pi4j.io.gpio.Pin;
-//import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.RaspiPin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,33 +18,33 @@ public class PinUtil {
         //
         //      Name            #  IO WiPi                            Name            #  IO WiPi
         PWR_1("3v3",            1, -1, -1, null),             PWR_2("5v0",            2, -1, -1, null),
-        GPIO_8("SDA1",          3,  2,  8, "RaspiPin.GPIO_08"), PWR_3("5v0",            4, -1, -1, null),
-        GPIO_9("SCL1",          5,  3,  9, "RaspiPin.GPIO_09"), GRND_1("GND",           6, -1, -1, null),
-        GPIO_7("GPCLK0",        7,  4,  7, "RaspiPin.GPIO_07"), GPIO_15("UART0_TXD",    8, 14, 15, "RaspiPin.GPIO_15"),
-        GRND_2("GND",           9, -1, -1, null),             GPIO_16("UART0_RXD",   10, 15, 16, "RaspiPin.GPIO_16"),
-        GPIO_0("GPIO_0",       11, 17,  0, "RaspiPin.GPIO_00"), GPIO_1("PCM_CLK/PWM0", 12, 18,  1, "RaspiPin.GPIO_01"),
-        GPIO_2("GPIO_2",       13, 27,  2, "RaspiPin.GPIO_02"), GRND_3("GND",          14, -1, -1, null),
-        GPIO_3("GPIO_3",       15, 22,  3, "RaspiPin.GPIO_03"), GPIO_4("GPIO_4",       16, 23,  4, "RaspiPin.GPIO_04"),
-        PWR_4("3v3",           17, -1, -1, null),             GPIO_5("GPIO_5",       18, 24,  5, "RaspiPin.GPIO_05"),
-        GPIO_12("SPI0_MOSI",   19, 10, 12, "RaspiPin.GPIO_12"), GRND_4("GND",          20, -1, -1, null),
-        GPIO_13("SPI0_MISO",   21,  9, 13, "RaspiPin.GPIO_13"), GPIO_6("GPIO_6",       22, 25,  6, "RaspiPin.GPIO_06"),
-        GPIO_14("SPI0_CLK",    23, 11, 14, "RaspiPin.GPIO_14"), GPIO_10("SPI0_CS0_N",  24,  8, 10, "RaspiPin.GPIO_10"),
-        GRND_5("GND",          25, -1, -1, null),             GPIO_11("SPI0_CS1_N",  26,  7, 11, "RaspiPin.GPIO_11"),
-        SDA0("SDA0",           27, 0, 30, "RaspiPin.GPIO_30"), SCL0("SCL0",           28, 1, 31, "RaspiPin.GPIO_31"), // gpio was -1...
-        GPIO_21("GPCLK1",      29,  5, 21, "RaspiPin.GPIO_21"), GRND_6("GND",          30, -1, -1, null),
-        GPIO_22("GPCLK2",      31,  6, 22, "RaspiPin.GPIO_22"), GPIO_26("PWM0",        32, 12, 26, "RaspiPin.GPIO_26"),
-        GPIO_23("PWM1",        33, 13, 23, "RaspiPin.GPIO_23"), GRND_7("GND",          34, -1, -1, null),
-        GPIO_24("PCM_FS/PWM1", 35, 19, 24, "RaspiPin.GPIO_24"), GPIO_27("GPIO_27",     36, 16, 27, "RaspiPin.GPIO_27"),
-        GPIO_25("GPIO_25",     37, 26, 25, "RaspiPin.GPIO_25"), GPIO_28("PCM_DIN",     38, 20, 28, "RaspiPin.GPIO_28"),
-        GRND_8("GND",          39, -1, -1, null),             GPIO_29("PCM_DOUT",    40, 21, 29, "RaspiPin.GPIO_29");
+        GPIO_8("SDA1",          3,  2,  8, RaspiPin.GPIO_08), PWR_3("5v0",            4, -1, -1, null),
+        GPIO_9("SCL1",          5,  3,  9, RaspiPin.GPIO_09), GRND_1("GND",           6, -1, -1, null),
+        GPIO_7("GPCLK0",        7,  4,  7, RaspiPin.GPIO_07), GPIO_15("UART0_TXD",    8, 14, 15, RaspiPin.GPIO_15),
+        GRND_2("GND",           9, -1, -1, null),             GPIO_16("UART0_RXD",   10, 15, 16, RaspiPin.GPIO_16),
+        GPIO_0("GPIO_0",       11, 17,  0, RaspiPin.GPIO_00), GPIO_1("PCM_CLK/PWM0", 12, 18,  1, RaspiPin.GPIO_01),
+        GPIO_2("GPIO_2",       13, 27,  2, RaspiPin.GPIO_02), GRND_3("GND",          14, -1, -1, null),
+        GPIO_3("GPIO_3",       15, 22,  3, RaspiPin.GPIO_03), GPIO_4("GPIO_4",       16, 23,  4, RaspiPin.GPIO_04),
+        PWR_4("3v3",           17, -1, -1, null),             GPIO_5("GPIO_5",       18, 24,  5, RaspiPin.GPIO_05),
+        GPIO_12("SPI0_MOSI",   19, 10, 12, RaspiPin.GPIO_12), GRND_4("GND",          20, -1, -1, null),
+        GPIO_13("SPI0_MISO",   21,  9, 13, RaspiPin.GPIO_13), GPIO_6("GPIO_6",       22, 25,  6, RaspiPin.GPIO_06),
+        GPIO_14("SPI0_CLK",    23, 11, 14, RaspiPin.GPIO_14), GPIO_10("SPI0_CS0_N",  24,  8, 10, RaspiPin.GPIO_10),
+        GRND_5("GND",          25, -1, -1, null),             GPIO_11("SPI0_CS1_N",  26,  7, 11, RaspiPin.GPIO_11),
+        SDA0("SDA0",           27, 0, 30, RaspiPin.GPIO_30), SCL0("SCL0",           28, 1, 31, RaspiPin.GPIO_31), // gpio was -1...
+        GPIO_21("GPCLK1",      29,  5, 21, RaspiPin.GPIO_21), GRND_6("GND",          30, -1, -1, null),
+        GPIO_22("GPCLK2",      31,  6, 22, RaspiPin.GPIO_22), GPIO_26("PWM0",        32, 12, 26, RaspiPin.GPIO_26),
+        GPIO_23("PWM1",        33, 13, 23, RaspiPin.GPIO_23), GRND_7("GND",          34, -1, -1, null),
+        GPIO_24("PCM_FS/PWM1", 35, 19, 24, RaspiPin.GPIO_24), GPIO_27("GPIO_27",     36, 16, 27, RaspiPin.GPIO_27),
+        GPIO_25("GPIO_25",     37, 26, 25, RaspiPin.GPIO_25), GPIO_28("PCM_DIN",     38, 20, 28, RaspiPin.GPIO_28),
+        GRND_8("GND",          39, -1, -1, null),             GPIO_29("PCM_DOUT",    40, 21, 29, RaspiPin.GPIO_29);
 
         private final String pinName; // Pin name
         private final int pinNumber;  // Physical, [1..40]
         private final int gpio;       // Used by onoff (nodejs), BCM in 'gpio readall', and Javah-io (JOB)
         private final int wiringPi;   // Also used by PI4J
-        private final String pin;        // Legacy name
+        private final Pin pin;
 
-        GPIOPin(String name, int pinNumber, int gpio, int wiring, String pin) {
+        GPIOPin(String name, int pinNumber, int gpio, int wiring, Pin pin) {
             this.pinName = name;
             this.pinNumber = pinNumber;
             this.gpio = gpio;
@@ -56,11 +56,11 @@ public class PinUtil {
         public int pinNumber() { return this.pinNumber; }
         public int gpio() { return this.gpio; }
         public int wiringPi() { return this.wiringPi; }
-        public String pin() { return this.pin; }
+        public Pin pin() { return this.pin; }
     }
 
-    public static String getPinByPhysicalNumber(int n) {
-        String pin = null;
+    public static Pin getPinByPhysicalNumber(int n) {
+        Pin pin = null;
         for (GPIOPin gpioPin : GPIOPin.values()) {
             if (gpioPin.pinNumber() == n) {
                 pin = gpioPin.pin();
@@ -70,7 +70,7 @@ public class PinUtil {
         return pin;
     }
 
-    public static int getPhysicalByWiringPiNumber(String wPi) {
+    public static int getPhysicalByWiringPiNumber(Pin wPi) {
         int physical = 0;
         for (GPIOPin gpioPin : GPIOPin.values()) {
             if (gpioPin.pin != null && gpioPin.pin.equals(wPi)) {
@@ -81,8 +81,8 @@ public class PinUtil {
         return physical;
     }
 
-    public static String getPinByWiringPiNumber(int n) {
-        String pin = null;
+    public static Pin getPinByWiringPiNumber(int n) {
+        Pin pin = null;
         for (GPIOPin gpioPin : GPIOPin.values()) {
             if (gpioPin.wiringPi() == n) {
                 pin = gpioPin.pin();
@@ -92,7 +92,7 @@ public class PinUtil {
         return pin;
     }
 
-    public static int getWiringPiNumber(String p) {
+    public static int getWiringPiNumber(Pin p) {
         int wpi = -1;
         for (GPIOPin gpioPin : GPIOPin.values()) {
             if (gpioPin.pin().equals(p)) {
@@ -107,8 +107,8 @@ public class PinUtil {
      * @param n BCM number
      * @return wPi Pin
      */
-    public static String getPinByGPIONumber(int n) {
-        String pin = null;
+    public static Pin getPinByGPIONumber(int n) {
+        Pin pin = null;
         for (GPIOPin gpioPin : GPIOPin.values()) {
             if (gpioPin.gpio() == n) {
                 pin = gpioPin.pin();
@@ -118,7 +118,7 @@ public class PinUtil {
         return pin;
     }
 
-    public static GPIOPin findByPin(String pin) {
+    public static GPIOPin findByPin(Pin pin) {
         GPIOPin gpio = null;
         for (GPIOPin gpioPin : GPIOPin.values()) {
             if (pin != null && pin.equals(gpioPin.pin())) {

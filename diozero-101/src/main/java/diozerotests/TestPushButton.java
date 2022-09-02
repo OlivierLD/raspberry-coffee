@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
  * GPIO Pin numbers, see https://www.diozero.com/api/gpio.html
- * PINs are BCM numbers.
+ * PINs are BCM (Broadcom) numbers.
  */
 
 public class TestPushButton {
@@ -61,8 +61,9 @@ public class TestPushButton {
             }
         }, "Oops"));
 
-        AtomicBoolean buttonPressed = new AtomicBoolean(false); // false: led is (should be) off.
-        try (Button button = new Button(buttonPin, GpioPullUpDown.PULL_UP); LED led = new LED(ledPin)) { // With resources, nice !
+        AtomicBoolean buttonPressed = new AtomicBoolean(false);    // false: led is (should be) off.
+        try (Button button = new Button(buttonPin, GpioPullUpDown.PULL_UP);
+             LED led = new LED(ledPin)) {                                    // With resources, nice !
 
             System.out.println("--- Button block, top.");
 //            led.off();

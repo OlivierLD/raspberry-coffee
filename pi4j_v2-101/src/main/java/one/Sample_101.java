@@ -36,7 +36,7 @@ public class Sample_101 {
                 .address(PIN_BUTTON)
                 .pull(PullResistance.PULL_DOWN)
                 .debounce(3_000L)
-                .provider("pigpio-digital-input");
+                .provider("pigpio-digital-input"); // Problem with that one ?...
 
         var button = pi4j.create(buttonConfig);
 
