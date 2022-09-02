@@ -15,7 +15,7 @@ import com.pi4j.util.Console;
 public class Sample_101 {
 
     private static int pressCount = 0;
-    // Use BCM numbers.
+    // PI4J v2 uses BCM numbers.
     private static final int PIN_BUTTON = 24; // PIN #18 = BCM 24
     private static final int PIN_LED = 22;    // PIN #15 = BCM 22
 
