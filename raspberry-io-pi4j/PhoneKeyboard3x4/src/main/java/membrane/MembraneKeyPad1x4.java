@@ -21,13 +21,13 @@ public class MembraneKeyPad1x4 {
 	/*
 	 * https://www.adafruit.com/products/1332
    */
-	private final Pin[] kpCol = new Pin[] {
+	private final String[] kpCol = new String[] {
 			PinUtil.GPIOPin.GPIO_1.pin(),
 			PinUtil.GPIOPin.GPIO_4.pin(),
 			PinUtil.GPIOPin.GPIO_5.pin(),
 			PinUtil.GPIOPin.GPIO_6.pin()
 	};
-	private Pin common = PinUtil.GPIOPin.GPIO_7.pin();
+	private String common = PinUtil.GPIOPin.GPIO_7.pin();
 
 	public MembraneKeyPad1x4() {
 		this(false);
