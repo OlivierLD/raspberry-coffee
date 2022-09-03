@@ -17,6 +17,8 @@ fi
 OPT="${OPT} -Dspit-out-points=true"
 OPT="${OPT} -Duser.language=en -Duser.country=US"
 #
+# The main class boatdesign.ThreeViews is in the MANIFEST.
+#
 COMMAND="java ${OPT} ${LOGGING_FLAGS} -jar ${CP} $*"
 echo -e "Running ${COMMAND}"
 ${COMMAND}
