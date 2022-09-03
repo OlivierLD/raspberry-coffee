@@ -11,7 +11,7 @@ public class BMPReader {
 		File bmpFile = new File("img/pic.240x240.bmp");
 		try {
 			BufferedImage image = ImageIO.read(bmpFile);
-			System.out.println(String.format("Image was read, w: %d, h: %d", image.getWidth(), image.getHeight()));
+			System.out.printf("Image was read, w: %d, h: %d\n", image.getWidth(), image.getHeight());
 			int[] pixel = new int[4]; // RGBA
 			Raster data = image.getData();
 			for (int row=0; row<image.getHeight(); row++) {

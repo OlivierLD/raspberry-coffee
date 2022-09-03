@@ -56,7 +56,7 @@ public class Nokia5110 {
 	private static GpioPinDigitalOutput resetOutput = null;
 	private static GpioPinDigitalOutput dcOutput = null;
 
-	private boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+	private final boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
 	public Nokia5110() {
 		init();

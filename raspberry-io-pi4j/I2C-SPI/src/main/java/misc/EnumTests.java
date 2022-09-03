@@ -1,7 +1,7 @@
 package misc;
 
 public class EnumTests {
-	private static boolean verbose = true;
+	private final static boolean verbose = true;
 
 	public enum spsADS1015 {
 		ADS1015_REG_CONFIG_DR_128SPS(128),
@@ -36,7 +36,6 @@ public class EnumTests {
 				if (verbose)
 					System.out.println("Value [" + val + "] not found, defaulting to [" + def + "]");
 				// Check if default value is in the list
-				found = false;
 				for (spsADS1015 one : values()) {
 					if (one.value() == def) {
 						ret = val;
