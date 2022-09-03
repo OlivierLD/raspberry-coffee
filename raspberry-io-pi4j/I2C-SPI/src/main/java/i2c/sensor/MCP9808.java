@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import static utils.TimeUtil.delay;
+import static utils.StringUtils.lpad;
 
 /*
  * Temperature
@@ -37,7 +38,7 @@ public class MCP9808 {
 	private final static int MCP9808_REG_CONFIG_ALERTPOL = 0x0002;
 	private final static int MCP9808_REG_CONFIG_ALERTMODE = 0x0001;
 
-	private static boolean verbose = false;
+	private final static boolean verbose = false;
 
 	private I2CBus bus;
 	private I2CDevice mcp9808;
@@ -69,10 +70,10 @@ public class MCP9808 {
 		byte[] bb = new byte[TWO];
 		int nbr = this.mcp9808.read(register, bb, 0, TWO);
 		if (nbr != TWO) {
-			throw new Exception("Cannot read 2 bytes from " + lpad(Integer.toHexString(register), "0", 2));
+			throw new Exception("Cannot read 2 bytes from " + lpad(Integer.toHexString(register), 2, "0"));
 		}
 		if (verbose) {
-			System.out.println("I2C: 0x" + lpad(Integer.toHexString(bb[0]), "0", 2) + lpad(Integer.toHexString(bb[1]), "0", 2));
+			System.out.println("I2C: 0x" + lpad(Integer.toHexString(bb[0]), 2, "0") + lpad(Integer.toHexString(bb[1]), 2, "0"));
 		}
 		return ((bb[0] & 0xFF) << 8) + (bb[1] & 0xFF);
 	}
@@ -86,8 +87,8 @@ public class MCP9808 {
 			throw e;
 		}
 		if (verbose) {
-			System.out.println("I2C: MID 0x" + lpad(Integer.toHexString(mid), "0", 4) + " (expected 0x0054)" +
-					" DID 0x" + lpad(Integer.toHexString(did), "0", 4) + " (expected 0x0400)");
+			System.out.println("I2C: MID 0x" + lpad(Integer.toHexString(mid), 4, "0") + " (expected 0x0054)" +
+					" DID 0x" + lpad(Integer.toHexString(did), 4, "0") + " (expected 0x0400)");
 		}
 		return (mid == 0x0054 && did == 0x0400);
 	}
@@ -100,17 +101,9 @@ public class MCP9808 {
 			temp -= 256;
 		}
 		if (verbose) {
-			System.out.println("DBG: C Temp: " + lpad(Integer.toHexString(raw & 0xFFFF), "0", 4) + ", " + temp);
+			System.out.println("DBG: C Temp: " + lpad(Integer.toHexString(raw & 0xFFFF), 4, "0") + ", " + temp);
 		}
 		return temp;
-	}
-
-	private static String lpad(String s, String with, int len) {
-		String str = s;
-		while (str.length() < len) {
-			str = with + str;
-		}
-		return str;
 	}
 
 	private final static NumberFormat NF = new DecimalFormat("##00.000");

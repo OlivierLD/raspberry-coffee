@@ -42,7 +42,7 @@ public class PWM {
 	public final static int SERVO_ADDRESS = 0x40;
 	private int deviceAddr = SERVO_ADDRESS;
 
-	private boolean verbose = "true".equals(System.getProperty("hat.debug", "false"));
+	private final boolean verbose = "true".equals(System.getProperty("hat.debug", "false"));
 
 	public PWM() throws I2CFactory.UnsupportedBusNumberException {
 		this(SERVO_ADDRESS);
@@ -68,7 +68,7 @@ public class PWM {
 
 		try {
 			if (verbose) {
-				System.out.println("Reseting AdafruitHAT MODE1 (without SLEEP) and MODE2");
+				System.out.println("Resetting AdafruitHAT MODE1 (without SLEEP) and MODE2");
 			}
 			this.setAllPWM((byte) 0, (byte) 0);
 			if (verbose) {

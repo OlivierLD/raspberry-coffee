@@ -114,7 +114,7 @@ public class LedPanelMain2 extends java.awt.Frame {
 		boolean[][] matrix = ledPanel.getLedOnOff();
 		for (int i = 0; i < NB_LINES; i++) {
 			for (int j = 0; j < NB_COLS; j++) {
-				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X' ? true : false);
+				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X');
 			}
 		}
 		ledPanel.setLedOnOff(matrix);

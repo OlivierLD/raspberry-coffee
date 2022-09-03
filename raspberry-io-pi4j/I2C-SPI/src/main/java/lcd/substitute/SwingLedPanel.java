@@ -30,7 +30,7 @@ import utils.StringUtils;
  */
 public class SwingLedPanel
 				extends JFrame {
-	private SwingLedPanel instance = this;
+	private final SwingLedPanel instance = this;
 	private LEDPanel ledPanel;
 	private JPanel bottomPanel;
 	private JCheckBox gridCheckBox;
@@ -45,8 +45,8 @@ public class SwingLedPanel
 		SSD1306_128x64(128, 64),
 		NOKIA5110(84, 48);
 
-		private int width;
-		private int height;
+		private final int width;
+		private final int height;
 		ScreenDefinition(int width, int height) {
 			this.width = width;
 			this.height = height;
@@ -224,7 +224,7 @@ public class SwingLedPanel
 		// for (int i=31; i>=0; i--)
 		{
 			for (int j = 0; j < nbCols; j++)
-				matrix[j][nbLines - 1 - i] = (screenMatrix[i][j] == 'X' ? true : false);
+				matrix[j][nbLines - 1 - i] = (screenMatrix[i][j] == 'X');
 		}
 		ledPanel.setLedOnOff(matrix);
 	}

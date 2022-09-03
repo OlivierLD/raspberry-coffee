@@ -73,25 +73,15 @@ public class LedPanelMain
 		gridCheckBox = new JCheckBox("With Grid");
 		gridCheckBox.setSelected(false);
 		bottomPanel.add(gridCheckBox, null);
-		gridCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				ledPanel.setWithGrid(gridCheckBox.isSelected());
-				ledPanel.repaint();
-			}
+		gridCheckBox.addActionListener(actionEvent -> {
+			ledPanel.setWithGrid(gridCheckBox.isSelected());
+			ledPanel.repaint();
 		});
 		againButton = new JButton("Play again");
 		bottomPanel.add(againButton, null);
-		againButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				Thread go = new Thread() {
-					public void run() {
-						instance.doYourJob();
-					}
-				};
-				go.start();
-			}
+		againButton.addActionListener(actionEvent -> {
+			Thread go = new Thread(() -> instance.doYourJob());
+			go.start();
 		});
 
 		add(bottomPanel, java.awt.BorderLayout.SOUTH);
@@ -135,7 +125,7 @@ public class LedPanelMain
 		// for (int i=31; i>=0; i--)
 		{
 			for (int j = 0; j < NB_COLS; j++)
-				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X' ? true : false);
+				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X');
 		}
 		ledPanel.setLedOnOff(matrix);
 	}

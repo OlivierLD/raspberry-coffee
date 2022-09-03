@@ -13,6 +13,7 @@ channels:
     zip: true
     path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
     verbose: false
-#forwarders:
+forwarders:
 #  - type: console
-
+  - type: tcp
+    port: 7002

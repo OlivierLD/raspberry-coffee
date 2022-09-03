@@ -358,8 +358,8 @@ public class ScreenBuffer {
 	 * Return the length of the matrix displaying the string,
 	 * NOT the length of the string...
 	 *
-	 * @param s
-	 * @return
+	 * @param s the string
+	 * @return the length
 	 */
 	public int strlen(String s) {
 		return strlen(s, 1);

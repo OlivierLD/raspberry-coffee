@@ -36,9 +36,9 @@ public class AdafruitMotorHAT {
 	private final static int HAT_ADDR     = 0x60;
 	private final static int DEFAULT_FREQ = 1_600;
 
-	private AdafruitDCMotor motors[];
-	private AdafruitStepperMotor steppers[];
-	private PWM pwm;
+	private final AdafruitDCMotor[] motors;
+	private final AdafruitStepperMotor[] steppers;
+	private final PWM pwm;
 
 	public AdafruitMotorHAT() throws I2CFactory.UnsupportedBusNumberException {
 		this(HAT_ADDR, DEFAULT_FREQ);
@@ -106,8 +106,8 @@ public class AdafruitMotorHAT {
 	}
 
 	public static class AdafruitDCMotor {
-		private AdafruitMotorHAT mh;
-		private Motor motorNum;
+		private final AdafruitMotorHAT mh;
+		private final Motor motorNum;
 		private int pwm = 0, in1 = 0, in2 = 0;
 		private int PWMpin = 0, IN1pin = 0, IN2pin = 0;
 
@@ -177,9 +177,9 @@ public class AdafruitMotorHAT {
 
 		private double rpm = 30; // Default
 
-		private AdafruitMotorHAT mc;
-		private int MICROSTEPS = 8;
-		private int[] MICROSTEP_CURVE = new int[] {
+		private final AdafruitMotorHAT mc;
+		private final int MICROSTEPS = 8;
+		private final int[] MICROSTEP_CURVE = new int[] {
 				0, 50, 98, 142, 180, 212, 236, 250, 255
 		};
 //		private int MICROSTEPS = 16;
@@ -198,7 +198,7 @@ public class AdafruitMotorHAT {
 		private int BIN1 = 11;
 
 		private int revSteps; // Steps per Revolution
-		private int motorNum;
+		private final int motorNum;
 		private double secPerStep;
 		private int steppingCounter = 0;
 		private int currentStep = 0;
@@ -400,7 +400,7 @@ public class AdafruitMotorHAT {
 			this.mc.pwm.setPWM(this.PWMB, (short) 0, (short) (pwmB * 16));
 
 			// set up coil energizing.
-			int coils[] = new int[]{ 0, 0, 0, 0 };
+			int[] coils = new int[]{ 0, 0, 0, 0 };
 
 			if (style == Style.MICROSTEP) {
 				if (this.currentStep >= 0 && this.currentStep < this.MICROSTEPS) {
@@ -468,7 +468,7 @@ public class AdafruitMotorHAT {
 			long waitMS = (long) (sPerS * 1_000);
 
 			if ("true".equals(System.getProperty("hat.debug", "false"))) {
-				System.out.println(String.format("%.03f sec per step (delay %d ms)", sPerS, waitMS));
+				System.out.printf("%.03f sec per step (delay %d ms)\n", sPerS, waitMS);
 			}
 
 			for (int s = 0; s < steps; s++) {
@@ -504,7 +504,7 @@ public class AdafruitMotorHAT {
 				}
 			}
 			if ("true".equals(System.getProperty("hat.debug", "false"))) {
-				System.out.println(String.format("LatestStep: %d", latestStep));
+				System.out.printf("LatestStep: %d\n", latestStep);
 			}
 		}
 	}

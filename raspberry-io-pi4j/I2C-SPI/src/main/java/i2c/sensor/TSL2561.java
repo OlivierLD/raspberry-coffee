@@ -71,7 +71,7 @@ public class TSL2561 {
 	private static boolean verbose = false;
 	private int gain = TSL2561_GAIN_1X;
 	private int integration = TSL2561_INTEGRATIONTIME_402MS;
-	private long pause = 800L;
+	private final long pause = 800L;
 
 	private I2CBus bus;
 	private I2CDevice tsl2561;

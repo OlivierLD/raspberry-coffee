@@ -49,7 +49,7 @@ public class VCNL4000 {
 	public final static int VCNL4000_AMBIENTREADY = 0x40;
 	public final static int VCNL4000_PROXIMITYREADY = 0x20;
 
-	private static boolean verbose = false;
+	private final static boolean verbose = false;
 
 	private I2CBus bus;
 	private I2CDevice vcnl4000;

@@ -69,25 +69,15 @@ public class LedPanelScratchPad
 		gridCheckBox = new JCheckBox("With Grid");
 		gridCheckBox.setSelected(false);
 		bottomPanel.add(gridCheckBox, null);
-		gridCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				ledPanel.setWithGrid(gridCheckBox.isSelected());
-				ledPanel.repaint();
-			}
+		gridCheckBox.addActionListener(actionEvent -> {
+			ledPanel.setWithGrid(gridCheckBox.isSelected());
+			ledPanel.repaint();
 		});
 		againButton = new JButton("Play again");
 		bottomPanel.add(againButton, null);
-		againButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				Thread go = new Thread() {
-					public void run() {
-						instance.doYourJob();
-					}
-				};
-				go.start();
-			}
+		againButton.addActionListener(actionEvent -> {
+			Thread go = new Thread(() -> instance.doYourJob());
+			go.start();
 		});
 
 		add(bottomPanel, java.awt.BorderLayout.SOUTH);
@@ -131,7 +121,7 @@ public class LedPanelScratchPad
 		// for (int i=31; i>=0; i--)
 		{
 			for (int j = 0; j < NB_COLS; j++)
-				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X' ? true : false);
+				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X');
 		}
 		ledPanel.setLedOnOff(matrix);
 	}
@@ -195,9 +185,7 @@ public class LedPanelScratchPad
 		Map<String, String[]> characters = CharacterMatrixes.characters;
 		Set<String> keys = characters.keySet();
 		List<String> kList = new ArrayList<>(keys.size());
-		for (String k : keys) {
-			kList.add(k);
-		}
+		kList.addAll(keys);
 		// Sort here
 		Collections.sort(kList);
 		for (String k : kList) {

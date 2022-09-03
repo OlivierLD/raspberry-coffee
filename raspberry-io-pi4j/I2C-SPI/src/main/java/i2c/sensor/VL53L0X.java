@@ -101,10 +101,10 @@ public class VL53L0X {
 		return (int)(((timeoutPeriodMclks * macroPeriodNs) + (int)(macroPeriodNs / 2f)) / 1_000f);
 	}
 
-	private static boolean verbose = "true".equals(System.getProperty("vl53l0x.debug", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("vl53l0x.debug", "false"));
 
-	private I2CBus bus;
-	private I2CDevice vl53l0x;
+	private final I2CBus bus;
+	private final I2CDevice vl53l0x;
 
 	private int ioTimeout = 0;
 	private int stopVariable = 0;
@@ -599,7 +599,7 @@ public class VL53L0X {
 			while (true) {
 				int mm = vl53l0x.range();
 				if (previousDist != mm) {
-					System.out.println(String.format("Range: %d mm", mm));
+					System.out.printf("Range: %d mm\n", mm);
 				}
 				previousDist = mm;
 				try {

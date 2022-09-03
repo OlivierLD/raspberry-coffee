@@ -1,4 +1,4 @@
-package i2c.sensor.main;
+package main;
 
 import i2c.sensor.L3GD20;
 import i2c.sensor.utils.L3GD20Dictionaries;

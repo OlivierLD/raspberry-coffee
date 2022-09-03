@@ -110,8 +110,8 @@ public class TCS34725 {
 
 	private static boolean verbose = false;
 
-	private I2CBus bus;
-	private I2CDevice tcs34725;
+	private final I2CBus bus;
+	private final I2CDevice tcs34725;
 
 	private int integrationTime = 0xFF;
 	private int gain = 0x01;
@@ -305,7 +305,7 @@ public class TCS34725 {
 	}
 
 	public static class TCSColor {
-		private int r, b, g, c;
+		private final int r, b, g, c;
 
 		public TCSColor(int r, int b, int g, int c) {
 			this.r = r;

@@ -100,11 +100,11 @@ public class BME280 {
 
 	private float tFine = 0F;
 
-	private static boolean verbose = "true".equals(System.getProperty("bme280.debug", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("bme280.debug", "false"));
 
-	private I2CBus bus;
-	private I2CDevice bme280;
-	private int mode = BME280_OSAMPLE_8;
+	private final I2CBus bus;
+	private final I2CDevice bme280;
+	private final int mode = BME280_OSAMPLE_8;
 
 	public BME280() throws I2CFactory.UnsupportedBusNumberException {
 		this(BME280_I2CADDR);
@@ -222,12 +222,12 @@ public class BME280 {
 		// Reads the raw (uncompensated) temperature from the sensor
 		int meas = mode;
 		if (verbose) {
-			System.out.println(String.format("readRawTemp: 1 - meas=%d", meas));
+			System.out.printf("readRawTemp: 1 - meas=%d\n", meas);
 		}
 		bme280.write(BME280_REGISTER_CONTROL_HUM, (byte) meas); // HUM ?
 		meas = mode << 5 | mode << 2 | 1;
 		if (verbose) {
-			System.out.println(String.format("readRawTemp: 2 - meas=%d", meas));
+			System.out.printf("readRawTemp: 2 - meas=%d\n", meas);
 		}
 		bme280.write(BME280_REGISTER_CONTROL, (byte) meas);
 
@@ -364,8 +364,7 @@ public class BME280 {
 	  /*
     sensor.setStandardSeaLevelPressure((int)press); // As we ARE at the sea level (in San Francisco).
     try { alt = sensor.readAltitude(); }
-    catch (Exception ex)
-    {
+    catch (Exception ex) {
       System.err.println(ex.getMessage());
       ex.printStackTrace();
     }

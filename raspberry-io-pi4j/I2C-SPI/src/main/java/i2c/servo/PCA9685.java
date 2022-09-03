@@ -251,11 +251,11 @@ public class PCA9685 {
 
 	/**
 	 * Just for display
-	 * @param freq
-	 * @param targetPulse
+	 * @param freq Frequency, Hz
+	 * @param targetPulse Target pulse, ms
 	 */
 	public static void displayServoValue(int freq, float targetPulse) {
-		System.out.println(String.format("At %d Hz, for a target pulse of %.02f \u00b5s, servo value is %d", freq, targetPulse, getServoValueFromPulse(freq, targetPulse)));
+		System.out.printf("At %d Hz, for a target pulse of %.02f \u00b5s, servo value is %d\n", freq, targetPulse, getServoValueFromPulse(freq, targetPulse));
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class PCA9685 {
 		pulseLength /= 4_096; // 12 bits of resolution. 4096 = 2^12
 		int pulse = (int) Math.round((targetPulse * 1_000) / pulseLength); // in millisec
 		if (verbose) {
-			System.out.println(String.format("%.04f \u00b5s per bit, pulse: %d", pulseLength, pulse)); // bit? cycle?
+			System.out.printf("%.04f \u00b5s per bit, pulse: %d\n", pulseLength, pulse); // bit? cycle?
 		}
 		return pulse;
 	}
@@ -294,16 +294,16 @@ public class PCA9685 {
     int[] frequencies = new int[] { 60, 50, 250, 1_000 };
 
     for (int freq : frequencies) {
-	    System.out.println(String.format("For freq %d, min is %d, center is %d, max is %d", freq, getServoMinValue(freq), getServoCenterValue(freq), getServoMaxValue(freq)));
+	    System.out.printf("For freq %d, min is %d, center is %d, max is %d\n", freq, getServoMinValue(freq), getServoCenterValue(freq), getServoMaxValue(freq));
     }
 
     int min = 122, max = 615; // min and max values for servos like https://www.adafruit.com/product/169 or https://www.adafruit.com/product/155 at 60 Hz
     int freq = 60;
-		System.out.println(String.format("At %d Hz, %d pulses %.04f ms, %d pulses %.04f ms", freq, min, getPulseFromValue(freq, min), max, getPulseFromValue(freq, max)));
+		System.out.printf("At %d Hz, %d pulses %.04f ms, %d pulses %.04f ms\n", freq, min, getPulseFromValue(freq, min), max, getPulseFromValue(freq, max));
 
 		int value_05 = getServoValueFromPulse(freq, 0.5f);
 		int value_25 = getServoValueFromPulse(freq, 2.5f);
-		System.out.println(String.format("At %d Hz, value for 0.5ms is %d, value for 2.5ms is %d", freq, value_05, value_25));
+		System.out.printf("At %d Hz, value for 0.5ms is %d, value for 2.5ms is %d\n", freq, value_05, value_25);
 	}
 
 	public static void main___(String... args) throws I2CFactory.UnsupportedBusNumberException {
@@ -324,7 +324,7 @@ public class PCA9685 {
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		}, "Shutdown Hook"));
 
-		System.out.println(String.format("min: %d, max: %d", servoMin, servoMax));
+		System.out.printf("min: %d, max: %d\n", servoMin, servoMax);
 		for (int i = 0; true && i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
@@ -341,7 +341,7 @@ public class PCA9685 {
 		System.out.println("With hard coded values (Suitable for 60 Hz)");
 		servoMin = 122;
 		servoMax = 615;
-		System.out.println(String.format("min: %d, max: %d", servoMin, servoMax));
+		System.out.printf("min: %d, max: %d\n", servoMin, servoMax);
 		for (int i = 0; true && i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
@@ -354,6 +354,6 @@ public class PCA9685 {
 
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
-		System.out.println("Ouala");
+		System.out.println("Ouala.");
 	}
 }

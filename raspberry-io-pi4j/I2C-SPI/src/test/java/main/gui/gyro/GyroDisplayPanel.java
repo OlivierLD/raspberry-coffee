@@ -1,12 +1,12 @@
-package i2c.gui.gyro;
+package main.gui.gyro;
 
 
-import i2c.gui.utils.Point3D;
+import main.gui.utils.Point3D;
 
 import i2c.sensor.listener.L3GD20Listener;
 import i2c.sensor.listener.SensorL3GD20Context;
 
-import i2c.sensor.main.SampleL3GD20RealReader;
+import main.SampleL3GD20RealReader;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
