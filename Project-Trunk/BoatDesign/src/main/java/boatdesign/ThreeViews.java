@@ -10,10 +10,8 @@ import gsg.SwingUtils.SwingUtils;
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
 import gsg.VectorUtils;
-
 import oracle.xml.parser.v2.XMLDocument;
 import oracle.xml.parser.v2.XMLElement;
-
 import org.w3c.dom.Comment;
 import org.w3c.dom.Text;
 
@@ -108,11 +106,14 @@ public class ThreeViews {
     private final JButton refreshButton = new JButton(BoatDesignResourceBundle.buildMessage("refresh-boat-shape"));
     private final JButton stopRefreshButton = new JButton(BoatDesignResourceBundle.buildMessage("stop-refresh"));
 
+    private final JButton deeper1cmButton = new JButton("1cm deeper"); // This is a test for now.
+    private final JButton shallower1cmButton = new JButton("1cm shallower"); // This is a test for now.
+
     private final JRadioButton jsonRadioButton = new JRadioButton("json");
     private final JRadioButton scadRadioButton = new JRadioButton("scad");
 
     // Screen dimension
-    private final static int WIDTH = 1536; // 1024;
+    private final static int WIDTH = 1_536; // 1024;
     private final static int HEIGHT = 800;
 
     protected final static ObjectMapper mapper = new ObjectMapper();
@@ -981,6 +982,58 @@ public class ThreeViews {
     private void killRefreshBoatShape() {
         keepLooping.set(false);
         this.box3D.setWorking(false);
+    }
+
+    private void deeper1cm() {
+        System.out.println("Deeper 1cm");
+        moveInitCoordinates(1d, DimensionOnPlan.Z, DirectionOnPlan.MINUS);
+    }
+    private void shallower1cm() {
+        System.out.println("Shallower 1cm");
+        moveInitCoordinates(1d, DimensionOnPlan.Z, DirectionOnPlan.PLUS);
+    }
+
+    enum DimensionOnPlan {
+        X, Y, Z
+    }
+    enum DirectionOnPlan {
+        PLUS, MINUS
+    }
+    @SuppressWarnings("unchecked")
+    private void moveInitCoordinates(double offset, DimensionOnPlan dimension, DirectionOnPlan direction) {
+        if (dimension == DimensionOnPlan.Z) {
+            Map<String, Object> defaultPoints = (Map<String, Object>)initConfig.get("default-points");
+            List<Object> keelPoints = (List<Object>)defaultPoints.get("keel");
+            keelPoints.forEach(kp -> {
+                if (kp instanceof Map) {
+//                double x = ((Map<String, Double>) kp).get("x");
+                    // double y = ((Map<String, Double>) kp).get("y");
+                    double z = ((Map<String, Double>) kp).get("z");
+                    z += (offset * (direction == DirectionOnPlan.PLUS ? 1 : -1));
+                    ((Map<String, Double>) kp).put("z", z);
+                } else if (kp instanceof Bezier.Point3D) {
+                    // ???
+                    System.out.println("Un-managed KP cast!!");
+                }
+            });
+            List<Object> railPoints = (List<Object>)defaultPoints.get("rail");
+            railPoints.forEach(rp -> {
+                if (rp instanceof Map) {
+//                double x = ((Map<String, Double>) kp).get("x");
+                    // double y = ((Map<String, Double>) kp).get("y");
+                    double z = ((Map<String, Double>) rp).get("z");
+                    z += (offset * (direction == DirectionOnPlan.PLUS ? 1 : -1));
+                    ((Map<String, Double>) rp).put("z", z);
+                } else if (rp instanceof Bezier.Point3D) {
+                    // ???
+                    System.out.println("Un-managed RP cast!!");
+                }
+            });
+            System.out.println("");
+        } else {
+            System.out.println("Not managed yet...");
+        }
+        this.reLoadConfig(true);
     }
 
     private Map<String, Object> generateBezierJson() {
@@ -1886,6 +1939,9 @@ public class ThreeViews {
         refreshButton.addActionListener(e -> refreshBoatShape());
         stopRefreshButton.addActionListener(e -> killRefreshBoatShape());
 
+        deeper1cmButton.addActionListener(e -> deeper1cm());
+        shallower1cmButton.addActionListener(e -> shallower1cm());
+
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
@@ -2401,6 +2457,9 @@ public class ThreeViews {
         smallButtonPanel.add(refreshButton); // , BorderLayout.WEST);
         smallButtonPanel.add(stopRefreshButton); // , BorderLayout.WEST);
         stopRefreshButton.setEnabled(false);
+
+        smallButtonPanel.add(deeper1cmButton);
+        smallButtonPanel.add(shallower1cmButton);
 
         bottomPanel.add(smallButtonPanel, new GridBagConstraints(0,
                 0,

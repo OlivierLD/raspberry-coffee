@@ -42,6 +42,7 @@ Then do the hydrostatic calculations.
 - Data to Processing (see PitchRoll.pde ...)
 - Check the CC position...
 - **pdf / xsl-fop** output... with XY.png, XZ.png, etc.
+  - Images are generated with a `[Shift+Right-Click]` on the 3 drawing boards.
   - Work in progress in the `pub` folder.
   - Make it an option.
 - Multi-lang - Soft and publications (resource bundle), in progress.
