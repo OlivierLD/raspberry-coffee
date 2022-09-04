@@ -56,12 +56,13 @@ while [ "$LOOP" == "true" ]; do
 			# in the box labeled "Calculate XML for xsl-fo publishing".
 			#
 			DATA=data.2.xml
+			echo -e "We will be using the file ${DATA}"
 			XSL=./data-fo.xsl
 			OUTPUT=data.pdf
 			COMMAND="java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor ${PRM_OPTION} -xml ${DATA} -xsl ${XSL} -pdf ${OUTPUT}"
 			echo Running from $PWD: ${COMMAND}
 			${COMMAND}
-			echo Done transforming, document is ready. See data.pdf.
+			echo -e "Done transforming, document is ready. See ${OUTPUT}".
 			echo "Hit Return"
 			read a
       ;;

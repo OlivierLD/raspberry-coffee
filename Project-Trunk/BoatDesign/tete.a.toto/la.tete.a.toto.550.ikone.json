@@ -1,5 +1,10 @@
 {
-  "comments" : [ "First point of rail is first point of bow", "First point of keel is last point of bow", "Length is 550 (for rail, and keel)", "Displ ~0.602" ],
+  "comments" : [
+    "First point of rail is first point of bow",
+    "First point of keel is last point of bow",
+    "Length is 550 (for rail, and keel)",
+    "Displ ~0.602"
+  ],
   "boat-name" : "La Tête à Toto",
   "description" : "Inspired by the Ikone JS we saw in Etel",
   "default-points" : {
