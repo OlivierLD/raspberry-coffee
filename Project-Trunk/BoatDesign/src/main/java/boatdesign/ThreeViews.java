@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  * </p>
  * <p>
  * Bow is correlated, transom too. See in {@link BoatBox3D}
- *</p>
+ * </p>
  * Calculation done in BoatBox3D, look for "// Actual shape calculation takes place here." in this BoatBox3D class.
  */
 public class ThreeViews {
@@ -65,6 +65,7 @@ public class ThreeViews {
 
     // See in the starting script LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
     private final static Logger LOGGER = Logger.getLogger(ThreeViews.class.getName()); //  .getLogger(Logger.GLOBAL_LOGGER_NAME); // BoatBox3D.class;
+
     static {
         LOGGER.setLevel(Level.ALL);
     }
@@ -183,30 +184,37 @@ public class ThreeViews {
         public boolean isGenerateImageChecked() {
             return (generateImage != null && generateImage.isSelected());
         }
+
         public boolean isBWChecked() {
             return (blackAndWhite != null && blackAndWhite.isSelected());
         }
+
         public boolean isHideCtrlPtsChecked() {
             return (hideCtrlPoints != null && hideCtrlPoints.isSelected());
         }
+
         public boolean isHideCCChecked() {
             return (hideCC != null && hideCC.isSelected());
         }
+
         public void setGenerateImage(boolean b) {
             if (generateImage != null) {
                 generateImage.setSelected(b);
             }
         }
+
         public void setBW(boolean b) {
             if (blackAndWhite != null) {
                 blackAndWhite.setSelected(b);
             }
         }
+
         public void setHideCP(boolean b) {
             if (hideCtrlPoints != null) {
                 hideCtrlPoints.setSelected(b);
             }
         }
+
         public void setHideCC(boolean b) {
             if (hideCC != null) {
                 hideCC.setSelected(b);
@@ -522,7 +530,7 @@ public class ThreeViews {
         oneFrame.appendChild(keel);
         keel.appendChild(createTextNode(doc, "z", NUM_FMT.format(zKeel)));
         // Coordinates. Step: buttocks - TODO 10 for now
-        for (int w=10; w<yRail; w+=10.0) {
+        for (int w = 10; w < yRail; w += 10.0) {
             // Get the value for given w
             String zStrValue = "-";
             Bezier bezier = new Bezier(frameBezier);
@@ -558,26 +566,26 @@ public class ThreeViews {
         XMLElement boatData = (XMLElement) doc.createElement("boat-data");
         root.appendChild(boatData);
 
-        boatData.appendChild(createTextNode(doc, "boat-name", (String)dataMap.get("boat-name")));
+        boatData.appendChild(createTextNode(doc, "boat-name", (String) dataMap.get("boat-name")));
 
         XMLElement comments = (XMLElement) doc.createElement("comments");
         boatData.appendChild(comments);
 
-        List<String> mapComments = (List<String>)dataMap.get("comments");
+        List<String> mapComments = (List<String>) dataMap.get("comments");
         mapComments.forEach(mapComment -> {
             comments.appendChild(createTextNode(doc, "comment", mapComment));
         });
-        boatData.appendChild(createTextNode(doc, "description", (String)dataMap.get("description")));
+        boatData.appendChild(createTextNode(doc, "description", (String) dataMap.get("description")));
 
         XMLElement defaultPoints = (XMLElement) doc.createElement("ctrl-points");
         boatData.appendChild(defaultPoints);
         // The ctrl points
-        Map<String, Object> mapDefaultPoints = (Map<String, Object>)dataMap.get("default-points");
-        List<Object> mapKeelPoints = (List<Object>)mapDefaultPoints.get("keel");
+        Map<String, Object> mapDefaultPoints = (Map<String, Object>) dataMap.get("default-points");
+        List<Object> mapKeelPoints = (List<Object>) mapDefaultPoints.get("keel");
         mapKeelPoints.forEach(kp -> {
-            double x = ((Map<String, Double>)kp).get("x");
-            double y = ((Map<String, Double>)kp).get("y");
-            double z = ((Map<String, Double>)kp).get("z");
+            double x = ((Map<String, Double>) kp).get("x");
+            double y = ((Map<String, Double>) kp).get("y");
+            double z = ((Map<String, Double>) kp).get("z");
             XMLElement keelPoint = (XMLElement) doc.createElement("keel");
             defaultPoints.appendChild(keelPoint);
 
@@ -586,11 +594,11 @@ public class ThreeViews {
             keelPoint.appendChild(createTextNode(doc, "z", String.valueOf(z)));
         });
 
-        List<Object> mapRailPoints = (List<Object>)mapDefaultPoints.get("rail");
+        List<Object> mapRailPoints = (List<Object>) mapDefaultPoints.get("rail");
         mapRailPoints.forEach(kp -> {
-            double x = ((Map<String, Double>)kp).get("x");
-            double y = ((Map<String, Double>)kp).get("y");
-            double z = ((Map<String, Double>)kp).get("z");
+            double x = ((Map<String, Double>) kp).get("x");
+            double y = ((Map<String, Double>) kp).get("y");
+            double z = ((Map<String, Double>) kp).get("z");
             XMLElement railPoint = (XMLElement) doc.createElement("rail");
             defaultPoints.appendChild(railPoint);
 
@@ -610,30 +618,30 @@ public class ThreeViews {
         XMLElement lengths = (XMLElement) doc.createElement("lengths");
         calculated.appendChild(lengths);
 
-        double loa = (double)((Map<String, Object>)dataMap.get("dimensions")).get("default-lht");
+        double loa = (double) ((Map<String, Object>) dataMap.get("dimensions")).get("default-lht");
         lengths.appendChild(createTextNode(doc, "loa", NUM_FMT.format(loa)));
-        lengths.appendChild(createTextNode(doc, "lwl-start", NUM_FMT.format((double)calculatedMap.get("lwl-start"))));
-        lengths.appendChild(createTextNode(doc, "lwl-end", NUM_FMT.format((double)calculatedMap.get("lwl-end"))));
-        lengths.appendChild(createTextNode(doc, "lwl", NUM_FMT.format((double)calculatedMap.get("lwl"))));
+        lengths.appendChild(createTextNode(doc, "lwl-start", NUM_FMT.format((double) calculatedMap.get("lwl-start"))));
+        lengths.appendChild(createTextNode(doc, "lwl-end", NUM_FMT.format((double) calculatedMap.get("lwl-end"))));
+        lengths.appendChild(createTextNode(doc, "lwl", NUM_FMT.format((double) calculatedMap.get("lwl"))));
 
         XMLElement depths = (XMLElement) doc.createElement("depths");
         calculated.appendChild(depths);
 
-        depths.appendChild(createTextNode(doc, "max-depth", NUM_FMT.format((double)calculatedMap.get("max-depth"))));
-        depths.appendChild(createTextNode(doc, "max-depth-x", NUM_FMT.format((double)calculatedMap.get("max-depth-x"))));
+        depths.appendChild(createTextNode(doc, "max-depth", NUM_FMT.format((double) calculatedMap.get("max-depth"))));
+        depths.appendChild(createTextNode(doc, "max-depth-x", NUM_FMT.format((double) calculatedMap.get("max-depth-x"))));
 
         XMLElement widths = (XMLElement) doc.createElement("widths");
         calculated.appendChild(widths);
 
-        widths.appendChild(createTextNode(doc, "max-width", NUM_FMT.format(2d * (double)calculatedMap.get("max-width"))));
-        widths.appendChild(createTextNode(doc, "max-width-x", NUM_FMT.format((double)calculatedMap.get("max-width-x"))));
+        widths.appendChild(createTextNode(doc, "max-width", NUM_FMT.format(2d * (double) calculatedMap.get("max-width"))));
+        widths.appendChild(createTextNode(doc, "max-width-x", NUM_FMT.format((double) calculatedMap.get("max-width-x"))));
 
         XMLElement displ = (XMLElement) doc.createElement("D");
         calculated.appendChild(displ);
 
-        displ.appendChild(createTextNode(doc, "displ", NUM_FMT.format((double)calculatedMap.get("displ-m3"))));
-        displ.appendChild(createTextNode(doc, "cc-x", NUM_FMT.format((double)calculatedMap.get("cc-x"))));
-        displ.appendChild(createTextNode(doc, "cc-z", NUM_FMT.format((double)calculatedMap.get("cc-z"))));
+        displ.appendChild(createTextNode(doc, "displ", NUM_FMT.format((double) calculatedMap.get("displ-m3"))));
+        displ.appendChild(createTextNode(doc, "cc-x", NUM_FMT.format((double) calculatedMap.get("cc-x"))));
+        displ.appendChild(createTextNode(doc, "cc-z", NUM_FMT.format((double) calculatedMap.get("cc-z"))));
 
         // Keel and Rail coordinates
         XMLElement keelAndRails = (XMLElement) doc.createElement("keel-and-rails");
@@ -641,11 +649,11 @@ public class ThreeViews {
         // Keel
         XMLElement keel = (XMLElement) doc.createElement("keel");
         keelAndRails.appendChild(keel);
-        List<Map<String, Double>> keelPoints = (List<Map<String, Double>>)((Map<String, Object>)dataMap.get("default-points")).get("keel");
+        List<Map<String, Double>> keelPoints = (List<Map<String, Double>>) ((Map<String, Object>) dataMap.get("default-points")).get("keel");
         List<Bezier.Point3D> keelCtrlPoints = new ArrayList<>();
-        keelPoints.forEach(kp ->  keelCtrlPoints.add(new Bezier.Point3D(kp.get("x"), kp.get("y"), kp.get("z"))) );
+        keelPoints.forEach(kp -> keelCtrlPoints.add(new Bezier.Point3D(kp.get("x"), kp.get("y"), kp.get("z"))));
         Bezier keelBezier = new Bezier(keelCtrlPoints);
-        for (int x=0; x<=(loa * 100.0); x+=10) { // in cm
+        for (int x = 0; x <= (loa * 100.0); x += 10) { // in cm
             try {
                 double t = keelBezier.getTForGivenX(0, 1E-2, x, 1E-4);
                 Bezier.Point3D keelPoint = keelBezier.getBezierPoint(t);
@@ -659,11 +667,11 @@ public class ThreeViews {
         // Rail
         XMLElement rail = (XMLElement) doc.createElement("rail");
         keelAndRails.appendChild(rail);
-        List<Map<String, Double>> railPoints = (List<Map<String, Double>>)((Map<String, Object>)dataMap.get("default-points")).get("rail");
+        List<Map<String, Double>> railPoints = (List<Map<String, Double>>) ((Map<String, Object>) dataMap.get("default-points")).get("rail");
         List<Bezier.Point3D> railCtrlPoints = new ArrayList<>();
-        railPoints.forEach(kp ->  railCtrlPoints.add(new Bezier.Point3D(kp.get("x"), kp.get("y"), kp.get("z"))) );
+        railPoints.forEach(kp -> railCtrlPoints.add(new Bezier.Point3D(kp.get("x"), kp.get("y"), kp.get("z"))));
         Bezier railBezier = new Bezier(railCtrlPoints);
-        for (int x=0; x<=(loa * 100.0); x+=10) { // in cm
+        for (int x = 0; x <= (loa * 100.0); x += 10) { // in cm
             try {
                 double t = railBezier.getTForGivenX(0, 1E-2, x, 1E-4);
                 Bezier.Point3D railPoint = railBezier.getBezierPoint(t);
@@ -730,7 +738,7 @@ public class ThreeViews {
             // Done
             getLogger().log(Level.INFO, "Done repainting.");
 
-            if (((UserWBParameters)whiteBoardXZ.getUserParameters()).generateImage) {
+            if (((UserWBParameters) whiteBoardXZ.getUserParameters()).generateImage) {
                 System.out.println("Generating image, as requested");
                 // Store XZ panel as an image
                 File imageFile = new File("XZ.png");
@@ -739,7 +747,7 @@ public class ThreeViews {
             } else {
                 System.out.println("Skipping XZ image generation");
             }
-            if (((UserWBParameters)whiteBoardXY.getUserParameters()).generateImage) {
+            if (((UserWBParameters) whiteBoardXY.getUserParameters()).generateImage) {
                 System.out.println("Generating image, as requested");
                 // Store XY panel as an image
                 File imageFile = new File("XY.png");
@@ -748,7 +756,7 @@ public class ThreeViews {
             } else {
                 System.out.println("Skipping XY image generation");
             }
-            if (((UserWBParameters)whiteBoardYZ.getUserParameters()).generateImage) {
+            if (((UserWBParameters) whiteBoardYZ.getUserParameters()).generateImage) {
                 System.out.println("Generating image, as requested");
                 // Store XY panel as an image
                 File imageFile = new File("YZ.png");
@@ -785,137 +793,136 @@ public class ThreeViews {
             this.whiteBoardXZ.repaint();
             this.whiteBoardYZ.repaint();
 
-            this.box3D.refreshData(false, map -> {
-                String json;
-                try {
-                    json = mapper.writerWithDefaultPrettyPrinter()
-                                 .writeValueAsString(map);
-                } catch (JsonProcessingException jpe) {
-                    json = map.toString();
-                }
-                boatDataTextArea.setText(json);
+            this.box3D.refreshData(false,
+                    map -> {
+                        String json;
+                        try {
+                            json = mapper.writerWithDefaultPrettyPrinter()
+                                    .writeValueAsString(map);
+                        } catch (JsonProcessingException jpe) {
+                            json = map.toString();
+                        }
+                        boatDataTextArea.setText(json);
 
-                // XML for XSL-FO publishing
-                if (displayXMLTextArea.isSelected()) {
-                    List<List<Bezier.Point3D>> allFramesCtrlPts = this.box3D.getFrameCtrlPts();
-                    List<List<Bezier.Point3D>> allBeamsCtrlPts = this.box3D.getBeamCtrlPts();
-                    List<Bezier.Point3D> ctrlPointsTransom = this.box3D.getTransomCtrlPoint();
-                    XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig,
-                            map,
-                            allFramesCtrlPts,
-                            allBeamsCtrlPts,
-                            ctrlPointsTransom);
-                    try {
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        doc.print(baos);
-                        String xmlString = baos.toString();
+                        // XML for XSL-FO publishing
+                        if (displayXMLTextArea.isSelected()) {
+                            List<List<Bezier.Point3D>> allFramesCtrlPts = this.box3D.getFrameCtrlPts();
+                            List<List<Bezier.Point3D>> allBeamsCtrlPts = this.box3D.getBeamCtrlPts();
+                            List<Bezier.Point3D> ctrlPointsTransom = this.box3D.getTransomCtrlPoint();
+                            XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig,
+                                    map,
+                                    allFramesCtrlPts,
+                                    allBeamsCtrlPts,
+                                    ctrlPointsTransom);
+                            try {
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                doc.print(baos);
+                                String xmlString = baos.toString();
 //                    System.out.println(xmlString);
-                        // TODO Do we need another callback here (in refreshData) ?
-                        xmlTextArea.setText(xmlString);
+                                // TODO Do we need another callback here (in refreshData) ?
+                                xmlTextArea.setText(xmlString);
 
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                if (map.get("lwl-start") != null && ((double)map.get("displ-m3")) > 0) {
-                    // CC position
-                    Double xCC = (Double) map.get("cc-x");
-                    Double zCC = (Double) map.get("cc-z");
-                    if (xCC != null && zCC != null && xCC != -0.01 && zCC != -0.01) {
-                        // Display on 2D whiteboards
-                        centerOfHull = new VectorUtils.Vector3D()
-                                .x(xCC * 1e2)
-                                .y(0d)
-                                .z(zCC * 1e2);
-                    }
-                    // Displacement for the area curve
-                    Map<Double, Double> displacementMap = (Map<Double, Double>) map.get("displacement-x-map");
-                    double lwlStart = (double) map.get("lwl-start");
-                    double lwlEnd = (double) map.get("lwl-end");
-                    // TODO: send to XY
-                    getLogger().log(Level.INFO, "Will send to Area Curve");
-                    if (true) {
-                        // 1 - Find max area
-                        Double wbMaxY = whiteBoardXY.getForcedMaxY();
-                        AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
-                        displacementMap.forEach((k, v) -> max.set(Math.max(max.get(), v)));
-                        getLogger().log(Level.INFO, "Max area: " + max);
-                        // TODO Remove the area curve if it exists
-                        if (displacementMap.size() > 0 && max.get() != -Double.MAX_VALUE) {
-                            double ratio = (wbMaxY / max.get());
-                            List<VectorUtils.Vector2D> areas = new ArrayList<>();
-                            areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
-                            displacementMap.forEach((k, v) -> areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio)));
-                            areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
-
-                            WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
-                                    .data(areas)
-                                    .graphicType(WhiteBoardPanel.GraphicType.AREA)
-                                    .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
-                                    .color(Color.BLACK);
-                            if (!((UserWBParameters)whiteBoardXY.getUserParameters()).hideCC) {
-                                whiteBoardXY.addSerie(areasSerie);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
                             }
                         }
-                    }
-                }
+                        if (map.get("lwl-start") != null && ((double) map.get("displ-m3")) > 0) {
+                            // CC position
+                            Double xCC = (Double) map.get("cc-x");
+                            Double zCC = (Double) map.get("cc-z");
+                            if (xCC != null && zCC != null && xCC != -0.01 && zCC != -0.01) {
+                                // Display on 2D whiteboards
+                                centerOfHull = new VectorUtils.Vector3D()
+                                        .x(xCC * 1e2)
+                                        .y(0d)
+                                        .z(zCC * 1e2);
+                            }
+                            // Displacement for the area curve
+                            Map<Double, Double> displacementMap = (Map<Double, Double>) map.get("displacement-x-map");
+                            double lwlStart = (double) map.get("lwl-start");
+                            double lwlEnd = (double) map.get("lwl-end");
+                            // TODO: send to XY
+                            getLogger().log(Level.INFO, "Will send to Area Curve");
+                            if (true) {
+                                // 1 - Find max area
+                                Double wbMaxY = whiteBoardXY.getForcedMaxY();
+                                AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
+                                displacementMap.forEach((k, v) -> max.set(Math.max(max.get(), v)));
+                                getLogger().log(Level.INFO, "Max area: " + max);
+                                // TODO Remove the area curve if it exists
+                                if (displacementMap.size() > 0 && max.get() != -Double.MAX_VALUE) {
+                                    double ratio = (wbMaxY / max.get());
+                                    List<VectorUtils.Vector2D> areas = new ArrayList<>();
+                                    areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
+                                    displacementMap.forEach((k, v) -> areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio)));
+                                    areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
 
+                                    WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
+                                            .data(areas)
+                                            .graphicType(WhiteBoardPanel.GraphicType.AREA)
+                                            .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
+                                            .color(Color.BLACK);
+                                    if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCC) {
+                                        whiteBoardXY.addSerie(areasSerie);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    mess -> messageTextArea.setText(mess),
+                    map -> {
+                        if (map != null) {
+                            if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.FRAME)) {
+                                List<VectorUtils.Vector3D> data = (List<VectorUtils.Vector3D>) map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D ?
+                                List<VectorUtils.Vector2D> framePtsYZVectors = new ArrayList<>();
+                                // Find x position of the max width. 'data' contains the points. Rail to Keel.
+                                data.forEach(pt -> {
+                                    // Transom sometime goes on the wrong side...
+                                    boolean right = pt.getX() < (this.xMaxWidth - (this.defaultLHT / 2));
+                                    framePtsYZVectors.add(new VectorUtils.Vector2D(right ? pt.getY() : -pt.getY(), pt.getZ()));
+                                });
+                                // TODO get here the required coordinates for the frame.
+                                // With X, rail value, keel value, points of the frame (Y & Z), with step on Y.
+                                // Keel & Rail ctrl points in initConfig.default-points
 
-            }, mess -> {
-                messageTextArea.setText(mess);
-            }, map -> {
-                if (map != null) {
-                    if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.FRAME)) {
-                        List<VectorUtils.Vector3D> data = (List<VectorUtils.Vector3D>)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D ?
-                        List<VectorUtils.Vector2D> framePtsYZVectors = new ArrayList<>();
-                        // Find x position of the max width. 'data' contains the points. Rail to Keel.
-                        data.forEach(pt -> {
-                            // Transom sometime goes on the wrong side...
-                            boolean right = pt.getX() < (this.xMaxWidth - (this.defaultLHT / 2));
-                            framePtsYZVectors.add(new VectorUtils.Vector2D(right ? pt.getY() : -pt.getY(), pt.getZ()));
-                        });
-                        // TODO get here the required coordinates for the frame.
-                        // With X, rail value, keel value, points of the frame (Y & Z), with step on Y.
-                        // Keel & Rail ctrl points in initConfig.default-points
-
-                        WhiteBoardPanel.DataSerie frameYZSerie = new WhiteBoardPanel.DataSerie()
-                                .data(framePtsYZVectors)
-                                .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                                .lineThickness(1)
-                                .color(Color.RED);
-                        whiteBoardYZ.addSerie(frameYZSerie, ((UserWBParameters)whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
-                        whiteBoardYZ.repaint();
-                    } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.WATERLINE)) {
-                        List<Bezier.Point3D> data = (List<Bezier.Point3D>)map.get(BoatBox3D.DATA);
-                        List<VectorUtils.Vector2D> waterlinePtsXYVectors = new ArrayList<>();
-                        data.forEach(pt -> {
-                            waterlinePtsXYVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getY()));
-                        });
-                        WhiteBoardPanel.DataSerie frameXYSerie = new WhiteBoardPanel.DataSerie()
-                                .data(waterlinePtsXYVectors)
-                                .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                                .lineThickness(1)
-                                .color(Color.RED);
-                        whiteBoardXY.addSerie(frameXYSerie, ((UserWBParameters)whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
-                        whiteBoardXY.repaint();
-                    } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.BUTTOCK)) {
-                        List<Bezier.Point3D> data = (List<Bezier.Point3D>)map.get(BoatBox3D.DATA);
-                        List<VectorUtils.Vector2D> buttockPtsXZVectors = new ArrayList<>();
-                        data.forEach(pt -> {
-                            buttockPtsXZVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getZ()));
-                        });
-                        WhiteBoardPanel.DataSerie buttockXZSerie = new WhiteBoardPanel.DataSerie()
-                                .data(buttockPtsXZVectors)
-                                .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                                .lineThickness(1)
-                                .color(Color.RED);
-                        whiteBoardXZ.addSerie(buttockXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
-                        whiteBoardXZ.repaint();
-                    } else {
-                        // TODO Others, BEAM
-                    }
-                }
-            });
+                                WhiteBoardPanel.DataSerie frameYZSerie = new WhiteBoardPanel.DataSerie()
+                                        .data(framePtsYZVectors)
+                                        .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                                        .lineThickness(1)
+                                        .color(Color.RED);
+                                whiteBoardYZ.addSerie(frameYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+                                whiteBoardYZ.repaint();
+                            } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.WATERLINE)) {
+                                List<Bezier.Point3D> data = (List<Bezier.Point3D>) map.get(BoatBox3D.DATA);
+                                List<VectorUtils.Vector2D> waterlinePtsXYVectors = new ArrayList<>();
+                                data.forEach(pt -> {
+                                    waterlinePtsXYVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getY()));
+                                });
+                                WhiteBoardPanel.DataSerie frameXYSerie = new WhiteBoardPanel.DataSerie()
+                                        .data(waterlinePtsXYVectors)
+                                        .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                                        .lineThickness(1)
+                                        .color(Color.RED);
+                                whiteBoardXY.addSerie(frameXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+                                whiteBoardXY.repaint();
+                            } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.BUTTOCK)) {
+                                List<Bezier.Point3D> data = (List<Bezier.Point3D>) map.get(BoatBox3D.DATA);
+                                List<VectorUtils.Vector2D> buttockPtsXZVectors = new ArrayList<>();
+                                data.forEach(pt -> {
+                                    buttockPtsXZVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getZ()));
+                                });
+                                WhiteBoardPanel.DataSerie buttockXZSerie = new WhiteBoardPanel.DataSerie()
+                                        .data(buttockPtsXZVectors)
+                                        .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                                        .lineThickness(1)
+                                        .color(Color.RED);
+                                whiteBoardXZ.addSerie(buttockXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+                                whiteBoardXZ.repaint();
+                            } else {
+                                // TODO Others, BEAM
+                            }
+                        }
+                    });
             // Stop re-painter
             keepLooping.set(false);
             getLogger().log(Level.INFO, "Refresh completed!");
@@ -930,11 +937,11 @@ public class ThreeViews {
                         .graphicType(WhiteBoardPanel.GraphicType.POINTS)
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
-                if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCC) {
+                if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCC) {
                     whiteBoardXZ.addSerie(ccXZSerie);
                 }
 
-                if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCC) {
+                if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCC) {
                     WhiteBoardPanel.TextSerie ccXZTextSerie = new WhiteBoardPanel.TextSerie(xzCC.get(0), "CC", 0, 6, WhiteBoardPanel.TextSerie.Justification.CENTER);
                     ccXZTextSerie.setTextColor(new Color(0, 102, 0, 200));
                     ccXZTextSerie.setFont(new Font("Courier", Font.BOLD, 12));
@@ -949,7 +956,7 @@ public class ThreeViews {
                         .graphicType(WhiteBoardPanel.GraphicType.POINTS)
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
-                if (!((UserWBParameters)whiteBoardYZ.getUserParameters()).hideCC) {
+                if (!((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCC) {
                     whiteBoardYZ.addSerie(ccYZSerie);
                     WhiteBoardPanel.TextSerie ccYZTextSerie = new WhiteBoardPanel.TextSerie(yzCC.get(0), "CC", 7, -6, WhiteBoardPanel.TextSerie.Justification.LEFT);
                     ccYZTextSerie.setTextColor(new Color(0, 102, 0, 200));
@@ -965,7 +972,7 @@ public class ThreeViews {
                         .graphicType(WhiteBoardPanel.GraphicType.POINTS)
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
-                if (!((UserWBParameters)whiteBoardXY.getUserParameters()).hideCC) {
+                if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCC) {
                     whiteBoardXY.addSerie(ccXYSerie);
                     WhiteBoardPanel.TextSerie ccXYTextSerie = new WhiteBoardPanel.TextSerie(xyCC.get(0), "CC", 0, -14, WhiteBoardPanel.TextSerie.Justification.CENTER);
                     ccXYTextSerie.setTextColor(new Color(0, 102, 0, 200));
@@ -988,6 +995,7 @@ public class ThreeViews {
         System.out.println("Deeper 1cm");
         moveInitCoordinates(1d, DimensionOnPlan.Z, DirectionOnPlan.MINUS);
     }
+
     private void shallower1cm() {
         System.out.println("Shallower 1cm");
         moveInitCoordinates(1d, DimensionOnPlan.Z, DirectionOnPlan.PLUS);
@@ -996,14 +1004,16 @@ public class ThreeViews {
     enum DimensionOnPlan {
         X, Y, Z
     }
+
     enum DirectionOnPlan {
         PLUS, MINUS
     }
+
     @SuppressWarnings("unchecked")
     private void moveInitCoordinates(double offset, DimensionOnPlan dimension, DirectionOnPlan direction) {
         if (dimension == DimensionOnPlan.Z) {
-            Map<String, Object> defaultPoints = (Map<String, Object>)initConfig.get("default-points");
-            List<Object> keelPoints = (List<Object>)defaultPoints.get("keel");
+            Map<String, Object> defaultPoints = (Map<String, Object>) initConfig.get("default-points");
+            List<Object> keelPoints = (List<Object>) defaultPoints.get("keel");
             keelPoints.forEach(kp -> {
                 if (kp instanceof Map) {
 //                double x = ((Map<String, Double>) kp).get("x");
@@ -1016,7 +1026,7 @@ public class ThreeViews {
                     System.out.println("Un-managed KP cast!!");
                 }
             });
-            List<Object> railPoints = (List<Object>)defaultPoints.get("rail");
+            List<Object> railPoints = (List<Object>) defaultPoints.get("rail");
             railPoints.forEach(rp -> {
                 if (rp instanceof Map) {
 //                double x = ((Map<String, Double>) kp).get("x");
@@ -1029,7 +1039,6 @@ public class ThreeViews {
                     System.out.println("Un-managed RP cast!!");
                 }
             });
-            System.out.println("");
         } else {
             System.out.println("Not managed yet...");
         }
@@ -1052,9 +1061,9 @@ public class ThreeViews {
                 .collect(Collectors.joining(", "));
 
         return String.format("extVolume = %s;\nrail = %s;\nkeel = %s;\n",
-                    String.format("[ %f, %f, %f ]", this.box3D.getDefaultLHT(), 0d, 0d),
-                    String.format("[ %s ]", collectRail),
-                    String.format("[ %s ]", collectKeel)
+                String.format("[ %f, %f, %f ]", this.box3D.getDefaultLHT(), 0d, 0d),
+                String.format("[ %s ]", collectRail),
+                String.format("[ %s ]", collectKeel)
         );
     }
 
@@ -1182,19 +1191,19 @@ public class ThreeViews {
                     .toArray();
             List<VectorUtils.Vector2D> keelCtrlPtsXYVectors = new ArrayList<>();
             for (int i = 0; i < xKeelCtrlPoints.length; i++) {
-                synchronized(keelCtrlPtsXYVectors) {
+                synchronized (keelCtrlPtsXYVectors) {
                     keelCtrlPtsXYVectors.add(new VectorUtils.Vector2D(xKeelCtrlPoints[i], yKeelCtrlPoints[i]));
                 }
             }
             List<VectorUtils.Vector2D> keelCtrlPtsXZVectors = new ArrayList<>();
             for (int i = 0; i < xKeelCtrlPoints.length; i++) {
-                synchronized(keelCtrlPtsXZVectors) {
+                synchronized (keelCtrlPtsXZVectors) {
                     keelCtrlPtsXZVectors.add(new VectorUtils.Vector2D(xKeelCtrlPoints[i], zKeelCtrlPoints[i]));
                 }
             }
             List<VectorUtils.Vector2D> keelCtrlPtsYZVectors = new ArrayList<>();
             for (int i = 0; i < yKeelCtrlPoints.length; i++) {
-                synchronized(keelCtrlPtsYZVectors) {
+                synchronized (keelCtrlPtsYZVectors) {
                     keelCtrlPtsYZVectors.add(new VectorUtils.Vector2D(yKeelCtrlPoints[i], zKeelCtrlPoints[i]));
                 }
             }
@@ -1233,8 +1242,8 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters)whiteBoardXY.getUserParameters()).hideCP) {
-                whiteBoardXY.addSerie(railCtrlXYSerie, ((UserWBParameters)whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+            if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCP) {
+                whiteBoardXY.addSerie(railCtrlXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
             }
             // XY - Keel
             WhiteBoardPanel.DataSerie keelCtrlXYSerie = new WhiteBoardPanel.DataSerie()
@@ -1242,8 +1251,8 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters)whiteBoardXY.getUserParameters()).hideCP) {
-                whiteBoardXY.addSerie(keelCtrlXYSerie, ((UserWBParameters)whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+            if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCP) {
+                whiteBoardXY.addSerie(keelCtrlXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
             }
 
             // XZ - Rail
@@ -1252,8 +1261,8 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCP) {
-                whiteBoardXZ.addSerie(railCtrlXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCP) {
+                whiteBoardXZ.addSerie(railCtrlXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
             }
             // XZ - Keel
             WhiteBoardPanel.DataSerie keelCtrlXZSerie = new WhiteBoardPanel.DataSerie()
@@ -1261,8 +1270,8 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCP) {
-                whiteBoardXZ.addSerie(keelCtrlXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCP) {
+                whiteBoardXZ.addSerie(keelCtrlXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
             }
 
             // YZ - Rail
@@ -1271,7 +1280,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters)whiteBoardYZ.getUserParameters()).hideCP) {
+            if (!((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCP) {
                 whiteBoardYZ.addSerie(railCtrlYZSerie);
             }
             // YZ - Keel
@@ -1280,8 +1289,8 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters)whiteBoardYZ.getUserParameters()).hideCC) {
-                whiteBoardYZ.addSerie(keelCtrlYZSerie, ((UserWBParameters)whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+            if (!((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCC) {
+                whiteBoardYZ.addSerie(keelCtrlYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
             }
             // Bezier points series
             // XY - Rail
@@ -1290,14 +1299,14 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardXY.addSerie(railDataXYSerie, ((UserWBParameters)whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXY.addSerie(railDataXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
             // XY - Keel
             WhiteBoardPanel.DataSerie keelDataXYSerie = new WhiteBoardPanel.DataSerie()
                     .data(keelDataXYVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardXY.addSerie(keelDataXYSerie, ((UserWBParameters)whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXY.addSerie(keelDataXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
 
             // XZ - Rail
             WhiteBoardPanel.DataSerie railDataXZSerie = new WhiteBoardPanel.DataSerie()
@@ -1305,14 +1314,14 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardXZ.addSerie(railDataXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXZ.addSerie(railDataXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
             // XZ - Keel
             WhiteBoardPanel.DataSerie keelDataXZSerie = new WhiteBoardPanel.DataSerie()
                     .data(keelDataXZVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE); // ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : Color.BLUE);
-            whiteBoardXZ.addSerie(keelDataXZSerie, ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXZ.addSerie(keelDataXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
 
             // YZ - Rail
             WhiteBoardPanel.DataSerie railDataYZSerie = new WhiteBoardPanel.DataSerie()
@@ -1320,14 +1329,14 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardYZ.addSerie(railDataYZSerie, ((UserWBParameters)whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardYZ.addSerie(railDataYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
             // Other side (on the left of the axis)
             WhiteBoardPanel.DataSerie railDataYZSerieOther = new WhiteBoardPanel.DataSerie()
                     .data(railDataYZVectorsOther)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardYZ.addSerie(railDataYZSerieOther, ((UserWBParameters)whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardYZ.addSerie(railDataYZSerieOther, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
 
             // YZ - Keel
             WhiteBoardPanel.DataSerie keelDataYZSerie = new WhiteBoardPanel.DataSerie()
@@ -1335,7 +1344,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardYZ.addSerie(keelDataYZSerie, ((UserWBParameters)whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardYZ.addSerie(keelDataYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
 
             // Finally, display it.
             whiteBoardXY.repaint();  // This is for a pure Swing context
@@ -1509,7 +1518,7 @@ public class ThreeViews {
                     // Dialog for options (generate image, B&W, no ctrl-points,...)
                     System.out.println(">> Shift + Right click ?");
                     WhiteBoardOptionPanel wbop = new WhiteBoardOptionPanel();
-                    UserWBParameters userPrms = (UserWBParameters)whiteBoardXY.getUserParameters();
+                    UserWBParameters userPrms = (UserWBParameters) whiteBoardXY.getUserParameters();
                     wbop.setGenerateImage(userPrms.generateImage);
                     wbop.setBW(userPrms.bw);
                     wbop.setHideCP(userPrms.hideCP);
@@ -1519,10 +1528,10 @@ public class ThreeViews {
                     if (response == JOptionPane.OK_OPTION) {
                         System.out.println("OK!");
 //                        System.out.printf("Generate Image: %s\n", wbop.isGenerateImageChecked() ? "yes" : "no");
-                        ((UserWBParameters)whiteBoardXY.getUserParameters()).generateImage = wbop.isGenerateImageChecked();
-                        ((UserWBParameters)whiteBoardXY.getUserParameters()).bw = wbop.isBWChecked();
-                        ((UserWBParameters)whiteBoardXY.getUserParameters()).hideCP = wbop.isHideCtrlPtsChecked();
-                        ((UserWBParameters)whiteBoardXY.getUserParameters()).hideCC = wbop.isHideCCChecked();
+                        ((UserWBParameters) whiteBoardXY.getUserParameters()).generateImage = wbop.isGenerateImageChecked();
+                        ((UserWBParameters) whiteBoardXY.getUserParameters()).bw = wbop.isBWChecked();
+                        ((UserWBParameters) whiteBoardXY.getUserParameters()).hideCP = wbop.isHideCtrlPtsChecked();
+                        ((UserWBParameters) whiteBoardXY.getUserParameters()).hideCC = wbop.isHideCCChecked();
                     } else {
                         System.out.println("Canceled.");
                     }
@@ -1648,7 +1657,7 @@ public class ThreeViews {
                     // Dialog for options (generate image, B&W, no ctrl-points,...)
                     System.out.println(">> Shift + Right click ?");
                     WhiteBoardOptionPanel wbop = new WhiteBoardOptionPanel();
-                    UserWBParameters userPrms = (UserWBParameters)whiteBoardXZ.getUserParameters();
+                    UserWBParameters userPrms = (UserWBParameters) whiteBoardXZ.getUserParameters();
                     wbop.setGenerateImage(userPrms.generateImage);
                     wbop.setBW(userPrms.bw);
                     wbop.setHideCP(userPrms.hideCP);
@@ -1658,10 +1667,10 @@ public class ThreeViews {
                     if (response == JOptionPane.OK_OPTION) {
                         System.out.println("OK!");
 //                        System.out.printf("Generate Image: %s\n", wbop.isGenerateImageChecked() ? "yes" : "no");
-                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).generateImage = wbop.isGenerateImageChecked();
-                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw = wbop.isBWChecked();
-                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCP = wbop.isHideCtrlPtsChecked();
-                        ((UserWBParameters)whiteBoardXZ.getUserParameters()).hideCC = wbop.isHideCCChecked();
+                        ((UserWBParameters) whiteBoardXZ.getUserParameters()).generateImage = wbop.isGenerateImageChecked();
+                        ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw = wbop.isBWChecked();
+                        ((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCP = wbop.isHideCtrlPtsChecked();
+                        ((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCC = wbop.isHideCCChecked();
                     } else {
                         System.out.println("Canceled.");
                     }
@@ -1792,7 +1801,7 @@ public class ThreeViews {
                     // Dialog for options (generate image, B&W, no ctrl-points,...)
                     System.out.println(">> Shift + Right click ?");
                     WhiteBoardOptionPanel wbop = new WhiteBoardOptionPanel();
-                    UserWBParameters userPrms = (UserWBParameters)whiteBoardYZ.getUserParameters();
+                    UserWBParameters userPrms = (UserWBParameters) whiteBoardYZ.getUserParameters();
                     wbop.setGenerateImage(userPrms.generateImage);
                     wbop.setBW(userPrms.bw);
                     wbop.setHideCP(userPrms.hideCP);
@@ -1802,10 +1811,10 @@ public class ThreeViews {
                     if (response == JOptionPane.OK_OPTION) {
                         System.out.println("OK!");
 //                        System.out.printf("Generate Image: %s\n", wbop.isGenerateImageChecked() ? "yes" : "no");
-                        ((UserWBParameters)whiteBoardYZ.getUserParameters()).generateImage = wbop.isGenerateImageChecked();
-                        ((UserWBParameters)whiteBoardYZ.getUserParameters()).bw = wbop.isBWChecked();
-                        ((UserWBParameters)whiteBoardYZ.getUserParameters()).hideCP = wbop.isHideCtrlPtsChecked();
-                        ((UserWBParameters)whiteBoardYZ.getUserParameters()).hideCC = wbop.isHideCCChecked();
+                        ((UserWBParameters) whiteBoardYZ.getUserParameters()).generateImage = wbop.isGenerateImageChecked();
+                        ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw = wbop.isBWChecked();
+                        ((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCP = wbop.isHideCtrlPtsChecked();
+                        ((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCC = wbop.isHideCCChecked();
                     } else {
                         System.out.println("Canceled.");
                     }
@@ -2080,7 +2089,7 @@ public class ThreeViews {
                     try {
 //                        double val = Double.parseDouble(frameStepValue.getText());
                         Object value = frameStepValue.getValue();
-                        double val = (value instanceof Long) ? (long)(value) : (double)(value);
+                        double val = (value instanceof Long) ? (long) (value) : (double) (value);
                         box3D.setFrameIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
@@ -2115,7 +2124,7 @@ public class ThreeViews {
                     try {
 //                        double val = Double.parseDouble(wlStepValue.getText());
                         Object value = wlStepValue.getValue();
-                        double val = (value instanceof Long) ? (long)(value) : (double)(value);
+                        double val = (value instanceof Long) ? (long) (value) : (double) (value);
 
                         box3D.setWlIncrement(val);
                         box3D.repaint();
@@ -2151,7 +2160,7 @@ public class ThreeViews {
                     try {
 //                        double val = Double.parseDouble(buttockStepValue.getText());
                         Object value = buttockStepValue.getValue();
-                        double val = (value instanceof Long) ? (long)(value) : (double)(value);
+                        double val = (value instanceof Long) ? (long) (value) : (double) (value);
                         box3D.setButtockIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
@@ -2708,17 +2717,17 @@ public class ThreeViews {
 
         public double getXValue() {
             Object value = this.xValue.getValue();
-            return (value instanceof Long) ? (long)value : (double)value;
+            return (value instanceof Long) ? (long) value : (double) value;
         }
 
         public double getYValue() {
             Object value = this.yValue.getValue();
-            return (value instanceof Long) ? (long)value : (double)value;
+            return (value instanceof Long) ? (long) value : (double) value;
         }
 
         public double getZValue() {
             Object value = this.zValue.getValue();
-            return (value instanceof Long) ? (long)value : (double)value;
+            return (value instanceof Long) ? (long) value : (double) value;
         }
 
         private void jbInit() {
@@ -2824,6 +2833,7 @@ public class ThreeViews {
 
     /**
      * Main for the Swing app.
+     *
      * @param args Unused.
      */
     @SuppressWarnings("unchecked")
