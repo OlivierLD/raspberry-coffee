@@ -55,7 +55,11 @@ Then do the hydrostatic calculations.
 - Shape calculation done in `BoatBox3D`, look for "`// Actual shape calculation takes place here.`"
 
 ### Some small boats
-- <https://sailboatdata.com/sailboat/corsaire>
+- Corsaire, Jean-Jacques Herbulot <https://sailboatdata.com/sailboat/corsaire>
+- Kerbulot, Yann Quénet 
+  - <https://photos.google.com/share/AF1QipM3Byy5dbo2Y4yIPwltfxCnPWq7kFEZneMXE1w7nQ3OWDDNuWW_EN_8W4TeB027fA?key=aXZTek5sRXozRm5VWTF2WWpzdWI2MnIxY2FyZTlR> 
+  - <https://www.boat-et-koad.com/plans-de-voilier-de-plus-de-5m.php>.
+- Beniguet, Francois Vivier <https://www.vivierboats.com/produit/beniguet/>
 - <https://www.asmaraudeur.com/>
 - ...
 

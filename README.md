@@ -74,7 +74,11 @@ $ ./gradlew project [--info]
 The modules under `raspberry-io-pi4j` use the [`PI4J library`](http://pi4j.com) (Version **1.x**. Version **2.x** brings in some new architecture and paradigm, not dealt with yet), itself relying on [`WiringPi`](http://wiringpi.com/).  
 
 > Note: `WiringPi` is now deprecated (since 2019, apparently), which makes `PI4J v1.*` deprecated too.  
-> ...More to come. Another way would be to use a library like `diozero`.
+> ...More to come. We are evaluating other options, like
+> - [`PI4J V2`](https://pi4j.com/)
+> - [`diozero`](https://www.diozero.com/)
+> - [`JOB`](https://github.com/OlivierLD/JOB)
+> 
 
 ### Java
 Java downloads can come in two main flavors:
