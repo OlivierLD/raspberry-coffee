@@ -1,6 +1,7 @@
 # Processing.org
 
-[Processing](http://processing.org) is a framework that considerably simplifies Java development.
+[Processing](http://processing.org) is a framework that considerably simplifies Java development,
+and provides amazing graphical features.
 
 > See how to install it on the Raspberry Pi [here](https://www.raspberrypi.org/blog/now-available-for-download-processing/).
 
@@ -29,7 +30,7 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
   text(String.format("%04d", value), 10, 100);
 }
 ```
-About 20 lines...
+About 20 lines, only...
 
 ### To run the Sketch
 - From the project root, to produce the required jar files, run
@@ -37,7 +38,50 @@ About 20 lines...
  $> ./gradlew clean shadowJar
 ```
   > Processing 3.0 might not like a JDK more recent than 1.8. Make sure you set 
-  > your Java alternative correctly. Processing 4.0 seems to support more recent versions of Java.
+  > your Java alternative correctly. Processing 4.0 seems to support more recent versions of Java (11, 17, etc).
+
+#### Note about the JDK to use in Processing
+In the installation directory, there is a full JDK. For example, my recent version
+came with JDK 17, and I wanted to use a JDK 11, already installed on my Raspberry Pi.
+The script `processing-java` explains how to change the JDK version.
+
+To change the JDK version:
+* In the installation directory, like `/tmp/processing-4.0.1`:
+  * `mv java java.17`
+  * `ln -s /usr/lib/jvm/java-11-openjdk-armhf ./java`  
+  
+Then JDK 11 will be used at runtime.  
+To come back to default, unlink the `./java`, and name `java.17` back to `java`.
+
+To see - at runtime - what version of the JDK you are using, run a script simple like this:
+
+```java
+void setup() {
+    println(String.format("Java Version: %s", System.getProperty("java.version")));    
+}
+```
+Then you'd see the java version in the console.  
+Or, to see it also in the GUI:
+```java
+void setup() {
+    println(String.format("Java Version: %s", System.getProperty("java.version")));
+    
+    size(600, 400);
+    stroke(255);
+    noFill();
+    textSize(72);
+    
+    fill(255);
+    text("Java Version:", 10, 75);
+    text(String.format(" %s", System.getProperty("java.version")), 10, 150);
+}
+```
+
+---
+
+
+
+
 ```
 $ [sudo] update-alternatives --config java
 $ [sudo] update-alternatives --config javac

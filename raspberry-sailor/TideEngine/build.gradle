@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
 //  implementation "com.google.code.gson:gson:$google_gson_gson"
-  implementation 'org.fusesource.jansi:jansi:1.11'
+  // implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'oracle:xmlparser:2.0'
 //  implementation project(':common-utils')
   implementation project(':astro-computer:AstroComputer')
