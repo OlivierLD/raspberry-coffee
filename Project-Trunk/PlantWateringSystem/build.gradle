@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "com.google.code.gson:gson:$google_gson_gson"
     implementation 'org.fusesource.jansi:jansi:1.11'
     implementation "org.scala-lang:scala-library:$scala_version"
     implementation 'org.codehaus.groovy:groovy-all:2.4.6'

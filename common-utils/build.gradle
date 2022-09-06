@@ -22,12 +22,12 @@ repositories {
 
 dependencies {
 //    implementation "com.pi4j:pi4j-core:$pi4j_version"   // Removed references to PI4J from PinUtil
-    implementation 'com.google.code.gson:gson:2.8.5'
+//    implementation "com.google.code.gson:gson:$google_gson_gson"
 //    implementation 'javax.mail:mail:1.4.4' // Important! Later versions might not work (2015...)
 //    implementation 'javax.mail:mail:1.5.0-b01'  // Previous one
     implementation 'com.sun.mail:javax.mail:1.6.2'
 //    implementation 'javax.mail:javax.mail-api:1.6.0'
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation "junit:junit:$junit_version"
 
 //    testImplementation project(':http-tiny-server')
 }

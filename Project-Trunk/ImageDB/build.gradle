@@ -23,5 +23,5 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+    implementation 'org.xerial:sqlite-jdbc:3.34.0'
 }

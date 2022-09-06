@@ -52,7 +52,7 @@ repositories {
 
 dependencies {
   implementation 'org.json:json:20141113'
-  implementation 'com.google.code.gson:gson:2.8.5'
+  implementation "com.google.code.gson:gson:$google_gson_gson"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation 'org.codehaus.groovy:groovy-all:2.4.6'
@@ -61,5 +61,5 @@ dependencies {
 //  implementation 'org.clojure:clojure:1.5.1'
   implementation "org.scala-lang:scala-library:$scala_version"
   implementation project(':http-tiny-server')
-  testImplementation group: 'junit', name: 'junit', version: '4.13'
+  testImplementation "junit:junit:$junit_version"
 }

@@ -26,6 +26,6 @@ mainClassName = "httpserver.HttpRequestServer"
 dependencies {
     implementation project(':http-tiny-server')
     implementation 'org.json:json:20141113'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    implementation "com.google.code.gson:gson:$google_gson_gson"
+    testImplementation "junit:junit:$junit_version"
 }

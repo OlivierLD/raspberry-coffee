@@ -64,5 +64,5 @@ dependencies {
   implementation project(':Adafruit-IO')
   implementation project(':NMEA-multiplexer')
   implementation project(':HanoiTower')
-  testImplementation 'junit:junit:4.13.2'
+  testImplementation "junit:junit:$junit_version"
 }

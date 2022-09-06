@@ -20,9 +20,9 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation "com.google.code.gson:gson:$google_gson_gson"
   // FindBugs should be included in RESTTideEngine -> TideEngine...
-  implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+  implementation 'com.google.code.findbugs:jsr305:3.0.0'
   implementation 'com.sun.mail:javax.mail:1.6.2'
   implementation project (':common-utils')
   implementation project (':http-tiny-server')
@@ -37,7 +37,7 @@ dependencies {
   implementation project (':NMEA-mux-extensions')
   implementation project (':Project-Trunk:SunFlower')
 
-  testImplementation 'junit:junit:4.13.2'
+  testImplementation "junit:junit:$junit_version"
 }
 
 shadowJar {

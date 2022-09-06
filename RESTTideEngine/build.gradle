@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation "com.google.code.gson:gson:$google_gson_gson"
   //implementation 'org.fusesource.jansi:jansi:1.11'
   //implementation 'oracle:xmlparser:2.0'
   implementation project (':http-tiny-server')
@@ -29,11 +29,11 @@ dependencies {
   implementation project(':astro-computer:AstroComputer')
 //  implementation 'astro.computer:astro.computer:1.0'
   implementation project (':RESTNauticalAlmanac')
-  implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+  implementation 'com.google.code.findbugs:jsr305:3.0.0'
   //implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
   implementation 'org.glassfish.jersey.core:jersey-client:2.25.1'
   implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
-  testImplementation 'junit:junit:4.13.2'
+  testImplementation "junit:junit:$junit_version"
 }
 
 shadowJar {

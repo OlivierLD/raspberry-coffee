@@ -32,8 +32,8 @@ compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
 dependencies {
     implementation "com.pi4j:pi4j-core:$pi4j_version"
     implementation 'org.rxtx:rxtx:2.1.7'
-    implementation 'com.google.code.gson:gson:2.8.0'
-    implementation group: 'org.json', name: 'json', version: '20190722'
+    implementation "com.google.code.gson:gson:$google_gson_gson"
+    implementation 'org.json:json:20190722'
     implementation project(':common-utils')
     implementation project(':http-tiny-server')
 //    implementation 'astro.computer:astro.computer:1.0'

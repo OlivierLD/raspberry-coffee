@@ -62,9 +62,9 @@ dependencies {
     implementation "org.scala-lang:scala-compiler:$scala_version"
     implementation 'com.typesafe.akka:akka-actor_2.13:2.6.19' // 'com.typesafe.akka:akka-actor_2.11:2.3.11'
 
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation "junit:junit:$junit_version"
     implementation 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.10'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "com.google.code.gson:gson:$google_gson_gson"
     implementation 'org.ajoberstar:gradle-git:1.1.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
 

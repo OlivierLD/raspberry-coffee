@@ -32,7 +32,7 @@ mainClassName = "httpserver.HttpRequestServer"
 
 dependencies {
 
-    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation "junit:junit:$junit_version"
 
     implementation project(':http-tiny-server')
     implementation project(':raspberry-io-pi4j:ADC')

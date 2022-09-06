@@ -1,5 +1,7 @@
 buildscript {
     ext.pi4j_version = '1.2' // '2.2.0' // ''2.1.1' // '1.2'
+    ext.google_gson_gson = '2.8.5'
+    ext.junit_version = '4.13.2'
 }
 plugins {
   id 'java'

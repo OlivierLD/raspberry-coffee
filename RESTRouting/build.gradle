@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation "com.google.code.gson:gson:$google_gson_gson"
   implementation 'oracle:xmlparser:2.0'
   implementation project(':astro-computer:AstroComputer')
 //  implementation 'astro.computer:astro.computer:1.0'

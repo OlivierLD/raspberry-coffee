@@ -40,7 +40,7 @@ dependencies {
     implementation 'oracle:xmlparser:2.0'
     implementation 'org.yaml:snakeyaml:1.21'
     implementation 'org.xerial:sqlite-jdbc:3.34.0'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation "com.google.code.gson:gson:$google_gson_gson"
     implementation 'org.json:json:20190722'
     implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
     implementation 'net.thisptr:jackson-jq:1.0.0-preview.20220705'  // jackson-jq
@@ -52,7 +52,7 @@ dependencies {
 //    implementation project(':SunFlower')
 //    implementation project(':GPS.sun.servo')
 //    implementation project(':LoRa')    // Needed for a publisher
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation "junit:junit:$junit_version"
 }
 
 shadowJar {

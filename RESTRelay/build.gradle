@@ -32,7 +32,7 @@ dependencies {
   implementation project(':http-tiny-server')
   implementation project(":raspberry-io-pi4j:Utils")
   implementation 'org.json:json:20141113'
-  implementation 'com.google.code.gson:gson:2.8.5'
+  implementation "com.google.code.gson:gson:$google_gson_gson"
 //testImplementation group: 'junit', name: 'junit', version: '4.13'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
   testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
