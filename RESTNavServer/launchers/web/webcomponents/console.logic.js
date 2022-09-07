@@ -469,7 +469,7 @@ function callAfter(id) {
 						let issLat = issData.iss_position.latitude;
 						let issLng = issData.iss_position.longitude;
 						// console.log(`Plotting ISS pos ${worldMap.decToSex(issLat, "NS")} / ${worldMap.decToSex(issLng, "EW")}`)
-						plotSatellite(context, worldMap, userPos, 'red', 'ISS', {lat: issLat, lng: issLng});
+						plotSatellite(context, worldMap, userPos, 'silver', 'ISS', {lat: issLat, lng: issLng});
 					} catch (error) {
 
 					}
