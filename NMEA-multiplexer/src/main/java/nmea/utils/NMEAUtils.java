@@ -423,10 +423,16 @@ public class NMEAUtils {
         try {
             String line = "";
             while ((line = br.readLine()) != null) {
-                String[] sa = line.split(",");
-                double cm = Double.parseDouble(sa[0]);
-                double d = Double.parseDouble(sa[1]);
-                data.put(cm, d);
+                if (!line.startsWith("#")) {    // Warning! We assume that a line starting with "#" is a comment.
+                    String[] sa = line.split(",");  // Comma, not semicolons here.
+                    double cm = Double.parseDouble(sa[0]);
+                    double d = Double.parseDouble(sa[1]);
+                    data.put(cm, d);
+                } else {
+                    if ("true".equals(System.getProperty("nmea.utils.verbose"))) {
+                        System.out.printf("Found commented line in deviation file: %s\n", line);
+                    }
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();

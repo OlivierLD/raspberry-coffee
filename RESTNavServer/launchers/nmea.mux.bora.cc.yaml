@@ -21,6 +21,6 @@ forwarders:
     properties: char.console.properties
 computers:
   - type: tw-current
-    #                   30s 60s 10m
+    #  in seconds:      30s 1m  10m
     time.buffer.length: 30, 60, 600
 
