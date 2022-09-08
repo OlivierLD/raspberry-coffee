@@ -51,9 +51,9 @@ public final class GeomUtil {
 		}
 	}
 
-	private final static double KM_EQUATORIAL_EARTH_RADIUS = 6378.1370D;
-	private final static double NM_EQUATORIAL_EARTH_RADIUS = 3443.9184665227D;
-	private final static double MILE_EQUATORIAL_EARTH_RADIUS = 3964.0379117464D;
+	private final static double KM_EQUATORIAL_EARTH_RADIUS = 6_378.1370D;
+	private final static double NM_EQUATORIAL_EARTH_RADIUS = 3_443.9184665227D;
+	private final static double MILE_EQUATORIAL_EARTH_RADIUS = 3_964.0379117464D;
 
 	protected static double haversineRaw(double lat1, double long1, double lat2, double long2) {
 		double deltaG = Math.toRadians(long2 - long1);

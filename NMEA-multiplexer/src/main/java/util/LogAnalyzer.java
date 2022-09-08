@@ -188,6 +188,7 @@ public class LogAnalyzer {
 			// Accumulators and others
 			GeoPos previousPos = null;
 			double distanceInKm = 0d;
+			double distanceInNm = 0d;
 			double minLat = Double.MAX_VALUE, maxLat = -Double.MAX_VALUE;
 			double minLng = Double.MAX_VALUE, maxLng = -Double.MAX_VALUE;
 
@@ -246,14 +247,17 @@ public class LogAnalyzer {
 								}
 								GeoPos gp = rmc.getGp();
 								if (gp != null) {
-									double distance = 0;
+									double distanceKm = 0;
+									double distanceGcNm = 0d;
 									double calcSpeed = 0;
 									if (previousPos != null) {
-										distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
+										distanceKm = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
+										distanceGcNm = new GreatCirclePoint(previousPos.lat, previousPos.lng).gcDistanceBetween(new GreatCirclePoint(gp.lat, gp.lng));
+
 										if (rmcTime != null && prevRMCTime != null) {
 											double deltaT = rmcTime.getTime() - prevRMCTime.getTime();
 											if (deltaT > 0) {
-												calcSpeed = (distance * 1_000d) / (deltaT / 1_000d); // ms
+												calcSpeed = (distanceKm * 1_000d) / (deltaT / 1_000d); // ms
 //												if (calcSpeed > MAX_CALCULATED_SPEED) {
 //													System.out.printf("Speed: %.02f", calcSpeed));
 //												}
@@ -293,23 +297,33 @@ public class LogAnalyzer {
 										double cog = rmc.getCog();
 										double sog = rmc.getSog();
 										if (previousPos != null) {
-											distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
-											if (verbose && distance == 0) {
+											distanceKm = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
+											distanceGcNm = new GreatCirclePoint(previousPos.lat, previousPos.lng).gcDistanceBetween(new GreatCirclePoint(gp.lat, gp.lng));
+
+//											System.out.printf("NM GC dist: %.03f nm\n", distanceGcNm);
+
+											if (verbose && distanceKm == 0) {
 												System.out.printf("Rec # %d (RMC# %d), Step: %.03f km between %s and %s (%s, previous was %s)\n",
 														originalFileRecNo,
 														nbRMCRec,
-														distance,
+														distanceKm,
 														previousPos.toString(),
 														gp.toString(),
 														rmcTime != null ? SDF.format(rmcTime) : "",
 														prevRMCTime != null ? SDF.format(prevRMCTime) : "-");
 											}
-											distanceInKm += distance;
+											distanceInKm += distanceKm;
+											if (!Double.isNaN(distanceGcNm)) {
+												distanceInNm += distanceGcNm;
+											}
+//											if (verbose) {
+//												System.out.printf("Small step: %.03f km, distance now : %.03f km\n", distanceKm, distanceInKm);
+//											}
 											bw.write(String.format("%d;%d;%d;%f;=(B%d-B%d);%s;%s\n",
 													(totalNbRec - 1),
 													rmcTime != null ? rmcTime.getTime() : 0,
 													rmcTime != null ? (rmcTime.getTime() - previousDate) : 0,
-													distance,
+													distanceKm,
 													(statLineNo + 1),
 													statLineNo,
 													cog,
@@ -371,13 +385,14 @@ public class LogAnalyzer {
 			assert (start != null && arrival != null);
 			System.out.printf("Started %s\n", SDF.format(start));
 			System.out.printf("Arrived %s\n", SDF.format(arrival));
-			System.out.printf("Used %s record(s) out of %s. Total distance: %.03f %s, in %s. Avg speed:%.03f %s\n",
-					NumberFormat.getInstance().format(nbRec),
-					NumberFormat.getInstance().format(totalNbRec),
-					distanceInKm / (unitToUse.equals(SpeedUnit.KMH) ? 1 : 1.852),
-					unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm",
-					msToHMS(arrival.getTime() - start.getTime()),
-					(distanceInKm / ((arrival.getTime() - start.getTime()) / ((double) HOUR))) / (unitToUse.equals(SpeedUnit.KMH) ? 1 : 1.852),
+			System.out.printf("Used %s record(s) out of %s. \nTotal distance: %.03f (%.03f) %s, in %s. Avg speed:%.03f %s\n",
+					NumberFormat.getInstance().format(nbRec), // nb recs
+					NumberFormat.getInstance().format(totalNbRec), // total recs
+					distanceInKm / (unitToUse.equals(SpeedUnit.KMH) ? 1 : 1.852), // dist
+					distanceInNm * (unitToUse.equals(SpeedUnit.KN) ? 1 : 1.852), // dist
+					unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm", // Unit
+					msToHMS(arrival.getTime() - start.getTime()), // time
+					(distanceInKm / ((arrival.getTime() - start.getTime()) / ((double) HOUR))) / (unitToUse.equals(SpeedUnit.KMH) ? 1 : 1.852), // AVG
 					unitToUse.label());
 			System.out.printf("Max Speed (SOG): %.03f %s\n", maxSpeed * unitToUse.convert(), unitToUse.label());
 			System.out.printf("Min Speed (SOG): %.03f %s\n", minSpeed * unitToUse.convert(), unitToUse.label());
