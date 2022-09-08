@@ -306,6 +306,7 @@ public class ExtraDataComputer extends Computer {
 					if (verbose) {
 						System.out.println(String.format(">>>                                    Producing Current Speed %f, dir %d (with %d s)", csp, cdr, producedWith));
 					}
+					// "Computer" generated
 					String nmeaVDR = StringGenerator.generateVDR(generatedStringsPrefix, csp, cdr, cdr - decl);
 					this.produce(nmeaVDR + NMEAParser.STANDARD_NMEA_EOS);
 				}

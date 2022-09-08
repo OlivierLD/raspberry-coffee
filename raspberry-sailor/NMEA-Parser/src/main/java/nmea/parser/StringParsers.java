@@ -2116,6 +2116,14 @@ public class StringParsers {
 		public Class returnedType() { return this.returnedType; }
 	}
 
+	public static String getSentenceDescription(String id) {
+		return Arrays.asList(StringParsers.Dispatcher.values()).stream()
+				.filter(disp -> findDispatcherByKey(id) != null)
+				.map(disp -> findDispatcherByKey(id).description())
+				.findFirst()
+				.orElse(null);
+	}
+
 	public static class ParsedData {
 		private String deviceID;
 		private String sentenceId;

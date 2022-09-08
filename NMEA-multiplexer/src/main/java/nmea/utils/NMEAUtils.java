@@ -300,7 +300,7 @@ public class NMEAUtils {
      * @param y deltaY
      * @return the dir, in degrees
      *
-     * @Deprecated Use getDir (below)
+     * @deprecated Use getDir (below)
      */
     public static double getDirObsolete(float x, float y) {
         double dir = 0.0D;

@@ -131,6 +131,7 @@ public class LogAnalyzer {
 	public static void main(String... args) {
 
 		final boolean verbose = "true".equals(System.getProperty("verbose"));
+		final boolean summary = "true".equals(System.getProperty("summary"));
 		final String speedUnit = System.getProperty("speed.unit");
 		if (speedUnit != null) {
 			switch (speedUnit) {
@@ -155,6 +156,7 @@ public class LogAnalyzer {
 			InputStream fis;
 			Map<String, Long> validStrings = new HashMap<>();
 			Map<String, Long> invalidStrings = new HashMap<>();
+			Map<String, Long> validDevices = new HashMap<>();
 
 			String dataFileName = args[0];
 			if (dataFileName.endsWith(".zip")) {
@@ -224,6 +226,9 @@ public class LogAnalyzer {
 						totalNbRec++;
 						String id = StringParsers.getSentenceID(line);
 					    appendToMap(validStrings, id);
+						String device = StringParsers.getDeviceID(line);
+						appendToMap(validDevices, device);
+
 						if (id.equals("RMC")) {
 							nbRec++;
 							nbRMCRec++;
@@ -407,11 +412,15 @@ public class LogAnalyzer {
 			System.out.printf("Top-Left to bottom-right: %.03f %s\n", distTLBR, (unitToUse.equals(SpeedUnit.KMH) ? "km" : "nm"));
 
 			// Maps
-			if (verbose) {
+			if (summary) { // Summary
 				System.out.println("Valid Strings:");
-				validStrings.keySet().stream().forEach(key -> System.out.printf("%s : %d elements\n", key, validStrings.get(key)));
-				System.out.println("Invalid Strings:");
-				invalidStrings.keySet().stream().forEach(key -> System.out.printf("%s : %d elements\n", key, invalidStrings.get(key)));
+				validStrings.keySet().stream().forEach(key -> System.out.printf("%s : %s element(s) (%s)\n", key, NumberFormat.getInstance().format(validStrings.get(key)), StringParsers.getSentenceDescription(key)));
+				if (verbose) {
+					System.out.println("Invalid Strings:");
+					invalidStrings.keySet().stream().forEach(key -> System.out.printf("%s : %d elements\n", key, invalidStrings.get(key)));
+				}
+				System.out.println("Valid Devices:");
+				validDevices.keySet().stream().forEach(key -> System.out.printf("%s : %s element(s)\n", key, NumberFormat.getInstance().format(validDevices.get(key))));
 			}
 			try {
 				// A Map on a canvas?
