@@ -12,3 +12,7 @@ channels:
     zip: true
     path.in.zip: 2022-08-04.nmea
     verbose: false
+forwarders:
+  - type: tcp
+    port: 7005
+

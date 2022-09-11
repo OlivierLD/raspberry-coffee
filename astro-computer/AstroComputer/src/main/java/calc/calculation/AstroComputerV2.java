@@ -1271,11 +1271,39 @@ public class AstroComputerV2 {
         return this.context.EoT;
     }
 
-    public synchronized double getLDist() {
+    public synchronized double getLDist() { // Moon Sun
         if (!this.calculateHasBeenInvoked) {
             throw new RuntimeException("Calculation was never invoked in this context");
         }
         return this.context.LDist;
+    }
+
+    public synchronized double getVenusMoonDist() {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        return this.context.moonVenusDist;
+    }
+
+    public synchronized double getMarsMoonDist() {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        return this.context.moonMarsDist;
+    }
+
+    public synchronized double getJupiterMoonDist() {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        return this.context.moonJupiterDist;
+    }
+
+    public synchronized double getSaturnMoonDist() {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        return this.context.moonSaturnDist;
     }
 
     public synchronized String getWeekDay() {

@@ -1569,47 +1569,48 @@ public class RESTImplementation {
 							case "Sun":
 								gha = acv2.getSunGHA();
 								decl = acv2.getSunDecl();
-								hp  = Context.HPsun / 3600d;
-								sd  = Context.SDsun / 3600d;
-								lunar = Context.LDist;
+								hp  = acv2.getSunHp() / 3_600d;
+								sd  = acv2.getSunSd() / 3_600d;
+								lunar = acv2.getLDist();
 								break;
 							case "Moon":
 								gha = acv2.getMoonGHA();
 								decl = acv2.getMoonDecl();
-								hp  = Context.HPmoon / 3600d;
-								sd  = Context.SDmoon / 3600d;
+								hp  = acv2.getMoonHp() / 3_600d;
+								sd  = acv2.getMoonSd() / 3_600d;
 								break;
 							case "Venus":
 								gha = acv2.getVenusGHA();
 								decl = acv2.getVenusDecl();
-								hp  = Context.HPvenus / 3600d;
-								sd  = Context.SDvenus / 3600d;
-								lunar = Context.moonVenusDist;
+								hp  = acv2.getVenusHp() / 3_600d;
+								sd  = acv2.getVenusSd() / 3_600d;
+								lunar = acv2.getVenusMoonDist();
 								break;
 							case "Mars":
 								gha = acv2.getMarsGHA();
 								decl = acv2.getMarsDecl();
-								hp  = Context.HPmars / 3600d;
-								sd  = Context.SDmars / 3600d;
-								lunar = Context.moonMarsDist;
+								hp  = acv2.getMarsHp() / 3_600d;
+								sd  = acv2.getMarsSd() / 3_600d;
+								lunar = acv2.getMarsMoonDist();
 								break;
 							case "Jupiter":
 								gha = acv2.getJupiterGHA();
 								decl = acv2.getJupiterDecl();
-								hp  = Context.HPjupiter / 3600d;
-								sd  = Context.SDjupiter / 3600d;
-								lunar = Context.moonJupiterDist;
+								hp  = acv2.getJupiterHp() / 3_600d;
+								sd  = acv2.getJupiterSd() / 3_600d;
+								lunar = acv2.getJupiterMoonDist();
 								break;
 							case "Saturn":
 								gha = acv2.getSaturnGHA();
 								decl = acv2.getSaturnDecl();
-								hp  = Context.HPsaturn / 3600d;
-								sd  = Context.SDsaturn / 3600d;
-								lunar = Context.moonSaturnDist;
+								hp  = acv2.getSaturnHp() / 3_600d;
+								sd  = acv2.getSaturnSd() / 3_600d;
+								lunar = acv2.getSaturnMoonDist();
 								break;
 							default: // Stars
+								// Warning: static !
 								Core.starPos(bodyName);
-								gha = Context.GHAstar;
+								gha = Context.GHAstar;  // TODO All with Aries ?
 								decl = Context.DECstar;
 								hp = 0d;
 								sd = 0d;

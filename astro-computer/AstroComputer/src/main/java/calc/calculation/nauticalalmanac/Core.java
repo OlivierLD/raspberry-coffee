@@ -4,7 +4,7 @@ public class Core {
 	/**
 	 * Set the julian date
 	 * @param year full year
-	 * @param month  1 - Jan, 2 - Feb, etc.
+	 * @param month  [1..12]. 1: Jan, 2: Feb, etc.
 	 * @param day in [1..31]
 	 * @param hour in [0..23]
 	 * @param minute in [0..59]
@@ -13,7 +13,7 @@ public class Core {
 	 */
 	public static void julianDate(int year, int month, int day, int hour, int minute, float second, double deltaT) {
 		//var year, month, day, hour, minute, second, Context.dayfraction, ly=0;
-		Context.dayfraction = ((double) hour + ((double) minute / 60D) + ((double) second / 3600D)) / 24D;
+		Context.dayfraction = ((double) hour + ((double) minute / 60D) + ((double) second / 3_600d)) / 24D;
 		// Calculating Julian date, century, and millennium
 		//Julian daContext.TE (UT1)
 		if (month <= 2) {
@@ -129,8 +129,8 @@ public class Core {
 		double DECpol0 = 89.26408889;
 
 		//Proper motion per year
-		double dRApol = 2.98155 / 3600D;
-		double dDECpol = -0.0152 / 3600D;
+		double dRApol = 2.98155 / 3_600d;
+		double dDECpol = -0.0152 / 3_600d;
 
 		//Equatorial coordinates at Julian DaContext.TE T (mean equinox and equator 2000.0)
 		double RApol1 = RApol0 + 100 * Context.TE * dRApol;
@@ -144,9 +144,9 @@ public class Core {
 		double betapol1 = Math.asin(Utils.sind(DECpol1) * Utils.cosd(Context.EPS0_2000) - Utils.cosd(DECpol1) * Utils.sind(Context.EPS0_2000) * Utils.sind(RApol1));
 
 		//Precession
-		double eta = Math.toRadians(47.0029 * Context.TE - 0.03302 * Context.TE2 + 0.00006 * Context.TE3) / 3600D;
-		double PI0 = Math.toRadians(174.876384 - (869.8089 * Context.TE + 0.03536 * Context.TE2) / 3600D);
-		double p0 = Math.toRadians(5029.0966 * Context.TE + 1.11113 * Context.TE2 - 0.0000006 * Context.TE3) / 3600D;
+		double eta = Math.toRadians(47.0029 * Context.TE - 0.03302 * Context.TE2 + 0.00006 * Context.TE3) / 3_600d;
+		double PI0 = Math.toRadians(174.876384 - (869.8089 * Context.TE + 0.03536 * Context.TE2) / 3_600d);
+		double p0 = Math.toRadians(5029.0966 * Context.TE + 1.11113 * Context.TE2 - 0.0000006 * Context.TE3) / 3_600d;
 		double A1 = Math.cos(eta) * Math.cos(betapol1) * Math.sin(PI0 - lambdapol1) - Math.sin(eta) * Math.sin(betapol1);
 		double B1 = Math.cos(betapol1) * Math.cos(PI0 - lambdapol1);
 		double C1 = Math.cos(eta) * Math.sin(betapol1) + Math.sin(eta) * Math.cos(betapol1) * Math.sin(PI0 - lambdapol1);
@@ -180,9 +180,9 @@ public class Core {
 			//Read catalog
 			double RAstar0 = 15D * star.getRa();
 			double DECstar0 = star.getDec();
-			double dRAstar = 15D * star.getDeltaRa() / 3600D;
-			double dDECstar = star.getDeltaDec() / 3600D;
-			double par = star.getPar() / 3600D;
+			double dRAstar = 15D * star.getDeltaRa() / 3_600d;
+			double dDECstar = star.getDeltaDec() / 3_600d;
+			double par = star.getPar() / 3_600d;
 
 			//Equatorial coordinates at Julian Date T (mean equinox and equator 2000.0)
 			double RAstar1 = RAstar0 + Context.TE * dRAstar;
@@ -196,9 +196,9 @@ public class Core {
 			double betastar1 = Math.asin(Utils.sind(DECstar1) * Utils.cosd(Context.EPS0_2000) - Utils.cosd(DECstar1) * Utils.sind(Context.EPS0_2000) * Utils.sind(RAstar1));
 
 			//Precession
-			double eta = Math.toRadians(47.0029 * Context.TE - 0.03302 * Context.TE2 + 0.00006 * Context.TE3) / 3600D;
-			double PI0 = Math.toRadians(174.876384 - (869.8089 * Context.TE + 0.03536 * Context.TE2) / 3600D);
-			double p0 = Math.toRadians(5029.0966 * Context.TE + 1.11113 * Context.TE2 - 0.0000006 * Context.TE3) / 3600D;
+			double eta = Math.toRadians(47.0029 * Context.TE - 0.03302 * Context.TE2 + 0.00006 * Context.TE3) / 3_600d;
+			double PI0 = Math.toRadians(174.876384 - (869.8089 * Context.TE + 0.03536 * Context.TE2) / 3_600d);
+			double p0 = Math.toRadians(5029.0966 * Context.TE + 1.11113 * Context.TE2 - 0.0000006 * Context.TE3) / 3_600d;
 			double A1 = Math.cos(eta) * Math.cos(betastar1) * Math.sin(PI0 - lambdastar1) - Math.sin(eta) * Math.sin(betastar1);
 			double B1 = Math.cos(betastar1) * Math.cos(PI0 - lambdastar1);
 			double C1 = Math.cos(eta) * Math.sin(betastar1) + Math.sin(eta) * Math.cos(betastar1) * Math.sin(PI0 - lambdastar1);
@@ -216,7 +216,7 @@ public class Core {
 			lambdastar2 += Math.toRadians(Context.delta_psi);
 
 			// Aberration
-//    double kappa = Math.toRadians(20.49552) / 3600D;
+//    double kappa = Math.toRadians(20.49552) / 3_600d;
 //    double pi0 = Math.toRadians(102.93735 + 1.71953 * Context.TE + 0.00046 * Context.TE2);
 //    double e = 0.016708617 - 0.000042037 * Context.TE - 0.0000001236 * Context.TE2;
 
