@@ -1,7 +1,10 @@
 package calc.calculation;
 
 import calc.*;
+//import calc.calculation.nauticalalmanac.Context;
 import calc.calculation.nauticalalmanacV2.*;
+import calc.calculation.nauticalalmanac.Star;
+import calc.calculation.nauticalalmanac.Utils;
 import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
@@ -168,6 +171,7 @@ public class AstroComputerV2 {
 
     public AstroComputerV2() {
         this.calculateHasBeenInvoked = false;
+        this.context.starName = null;
     }
 
     // Updated after the calculate invocation.
@@ -186,6 +190,7 @@ public class AstroComputerV2 {
         this.minute = mi;
         this.second = s;
         this.calculateHasBeenInvoked = false;
+        this.context.starName = null;
     }
 
     public synchronized void setDateTime(long epoch) {
@@ -199,6 +204,7 @@ public class AstroComputerV2 {
         this.minute = calcDate.get(Calendar.MINUTE);
         this.second = calcDate.get(Calendar.SECOND);
         this.calculateHasBeenInvoked = false;
+        this.context.starName = null;
     }
 
     public synchronized Calendar getCalculationDateTime() {
@@ -500,6 +506,121 @@ public class AstroComputerV2 {
         this.dow = WEEK_DAYS[Core.weekDay(this.context)];
 
         this.calculateHasBeenInvoked = true;
+    }
+
+    /**
+     *
+     * @param starName Name of the star (as in the CATALOG)
+     */
+    public synchronized void starPos(String starName) { // }, ContextV2 context) {
+        assert (this.context != null);
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        this.context.starName = starName;
+        //Read catalog
+        Star star = Star.getStar(starName);
+        if (star != null) {
+            //Read star in catalog
+            double RAstar0 = 15d * star.getRa();
+            double DECstar0 = star.getDec();
+            double dRAstar = 15d * star.getDeltaRa() / 3_600d;
+            double dDECstar = star.getDeltaDec() / 3_600d;
+            double par = star.getPar() / 3_600d;
+
+            //Equatorial coordinates at Julian Date T (mean equinox and equator 2000.0)
+            double RAstar1 = RAstar0 + this.context.TE * dRAstar;
+            double DECstar1 = DECstar0 + this.context.TE * dDECstar;
+
+            //Mean obliquity of ecliptic at 2000.0 in degrees
+//    double eps0_2000 = 23.439291111;
+
+            //Transformation to ecliptic coordinates in radians (mean equinox and equator 2000.0)
+            double lambdastar1 = Math.atan2((Utils.sind(RAstar1) * Utils.cosd(this.context.EPS0_2000) + Utils.tand(DECstar1) * Utils.sind(this.context.EPS0_2000)), Utils.cosd(RAstar1));
+            double betastar1 = Math.asin(Utils.sind(DECstar1) * Utils.cosd(this.context.EPS0_2000) - Utils.cosd(DECstar1) * Utils.sind(this.context.EPS0_2000) * Utils.sind(RAstar1));
+
+            //Precession
+            double eta = Math.toRadians(47.0029 * this.context.TE - 0.03302 * this.context.TE2 + 0.00006 * this.context.TE3) / 3_600d;
+            double PI0 = Math.toRadians(174.876384 - (869.8089 * this.context.TE + 0.03536 * this.context.TE2) / 3_600d);
+            double p0 = Math.toRadians(5_029.0966 * this.context.TE + 1.11113 * this.context.TE2 - 0.0000006 * this.context.TE3) / 3_600d;
+            double A1 = Math.cos(eta) * Math.cos(betastar1) * Math.sin(PI0 - lambdastar1) - Math.sin(eta) * Math.sin(betastar1);
+            double B1 = Math.cos(betastar1) * Math.cos(PI0 - lambdastar1);
+            double C1 = Math.cos(eta) * Math.sin(betastar1) + Math.sin(eta) * Math.cos(betastar1) * Math.sin(PI0 - lambdastar1);
+            double lambdastar2 = p0 + PI0 - Math.atan2(A1, B1);
+            double betastar2 = Math.asin(C1);
+
+            //Annual parallax
+            double par_lambda = Math.toRadians(par * Math.sin(Math.toRadians(this.context.Lsun_true) - lambdastar2) / Math.cos(betastar2));
+            double par_beta = -Math.toRadians(par * Math.sin(betastar2) * Math.cos(Math.toRadians(this.context.Lsun_true) - lambdastar2));
+
+            lambdastar2 += par_lambda;
+            betastar2 += par_beta;
+
+            // Nutation in longitude
+            lambdastar2 += Math.toRadians(this.context.delta_psi);
+
+            // Aberration
+//    double kappa = Math.toRadians(20.49552) / 3_600d;
+//    double pi0 = Math.toRadians(102.93735 + 1.71953 *this.context.TE + 0.00046 * Context.TE2);
+//    double e = 0.016708617 - 0.000042037 * Context.TE - 0.0000001236 * Context.TE2;
+
+            double dlambdastar = (this.context.e * this.context.kappa * Math.cos(this.context.pi0 - lambdastar2) - this.context.kappa * Math.cos(Math.toRadians(this.context.Lsun_true) - lambdastar2)) / Math.cos(betastar2);
+            double dbetastar = -context.kappa * Math.sin(betastar2) * (Math.sin(Math.toRadians(this.context.Lsun_true) - lambdastar2) - this.context.e * Math.sin(this.context.pi0 - lambdastar2));
+
+            lambdastar2 += dlambdastar;
+            betastar2 += dbetastar;
+
+            // Transformation back to equatorial coordinates in radians
+            double RAstar2 = Math.atan2((Math.sin(lambdastar2) * Utils.cosd(this.context.eps) - Math.tan(betastar2) * Utils.sind(this.context.eps)), Math.cos(lambdastar2));
+            double DECstar2 = Math.asin(Math.sin(betastar2) * Utils.cosd(this.context.eps) + Math.cos(betastar2) * Utils.sind(this.context.eps) * Math.sin(lambdastar2));
+
+            //Lunar distance of star
+           this.context.starMoonDist = Math.toDegrees(Math.acos(Utils.sind(this.context.DECmoon) * Math.sin(DECstar2) + Utils.cosd(this.context.DECmoon) * Math.cos(DECstar2) * Utils.cosd(this.context.RAmoon - Math.toDegrees(RAstar2))));
+
+            // Finals
+           this.context.GHAstar = Utils.trunc(this.context.GHAAtrue - Math.toDegrees(RAstar2));
+           this.context.SHAstar = Utils.trunc(360 - Math.toDegrees(RAstar2));
+           this.context.DECstar = Math.toDegrees(DECstar2);
+        } else {
+            System.out.println(starName + " not found in the catalog...");
+        }
+    }
+
+    public synchronized double getStarGHA(String starName) {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        if (!starName.equals(this.context.starName)) {
+            throw new RuntimeException(String.format("starPos was not invoked for %s (%s)", starName, this.context.starName));
+        }
+        return this.context.GHAstar;
+    }
+    public synchronized double getStarSHA(String starName) {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        if (!starName.equals(this.context.starName)) {
+            throw new RuntimeException(String.format("starPos was not invoked for %s (%s)", starName, this.context.starName));
+        }
+        return this.context.SHAstar;
+    }
+    public synchronized double getStarDec(String starName) {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        if (!starName.equals(this.context.starName)) {
+            throw new RuntimeException(String.format("starPos was not invoked for %s (%s)", starName, this.context.starName));
+        }
+        return this.context.DECstar;
+    }
+    public synchronized double getStarMoonDist(String starName) {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+        if (!starName.equals(this.context.starName)) {
+            throw new RuntimeException(String.format("starPos was not invoked for %s (%s)", starName, this.context.starName));
+        }
+        return this.context.starMoonDist;
     }
 
     public final static int UTC_RISE_IDX = 0;

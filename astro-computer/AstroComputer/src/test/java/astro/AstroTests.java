@@ -1,10 +1,13 @@
 package astro;
 
 //import calc.calculation.AstroComputer;
+
+import calc.calculation.AstroComputer;
 import calc.calculation.AstroComputerV2;
 import calc.calculation.SightReductionUtil;
 import calc.calculation.nauticalalmanac.Context;
 import calc.calculation.nauticalalmanac.Core;
+import calc.calculation.nauticalalmanac.Star;
 import org.junit.Test;
 
 import java.text.DecimalFormat;
@@ -14,6 +17,7 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertTrue;
 
 public class AstroTests {
 
@@ -34,8 +38,14 @@ public class AstroTests {
 		assertEquals(String.format("Ooops: was %f, instead of %f", backAgain, longitude), longitude, backAgain);
 	}
 
-	public void sightReduction(String utcDate, String bodyName, double userLatitude, double userLongitude, boolean reverse, double instrumentalAltitude, int limb, double eyeHeight) {
-
+	public void sightReduction(String utcDate,
+							   String bodyName,
+							   double userLatitude,
+							   double userLongitude,
+							   boolean reverse,
+							   double instrumentalAltitude,
+							   int limb,
+							   double eyeHeight) {
 		try {
 			Date from = DURATION_FMT.parse(utcDate);
 			Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -106,12 +116,20 @@ public class AstroTests {
 					lunar = acv2.getSaturnMoonDist(); // Context.moonSaturnDist;
 					break;
 				default: // Stars
-					Core.starPos(bodyName);
-					gha = Context.GHAstar;
-					decl = Context.DECstar;
+//					Core.starPos(bodyName);
+//					gha = Context.GHAstar;
+//					decl = Context.DECstar;
+//					lunar = Context.starMoonDist;
 					hp = 0d;
 					sd = 0d;
-					lunar = Context.starMoonDist;
+					// New version.
+					acv2.starPos(bodyName); //, acv2.context);
+					gha = acv2.getStarGHA(bodyName);
+					decl = acv2.getStarDec(bodyName);
+					lunar = acv2.getStarMoonDist(bodyName);
+
+					System.out.println("Break here!");
+
 					break;
 			}
 
@@ -268,5 +286,138 @@ public class AstroTests {
 		System.setProperty("astro.verbose", "true");
 
 		sightReduction(utcDate, bodyName, userLatitude, userLongitude, reverse, instrumentalAltitude, limb, eyeHeight);
+	}
+
+	@Test
+	public void testNoCalculateInvoked() {
+		Date from = new Date(); // now
+		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		current.setTime(from);
+		System.out.printf("Starting calculation at %s (%s)\n", current.getTime(), DURATION_FMT.format(from));
+
+		try {
+			AstroComputerV2 acv2 = new AstroComputerV2();
+			if (false) {
+				acv2.calculate(
+						current.get(Calendar.YEAR),
+						current.get(Calendar.MONTH) + 1,
+						current.get(Calendar.DAY_OF_MONTH),
+						current.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+						current.get(Calendar.MINUTE),
+						current.get(Calendar.SECOND));
+			}
+			final double ariesGHA = acv2.getAriesGHA();
+			fail("Should have failed!");
+		} catch (Exception ex) {
+			assertTrue("Unexpected Exception type", ex instanceof RuntimeException && ex.getMessage().startsWith("Calculation was never invoked in this context"));
+		}
+	}
+
+	@Test
+	public void testGoodStar() {
+		Date from = new Date(); // now
+		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		current.setTime(from);
+		System.out.printf("Starting calculation at %s (%s)\n", current.getTime(), DURATION_FMT.format(from));
+
+		try {
+			AstroComputerV2 acv2 = new AstroComputerV2();
+			if (true) {
+				acv2.calculate(
+						current.get(Calendar.YEAR),
+						current.get(Calendar.MONTH) + 1,
+						current.get(Calendar.DAY_OF_MONTH),
+						current.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+						current.get(Calendar.MINUTE),
+						current.get(Calendar.SECOND));
+			}
+			final String ALDEBARAN = "Aldebaran";
+			final Star star = Star.getStar(ALDEBARAN);
+			assertTrue(String.format("%s not found in Star Catalog", ALDEBARAN), star != null);
+
+			acv2.starPos(ALDEBARAN);
+			final double starGHA = acv2.getStarGHA(ALDEBARAN);
+
+			assertTrue("Oops!", starGHA > 0);
+		} catch (Exception ex) {
+			fail(ex.getMessage());
+		}
+	}
+
+	@Test
+	public void testTwoStars() {
+		Date from = new Date(); // now
+		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		current.setTime(from);
+		System.out.printf("Starting Sight Reduction calculation at %s (%s)\n", current.getTime(), DURATION_FMT.format(from));
+
+		try {
+			AstroComputerV2 acv2 = new AstroComputerV2();
+			if (true) {
+				acv2.calculate(
+						current.get(Calendar.YEAR),
+						current.get(Calendar.MONTH) + 1,
+						current.get(Calendar.DAY_OF_MONTH),
+						current.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+						current.get(Calendar.MINUTE),
+						current.get(Calendar.SECOND));
+			}
+			final String ALDEBARAN = "Aldebaran";
+			final Star star = Star.getStar(ALDEBARAN);
+			assertTrue(String.format("%s not found in Star Catalog", ALDEBARAN), star != null);
+
+			acv2.starPos(ALDEBARAN);
+			final double starGHA = acv2.getStarGHA(ALDEBARAN);
+			final double starDEC = acv2.getStarDec("Capella");
+
+			fail("Should have failed here!");
+		} catch (Exception ex) {
+			assertTrue(ex instanceof RuntimeException && ex.getMessage().startsWith("starPos was not invoked for Capella (Aldebaran)"));
+		}
+	}
+
+	@Test
+	public void compareV1V2() {
+		Date from = new Date(); // now
+		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		current.setTime(from);
+		System.out.printf("Starting calculation at %s (%s)\n", current.getTime(), DURATION_FMT.format(from));
+
+		try {
+			AstroComputerV2 acv2 = new AstroComputerV2();
+			acv2.calculate(
+					current.get(Calendar.YEAR),
+					current.get(Calendar.MONTH) + 1,
+					current.get(Calendar.DAY_OF_MONTH),
+					current.get(Calendar.HOUR_OF_DAY),
+					current.get(Calendar.MINUTE),
+					current.get(Calendar.SECOND));
+
+			AstroComputer.calculate(current.get(Calendar.YEAR),
+					current.get(Calendar.MONTH) + 1,
+					current.get(Calendar.DAY_OF_MONTH),
+					current.get(Calendar.HOUR_OF_DAY),
+					current.get(Calendar.MINUTE),
+					current.get(Calendar.SECOND));
+
+			// Now, compare.
+			// Sun & Aries
+			assertTrue("Sun GHA", acv2.getSunGHA() == AstroComputer.getSunGHA());
+			assertTrue("Aries GHA", acv2.getAriesGHA() == AstroComputer.getAriesGHA());
+			// Star
+			final String ALDEBARAN = "Aldebaran";
+			Core.starPos(ALDEBARAN);
+			// New version.
+			acv2.starPos(ALDEBARAN);
+
+			assertTrue("Star GHA", acv2.getStarGHA(ALDEBARAN) == Context.GHAstar);
+			assertTrue("Star Decl", acv2.getStarDec(ALDEBARAN) == Context.DECstar);
+			assertTrue("Star Moon-Dist", acv2.getStarMoonDist(ALDEBARAN) == Context.starMoonDist);
+
+			// TODO More !
+
+		} catch (Exception ex) {
+
+		}
 	}
 }

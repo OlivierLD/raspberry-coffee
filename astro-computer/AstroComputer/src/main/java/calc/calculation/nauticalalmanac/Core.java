@@ -1,5 +1,8 @@
 package calc.calculation.nauticalalmanac;
 
+/**
+ * @Deprecated Use only in the context of {@link calc.calculation.AstroComputer}
+ */
 public class Core {
 	/**
 	 * Set the julian date
@@ -54,7 +57,7 @@ public class Core {
 
 	public static void aries() {
 		//Mean GHA Aries
-		double GHAAmean = Utils.trunc(280.46061837 + 360.98564736629 * (Context.JD - 2451545D) + 0.000387933 * Context.T2 - Context.T3 / 38710000D);
+		double GHAAmean = Utils.trunc(280.46061837 + 360.98564736629 * (Context.JD - 2_451_545D) + 0.000387933 * Context.T2 - Context.T3 / 38_710_000D);
 
 		//GMST
 //  SidTm = OutSidTime(GHAAmean);
@@ -67,7 +70,7 @@ public class Core {
 
 		//Equation of the equinoxes
 		double EoE = 240 * Context.delta_psi * Utils.cosd(Context.eps);
-		String EoEout = Double.toString(Math.round(1000 * EoE) / 1000D);
+		String EoEout = Double.toString(Math.round(1_000 * EoE) / 1_000D);
 		EoEout = " " + EoEout + "s";
 	}
 
@@ -75,7 +78,7 @@ public class Core {
 	//Calculations for the Sun
 	public static void sun() {
 		//Mean longitude of the Sun
-		Context.Lsun_mean = Utils.trunc(280.4664567 + 360007.6982779 * Context.Tau + 0.03032028 * Context.Tau2 + Context.Tau3 / 49931D - Context.Tau4 / 15299D - Context.Tau5 / 1988000D);
+		Context.Lsun_mean = Utils.trunc(280.4664567 + 360_007.6982779 * Context.Tau + 0.03032028 * Context.Tau2 + Context.Tau3 / 49_931D - Context.Tau4 / 15_299D - Context.Tau5 / 1_988_000D);
 
 		//Heliocentric longitude of the Earth
 		Context.Le = Earth.lEarth(Context.Tau);
@@ -96,7 +99,7 @@ public class Core {
 
 		//Distance Earth-Sun
 		Context.Re = Earth.rEarth(Context.Tau);
-		Context.dES = 149597870.691 * Context.Re;
+		Context.dES = 149_597_870.691 * Context.Re;
 
 		//Apparent longitude of the Sun
 		Context.lambda_sun = Utils.trunc(Context.Lsun_true + Context.delta_psi - 0.005691611 / Context.Re);
@@ -125,6 +128,7 @@ public class Core {
 
 	public static void polaris() {
 		//Equatorial coordinates of Polaris at 2000.0 (mean equinox and equator 2000.0)
+		// Same as in Star.getStar("polaris")
 		double RApol0 = 37.95293333;
 		double DECpol0 = 89.26408889;
 
@@ -175,12 +179,13 @@ public class Core {
 	}
 
 	public static void starPos(String starName) {
+		//Read catalog
 		Star star = Star.getStar(starName);
 		if (star != null) {
-			//Read catalog
-			double RAstar0 = 15D * star.getRa();
+			//Read star in catalog
+			double RAstar0 = 15d * star.getRa();
 			double DECstar0 = star.getDec();
-			double dRAstar = 15D * star.getDeltaRa() / 3_600d;
+			double dRAstar = 15d * star.getDeltaRa() / 3_600d;
 			double dDECstar = star.getDeltaDec() / 3_600d;
 			double par = star.getPar() / 3_600d;
 
@@ -237,15 +242,16 @@ public class Core {
 			Context.GHAstar = Utils.trunc(Context.GHAAtrue - Math.toDegrees(RAstar2));
 			Context.SHAstar = Utils.trunc(360 - Math.toDegrees(RAstar2));
 			Context.DECstar = Math.toDegrees(DECstar2);
-		} else
+		} else {
 			System.out.println(starName + " not found in the catalog...");
+		}
 	}
 
 	public static String moonPhase() {
 		String quarter = "";
 		double x = Context.lambdaMapp - Context.lambda_sun;
 		x = Utils.trunc(x);
-		x = Math.round(10 * x) / 10; // Sort of rounded...
+		x = Math.round(10 * x) / 10; // Sort of rounded... OK...ish.
 		if (x == 0) {
 			quarter = " New";
 		}

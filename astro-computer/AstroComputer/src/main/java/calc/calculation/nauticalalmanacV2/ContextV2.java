@@ -25,5 +25,6 @@ public class ContextV2 {
 
 	public double GHAAtrue, Lsun_mean, Lsun_true, k_moon, k_venus, k_mars, k_jupiter, k_saturn;
 
+	public String starName = null;
 	public double GHAstar, SHAstar, DECstar;
 }

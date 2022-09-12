@@ -1,6 +1,7 @@
 package calc.calculation.nauticalalmanac;
 
 public class Star {
+
     private final static Star[] CATALOG = new Star[]{
             //       Name              Constellation pos            RA             Dec             deltaRA     deltaD  par
             new Star("Acamar", "theta Eridani", 2.9710266670, -40.3047138890, -0.3910, 1.9400, 0.0280),

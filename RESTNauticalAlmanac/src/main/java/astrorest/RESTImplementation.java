@@ -775,11 +775,19 @@ public class RESTImplementation {
 					List<AstroComputerV2.GP> starPositions = new ArrayList<>();
 					Arrays.asList(Star.getCatalog()).stream()
 							.forEach(star -> {
-								Core.starPos(star.getStarName());
-								starPositions.add(new AstroComputerV2.GP()
-									.name(star.getStarName()) // Also available star.getConstellation()
-									.gha(Context.GHAstar)
-									.decl(Context.DECstar));
+								if (false) { // Old implementation. TODO To be removed.
+									Core.starPos(star.getStarName());
+									starPositions.add(new AstroComputerV2.GP()
+											.name(star.getStarName()) // Also available star.getConstellation()
+											.gha(Context.GHAstar)
+											.decl(Context.DECstar));
+								} else {
+									acv2.starPos(star.getStarName());
+									starPositions.add(new AstroComputerV2.GP()
+											.name(star.getStarName()) // Also available star.getConstellation()
+											.gha(acv2.getStarGHA(star.getStarName()))
+											.decl(acv2.getStarDec(star.getStarName())));
+								}
 							});
 					data = data.stars(starPositions);
 				}
@@ -1608,13 +1616,17 @@ public class RESTImplementation {
 								lunar = acv2.getSaturnMoonDist();
 								break;
 							default: // Stars
-								// Warning: static !
-								Core.starPos(bodyName);
-								gha = Context.GHAstar;  // TODO All with Aries ?
-								decl = Context.DECstar;
 								hp = 0d;
 								sd = 0d;
-								lunar = Context.starMoonDist;
+//								// Warning: that one is static !
+//								Core.starPos(bodyName);
+//								gha = Context.GHAstar;
+//								decl = Context.DECstar;
+//								lunar = Context.starMoonDist;
+								acv2.starPos(bodyName);
+								gha = acv2.getStarGHA(bodyName);
+								decl = acv2.getStarDec(bodyName);
+								lunar = acv2.getStarMoonDist(bodyName);
 								break;
 						}
 

@@ -1,5 +1,8 @@
 package calc.calculation.nauticalalmanac;
 
+/**
+ * @Deprecated Use only in the context of {@link calc.calculation.AstroComputer}
+ */
 public class Context {
 	public final static double EPS0_2000 = 23.439291111; // Reference
 	// Global Variables
