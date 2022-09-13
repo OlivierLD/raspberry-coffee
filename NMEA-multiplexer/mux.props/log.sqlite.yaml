@@ -1,7 +1,7 @@
 #
 # This is an example for SQLite.
 #
-name: "NMEA, log replay, with SQLite"
+name: "NMEA, log replay, with SQLite forwarder"
 context:
   with.http.server: true
   http.port: 8888
@@ -18,12 +18,9 @@ context:
 channels:
   - type: file
     filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip
-    # mux.01.filename=./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
-    # mux.01.device.filters=
-    # mux.01.sentence.filters=~RMC, ~GLL
     zip: true
     path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
     verbose: false
 forwarders:
   - class: "nmea.forwarders.SQLitePublisher"
-    properties: sqlite.fwd.properties
+    properties: mux.props/sqlite.fwd.properties

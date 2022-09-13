@@ -297,7 +297,7 @@ public class AstroTests {
 
 		try {
 			AstroComputerV2 acv2 = new AstroComputerV2();
-			if (false) {
+			if (false) { // Skip calculate step. Should raise an exception
 				acv2.calculate(
 						current.get(Calendar.YEAR),
 						current.get(Calendar.MONTH) + 1,
@@ -377,6 +377,7 @@ public class AstroTests {
 	}
 
 	@Test
+	// Make sure V1 and V2 return the same values
 	public void compareV1V2() {
 		Date from = new Date(); // now
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -401,23 +402,27 @@ public class AstroTests {
 					current.get(Calendar.SECOND));
 
 			// Now, compare.
+			final Calendar calculationDateTime = acv2.getCalculationDateTime();
+			System.out.printf("Calculation done for %s\n", DURATION_FMT.format(calculationDateTime.getTime()));
 			// Sun & Aries
 			assertTrue("Sun GHA", acv2.getSunGHA() == AstroComputer.getSunGHA());
 			assertTrue("Aries GHA", acv2.getAriesGHA() == AstroComputer.getAriesGHA());
-			// Star
-			final String ALDEBARAN = "Aldebaran";
-			Core.starPos(ALDEBARAN);
-			// New version.
-			acv2.starPos(ALDEBARAN);
+			assertTrue("Sun-Moon dist", acv2.getLDist() == AstroComputer.getLDist());
 
-			assertTrue("Star GHA", acv2.getStarGHA(ALDEBARAN) == Context.GHAstar);
-			assertTrue("Star Decl", acv2.getStarDec(ALDEBARAN) == Context.DECstar);
-			assertTrue("Star Moon-Dist", acv2.getStarMoonDist(ALDEBARAN) == Context.starMoonDist);
+			// Star
+			final String THE_STAR = "Aldebaran";
+			Core.starPos(THE_STAR);
+			// New version.
+			acv2.starPos(THE_STAR);
+
+			assertTrue("Star GHA", acv2.getStarGHA(THE_STAR) == Context.GHAstar);
+			assertTrue("Star Decl", acv2.getStarDec(THE_STAR) == Context.DECstar);
+			assertTrue("Star Moon-Dist", acv2.getStarMoonDist(THE_STAR) == Context.starMoonDist);
 
 			// TODO More !
 
 		} catch (Exception ex) {
-
+			fail(ex.getMessage());
 		}
 	}
 }

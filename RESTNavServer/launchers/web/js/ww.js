@@ -5,7 +5,7 @@
  * and the REST APIs of the img service.
  * Displays faxes.
  *
- * TODO Move to ES6 Promise and Co.
+ * TODO Move to ES6 Promise and Co, instead of JQuery Deferred.
  */
 "use strict";
 
