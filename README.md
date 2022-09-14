@@ -8,7 +8,7 @@
 > - Navigation utilities (look into `raspberry-sailor`, `NMEA-multiplexer` and others)
 > 
 > Those two above can interact. For example, navigation software can use sensors.  
-> And again, this project is not limited to those two threads.
+> And again, this project is not limited to those two threads, by far.
 
 ---
 Main keywords:
