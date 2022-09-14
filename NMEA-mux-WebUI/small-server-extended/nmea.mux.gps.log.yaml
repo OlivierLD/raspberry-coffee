@@ -39,7 +39,7 @@ forwarders:
     timebase.filename: true
     filename.suffix: _LOG
     log.dir: logged
-    split: hour
+    split: day
     flush: true
   - type: tcp
     port: 7001

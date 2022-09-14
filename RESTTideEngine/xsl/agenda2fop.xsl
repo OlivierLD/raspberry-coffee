@@ -263,7 +263,7 @@
                        vertical-align="middle" horizontal-align="center">
                 <fo:block vertical-align="middle" padding="0.25mm" >
                   <xsl:choose>
-                    <xsl:when test="$data/@moon-phase = '01'">
+                    <xsl:when test="$data/@moon-phase = '01' or $data/@moon-phase = '00'">
                       <fo:external-graphic src="url('phase01.gif')"
                                  vertical-align="middle" horizontal-align="center"/>
                     </xsl:when>
@@ -371,7 +371,7 @@
                       <fo:external-graphic src="url('phase27.gif')"
                                  vertical-align="middle" horizontal-align="center"/>
                     </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '28'">
+                    <xsl:when test="$data/@moon-phase = '28' or $data/@moon-phase = '29'">
                       <fo:external-graphic src="url('phase28.gif')"
                                  vertical-align="middle" horizontal-align="center"/>
                     </xsl:when>
