@@ -25,8 +25,7 @@ public class LogScanner {
 		double minLat = Double.MAX_VALUE, maxLat = -Double.MAX_VALUE,
 						minLng = Double.MAX_VALUE, maxLng = -Double.MAX_VALUE;
 		String fileName = args[0];
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
 			String line;
 			long lineNum = 0L;
 			boolean go = true;
@@ -63,7 +62,7 @@ public class LogScanner {
 					lineNum++;
 				}
 			}
-			bufferedReader.close();
+//			bufferedReader.close();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

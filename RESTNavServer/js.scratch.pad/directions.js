@@ -14,10 +14,10 @@ if (Math.toDegrees === undefined) {
 
 let directionFinder = (x, y) => {
 
-    // TODO Replace with getDir in Utilities.js (atan2)
+    // Prefer getDir (atan2)
     
     let dir = 0.0;
-    if (y != 0) {
+    if (y !== 0) {
         dir = Math.toDegrees(Math.atan(x / y));
     }
     if (x <= 0 || y <= 0) {
@@ -60,18 +60,33 @@ let getDir = (x, y) => {
 let xArray = [-10, 0, 10];
 let yArray = [-10, 0, 10];
 
-xArray.forEach(x => {
-    yArray.forEach(y => {
-        let dir1 = directionFinder(x, y);
-        let dir2 = getDir(x, y);
-        console.log(`x:${x}, y:${y}: dir1:${dir1}, dir2:${dir2}. ${ (dir1 === dir2) ? "Good" : "BAAD!!" }`);
-    });
-});
+const BAD_ONLY = true;
+const OK_DELTA = 1e-10; // Set to 0 to get all the diffs.
+
 console.log("-----------------------------");
-for (let x=-10; x<=10; x++) {
-    for (let y=-10; y<=10; y++) {
-        let dir1 = directionFinder(x, y);
-        let dir2 = getDir(x, y);
-        console.log(`x:${x}, y:${y}: dir1:${dir1}, dir2:${dir2}. ${ (dir1 === dir2) ? "Good" : "BAAD!!" }`);
+if (false) {
+    xArray.forEach(x => {
+        yArray.forEach(y => {
+            let dir1 = directionFinder(x, y);
+            let dir2 = getDir(x, y);
+            let diff = Math.abs(dir2 - dir1);
+            if (!BAD_ONLY || (BAD_ONLY && dir2 !== dir1 && diff > OK_DELTA)) {
+                console.log(`x:${x}, y:${y}: dir1:${dir1}, dir2:${dir2}. ${ (dir1 === dir2) ? "Good" : "BAAD!! (diff:" + diff + ")" }`);
+            }
+        });
+    });
+    console.log("-----------------------------");
+}
+if (true) {
+    for (let x=-10; x<=10; x++) {
+        for (let y=-10; y<=10; y++) {
+            let dir1 = directionFinder(x, y);
+            let dir2 = getDir(x, y);
+            let diff = Math.abs(dir2 - dir1);
+            if (!BAD_ONLY || (BAD_ONLY && dir2 !== dir1 && diff > OK_DELTA)) {
+                console.log(`x:${x}, y:${y}: dir1:${dir1}, dir2:${dir2}. ${ (dir1 === dir2) ? "Good" : "BAAD!! (diff:" + diff + ")" }`);
+            }
+        }
     }
+    console.log("-----------------------------");
 }

@@ -181,7 +181,6 @@ public class LogAnalyzer {
 			}
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
-
 			// TODO Option to check chronology and continuity
 			BufferedWriter bw = new BufferedWriter(new FileWriter("stat.csv"));
 
@@ -202,7 +201,7 @@ public class LogAnalyzer {
 			long previousDate = -1L;
 			long statLineNo = 0;
 
-			bw.write("Idx;time (epoch);deltaT;deltaDist;deltaT(2);cog;sog\n");
+			bw.write("Idx;time (epoch);deltaT;deltaDist (km);deltaT(2);cog;sog (kn)\n");
 			statLineNo += 1;
 
 			long minLatIdx = -1,
@@ -326,15 +325,15 @@ public class LogAnalyzer {
 													distanceKm,
 													(statLineNo + 1),
 													statLineNo,
-													cog,
+													cog == -1 ? "": cog,
 													sog));
 											prevRMCTime = rmcTime;
 										} else {
-											bw.write(String.format("%d;%d;%d;;;%s;%s\n",
+											bw.write(String.format("%d;%d;%s;;;%s;%s\n",
 													(totalNbRec - 1),
 													rmcTime.getTime(),
-													(rmcTime.getTime() - previousDate),
-													cog,
+													previousDate != -1 ? String.format("%d", (rmcTime.getTime() - previousDate)) : "",
+													cog == -1 ? "": cog,
 													sog));
 										}
 										statLineNo += 1;

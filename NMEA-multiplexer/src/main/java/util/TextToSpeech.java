@@ -31,12 +31,13 @@ public class TextToSpeech {
 					commands.add("\"espeak -a 200 '" + text + "' --stdout | aplay\""); // No single quote in the message!!
 					commands.forEach(System.out::println); // Verbose
 					Process process = Runtime.getRuntime().exec(commands.toArray(new String[0]));
-					BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-					String line;
-					while ((line = in.readLine()) != null) {
-						System.out.println(line);
+					try (BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+						String line;
+						while ((line = in.readLine()) != null) {
+							System.out.println(line);
+						}
+//						in.close();
 					}
-					in.close();
 					break;
 				default:
 					throw new RuntimeException("No speech tool found in this os [" + osName + "]");

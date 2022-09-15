@@ -37,8 +37,8 @@ Then do the hydrostatic calculations.
   - Data to `STL` (rendered by many), `gcode`, etc. Done ✅.
     - See <https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Bezier>
       - Fill the script `SmallBoat.550.prms.scad` with the data you get when using the `scad` radio-button for the Bezier control points.
-        - _Note_: Make sure you use the dot (.) as decimal separator. If you are in French, the separator would be th comma (,),and OpenSCAD may not like it...
-    - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
+        - _Note_: Make sure you use the dot (`.`) as decimal separator. If you are in French, the separator would be th comma (`,`),and OpenSCAD may not like it...
+    - Look into the OpenSCAD's [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
 - Check the CC position...
 - **pdf / xsl-fop** output... with XY.png, XZ.png, etc.
