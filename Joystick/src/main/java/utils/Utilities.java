@@ -1,6 +1,7 @@
 package utils;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 
 /**
@@ -19,10 +20,12 @@ public class Utilities {
 		};
 
 		try {
-			DataOutputStream dos = new DataOutputStream(new FileOutputStream("sample.data.dat"));
+			File file = new File("sample.data.dat");
+			DataOutputStream dos = new DataOutputStream(new FileOutputStream(file));
 			dos.write(ba, 0, ba.length);
 			dos.flush();
 			dos.close();
+			System.out.println("Created " + file.getAbsolutePath());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

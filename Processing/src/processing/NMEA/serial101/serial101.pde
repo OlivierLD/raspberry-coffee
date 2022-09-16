@@ -6,7 +6,9 @@ void setup() {
   // List available ports
   printArray(Serial.list());
   // Trying /dev/tty.usbserial
-  serialPort = new Serial(this, "/dev/tty.usbserial", 4800);
+  String portName = "/dev/tty.usbmodem14242401";
+  // String portName = "/dev/tty.usbserial";
+  serialPort = new Serial(this, portName, 4800);
 }
 
 void draw() {

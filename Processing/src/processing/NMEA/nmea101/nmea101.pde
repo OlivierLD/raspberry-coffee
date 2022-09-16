@@ -42,21 +42,40 @@ import java.util.regex.PatternSyntaxException;
 
 Serial serialPort;
 
+/*
+A trick to find the Serial port to use:
+With the GPS **not** plugged in, type
+
+ $ ls -lisah /dev/tty* > before.txt
+
+Then connect the GPS on its USB socket
+
+ $ ls -lisah /dev/tty* > after.txt
+ $ diff before.txt after.txt
+   3a4,5
+   > 2589 0 crw-rw-rw-  1 root      wheel   18, 110 Nov 21 07:54 /dev/tty.usbmodem14101
+   > 2593 0 crw-rw-rw-  1 root      wheel   18, 112 Nov 21 07:54 /dev/tty.usbmodeme2df64a32
+ $
+ */
+
 void setup() {
   // List available ports
   printArray(Serial.list());
   // Trying one
-  serialPort = new Serial(this, "/dev/tty.usbmodem14101", 4800);
+  // serialPort = new Serial(this, "/dev/tty.usbmodem14101", 4800);
+  String portName = "/dev/tty.usbmodem14242401";
+  // String portName = "/dev/tty.usbserial";
+  serialPort = new Serial(this, portName, 4800);
 
   size(600, 400);
   stroke(255);
   noFill();
-  //PFont fontA = loadFont("Courier New");
-  //textFont(fontA, 72);
+  // PFont fontA = loadFont("Courier New");
+  // textFont(fontA, 72);
   textSize(72);
 }
 
-final boolean DEBUG = false;
+final boolean DEBUG = false;  // set to true for more output
 final char START_CHARACTER = '$';
 
 StringBuffer sb = new StringBuffer();
@@ -93,7 +112,7 @@ boolean validCheckSum(String data) {
 }
 
 double sexToDec(String degrees, String minutes)
-      throws RuntimeException {
+      /* throws RuntimeException */ {
   double deg = 0.0D;
   double min = 0.0D;
   double ret = 0.0D;
