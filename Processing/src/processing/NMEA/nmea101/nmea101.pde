@@ -4,6 +4,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+
+final boolean DEBUG = true;  // set to true for more output
+final boolean VERBOSE = false;  // set to true for more output
+
+final boolean USE_GLL = true;
+final boolean USE_RMC = true;
+
 /* Reads RMC & GLL sentences from a Serial GPS, and displays the position on the screen.
  *
  * Note: This is just a demo, there are many ways to optimize all this!
@@ -62,12 +69,13 @@ void setup() {
   // List available ports
   printArray(Serial.list());
   // Trying one
-  // serialPort = new Serial(this, "/dev/tty.usbmodem14101", 4800);
-  String portName = "/dev/tty.usbmodem14242401";
+  // String portName = "/dev/tty.usbmodem14242401";
   // String portName = "/dev/tty.usbserial";
+  // String portName = "/dev/ttyAMA0";
+  String portName = "/dev/ttyACM0";
   serialPort = new Serial(this, portName, 4800);
 
-  size(600, 400);
+  size(600, 800);
   stroke(255);
   noFill();
   // PFont fontA = loadFont("Courier New");
@@ -75,7 +83,6 @@ void setup() {
   textSize(72);
 }
 
-final boolean DEBUG = false;  // set to true for more output
 final char START_CHARACTER = '$';
 
 StringBuffer sb = new StringBuffer();
@@ -110,9 +117,8 @@ boolean validCheckSum(String data) {
   }
   return b;
 }
-
-double sexToDec(String degrees, String minutes)
-      /* throws RuntimeException */ {
+ //<>//
+double sexToDec(String degrees, String minutes) /* throws RuntimeException */ {
   double deg = 0.0D;
   double min = 0.0D;
   double ret = 0.0D;
@@ -124,24 +130,25 @@ double sexToDec(String degrees, String minutes)
   } catch (NumberFormatException nfe) {
     throw new RuntimeException("Bad number [" + degrees + "] [" + minutes + "]");
   }
-  return ret;
+  return ret; //<>//
 }
 
-enum DATA_TYPE {
-  LATITUDE, LONGITUDE
+enum DataType {
+  LATITUDE,  //<>//
+  LONGITUDE
 }
 
-String decToSex(double v, DATA_TYPE dataType) {
+String decToSex(double v, DataType dataType) {
   String s = "";
   double absVal = Math.abs(v);
   double intValue = Math.floor(absVal);
   double dec = absVal - intValue;
-  int i = (int) intValue; //<>//
-  dec *= 60D;
-  String sign = (v < 0 ? (dataType == DATA_TYPE.LATITUDE ? "S" : "W") : (dataType == DATA_TYPE.LATITUDE ? "N" : "E"));
+  int i = (int) intValue;
+  dec *= 60D; //<>//
+  String sign = (v < 0 ? (dataType == DataType.LATITUDE ? "S" : "W") : (dataType == DataType.LATITUDE ? "N" : "E"));
 
   s = String.format("%s %d\272%.02f'", sign, i, dec);
-  return s;
+  return s; //<>//
 }
 
 GeoPos position = null;
@@ -149,34 +156,33 @@ GeoPos position = null;
 // Following 2 patterns will be used to match the FIRST element of a sentence, before the first comma ','.
 static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
 static String GLL_PATTERN = "^\\$[A-Z]{2}GLL$";
-static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN); //<>//
+static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN);
 static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN);
 
 void draw() {
-  while (serialPort.available() > 0) { //<>//
+  while (serialPort.available() > 0) {
     int serialByte = serialPort.read();
     char currentChar = (char)serialByte;
-    if (DEBUG) {
+    if (VERBOSE) {
       println(String.format("%d 0x%02X %s", serialByte, serialByte, currentChar));
     }
     sb.append(currentChar);
-    if (currentChar == START_CHARACTER && DEBUG) {
+    if (currentChar == START_CHARACTER && VERBOSE) {
       println("\tStart of sentence detected");
     }
- //<>//
     //println(sb.toString());
 
     if (currentChar == '\n' && previousChar == '\r') {
-      String sentence = sb.toString(); //<>//
+      String sentence = sb.toString();
       if (DEBUG) {
-        println(String.format("Sentence detected: %s", sentence));
+        println(String.format("Sentence detected: %s", sentence.trim()));
       }
       if (validCheckSum(sentence)) {
         String[] data = sentence.substring(0, sentence.indexOf("*")).split(",");
         // TODO Make sure it is an RMC String, data[0] like '$GPRMC' (GP may vary)
         Matcher rmcMatcher = RMC_COMPILED_PATTERN.matcher(data[0]);
         Matcher gllMatcher = GLL_COMPILED_PATTERN.matcher(data[0]);
-        if (rmcMatcher.find()) {
+        if (USE_RMC && rmcMatcher.find()) {
           boolean valid = data[2].equals("A");  // Active
           if (valid) {
             if (data[3].length() > 0 && data[5].length() > 0) {
@@ -199,13 +205,21 @@ void draw() {
             background(0);
             fill(255);
             text("Position (RMC)", 5, 72);
-            text(decToSex(position.latitude, DATA_TYPE.LATITUDE), 5, 144);
-            text(decToSex(position.longitude, DATA_TYPE.LONGITUDE), 5, 216);
+            text(decToSex(position.latitude, DataType.LATITUDE), 5, 144);
+            text(decToSex(position.longitude, DataType.LONGITUDE), 5, 216);
+            // Display sentence
+            textSize(18);
+            text(sentence, 5, 288);
+            textSize(72);
           } else {
             println(String.format("%s not active yet.", sentence.trim()));
             text("RMC Not Active yet", 5, 72);
+            textSize(18);
+            text(sentence, 5, 270);
+            textSize(72);
           }
-        } else if (gllMatcher.find()) {
+        } /* else */ 
+        if (USE_GLL && gllMatcher.find()) {
           boolean valid = data[6].equals("A");  // Active
           if (valid) {
             if (data[1].length() > 0 && data[3].length() > 0) {
@@ -227,15 +241,24 @@ void draw() {
             }
             background(0);
             fill(255);
-            text("Position (GLL)", 5, 72);
-            text(decToSex(position.latitude, DATA_TYPE.LATITUDE), 5, 144);
-            text(decToSex(position.longitude, DATA_TYPE.LONGITUDE), 5, 216);
+            text("Position (GLL)", 5, 472);
+            text(decToSex(position.latitude, DataType.LATITUDE), 5, 544);
+            text(decToSex(position.longitude, DataType.LONGITUDE), 5, 616);
+            // Display sentence
+            textSize(18);
+            text(sentence, 5, 688);
+            textSize(72);
           } else {
             println(String.format("%s not active yet.", sentence.trim()));
-            text("GLL Not Active yet", 5, 144);
+            text("GLL Not Active yet", 5, 544);
+            textSize(18);
+            text(sentence, 5, 688);
+            textSize(72);
           }
         } else {
-          println(String.format("Dropping [%s], not RMC, not GLL (%s).", data[0], sentence.trim()));
+          if (VERBOSE) {
+            println(String.format("Dropping [%s], not RMC, not GLL (%s).", data[0], sentence.trim()));
+          }
         }
       } else {
         println(String.format("Invalid checksum for %s !", sentence));

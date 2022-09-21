@@ -11,6 +11,7 @@ int value = 0;
 int ADC_CHANNEL = MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 void setup() {
+  println(String.format("Java version: %s", System.getProperty("java.version")));
   size(400, 400); 
   stroke(255);
   noFill();
@@ -23,10 +24,11 @@ void setup() {
     Pin cs   = PinUtil.GPIOPin.GPIO_6.pin();
 
     // Default PINs, for diozero
-//  Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
-//  Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
-//  Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-//  Pin cs   = PinUtil.GPIOPin.GPIO_11.pin(); // Not good for RPi 4... use --cs:16 (16: BCM => wPi 27)
+    //Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
+    //Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
+    //Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+    ////Pin cs   = PinUtil.GPIOPin.GPIO_11.pin(); // Not good for RPi 4... use --cs:16 (16: BCM => wPi 27)
+    //Pin cs   = PinUtil.GPIOPin.GPIO_16.pin(); // Not good for RPi 4... use --cs:16 (16: BCM => wPi 27)
 
     // MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
     MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
