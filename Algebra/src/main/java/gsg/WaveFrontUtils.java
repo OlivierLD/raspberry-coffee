@@ -19,11 +19,9 @@ public class WaveFrontUtils {
             this.vertices = vertices;
             this.edges = edges;
         }
-
         public List<VectorUtils.Vector3D> getVertices() {
             return vertices;
         }
-
         public List<int[]> getEdges() {
             return edges;
         }

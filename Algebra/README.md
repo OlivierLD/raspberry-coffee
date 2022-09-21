@@ -8,7 +8,7 @@ Basic linear algebra (from the arabic [الجبر](https://en.wikipedia.org/wiki
 - Derivative
 - Standard deviation and others
 - Low pass filters
-- Bezier curves (in 2 & 3D)
+- Bezier curves (2 & 3D)
 - etc.
 
 ---
@@ -38,7 +38,7 @@ _Why should I learn a scripting language like Python if I already know a program
 There is no reason why Java should lag behind.
 And `HTML5/CSS3/ES6` should also be able to implement the same kind of features as well. 
 
-I'm not looking down on Python, it is popular for good reasons.
+I'm not looking down on Python, it is popular for obviously good reasons.
 
 We'll see.
 
