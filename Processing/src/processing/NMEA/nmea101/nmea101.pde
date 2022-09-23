@@ -3,6 +3,10 @@ import processing.serial.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.Map;
+import java.util.HashMap;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 
 final boolean DEBUG = true;  // set to true for more output
@@ -65,6 +69,15 @@ Then connect the GPS on its USB socket
  $
  */
 
+final static String[] MONTHS = {
+  "Jan", "Feb", "Mar",
+  "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep",
+  "Oct", "Nov", "Dec"
+};
+final static NumberFormat SEC_FMT = new DecimalFormat("00.00"); 
+final static int FONT_SIZE = 48;
+
 void setup() {
   // List available ports
   printArray(Serial.list());
@@ -75,12 +88,12 @@ void setup() {
   String portName = "/dev/ttyACM0";
   serialPort = new Serial(this, portName, 4800);
 
-  size(600, 800);
+  size(700, 800);
   stroke(255);
   noFill();
   // PFont fontA = loadFont("Courier New");
   // textFont(fontA, 72);
-  textSize(72);
+  textSize(FONT_SIZE);
 }
 
 final char START_CHARACTER = '$';
@@ -104,7 +117,7 @@ boolean validCheckSum(String data) {
   boolean b = false;
   try {
     int starIndex = sentence.indexOf("*");
-    if (starIndex < 0) {
+    if (starIndex < 0) { //<>//
       return false;
     }
     String csKey = sentence.substring(starIndex + 1);
@@ -121,7 +134,7 @@ boolean validCheckSum(String data) {
 double sexToDec(String degrees, String minutes) /* throws RuntimeException */ {
   double deg = 0.0D;
   double min = 0.0D;
-  double ret = 0.0D;
+  double ret = 0.0D; //<>//
   try {
     deg = Double.parseDouble(degrees);
     min = Double.parseDouble(minutes);
@@ -130,12 +143,12 @@ double sexToDec(String degrees, String minutes) /* throws RuntimeException */ {
   } catch (NumberFormatException nfe) {
     throw new RuntimeException("Bad number [" + degrees + "] [" + minutes + "]");
   }
-  return ret; //<>//
-}
+  return ret;
+} //<>//
 
 enum DataType {
-  LATITUDE,  //<>//
-  LONGITUDE
+  LATITUDE, 
+  LONGITUDE //<>//
 }
 
 String decToSex(double v, DataType dataType) {
@@ -144,11 +157,11 @@ String decToSex(double v, DataType dataType) {
   double intValue = Math.floor(absVal);
   double dec = absVal - intValue;
   int i = (int) intValue;
-  dec *= 60D; //<>//
+  dec *= 60D;
   String sign = (v < 0 ? (dataType == DataType.LATITUDE ? "S" : "W") : (dataType == DataType.LATITUDE ? "N" : "E"));
 
   s = String.format("%s %d\272%.02f'", sign, i, dec);
-  return s; //<>//
+  return s;
 }
 
 GeoPos position = null;
@@ -158,6 +171,8 @@ static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
 static String GLL_PATTERN = "^\\$[A-Z]{2}GLL$";
 static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN);
 static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN);
+
+Map<String, String> sentenceMap = new HashMap<>();
 
 void draw() {
   while (serialPort.available() > 0) {
@@ -173,16 +188,32 @@ void draw() {
     //println(sb.toString());
 
     if (currentChar == '\n' && previousChar == '\r') {
-      String sentence = sb.toString();
-      if (DEBUG) {
-        println(String.format("Sentence detected: %s", sentence.trim()));
-      }
+      String sentence = sb.toString(); //<>//
+      //if (DEBUG) {
+      //  println(String.format("Sentence detected: %s", sentence.trim()));
+      //}
+      background(0);
+      fill(255);
+      // textSize(18);
+      // text(sentence.trim(), 5, 20);
+      textSize(FONT_SIZE);
+      
       if (validCheckSum(sentence)) {
         String[] data = sentence.substring(0, sentence.indexOf("*")).split(",");
-        // TODO Make sure it is an RMC String, data[0] like '$GPRMC' (GP may vary)
+        sentenceMap.put(data[0].substring(3), sentence.trim()); // Only valid sentences go in the map
+        if (DEBUG) {
+          sentenceMap.forEach((k, v) -> println(String.format("%s => %s", k, v)));
+          println("--------------------");
+        }
+        
+        // Make sure it is an RMC String, data[0] like '$GPRMC' (GP may vary)
         Matcher rmcMatcher = RMC_COMPILED_PATTERN.matcher(data[0]);
         Matcher gllMatcher = GLL_COMPILED_PATTERN.matcher(data[0]);
-        if (USE_RMC && rmcMatcher.find()) {
+        String rmcSentence = sentenceMap.get("RMC");
+        if (rmcSentence != null) {
+          data = rmcSentence.substring(0, rmcSentence.indexOf("*")).split(",");
+        }
+        if (USE_RMC && (rmcMatcher.find() || rmcSentence != null)) {
           boolean valid = data[2].equals("A");  // Active
           if (valid) {
             if (data[3].length() > 0 && data[5].length() > 0) {
@@ -202,24 +233,51 @@ void draw() {
                 .latitude(l)
                 .longitude(g);
             }
-            background(0);
-            fill(255);
-            text("Position (RMC)", 5, 72);
-            text(decToSex(position.latitude, DataType.LATITUDE), 5, 144);
-            text(decToSex(position.longitude, DataType.LONGITUDE), 5, 216);
+            String dateTime = "";
+            if (data[1].length() >= 6 && data[9].length() == 6) { // Date-Time
+              try {
+                dateTime = "20" + data[9].substring(4) + "-" +                                // Year //<>//
+                           MONTHS[Integer.parseInt(data[9].substring(2, 4)) - 1] + "-" +      // Month
+                           data[9].substring(0, 2) + " " +                                    // Day
+                           data[1].substring(0, 2) + ":" +                                    // Hours
+                           data[1].substring(2, 4) + ":" +                                    // Minutes
+                           SEC_FMT.format(Double.parseDouble(data[1].substring(4))) + " UTC"; // seconds
+              } catch (Exception ex) {
+                println("--- err ---");
+                println("Month Val: " + data[9].substring(2, 4));
+                println("Sec Val: " + data[1].substring(4));
+                println("Sec Double: " + Double.parseDouble(data[1].substring(4)));
+                ex.printStackTrace();
+              }
+              // println(dateTime);                              
+            } else {
+              println("NO date time: " + data[1] + " " + data[9]);
+            }
+//            background(0);
+//            fill(255);
+            textSize(FONT_SIZE);
+            text("Position (RMC)", 5, 92);
+            text(decToSex(position.latitude, DataType.LATITUDE), 5, 164);
+            text(decToSex(position.longitude, DataType.LONGITUDE), 5, 236);
+            text("Date-Time (RMC)", 5, 308);
+            text(dateTime, 5, 380);
             // Display sentence
-            textSize(18);
-            text(sentence, 5, 288);
-            textSize(72);
+            // textSize(18);
+            // text(sentence, 5, 308);
+            // textSize(FONT_SIZE);
           } else {
             println(String.format("%s not active yet.", sentence.trim()));
-            text("RMC Not Active yet", 5, 72);
-            textSize(18);
-            text(sentence, 5, 270);
-            textSize(72);
+            text("RMC Not Active yet", 5, 92);
+            // textSize(18);
+            // text(sentence, 5, 290);
+            textSize(FONT_SIZE);
           }
-        } /* else */ 
-        if (USE_GLL && gllMatcher.find()) {
+        } /* else { */ 
+        String gllSentence = sentenceMap.get("GLL");
+        if (gllSentence != null) {
+          data = gllSentence.substring(0, gllSentence.indexOf("*")).split(",");
+        }
+        if (USE_GLL && (gllMatcher.find() || gllSentence != null)) {
           boolean valid = data[6].equals("A");  // Active
           if (valid) {
             if (data[1].length() > 0 && data[3].length() > 0) {
@@ -239,26 +297,30 @@ void draw() {
                 .latitude(l)
                 .longitude(g);
             }
-            background(0);
-            fill(255);
-            text("Position (GLL)", 5, 472);
-            text(decToSex(position.latitude, DataType.LATITUDE), 5, 544);
-            text(decToSex(position.longitude, DataType.LONGITUDE), 5, 616);
+            // background(0);
+            // fill(255);
+            text("Position (GLL)", 5, 492);
+            text(decToSex(position.latitude, DataType.LATITUDE), 5, 564);
+            text(decToSex(position.longitude, DataType.LONGITUDE), 5, 636);
             // Display sentence
-            textSize(18);
-            text(sentence, 5, 688);
-            textSize(72);
+            // textSize(18);
+            // text(sentence, 5, 688);
+            // textSize(FONT_SIZE);
           } else {
             println(String.format("%s not active yet.", sentence.trim()));
             text("GLL Not Active yet", 5, 544);
-            textSize(18);
-            text(sentence, 5, 688);
-            textSize(72);
+            // textSize(18);
+            // text(sentence, 5, 698);
+            textSize(FONT_SIZE);
           }
-        } else {
+        } /* else { */
+        if (!rmcMatcher.find() && !gllMatcher.find()) {
           if (VERBOSE) {
             println(String.format("Dropping [%s], not RMC, not GLL (%s).", data[0], sentence.trim()));
           }
+          // textSize(18);
+          // text(sentence.trim(), 5, 40);
+          textSize(FONT_SIZE);
         }
       } else {
         println(String.format("Invalid checksum for %s !", sentence));
