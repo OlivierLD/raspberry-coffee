@@ -80,7 +80,9 @@ final static int FONT_SIZE = 24;
 
 void setup() {
   // List available ports
+  println("-- Serial Ports --");
   printArray(Serial.list());
+  println("------------------");
   // Trying one
   // String portName = "/dev/tty.usbmodem14242401";
   // String portName = "/dev/tty.usbserial";
