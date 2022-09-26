@@ -9,8 +9,8 @@ import java.text.NumberFormat;
 import java.text.DecimalFormat;
 
 
-final boolean DEBUG = false;  // set to true for more output
-final boolean VERBOSE = false;  // set to true for more output
+final boolean DEBUG = false;   // set to true for more output
+final boolean VERBOSE = false; // set to true for more output
 
 final boolean USE_GLL = true;
 final boolean USE_RMC = true;
@@ -90,13 +90,10 @@ void setup() {
 /* 
   // Moved to settings() (see https://processing.org/reference/size_.html)
   int height = 10 * FONT_SIZE;
-  println("Setting screen height to " + height);
   size(700, height);
   */
   stroke(255);
   noFill();
-  // PFont fontA = loadFont("Courier New");
-  // textFont(fontA, 72);
   textSize(FONT_SIZE); 
 }
 
@@ -117,7 +114,7 @@ int calculateCheckSum(String str) {
   for (int i = 0; i < ca.length; i++) {
     cs ^= ca[i]; // XOR
 //  System.out.println("\tCS[" + i + "] (" + ca[i] + "):" + Integer.toHexString(cs));
-  } //<>//
+  }
   return cs;
 }
 
@@ -130,33 +127,33 @@ boolean validCheckSum(String data) {
     if (starIndex < 0) {
       return false;
     }
-    String csKey = sentence.substring(starIndex + 1); //<>//
+    String csKey = sentence.substring(starIndex + 1);
     int csk = Integer.parseInt(csKey, 16);
     String str2validate = sentence.substring(1, sentence.indexOf("*"));
     int calcCheckSum = calculateCheckSum(str2validate);
-    b = (calcCheckSum == csk); //<>//
+    b = (calcCheckSum == csk);
   } catch (Exception ex) {
     ex.printStackTrace();
   }
   return b;
-}
+} //<>//
 
 double sexToDec(String degrees, String minutes) /* throws RuntimeException */ {
   double deg = 0.0D;
   double min = 0.0D;
-  double ret = 0.0D; //<>//
+  double ret = 0.0D;
   try {
     deg = Double.parseDouble(degrees);
     min = Double.parseDouble(minutes);
-    min *= (10.0 / 6.0); //<>//
+    min *= (10.0 / 6.0);
     ret = deg + min / 100D;
   } catch (NumberFormatException nfe) {
     throw new RuntimeException("Bad number [" + degrees + "] [" + minutes + "]");
-  }
+  } //<>//
   return ret;
 }
 
-enum DataType {
+enum DataType { //<>//
   LATITUDE, 
   LONGITUDE
 }
@@ -166,36 +163,28 @@ String decToSex(double v, DataType dataType) {
   double absVal = Math.abs(v);
   double intValue = Math.floor(absVal);
   double dec = absVal - intValue;
-  int i = (int) intValue;
+  int i = (int) intValue; //<>//
   dec *= 60D;
   String sign = (v < 0 ? (dataType == DataType.LATITUDE ? "S" : "W") : (dataType == DataType.LATITUDE ? "N" : "E"));
 
-  s = String.format("%s %d\272%.02f'", sign, i, dec);
+  s = String.format("%s %d\272%.02f'", sign, i, dec); //<>//
   return s;
 }
 
 GeoPos position = null;
-// RegEx cheat-sheet at https://www.rexegg.com/regex-quickstart.html
-// Following 2 patterns will be used to match the FIRST element of a sentence, before the first comma ','.
-static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
-static String GLL_PATTERN = "^\\$[A-Z]{2}GLL$";
-static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN);
-static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN);
-
 Map<String, String> sentenceMap = new HashMap<>();
 
 void draw() {
   while (serialPort.available() > 0) {
     int serialByte = serialPort.read();
     char currentChar = (char)serialByte;
-    if (VERBOSE) { //<>//
+    if (VERBOSE) {
       println(String.format("%d 0x%02X %s", serialByte, serialByte, currentChar));
     }
     sb.append(currentChar);
     if (currentChar == START_CHARACTER && VERBOSE) {
       println("\tStart of sentence detected");
     }
-    //println(sb.toString());
 
     if (currentChar == '\n' && previousChar == '\r') {
       String sentence = sb.toString();
@@ -204,8 +193,6 @@ void draw() {
       }
       background(0);
       fill(255);
-      // textSize(18);
-      // text(sentence.trim(), 5, 20);
       textSize(FONT_SIZE);
       
       int yTextPos = 0;
@@ -218,15 +205,12 @@ void draw() {
           println("--------------------");
         }
         
-        // Make sure it is an RMC String, data[0] like '$GPRMC' (GP may vary)
-        Matcher rmcMatcher = RMC_COMPILED_PATTERN.matcher(data[0]);
-        Matcher gllMatcher = GLL_COMPILED_PATTERN.matcher(data[0]);
         String rmcSentence = sentenceMap.get("RMC");
         if (rmcSentence != null) {
           // println("RMC Sentence:" + rmcSentence);
           data = rmcSentence.substring(0, rmcSentence.indexOf("*")).split(",");
         }
-        if (USE_RMC && (/*rmcMatcher.find() ||*/ rmcSentence != null)) {
+        if (USE_RMC && rmcSentence != null) {
           boolean valid = data[2].equals("A");  // Active
           if (valid) {
             try {
@@ -254,7 +238,7 @@ void draw() {
             String dateTime = "";
             if (data[1].length() >= 6 && data[9].length() == 6) { // Date-Time
               try {
-                dateTime = "20" + data[9].substring(4) + "-" +                                // Year //<>//
+                dateTime = "20" + data[9].substring(4) + "-" +                                // Year
                            MONTHS[Integer.parseInt(data[9].substring(2, 4)) - 1] + "-" +      // Month
                            data[9].substring(0, 2) + " " +                                    // Day
                            data[1].substring(0, 2) + ":" +                                    // Hours
@@ -267,12 +251,9 @@ void draw() {
                 println("Sec Double: " + Double.parseDouble(data[1].substring(4)));
                 ex.printStackTrace();
               }
-              // println(dateTime);                              
             } else {
               println("NO date time: " + data[1] + " " + data[9]);
             }
-//            background(0);
-//            fill(255);
             textSize(FONT_SIZE);
             yTextPos += FONT_SIZE;
             text("Position (RMC)", 5, yTextPos);
@@ -284,24 +265,18 @@ void draw() {
             text("Date-Time (RMC)", 5, yTextPos);
             yTextPos += FONT_SIZE;
             text(dateTime, 5, yTextPos);
-            // Display sentence
-            // textSize(18);
-            // text(sentence, 5, 308);
-            // textSize(FONT_SIZE);
           } else {
             println(String.format("%s not active yet.", sentence.trim()));
             yTextPos += FONT_SIZE;
             text("RMC Not Active yet", 5, yTextPos);
-            // textSize(18);
-            // text(sentence, 5, 290);
             textSize(FONT_SIZE);
           }
-        } /* else { */ 
+        } 
         String gllSentence = sentenceMap.get("GLL");
         if (gllSentence != null) {
           data = gllSentence.substring(0, gllSentence.indexOf("*")).split(",");
         }
-        if (USE_GLL && (/*gllMatcher.find() ||*/ gllSentence != null)) {
+        if (USE_GLL && gllSentence != null) {
           boolean valid = data[6].equals("A");  // Active
           if (valid) {
             try {
@@ -326,8 +301,6 @@ void draw() {
               println("-- err (1) processing " + gllSentence);
               ex.printStackTrace();
             }
-            // background(0);
-            // fill(255);
             if (yTextPos > 0) {
               yTextPos += FONT_SIZE;
             }
@@ -337,26 +310,12 @@ void draw() {
             text(decToSex(position.latitude, DataType.LATITUDE), 5, yTextPos);
             yTextPos += FONT_SIZE;
             text(decToSex(position.longitude, DataType.LONGITUDE), 5, yTextPos);
-            // Display sentence
-            // textSize(18);
-            // text(sentence, 5, 688);
-            // textSize(FONT_SIZE);
           } else {
             println(String.format("%s not active yet.", sentence.trim()));
             yTextPos += FONT_SIZE;
             text("GLL Not Active yet", 5, yTextPos);
-            // textSize(18);
-            // text(sentence, 5, 698);
             textSize(FONT_SIZE);
           }
-        } /* else { */
-        if (!rmcMatcher.find() && !gllMatcher.find()) {
-          if (VERBOSE) {
-            println(String.format("Dropping [%s], not RMC, not GLL (%s).", data[0], sentence.trim()));
-          }
-          // textSize(18);
-          // text(sentence.trim(), 5, 40);
-          textSize(FONT_SIZE);
         }
       } else {
         println(String.format("Invalid checksum for [%s] !", sentence.trim()));
