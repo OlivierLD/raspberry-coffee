@@ -1,5 +1,5 @@
 # REST Tx (transformer)
-A playground for an XML/XSD/XSL experiment...
+A playground for an `XML`/`XSD`/`XSL` experiment...
 
 Here is a first scenario:
 1. From a Web UI, paste an XML Schema Definition in a text area
@@ -10,9 +10,9 @@ Here is a first scenario:
 1. The corresponding XSL Stylesheet is generated, and returned to the user
 
 
-> Note: apply an XSL StyleSheet from the command line:
+> _Note_: to apply an XSL StyleSheet from the command line:
 >
-> Use oracle.xml.parser.v2.oraxsl.class, see <https://docs.oracle.com/cd/B10501_01/appdev.920/a96616/arxml04.htm>
+> Use `oracle.xml.parser.v2.oraxsl.class`  (see <https://docs.oracle.com/cd/B10501_01/appdev.920/a96616/arxml04.htm>)  
 > like this:
 ```
 $ java -cp build/libs/REST-Tx-1.0-all.jar oracle.xml.parser.v2.oraxsl
@@ -33,9 +33,10 @@ oraxsl: Number of arguments specified (0) is illegal
              -debug                      Debug mode
  Please refer to the readme file for more information on the above options 
 ```
-Example:
+_**Example**_:  
+Turn an XML document into json using XSLT:
 ```
-$ java -cp build/libs/REST-Tx-1.0-all.jar oracle.xml.parser.v2.oraxsl /.../xml/sample.invoice.xml /.../xml/xml2json.xsl | jq
+$ java -cp build/libs/REST-Tx-1.0-all.jar oracle.xml.parser.v2.oraxsl <...>/xml/sample.invoice.xml <...>/xml/xml2json.xsl | jq
 ```
 
 ```json

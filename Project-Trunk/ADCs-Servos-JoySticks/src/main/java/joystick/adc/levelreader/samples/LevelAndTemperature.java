@@ -39,8 +39,9 @@ public class LevelAndTemperature implements LevelListenerInterface {
 			if (webSocketClient != null) {
 				System.out.println("Sending " + obj.toString());
 				webSocketClient.send(obj.toString());
-			} else
+			} else {
 				System.out.println("No websocket client (for level)");
+			}
 		}
 	}
 
@@ -65,24 +66,24 @@ public class LevelAndTemperature implements LevelListenerInterface {
 					while (headers.hasNext()) {
 						String h = headers.next();
 						System.out.println(h + " : " + serverHandshake.getFieldValue(h));
-            /*
-            if (h.equalsIgnoreCase("Sec-WebSocket-Accept"))
-            {
-              try
-              {
-                ByteArrayInputStream bais = new ByteArrayInputStream(serverHandshake.getFieldValue(h).getBytes("UTF-8"));
-                byte[] buf = new BASE64Decoder().decodeBuffer(bais);
-                System.out.print("Server Key:"); //  + new String(buf));
-                for (int i=0; i<buf.length; i++)
-                  System.out.print("[" + lpad(Integer.toHexString(buf[i] & 0xFF), "0", 2) + "]");
-                System.out.println();
-              }
-              catch (Exception ex)
-              {
-                ex.printStackTrace();
-              }
-            }
-            */
+						/*
+						if (h.equalsIgnoreCase("Sec-WebSocket-Accept"))
+						{
+						  try
+						  {
+							ByteArrayInputStream bais = new ByteArrayInputStream(serverHandshake.getFieldValue(h).getBytes("UTF-8"));
+							byte[] buf = new BASE64Decoder().decodeBuffer(bais);
+							System.out.print("Server Key:"); //  + new String(buf));
+							for (int i=0; i<buf.length; i++)
+							  System.out.print("[" + lpad(Integer.toHexString(buf[i] & 0xFF), "0", 2) + "]");
+							System.out.println();
+						  }
+						  catch (Exception ex)
+						  {
+							ex.printStackTrace();
+						  }
+						}
+						*/
 					}
 				}
 

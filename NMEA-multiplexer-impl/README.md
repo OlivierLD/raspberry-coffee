@@ -1,5 +1,5 @@
 # NMEA-multiplexer's Web Implementation Basics (and beyond)
-This module is one illustration of what can be done on top of the `NMEA-multiplexer`.  
+This module is one illustration of what can be done from  Web client, on top of the `NMEA-multiplexer`.  
 This includes the way to start the Multiplexer (through its configuration file), and the way to reach the data to 
 display on a web page.
 

@@ -49,8 +49,7 @@ public class SevenADCChannels {
 		for (int i = 0; i < smoothedChannel.length; i++)
 			smoothedChannel[i] = new ArrayList<Integer>(WINDOW_WIDTH);
 
-		channel = new MCPReader.MCP3008InputChannels[]
-				{
+		channel = new MCPReader.MCP3008InputChannels[] {
 						MCPReader.MCP3008InputChannels.CH0,
 						MCPReader.MCP3008InputChannels.CH1,
 						MCPReader.MCP3008InputChannels.CH2,
@@ -75,19 +74,20 @@ public class SevenADCChannels {
 					while (smoothedChannel[ch].size() > WINDOW_WIDTH) smoothedChannel[ch].remove(0);
 					smoothedChannelVolumes[ch] = smooth(ch);
 
-					if (DEBUG) // A table, with ansi box-drawing characters. Channel, volume, value.
-					{
+					if (DEBUG) { // A table, with ansi box-drawing characters. Channel, volume, value.
 						if (false) {
 							System.out.println("readAdc:" + Integer.toString(newValue) +
 									" (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
 									", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ")");
 							String output = "";
-							for (int chan = 0; chan < channel.length; chan++)
+							for (int chan = 0; chan < channel.length; chan++) {
 								output += (channelVolumes[chan] > WATER_THRESHOLD ? "*" : " ");
+							}
 							output += " || ";
-							for (int chan = 0; chan < channel.length; chan++)
+							for (int chan = 0; chan < channel.length; chan++) {
 								//           output += "Ch " + Integer.toString(chan) + ":" + lpad(Integer.toString(channelValues[chan]), " ", 3) + "%" + (chan != (channel.length - 1)?", ":"");
 								output += (Integer.toString(chan) + ":" + StringUtils.lpad(Integer.toString(channelVolumes[chan]), 4, " ") + (chan != (channel.length - 1) ? " | " : " |"));
+							}
 							System.out.println(output);
 						}
 						// Clear the screen, cursor on top left.
@@ -113,12 +113,13 @@ public class SevenADCChannels {
 									StringUtils.lpad(DF3.format(channelVolumes[chan]), 3, " ") + (ansiBox ? " % \u2503 " : " % | ") +
 									StringUtils.lpad(DF4.format(channelValues[chan]), 4, " ") + (ansiBox ? " \u2551" : " |");
 
-							if (smoothedChannelVolumes[chan] > WATER_THRESHOLD)
+							if (smoothedChannelVolumes[chan] > WATER_THRESHOLD) {
 								str += " Water (~ " + DF33.format(smoothedChannelVolumes[chan]) + ")                 ";
-							else if (smoothedChannelVolumes[chan] > OIL_THRESHOLD)
+							} else if (smoothedChannelVolumes[chan] > OIL_THRESHOLD) {
 								str += " Oil   (~ " + DF33.format(smoothedChannelVolumes[chan]) + ")                 ";
-							else
+							} else {
 								str += " Air   (~ " + DF33.format(smoothedChannelVolumes[chan]) + ")                 ";
+							}
 							AnsiConsole.out.println(str);
 						}
 						str = (ansiBox ? "\u255a\u2550\u2550\u2550\u2567\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2567\u2550\u2550\u2550\u2550\u2550\u2550\u255d" :
@@ -128,16 +129,18 @@ public class SevenADCChannels {
 
 					int maxLevel = 0;
 					for (int chan = 0; chan < channel.length; chan++) {
-						if (channelVolumes[chan] > WATER_THRESHOLD)
+						if (channelVolumes[chan] > WATER_THRESHOLD) {
 							maxLevel = Math.max(chan + 1, maxLevel);
+						}
 					}
 					if (maxLevel != currentLevel) {
 						System.out.print("Level : " + maxLevel + " ");
 						for (int i = 0; i < channel.length; i++) {
-							if (i < maxLevel)
+							if (i < maxLevel) {
 								System.out.print(">>");
-							else
+							} else {
 								System.out.print("  ");
+							}
 						}
 						System.out.println();
 						currentLevel = maxLevel;
@@ -160,16 +163,17 @@ public class SevenADCChannels {
 
 	private void quit() {
 		System.out.println("Stop observing.");
-		if (obs != null)
+		if (obs != null) {
 			obs.stop();
+		}
 	}
 
 	private float smooth(int ch) {
 		float size = smoothedChannel[ch].size();
 		float sigma = 0;
-		for (int v : smoothedChannel[ch])
+		for (int v : smoothedChannel[ch]) {
 			sigma += v;
-
+		}
 		return sigma / size;
 	}
 

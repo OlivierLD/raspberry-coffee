@@ -33,8 +33,9 @@ public class ADCChannels_1_to_8 {
 		obs = new ADCObserver(channel);
 		channelValues = new int[channel.length];
 		channelVolumes = new int[channel.length];
-		for (int i = 0; i < channel.length; i++)
+		for (int i = 0; i < channel.length; i++) {
 			channelValues[i] = channelVolumes[i] = 0;
+		}
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
@@ -43,18 +44,19 @@ public class ADCChannels_1_to_8 {
 				int volume = (int) (newValue / 10.23);
 				channelValues[ch] = newValue;
 				channelVolumes[ch] = volume;
-				if (DEBUG) // A table, with ansi box-drawing characters. Channel, volume (%), value.
-				{
+				if (DEBUG) { // A table, with ansi box-drawing characters. Channel, volume (%), value.
 					if (false) {
 						System.out.println("readAdc:" + Integer.toString(newValue) +
 								" (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
 								", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ")");
 						String output = "";
-						for (int chan = 0; chan < channel.length; chan++)
+						for (int chan = 0; chan < channel.length; chan++) {
 							output += (channelVolumes[chan] > THRESHOLD ? "*" : " ");
+						}
 						output += " || ";
-						for (int chan = 0; chan < channel.length; chan++)
+						for (int chan = 0; chan < channel.length; chan++) {
 							output += (Integer.toString(chan) + ":" + StringUtils.lpad(Integer.toString(channelVolumes[chan]), 4, " ") + (chan != (channel.length - 1) ? " | " : " |"));
+						}
 						System.out.println(output);
 					}
 					AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
@@ -78,18 +80,21 @@ public class ADCChannels_1_to_8 {
 
 				int maxLevel = 0;
 				for (int chan = 0; chan < channel.length; chan++) {
-					if (channelVolumes[chan] > THRESHOLD)
+					if (channelVolumes[chan] > THRESHOLD) {
 						maxLevel = Math.max(chan + 1, maxLevel);
+					}
 				}
 				if (maxLevel != currentLevel) {
 					System.out.print("Level : " + maxLevel + " ");
-					for (int i = 0; i < maxLevel; i++)
+					for (int i = 0; i < maxLevel; i++) {
 						System.out.print(">>");
+					}
 					System.out.println();
 					currentLevel = maxLevel;
 
-					if (lli != null)
+					if (lli != null) {
 						lli.setLevel(currentLevel);
+					}
 				}
 			}
 		});
@@ -106,8 +111,9 @@ public class ADCChannels_1_to_8 {
 
 	public void quit() {
 		System.out.println("Stop observing.");
-		if (obs != null)
+		if (obs != null) {
 			obs.stop();
+		}
 	}
 
 	/**

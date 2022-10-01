@@ -25,12 +25,13 @@ public class LelandPrototype implements AirWaterOilInterface {
 
 	private static String materialToString(SevenADCChannelsManager.Material material) {
 		String s = "UNKNOWN";
-		if (material == SevenADCChannelsManager.Material.AIR)
+		if (material == SevenADCChannelsManager.Material.AIR) {
 			s = "Air";
-		else if (material == SevenADCChannelsManager.Material.WATER)
+		} else if (material == SevenADCChannelsManager.Material.WATER) {
 			s = "Water";
-		else if (material == SevenADCChannelsManager.Material.OIL)
+		} else if (material == SevenADCChannelsManager.Material.OIL) {
 			s = "Oil";
+		}
 		return s;
 	}
 

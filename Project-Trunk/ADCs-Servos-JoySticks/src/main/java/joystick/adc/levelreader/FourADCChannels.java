@@ -14,8 +14,7 @@ public class FourADCChannels {
 	private final int[] calibrationValues = new int[]{-1, -1, -1, -1};
 
 	public FourADCChannels() throws Exception {
-		channel = new MCPReader.MCP3008InputChannels[]
-				{
+		channel = new MCPReader.MCP3008InputChannels[] {
 						MCPReader.MCP3008InputChannels.CH0,
 						MCPReader.MCP3008InputChannels.CH1,
 						MCPReader.MCP3008InputChannels.CH2,
@@ -30,22 +29,25 @@ public class FourADCChannels {
 				{
 					int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 					int ch = inputChannel.ch();
-					if (calibrationValues[ch] == -1)
+					if (calibrationValues[ch] == -1) {
 						calibrationValues[ch] = volume;
-					else {
+					} else {
 						//           channelValues[ch] = newValue;
 						channelValues[ch] = volume;
-						if (DEBUG)
+						if (DEBUG) {
 							System.out.println("readAdc:" + Integer.toString(newValue) +
 									" (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
 									", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ")");
+						}
 						String output = "";
-						for (int chan = 0; chan < channel.length; chan++)
+						for (int chan = 0; chan < channel.length; chan++) {
 							output += (channelValues[chan] != calibrationValues[chan] ? "*" : " ");
+						}
 						output += " || ";
-						for (int chan = 0; chan < channel.length; chan++)
+						for (int chan = 0; chan < channel.length; chan++) {
 							//           output += "Ch " + Integer.toString(chan) + ":" + lpad(Integer.toString(channelValues[chan]), " ", 3) + "%" + (chan != (channel.length - 1)?", ":"");
 							output += (Integer.toString(chan) + ":" + StringUtils.lpad(Integer.toString(channelValues[chan]), 4, " ") + (chan != (channel.length - 1) ? " | " : " |"));
+						}
 						System.out.println(output);
 					}
 				}
@@ -54,8 +56,9 @@ public class FourADCChannels {
 		obs.start();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-				if (obs != null)
+				if (obs != null) {
 					obs.stop();
+				}
 			}, "Shutdown Hook"));
 	}
 
