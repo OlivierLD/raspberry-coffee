@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-    Basic test.
+    Basic test, with a WebComponent to display the tide curve
     Requires a Web Server to avoid CORS errors.
     node JS does the job, for example, do a
     $ node server.js
@@ -8,13 +8,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Basic02</title>
+    <title>Basic04</title>
     <style type="text/css">
         * {
             font-family:'Courier New', Courier, monospace;
         }
     </style>
     <link rel="icon" type="image/ico" href="./wave.02.jpeg">
+
     <script type="module">
     import * as tideEngine from './tideEngine.js';
     
@@ -174,9 +175,84 @@
           tableContent += "</pre>";
           table.innerHTML = tableContent;
           document.getElementById('messages').innerText = "";
+
+          // Draw the graph.
+          let graph = document.getElementById("tide-graph-01");
+          let x = [];
+          let y = [];
+          let minX = NaN;
+          let maxX = NaN;
+          let minY = NaN;
+          let maxY = NaN;
+          let origin = NaN;
+          tideData.forEach(td => {
+            let X = td.at.getTime() / 1000; // hours in sesonds.
+            if (isNaN(origin)) {
+                origin = X;
+            }
+            X -= origin; // 86400: 24 h
+            X /= 3600; // In hours
+            // console.log(`X:${X}`);
+            let Y = td.wh;
+            minX = isNaN(minX) ? X : Math.min(minX, X);
+            maxX = isNaN(maxX) ? X : Math.max(maxX, X);
+            minY = isNaN(minY) ? Y : Math.min(minY, Y);
+            maxY = isNaN(maxY) ? Y : Math.max(maxY, Y);
+            x.push(X);
+            y.push(Y);
+          });
+          minY -= 0.2; // Slack below
+          maxY += 0.2; // Slack above
+          let currentDate = ((new Date(now).getTime() / 1000) - origin) / 3600; // in hours
+          // console.log(`Now:${currentDate}`);
+          let graphData = {
+            withGrid: true,
+            withXLabels: false,
+            withYLabels: true,
+            thickX: null,
+            thickY: null,  // number or array n numbers, like 10, or [0, 5, 10]
+            minX: minX,
+            maxX: maxX,
+            minY: minY,
+            maxY: maxY,
+            data: [{ // Curve
+                    name: 'Water Heights',
+                    lineColor: 'orange',
+                    fillColor: 'rgba(0, 255, 0, 0.35)', // With gradient ?
+                    thickness: 3,
+                    x: x,
+                    values: y // Same cardinality as x
+                }, 
+                { // Base Height
+                name: "Base height",
+                lineColor: 'red',
+                fillColor: null,
+                thickness: 2,
+                x: [minX, maxX],
+                values: [ station.baseHeight, station.baseHeight] 
+                },
+                { // Now
+                    name: "Now",
+                    lineColor: 'white',
+                    fillColor: null,
+                    thickness: 2,
+                    x: [ currentDate, currentDate ],
+                    values: [ minY, maxY ]
+                }
+            ]
+          };
+          graph.data = graphData;
+          graph.label = `WH at ${dateFmt.formatDate(new Date(now), 'd-M-y H:i')}, ${wh.toFixed(2)} ${station.displayUnit}`;
+          graph.repaint();
        } else {
           console.log(`${location} NOT found.`);
           document.getElementById('messages').innerText = `${location} NOT found.`;
+          let table = document.getElementById('tide-table');
+          table.innerHTML = '';
+          let graph = document.getElementById("tide-graph-01");
+          graph.data = null;
+          graph.label = '';
+          graph.repaint();
        }
     }
     // Expose it to the page (we are in a module)!!
@@ -185,26 +261,44 @@
     console.log("Done");
     
     </script>
+    
+    <script type="module" src="./webcomponents/GraphDisplay.js"></script>
+
 </head>
 <body>
-    <h1>ES6 TideEngine - Basic test - 2. <img src="./wave.02.jpeg" style="height: 38px; width: auto; vertical-align: middle;"></h1>
+    <h1>ES6 TideEngine - Basic test - 4. <img src="./wave.02.jpeg" style="height: 38px; width: auto; vertical-align: middle;"></h1>
     <small style="margin: 10px;">All in JavaScript, all computing done on the client side.</small>
     <div id="nb-stats" style="margin: 10px;"></div>
     <hr/>
     <i>Check the console for errors...</i>
     <hr/>
-    <div style="display: grid; grid-template-areas: '1-one 1-two 1-three' '2-one 2-two 2-three';">
+    <div style="display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto; grid-template-areas: 'oneone onetwo onethree' 'twoone twotwo twothree';">
         <!--  Enter your station name -->
-        <span style="grid-area: 1-one;">Enter the station name (at least a part of it, case-insensitive):</span> 
-        <input style="grid-area: 1-two;" type="text" id="station-name" placeholder="Station Name">
-        <button style="grid-area: 1-three;" onclick="doYourJob(1);" title="Click to compute">Click!</button>
+        <span style="grid-area: oneone;">Enter the station name (at least a part of it, case-insensitive):</span> 
+        <input style="grid-area: onetwo; align-self: start;" type="text" id="station-name" placeholder="Station Name">
+        <button style="grid-area: onethree; align-self: start;" onclick="doYourJob(1);" title="Click to compute">Click!</button>
         <!-- Choose in the list -->
-        <span style="grid-area: 2-one;"><i><b>Or</b></i> choose your station in the list:</span>
-        <select style="grid-area: 2-two;" id="station-list"></select>
-        <button style="grid-area: 2-three;" onclick="doYourJob(2);" title="Click to compute">Click!</button>
+        <span style="grid-area: twoone;"><i><b>Or</b></i> choose your station in the list:</span>
+        <select style="grid-area: twotwo; align-self: start;" id="station-list"></select>
+        <button style="grid-area: twothree; align-self: start;" onclick="doYourJob(2);" title="Click to compute">Click!</button>
     </div>
     <div id="result" style="margin-top: 10px;"></div>
-    <div id="tide-table"></div>
+    <!--div id="tide-table"></div-->
+    <div id="tide-table" style="max-height: 200px; overflow-y: scroll;"></div>
+    <hr/>
+    <div id="generated-graph">
+        <graph-display id="tide-graph-01"
+                       tabindex="-1"
+                       class=""
+                       width="800"
+                       height="300"
+                       padding="5"
+                       hgrid="0:1"
+                       vgrid="0:3"
+                       value="null"
+                       label="Tide Curve"
+                       title="Tide Curve"></graph-display>
+    </div>
     <hr/>
     <div id="messages"></div>
     <small style="font-style: italic;">ES6 Tide Engine</small>

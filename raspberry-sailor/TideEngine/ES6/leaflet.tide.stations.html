@@ -4,7 +4,7 @@
  | leafletjs available from http://leafletjs.com/
  | Tutorials and examples at https://leafletjs.com/examples.html
  |
- | This uses ES6 features, like modules, and others.
+ | This page uses ES6 features, like modules, and others.
  +-->
 <head>
 
@@ -302,7 +302,7 @@ function showGeneratedDialog(station) {
             tableContent += (`${line.type}: at ${dateFmt.formatDate(line.at, 'd-m-y H:m')}, ${line.wh.toFixed(2)} ${line.unit}\n`);
         });
         tableContent += "</pre>";
-        // TODO Draw the graph.
+        // Draw the graph.
         let graph = document.getElementById("tide-graph-01");
         let x = [];
         let y = [];
