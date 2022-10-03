@@ -1,4 +1,4 @@
-# Video Streaming on Raspberry Pi
+# How-To: Video Streaming on Raspberry Pi
 
 Good stuff here: <https://github.com/EbenKouao/pi-camera-stream-flask>
 
