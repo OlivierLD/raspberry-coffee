@@ -2,7 +2,7 @@ rootProject.name = 'raspberry-coffee'
 //
 include 'Adafruit-IO'
 include 'Algebra'
-include 'Relay.by.email'
+include 'Relay-by-email'
 include 'RasPISamples'
 include 'SerialRxTx'
 include 'system-utils'

@@ -8,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Hard-coded values
+ */
 public class SampleMain {
     private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
     private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
