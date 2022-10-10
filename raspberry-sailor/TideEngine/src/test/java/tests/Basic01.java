@@ -6,6 +6,7 @@ import tideengine.TideStation;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,11 +33,7 @@ public class Basic01 {
             List<TideStation> stationData = BackEndTideComputer.getStationData();
             System.out.printf("Got %d station data.\n", stationData.size());
             stationData.forEach(sd -> {
-                try {
-                    System.out.println(URLDecoder.decode(sd.getFullName(), "UTF-8"));
-                } catch (UnsupportedEncodingException uee) {
-                    System.err.printf("Bad Encoding for %s\n", sd.getFullName());
-                }
+                System.out.println(URLDecoder.decode(sd.getFullName(), StandardCharsets.UTF_8));
             });
 
             backEndTideComputer.disconnect();

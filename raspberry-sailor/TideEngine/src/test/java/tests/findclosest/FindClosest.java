@@ -8,6 +8,7 @@ import tideengine.TideStation;
 import tideengine.TideUtilities;
 
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -69,7 +70,7 @@ public class FindClosest {
         TideStation ts = closest.orElseThrow();
 
         if (ts != null) {
-            String location = URLDecoder.decode(ts.getFullName(), "UTF-8");
+            String location = URLDecoder.decode(ts.getFullName(), StandardCharsets.UTF_8);
             System.out.println(String.format(">> From %s, closest station is %s, distance %.02f nm.",
                     new GeoPoint(USER_POS_LATITUDE, USER_POS_LONGITUDE),
                     location,

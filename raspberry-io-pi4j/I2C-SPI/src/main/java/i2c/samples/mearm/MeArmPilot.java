@@ -5,6 +5,7 @@ import i2c.servo.PCA9685;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -213,8 +214,8 @@ public class MeArmPilot {
 				System.err.println(String.format("Unexpected number of args [%d] in servoPrint.", cmd.args.length));
 			} else {
 				try {
-					System.out.println(">> PRINT >>> " + URLDecoder.decode(cmd.args[0], "UTF-8"));
-				} catch (UnsupportedEncodingException e) {
+					System.out.println(">> PRINT >>> " + URLDecoder.decode(cmd.args[0], StandardCharsets.UTF_8));
+				} catch (/*UnsupportedEncoding*/ Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -258,8 +259,8 @@ public class MeArmPilot {
 				System.err.println(String.format("Unexpected number of args [%d] in servoUserInput.", cmd.args.length));
 			} else {
 				try {
-					String absorbed = userInput(URLDecoder.decode(cmd.args[0], "UTF-8"));
-				} catch (UnsupportedEncodingException e) {
+					String absorbed = userInput(URLDecoder.decode(cmd.args[0], StandardCharsets.UTF_8));
+				} catch (/*UnsupportedEncoding*/ Exception e) {
 					e.printStackTrace();
 				}
 			}

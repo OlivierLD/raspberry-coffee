@@ -14,6 +14,7 @@ import tideengine.publisher.TidePublisher;
 import javax.annotation.Nonnull;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -481,7 +482,7 @@ public class RESTImplementation {
 									try {
 										this.tideRequestManager.getLogger().log(Level.INFO,
 												String.format("Calculating tide in %s, from %s (%s) to %s (%s)",
-												URLDecoder.decode(ts.getFullName(), "UTF-8"),
+												URLDecoder.decode(ts.getFullName(), StandardCharsets.UTF_8),
 												sdf.format(now.getTime()),
 												NumberFormat.getInstance().format(now.getTimeInMillis()),
 												sdf.format(upTo.getTime()),
@@ -700,7 +701,7 @@ public class RESTImplementation {
 					return response;
 				}
 				try {
-//				String unescaped = URLDecoder.decode(stationFullName, "UTF-8");
+//				String unescaped = URLDecoder.decode(stationFullName, StandardCharsets.UTF_8);
 					String generatedFileName = TidePublisher.publish(
 							stationFullName,
 							options.startMonth,

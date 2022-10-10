@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class ExecutionTests {
         List<Coefficient> constSpeed = BackEndTideComputer.buildSiteConstSpeed();
 
         String location = "Oyster Point Marina, San Francisco Bay, California";
-        String encoded = URLEncoder.encode(location, "UTF-8").replace("+", "%20");
+        String encoded = URLEncoder.encode(location, StandardCharsets.UTF_8).replace("+", "%20");
     //  String location = "Adelaide";
         System.out.println("-- " + location + " --");
         System.out.println("Date and time zone:" + "Etc/UTC");

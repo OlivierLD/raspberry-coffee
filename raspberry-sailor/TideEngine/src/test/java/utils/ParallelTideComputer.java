@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Set;
 
@@ -65,7 +66,7 @@ public class ParallelTideComputer {
                 }
             }
         }
-        final String ENCODING = "UTF-8"; // "ISO-8859-1";
+        final String ENCODING = StandardCharsets.UTF_8.toString(); // StandardCharsets.ISO_8859_1;
         String name = xmlStation.getFullName();
         System.out.printf("XML : %s => %s\n", name, URLDecoder.decode(name, ENCODING));
         name = jsonStation.getFullName();

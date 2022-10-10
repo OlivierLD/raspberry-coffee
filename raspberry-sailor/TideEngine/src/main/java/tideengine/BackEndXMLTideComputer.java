@@ -12,6 +12,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,8 +152,8 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 					foundStation = true;
 					ts = new TideStation();
 					try {
-						ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, "ISO-8859-1"), "UTF-8").replace("+", "%20"));
-					} catch (UnsupportedEncodingException uee) {
+						ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).replace("+", "%20"));
+					} catch (/*UnsupportedEncoding*/ Exception uee) {
 						uee.printStackTrace();
 					}
 				}
@@ -161,8 +162,8 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 					foundNameCollection = true;
 				} else if ("name-part".equals(qName) && foundNameCollection) {
 					try {
-						ts.getNameParts().add(URLEncoder.encode(URLDecoder.decode(attributes.getValue("name"), "ISO-8859-1"), "UTF-8").replace("+", "%20"));
-					} catch (UnsupportedEncodingException uee) {
+						ts.getNameParts().add(URLEncoder.encode(URLDecoder.decode(attributes.getValue("name"), StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).replace("+", "%20"));
+					} catch (/*UnsupportedEncoding*/ Exception uee) {
 						uee.printStackTrace();
 					}
 				} else if ("position".equals(qName)) {

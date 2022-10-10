@@ -9,6 +9,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -92,7 +93,7 @@ public class TideUtilities {
 		InputSource is = null;
 		try {
 			is = new InputSource(new FileInputStream(new File(stationFileName)));
-			is.setEncoding("ISO-8859-1");
+			is.setEncoding(StandardCharsets.ISO_8859_1.toString());
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}

@@ -54,6 +54,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -2070,8 +2071,8 @@ public class RESTImplementation {
 		}
 		String logFileName = prmValues.get(0); // Slashes are escaped, as %2F
 		try {
-			logFileName = URLDecoder.decode(logFileName, "UTF-8");
-		} catch (UnsupportedEncodingException uee) {
+			logFileName = URLDecoder.decode(logFileName, StandardCharsets.UTF_8);
+		} catch (/*UnsupportedEncoding*/ Exception uee) {
 			uee.printStackTrace();
 		}
 		File file = new File(logFileName);
@@ -2121,8 +2122,8 @@ public class RESTImplementation {
 		}
 		String logFileName = prmValues.get(0); // Slashes are escaped, as %2F
 		try {
-			logFileName = URLDecoder.decode(logFileName, "UTF-8");
-		} catch (UnsupportedEncodingException uee) {
+			logFileName = URLDecoder.decode(logFileName, StandardCharsets.UTF_8);
+		} catch (/*UnsupportedEncoding*/ Exception uee) {
 			uee.printStackTrace();
 		}
 		File file = new File(logFileName);

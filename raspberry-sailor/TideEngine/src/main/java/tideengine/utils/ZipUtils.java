@@ -5,6 +5,7 @@ import tideengine.BackEndXMLTideComputer;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -50,7 +51,7 @@ public class ZipUtils {
             } else {
                 if (ze.getName().equals(entryName)) {
                     is = new InputSource(zip);
-                    is.setEncoding("ISO-8859-1");
+                    is.setEncoding(StandardCharsets.ISO_8859_1.toString());
                     go = false;
                 }
             }

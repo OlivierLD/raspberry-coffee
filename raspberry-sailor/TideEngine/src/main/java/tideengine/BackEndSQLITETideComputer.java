@@ -6,6 +6,7 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -179,7 +180,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 					String baseHeightUnit = rs.getString(7);
 					TideStation tideStation = new TideStation();
 
-					tideStation.setFullName(URLEncoder.encode(URLDecoder.decode(fullName, "ISO-8859-1"), "UTF-8").replace("+", "%20"));
+					tideStation.setFullName(URLEncoder.encode(URLDecoder.decode(fullName, StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).replace("+", "%20"));
 					tideStation.setLatitude(latitude.doubleValue());
 					tideStation.setLongitude(longitude.doubleValue());
 					tideStation.setTimeOffset(tzOffset);
@@ -187,7 +188,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 					tideStation.setBaseHeight(baseHeightValue.doubleValue());
 					tideStation.setUnit(baseHeightUnit);
 					for (String part : fullName.split(",")) {
-						tideStation.getNameParts().add(URLEncoder.encode(URLDecoder.decode(part.trim(), "ISO-8859-1"), "UTF-8").replace("+", "%20"));
+						tideStation.getNameParts().add(URLEncoder.encode(URLDecoder.decode(part.trim(), StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).replace("+", "%20"));
 					}
 					// TODO Other data, like isCurrentStation, etc
 					// Harmonics
@@ -210,7 +211,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 					coefficientsRS.close();
 					preparedStatement_02.close();
 
-					stationData.put(URLEncoder.encode(URLDecoder.decode(fullName, "ISO-8859-1"), "UTF-8").replace("+", "%20"),
+					stationData.put(URLEncoder.encode(URLDecoder.decode(fullName, StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).replace("+", "%20"),
 							        tideStation);
 				}
 				rs.close();

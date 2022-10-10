@@ -71,7 +71,7 @@ public class LevelAndTemperature implements LevelListenerInterface {
 						{
 						  try
 						  {
-							ByteArrayInputStream bais = new ByteArrayInputStream(serverHandshake.getFieldValue(h).getBytes("UTF-8"));
+							ByteArrayInputStream bais = new ByteArrayInputStream(serverHandshake.getFieldValue(h).getBytes(StandardCharsets.UTF_8));
 							byte[] buf = new BASE64Decoder().decodeBuffer(bais);
 							System.out.print("Server Key:"); //  + new String(buf));
 							for (int i=0; i<buf.length; i++)

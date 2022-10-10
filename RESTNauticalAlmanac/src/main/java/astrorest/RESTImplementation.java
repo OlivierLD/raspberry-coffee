@@ -20,6 +20,7 @@ import nmea.parser.StringParsers; // for durationToDate
 
 import java.io.*;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -198,8 +199,8 @@ public class RESTImplementation {
 					.stream()
 					.map(tz -> {
 						try {
-							return URLDecoder.decode(tz, "UTF-8");
-						} catch (UnsupportedEncodingException uee) {
+							return URLDecoder.decode(tz, StandardCharsets.UTF_8);
+						} catch (/*UnsupportedEncoding*/ Exception uee) {
 							return tz;
 						}
 					})
@@ -471,7 +472,7 @@ public class RESTImplementation {
 			toPrm = prms.get("to");
 			tzName = prms.get("tz");
 			try {
-				tzName = URLDecoder.decode(tzName, "UTF-8");
+				tzName = URLDecoder.decode(tzName, StandardCharsets.UTF_8);
 			} catch (Exception ex) {
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
@@ -1001,7 +1002,7 @@ public class RESTImplementation {
 			toPrm = prms.get("to");
 			tzName = prms.get("tz");
 			try {
-				tzName = URLDecoder.decode(tzName, "UTF-8");
+				tzName = URLDecoder.decode(tzName, StandardCharsets.UTF_8);
 			} catch (Exception ex) {
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
