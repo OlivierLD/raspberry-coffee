@@ -44,7 +44,7 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			InputSource is = ZipUtils.getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
+			InputSource is = ZipUtils.getZipInputSource(/*this.getClass(),*/ ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
 			saxParser.parse(is, scf);
 		} catch (NullPointerException npe) {
 			System.err.printf("NPE when reaching %s, %s, from %s\n", ARCHIVE_STREAM, CONSTITUENTS_ENTRY, System.getProperty("user.dir"));

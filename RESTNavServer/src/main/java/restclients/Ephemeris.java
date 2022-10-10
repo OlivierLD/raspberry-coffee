@@ -33,7 +33,7 @@ public class Ephemeris {
 	// Tide Table:
 	// POST http://localhost:9999/tide/tide-stations/Ocean%20Beach%2C%20California/wh?from=2018-01-03T00:00:00&to=2018-01-04T00:00:01
 
-	private final static EmailSender sender = new EmailSender("google");
+	private final static EmailSender sender = null; // new EmailSender("google");
 	private static boolean keepLooping = true;
 
 	private static boolean keepLooping() {
@@ -226,11 +226,13 @@ public class Ephemeris {
 
 		// 4 - Send email
 //	final EmailSender sender = new EmailSender("google");
-		String[] toEmails = { "olivier@lediouris.net", "olivier.lediouris@gmail.com" };
-		sender.send(
-				toEmails,
-				"Ephemeris for " + DATE_FMT.format(now.getTime()),
-				content,
-				"text/html;charset=utf-8");
+		if (sender != null) {
+			String[] toEmails = {"olivier@lediouris.net", "olivier.lediouris@gmail.com"};
+			sender.send(
+					toEmails,
+					"Ephemeris for " + DATE_FMT.format(now.getTime()),
+					content,
+					"text/html;charset=utf-8");
+		}
 	}
 }
