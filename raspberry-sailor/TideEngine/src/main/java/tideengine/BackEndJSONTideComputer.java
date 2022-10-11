@@ -19,7 +19,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 	public final static String CONSTITUENTS_ENTRY = "constituents.json";
 	public final static String STATIONS_ENTRY = "stations.json";
 
-	private static ObjectMapper mapper = new ObjectMapper();
+	private final static ObjectMapper mapper = new ObjectMapper();
 
 	private static boolean verbose = false;
 

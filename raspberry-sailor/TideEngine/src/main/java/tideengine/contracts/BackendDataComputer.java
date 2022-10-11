@@ -7,7 +7,7 @@ import tideengine.TideStation;
 import java.util.Map;
 
 /**
- * This interface is common to all the implementation of the data store that is used
+ * This interface is common to all the implementations of the data store that is used
  * to compute the coefficients and tide stations.
  */
 public interface BackendDataComputer {

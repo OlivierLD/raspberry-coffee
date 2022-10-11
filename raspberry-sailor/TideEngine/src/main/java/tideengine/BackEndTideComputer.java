@@ -43,7 +43,7 @@ public class BackEndTideComputer {
 	private static Stations stationsObject = null;
 
 	private static boolean verbose = "true".equals(System.getProperty("tide.verbose", "false"));
-	private static boolean dataVerbose = "true".equals(System.getProperty("data.verbose", "false"));
+	private final static boolean dataVerbose = "true".equals(System.getProperty("data.verbose", "false"));
 
 	public BackEndTideComputer() {
 		if (flavor == Option.XML) {

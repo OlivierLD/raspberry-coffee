@@ -133,7 +133,9 @@ public class TideUtilities {
 			ex.printStackTrace();
 		}
 		long after = System.currentTimeMillis();
-		if (verbose) System.out.println("Populating the tree took " + Long.toString(after - before) + " ms");
+		if (verbose) {
+			System.out.println("Populating the tree took " + Long.toString(after - before) + " ms");
+		}
 
 		return set;
 	}
@@ -408,8 +410,9 @@ public class TideUtilities {
 			if (h.getName().equals(name)) {
 				found = true;
 				break;
-			} else
+			} else {
 				idx++;
+			}
 		}
 		if (!found) {
 			System.out.println("Coeff [" + name + "] not found.");
@@ -475,8 +478,9 @@ public class TideUtilities {
 			throw new RuntimeException(ts.getFullName() + " is a current station. Method getWaterHeightIn applies only to tide stations.");
 		}
 		if (!unit.equals(ts.getUnit())) {
-			if (!unit.equals(TideStation.METERS) && !unit.equals(TideStation.FEET))
+			if (!unit.equals(TideStation.METERS) && !unit.equals(TideStation.FEET)) {
 				throw new RuntimeException("Unsupported unit [" + unit + "]. Only " + TideStation.METERS + " or " + TideStation.FEET + " please.");
+			}
 			if (unit.equals(TideStation.METERS) && ts.getUnit().equals(TideStation.FEET)) {
 				val *= FEET_2_METERS;
 			} else {
@@ -493,7 +497,7 @@ public class TideUtilities {
 		Calendar now = GregorianCalendar.getInstance();
 		Calendar jan1st = new GregorianCalendar(now.get(Calendar.YEAR), Calendar.JANUARY, 1);
 
-		long nbSecSinceJan1st = (now.getTimeInMillis() - jan1st.getTimeInMillis()) / 1000L;
+		long nbSecSinceJan1st = (now.getTimeInMillis() - jan1st.getTimeInMillis()) / 1_000L;
 		double timeOffset = nbSecSinceJan1st * 0.00027777777777777778D;
 
 		for (String k : COEFF_DEFINITION.keySet()) {
@@ -504,7 +508,8 @@ public class TideUtilities {
 				double speed = constSpeed.get(constIdx).getValue();
 				double phase = Math.toDegrees(speed * timeOffset - epoch) % 360;
 
-				String[] line = {Integer.toString(rank),
+				String[] line = {
+						Integer.toString(rank),
 						k,
 						DF13.format(amplitude),
 						DF31.format(phase),

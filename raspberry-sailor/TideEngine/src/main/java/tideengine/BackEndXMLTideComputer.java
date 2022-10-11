@@ -9,7 +9,7 @@ import tideengine.utils.ZipUtils;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.UnsupportedEncodingException;
+// import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -286,7 +286,7 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 			}
 		}
 
-		public void characters(char ch[], int start, int length)
+		public void characters(char[] ch, int start, int length)
 				throws SAXException {
 			String str = new String(ch).substring(start, start + length).trim();
 			if (foundCoeffName) {

@@ -14,14 +14,14 @@ public class TideStation implements Serializable {
 	public final static String SQUARE_KNOTS = "knots^2";
 
 	private String fullName = "";
-	private List<String> nameParts = new ArrayList<>();
+	private final List<String> nameParts = new ArrayList<>();
 	private double latitude = 0D;
 	private double longitude = 0D;
 	private double baseHeight = 0D;
 	private String unit = "";
 	private String timeZone = "";
 	private String timeOffset = "";
-	private List<Harmonic> harmonics = new ArrayList<>();
+	private final List<Harmonic> harmonics = new ArrayList<>();
 
 	private int harmonicsHaveBeenFixedForYear = -1;
 

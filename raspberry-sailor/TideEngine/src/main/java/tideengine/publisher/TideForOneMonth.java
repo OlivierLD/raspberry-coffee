@@ -112,7 +112,7 @@ public class TideForOneMonth {
 			sunRise.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			sunRise.set(Calendar.SECOND, 0);
 
-			double r = rsSun[acv2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), sunRise.getTime());
+			double r = rsSun[AstroComputerV2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), sunRise.getTime());
 			int min = (int) ((r - ((int) r)) * 60);
 			sunRise.set(Calendar.MINUTE, min);
 			sunRise.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -126,7 +126,7 @@ public class TideForOneMonth {
 
 			if (ts != null) {
 				double tPass = acv2.getSunMeridianPassageTime(ts.getLatitude(), ts.getLongitude());
-				r = tPass + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), sunTransit.getTime());
+				r = tPass + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), sunTransit.getTime());
 				min = (int) ((r - ((int) r)) * 60);
 				sunTransit.set(Calendar.MINUTE, min);
 				sunTransit.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -141,7 +141,7 @@ public class TideForOneMonth {
 			sunSet.set(Calendar.MONTH, now.get(Calendar.MONTH));
 			sunSet.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			sunSet.set(Calendar.SECOND, 0);
-			r = rsSun[acv2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), sunSet.getTime());
+			r = rsSun[AstroComputerV2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), sunSet.getTime());
 			min = (int) ((r - ((int) r)) * 60);
 			sunSet.set(Calendar.MINUTE, min);
 			sunSet.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -155,7 +155,7 @@ public class TideForOneMonth {
 			moonRise.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			moonRise.set(Calendar.SECOND, 0);
 
-			r = rsMoon[acv2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), moonRise.getTime());
+			r = rsMoon[AstroComputerV2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), moonRise.getTime());
 			min = (int) ((r - ((int) r)) * 60);
 			moonRise.set(Calendar.MINUTE, min);
 			moonRise.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -166,7 +166,7 @@ public class TideForOneMonth {
 			moonSet.set(Calendar.MONTH, now.get(Calendar.MONTH));
 			moonSet.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			moonSet.set(Calendar.SECOND, 0);
-			r = rsMoon[acv2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), moonSet.getTime());
+			r = rsMoon[AstroComputerV2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), moonSet.getTime());
 			min = (int) ((r - ((int) r)) * 60);
 			moonSet.set(Calendar.MINUTE, min);
 			moonSet.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -240,8 +240,8 @@ public class TideForOneMonth {
 						}
 					}
 				}
-				double riseZ = rsSun[acv2.RISE_Z_IDX],
-						setZ = rsSun[acv2.SET_Z_IDX];
+				double riseZ = rsSun[AstroComputerV2.RISE_Z_IDX],
+						setZ = rsSun[AstroComputerV2.SET_Z_IDX];
 
 				out.println("<date val='" + SDF.format(now.getTime()) + "' " + specialBG +
 						"moon-phase='" + DF2.format(phaseInDay) +
@@ -333,8 +333,8 @@ public class TideForOneMonth {
 							case RISING: {
 								Calendar prev = (Calendar) cal.clone();
 								prev.add(Calendar.MINUTE, -1);
-								if (acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), cal.getTime()) ==
-										acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), prev.getTime())) {
+								if (AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), cal.getTime()) ==
+										AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), prev.getTime())) {
 									if (previousWH > wh) // Now going down
 									{
 										if (Double.isNaN(high1)) {
@@ -437,7 +437,7 @@ public class TideForOneMonth {
 			sunRise.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			sunRise.set(Calendar.SECOND, 0);
 
-			double r = rsSun[acv2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), sunRise.getTime());
+			double r = rsSun[AstroComputerV2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), sunRise.getTime());
 			int min = (int) ((r - ((int) r)) * 60);
 			sunRise.set(Calendar.MINUTE, min);
 			sunRise.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -451,7 +451,7 @@ public class TideForOneMonth {
 
 			if (position != null) {
 				double tPass = acv2.getSunMeridianPassageTime(position.getL(), position.getG());
-				r = tPass + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), sunTransit.getTime());
+				r = tPass + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), sunTransit.getTime());
 				min = (int) ((r - ((int) r)) * 60);
 				sunTransit.set(Calendar.MINUTE, min);
 				sunTransit.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -465,7 +465,7 @@ public class TideForOneMonth {
 			sunSet.set(Calendar.MONTH, now.get(Calendar.MONTH));
 			sunSet.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			sunSet.set(Calendar.SECOND, 0);
-			r = rsSun[acv2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), sunSet.getTime());
+			r = rsSun[AstroComputerV2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), sunSet.getTime());
 			min = (int) ((r - ((int) r)) * 60);
 			sunSet.set(Calendar.MINUTE, min);
 			sunSet.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -479,7 +479,7 @@ public class TideForOneMonth {
 			moonRise.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			moonRise.set(Calendar.SECOND, 0);
 
-			r = rsMoon[acv2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), moonRise.getTime());
+			r = rsMoon[AstroComputerV2.UTC_RISE_IDX] /* + Utils.daylightOffset(sunRise) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone /*ts.getTimeZone()*/), moonRise.getTime());
 			min = (int) ((r - ((int) r)) * 60);
 			moonRise.set(Calendar.MINUTE, min);
 			moonRise.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -490,7 +490,7 @@ public class TideForOneMonth {
 			moonSet.set(Calendar.MONTH, now.get(Calendar.MONTH));
 			moonSet.set(Calendar.DAY_OF_MONTH, now.get(Calendar.DAY_OF_MONTH));
 			moonSet.set(Calendar.SECOND, 0);
-			r = rsMoon[acv2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + acv2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), moonSet.getTime());
+			r = rsMoon[AstroComputerV2.UTC_SET_IDX] /* + Utils.daylightOffset(sunSet) */ + AstroComputerV2.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone/*ts.getTimeZone()*/), moonSet.getTime());
 			min = (int) ((r - ((int) r)) * 60);
 			moonSet.set(Calendar.MINUTE, min);
 			moonSet.set(Calendar.HOUR_OF_DAY, (int) r);
@@ -528,8 +528,8 @@ public class TideForOneMonth {
 				out.println("- " + SDF.format(now.getTime()) + " - Moon Age:" + DF2.format(phaseInDay));
 			} else if (flavor == XML_FLAVOR) {
 				String specialBG = "specBG='n' ";
-				double riseZ = rsSun[acv2.RISE_Z_IDX],
-						setZ = rsSun[acv2.SET_Z_IDX];
+				double riseZ = rsSun[AstroComputerV2.RISE_Z_IDX],
+						setZ = rsSun[AstroComputerV2.SET_Z_IDX];
 
 				out.println("<date val='" + SDF.format(now.getTime()) + "' " + specialBG +
 						"moon-phase='" + DF2.format(phaseInDay) +

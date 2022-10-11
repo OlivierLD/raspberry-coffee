@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Optional;
-import java.util.TimeZone;
+// import java.util.TimeZone;
 
 public class TidePublisher {
 
@@ -112,7 +112,7 @@ public class TidePublisher {
 			Process p = Runtime.getRuntime().exec(cmd);
 			int exitStatus = p.waitFor();
 			System.out.println("Script completed, status " + exitStatus);
-			System.out.println(String.format("See %s.pdf", radical));
+			System.out.printf("See %s.pdf\n", radical);
 			cmd = String.format("mv %s.pdf web", radical);
 			p = Runtime.getRuntime().exec(cmd);
 			exitStatus = p.waitFor();
@@ -224,7 +224,7 @@ public class TidePublisher {
 			Process p = Runtime.getRuntime().exec(cmd);
 			int exitStatus = p.waitFor();
 			System.out.println("Script completed, status " + exitStatus);
-			System.out.println(String.format("See %s.pdf", radical));
+			System.out.printf("See %s.pdf\n", radical);
 			cmd = String.format("mv %s.pdf web", radical);
 			p = Runtime.getRuntime().exec(cmd);
 			exitStatus = p.waitFor();
@@ -261,7 +261,7 @@ public class TidePublisher {
 					1,
 					Calendar.YEAR,
 					"publishagenda.sh");
-			System.out.println(String.format("%s generated", f));
+			System.out.printf("%s generated\n", f);
 			System.out.println("Done!");
 		} catch (Exception ex) {
 			ex.printStackTrace();

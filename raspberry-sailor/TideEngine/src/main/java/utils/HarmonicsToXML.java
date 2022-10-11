@@ -17,7 +17,7 @@ import java.net.URL;
  */
 public class HarmonicsToXML {
 
-	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
 	// Those two are used only to generate and write the data files.
 	public final static String CONSTITUENT_FILE = /* "xml.data" + File.separator + */ "constituents.xml";
