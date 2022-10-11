@@ -147,6 +147,7 @@
 		let dataManager = (value) => { // Callback when tide data are ready
 
 			document.body.style.cursor = 'wait';
+			document.getElementById('backend-data').style.cursor = 'wait';
 
 			tideGraph.unsetSunData();
 			tideGraph.unsetAltitudes();
@@ -223,6 +224,7 @@
 				console.log(err);
 			}
 			document.body.style.cursor = 'auto';
+			document.getElementById('backend-data').style.cursor = 'auto';
 		};
 
 		let manageClick = (div) => {
