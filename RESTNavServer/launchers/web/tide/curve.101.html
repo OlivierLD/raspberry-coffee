@@ -157,7 +157,7 @@
 			try {
 				let json = JSON.parse(value);
 
-				document.getElementById('backend-data').innerHTML = JSON.stringify(json, null, 2);
+				document.getElementById('backend-data').innerHTML = `<pre>${JSON.stringify(json, null, 2)}</pre>`;
 
 				let data = json.heights;
 				let base = json.baseHeight;
