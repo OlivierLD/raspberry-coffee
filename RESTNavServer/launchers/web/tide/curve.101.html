@@ -5,7 +5,7 @@
 	<link rel="icon" type="image/jpg" href="../icons/palm.04.jpg">
 	<!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /-->
 	<link id="page-ux" rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
-	<!-- JQuery removed, 2020-Oct-23 -->
+	<!-- JQuery removed, 2020-Oct-23, now using ES6 promises. -->
 	<script type="text/javascript" src="../js/date.proto.js"></script>
 	<script type="text/javascript" src="../js/tide.js"></script>
 	<script type="text/javascript" src="../js/pub.sub.js"></script>
@@ -156,6 +156,9 @@
 //		    console.log(value);
 			try {
 				let json = JSON.parse(value);
+
+				document.getElementById('backend-data').innerHTML = JSON.stringify(json, null, 2);
+
 				let data = json.heights;
 				let base = json.baseHeight;
 				// Detect min & max
@@ -220,7 +223,7 @@
 
 		let manageClick = (div) => {
 			// Set the right class to the clicked tab
-			[ 'error-tab', 'message-tab' ].forEach((tab, idx) => {
+			[ 'error-tab', 'message-tab', 'data-tab' ].forEach((tab, idx) => {
 				document.getElementById(tab).className = (div.id === tab ? 'selectedButton' : 'unselectedButton');
 			});
 			// Show the right div
@@ -228,10 +231,17 @@
 				case 'error-tab':
 					document.getElementById("error-div").style.display = 'block';
 					document.getElementById("message-div").style.display = 'none';
+					document.getElementById("data-div").style.display = 'none';
 					break;
 				case 'message-tab':
 					document.getElementById("error-div").style.display = 'none';
 					document.getElementById("message-div").style.display = 'block';
+					document.getElementById("data-div").style.display = 'none';
+					break;
+				case 'data-tab':
+					document.getElementById("error-div").style.display = 'none';
+					document.getElementById("message-div").style.display = 'none';
+					document.getElementById("data-div").style.display = 'block';
 					break;
 				default:
 					break;
@@ -351,6 +361,7 @@
 	<div style="margin-bottom: 5px;">
 		<span id="message-tab" onclick="manageClick(this);" class="selectedButton" style="margin-left: 5px; cursor: pointer;">Messages</span>
 		<span id="error-tab"   onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Errors</span>
+		<span id="data-tab"    onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Data</span>
 	</div>
 	<div id="message-div" style="display: block;">
 		<div id="messages" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
@@ -359,6 +370,10 @@
 	<div id="error-div" style="display: none;">
 		<div id="error" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; color: red; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
 		<button onclick="document.getElementById('error').innerHTML = '';">Clear log</button>
+	</div>
+	<div id="data-div" style="display: none;">
+		<div id="backend-data" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
+		<button onclick="document.getElementById('backend-data').innerHTML = '';">Clear log</button>
 	</div>
 </body>
 </html>

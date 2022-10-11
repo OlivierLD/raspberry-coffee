@@ -570,7 +570,9 @@ function TideGraph(cName,       // Canvas Name
 //          console.log("Drawing daylight.");
             let previousX = 0;
             let lastOne = 0;
-            console.log(`>> ${Object.keys(sunRiseSet).length} key(s)`);
+            if (VERBOSE_1) {
+              console.log(`>> ${Object.keys(sunRiseSet).length} key(s)`);
+            }
             let keyNum = 0;
             for (let key in sunRiseSet) { // Loop, useful when more than one day
                 let oneDay = sunRiseSet[key];
