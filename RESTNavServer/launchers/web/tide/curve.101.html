@@ -145,6 +145,9 @@
 		 * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
 		 */
 		let dataManager = (value) => { // Callback when tide data are ready
+
+			document.body.style.cursor = 'wait';
+
 			tideGraph.unsetSunData();
 			tideGraph.unsetAltitudes();
 			tideGraph.unsetTable();
@@ -219,6 +222,7 @@
 			} catch (err) {
 				console.log(err);
 			}
+			document.body.style.cursor = 'auto';
 		};
 
 		let manageClick = (div) => {
