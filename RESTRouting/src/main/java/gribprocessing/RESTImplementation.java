@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -416,11 +417,18 @@ public class RESTImplementation {
 					response.setPayload(content.getBytes());
 				} catch (Exception ex1) {
 //				ex1.printStackTrace();
+					String errMess = ex1.toString();
+					if (ex1 instanceof RuntimeException) {
+						errMess = Arrays.stream(ex1.getStackTrace())
+								.filter(el -> !el.equals(ex1.getStackTrace()[0])) // Except first one
+								.map(StackTraceElement::toString)
+								.collect(Collectors.joining(" / "));
+					}
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
 									.errorCode("GRIB-0103")
-									.errorMessage(ex1.toString()));
+									.errorMessage(errMess));
 					return response;
 				}
 			} else {
