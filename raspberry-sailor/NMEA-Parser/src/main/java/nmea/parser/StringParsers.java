@@ -169,7 +169,7 @@ public class StringParsers {
 		MDA mda = new MDA();
 		for (int i = 0; i < sa.length; i++) {
 			//  System.out.println(sa[i]);
-			if (i % 2 == 1 && !sa[i].trim().isEmpty()) {
+			if (/*i % 2 == 1 &&*/ !sa[i].trim().isEmpty()) {
 				double d = 0;
 				try {
 					d = Double.parseDouble(sa[i]);
