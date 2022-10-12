@@ -1973,7 +1973,7 @@ public class StringParsers {
 					throws RuntimeException {
 		// A RegEx
 		final String regex = // "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})\\.(\\d{3})(.)$";
-				             "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?$"; // ms are optional.
+				             "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?(.*)$"; // ms, TZ are optional.
 		final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
 		final Matcher matcher = pattern.matcher(duration);
 		if (!matcher.find()) {
