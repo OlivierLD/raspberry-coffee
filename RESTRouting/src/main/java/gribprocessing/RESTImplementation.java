@@ -411,7 +411,7 @@ public class RESTImplementation {
 						default:
 							break;
 					}
-					if (verbose) {
+					if (true || verbose) {
 						System.out.println("Routing completed.");
 					}
 //					System.out.println(String.format("Content-type: %s", contentType));
