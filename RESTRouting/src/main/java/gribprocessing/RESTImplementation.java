@@ -355,6 +355,10 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response requestRouting(Request request) {
+		if (true || verbose) {
+			System.out.println("Starting routing computation.");
+		}
+
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 		if (request.getContent() != null && request.getContent().length > 0) {
