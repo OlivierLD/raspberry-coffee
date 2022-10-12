@@ -416,7 +416,9 @@ public class RESTImplementation {
 					RESTProcessorUtil.generateResponseHeaders(response, contentType, content.length());
 					response.setPayload(content.getBytes());
 				} catch (Exception ex1) {
-//				ex1.printStackTrace();
+					if (verbose) {
+						ex1.printStackTrace();
+					}
 					String errMess = ex1.toString();
 					if (ex1 instanceof RuntimeException) {
 						errMess = Arrays.stream(ex1.getStackTrace())
