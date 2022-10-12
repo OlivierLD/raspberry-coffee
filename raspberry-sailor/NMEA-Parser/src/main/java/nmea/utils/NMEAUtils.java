@@ -372,33 +372,35 @@ public class NMEAUtils {
             boolean keepLooping = true;
             while (keepLooping) {
                 line = br.readLine();
-                if (line == null)
+                if (line == null) {
                     keepLooping = false;
-                else {
+                } else {
                     if (line.startsWith("$") && line.length() > 7) { // then let's try
                         String key = line.substring(3, 6);
                         if ("HDG".equals(key) ||
-                                "HDM".equals(key) ||
-                                "VHW".equals(key) ||
-                                "RMC".equals(key) ||
-                                "GLL".equals(key) ||
-                                "VTG".equals(key))
+                            "HDM".equals(key) ||
+                            "VHW".equals(key) ||
+                            "RMC".equals(key) ||
+                            "GLL".equals(key) ||
+                            "VTG".equals(key)) {
                             counter.put(key, counter.get(key).intValue() + 1);
+                        }
                     }
                 }
             }
             br.close();
             System.out.println("We have:");
             Set<String> keys = counter.keySet();
-            for (String k : keys)
+            for (String k : keys) {
                 System.out.println(k + " " + counter.get(k).intValue());
+            }
             if (counter.get("RMC").intValue() == 0 &&
-                    counter.get("GLL").intValue() == 0 &&
-                    counter.get("VTG").intValue() == 0) {
+                counter.get("GLL").intValue() == 0 &&
+                counter.get("VTG").intValue() == 0) {
                 System.err.println("No RMC, GLL, or VTG!");
             } else if (counter.get("HDG").intValue() == 0 &&
-                    counter.get("HDM").intValue() == 0 &&
-                    counter.get("VHW").intValue() == 0) {
+                       counter.get("HDM").intValue() == 0 &&
+                       counter.get("VHW").intValue() == 0) {
                 System.err.println("No HDM, HDG or VHW!");
             } else { // Proceed
                 System.out.println("Proceeding...");
@@ -406,7 +408,7 @@ public class NMEAUtils {
                 if (counter.get("RMC").intValue() > 0 &&
                         (counter.get("HDG").intValue() > 0 || counter.get("HDM").intValue() > 0)) {
                     System.out.println("RMC + HDG/HDM, Ideal.");
-                    ret = new ArrayList<double[]>(counter.get("RMC").intValue());
+                    ret = new ArrayList<>(counter.get("RMC").intValue());
                     // Is there a Declination?
                     double decl = -Double.MAX_VALUE;
                     double hdg = 0d; // (cc - D) when available
@@ -439,6 +441,7 @@ public class NMEAUtils {
                                                 ret.add(new double[]{hdg, cog});
                                             }
                                         } catch (Exception ex) {
+                                            // Mmh ?
                                         }
                                     } else if ("HDM".equals(key) && counter.get("HDG").intValue() == 0) {
                                         try {
@@ -453,6 +456,7 @@ public class NMEAUtils {
                                                 ret.add(new double[]{ hdg, cog });
                                             }
                                         } catch (Exception ex) {
+                                            // Mmh ?
                                         }
                                     } else if ("RMC".equals(key)) {
                                         try {
@@ -462,6 +466,7 @@ public class NMEAUtils {
                                             }
                                             cog = rmc.getCog();
                                         } catch (Exception ex) {
+                                            // Mmh ?
                                         }
                                     }
                                 }
@@ -477,9 +482,9 @@ public class NMEAUtils {
                         ex.printStackTrace();
                     }
                 } else if (counter.get("VTG").intValue() > 0 &&
-                        counter.get("GLL").intValue() > 0 &&
-                        (counter.get("HDM").intValue() > 0 || counter.get("HDG").intValue() > 0)) {
-                    ret = new ArrayList<double[]>(counter.get("GLL").intValue());
+                           counter.get("GLL").intValue() > 0 &&
+                           (counter.get("HDM").intValue() > 0 || counter.get("HDG").intValue() > 0)) {
+                    ret = new ArrayList<>(counter.get("GLL").intValue());
                     System.out.println("VTG, GLL, (HDG or HDM), good enough");
                     // Is there a Declination?
                     double decl = -Double.MAX_VALUE;
@@ -499,11 +504,12 @@ public class NMEAUtils {
                                         try {
                                             HDG val = StringParsers.parseHDG(line);
                                             if (val.getDeviation() != -Double.MAX_VALUE ||
-                                                    val.getVariation() != -Double.MAX_VALUE) {
+                                                val.getVariation() != -Double.MAX_VALUE) {
                                                 decl = Math.max(val.getDeviation(), val.getVariation());
                                             }
                                             hdg = val.getHeading();
                                         } catch (Exception ex) {
+                                            // So ?
                                         }
                                     } else if (counter.get("HDM").intValue() == 0 && "HDG".equals(key)) {
                                         hdg = StringParsers.parseHDM(line);
@@ -519,6 +525,7 @@ public class NMEAUtils {
                                         try {
                                             cog = og.getCourse();
                                         } catch (Exception ex) {
+                                            // Argh !
                                         }
                                         if (og == null) {
                                             System.out.println("Null for VTG [" + line + "]");
@@ -555,6 +562,7 @@ public class NMEAUtils {
         return "$" + std;
     }
 
+    // This is just a test
     public static void main(String... args) {
         String data = "Akeu CoucouA*FG\r\n";
         System.out.println(translateEscape(data, ALL_IN_HEXA));

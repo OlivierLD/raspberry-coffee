@@ -36,6 +36,6 @@ public class AutoParse {
                         ex.printStackTrace();
                     }
                 });
-        assertTrue("Argh!", true);
+        assertTrue("Argh!", true); // Arf !
     }
 }
