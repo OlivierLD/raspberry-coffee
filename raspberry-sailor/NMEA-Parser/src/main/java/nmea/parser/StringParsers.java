@@ -1977,7 +1977,7 @@ public class StringParsers {
 		final Matcher matcher = pattern.matcher(duration);
 		if (!matcher.find()) {
 			// TODO Oops
-			System.out.println("Oops, no match.");
+			System.out.printf("Oops, no duration match for [%s].\n", duration);
 		}
 
 		String yyyy = duration.substring(0, 4);
