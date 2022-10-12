@@ -1972,12 +1972,13 @@ public class StringParsers {
 	public static long durationToDate(String duration, String tz)
 					throws RuntimeException {
 		// A RegEx
-		final String regex = "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})\\.(\\d{3})(.)$";
+		final String regex = // "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})\\.(\\d{3})(.)$";
+				             "^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3}))?$"; // ms are optional.
 		final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
 		final Matcher matcher = pattern.matcher(duration);
 		if (!matcher.find()) {
-			// TODO Oops
-			System.out.printf("Oops, no duration match for [%s].\n", duration);
+			// TODO Oops, raise ?
+			System.out.printf("Oops, no duration match for [%s] %s.\n", duration, tz);
 		}
 
 		String yyyy = duration.substring(0, 4);
