@@ -606,13 +606,13 @@
                 "verbose": false
             };
             var callback = function (bestRoute) {
-
                 if (ROUTING_VERBOSE) {
                     console.log(bestRoute);
                 }
-
-                bestRouteToPlot = JSON.parse(bestRoute); // in grib.routing.js
-                displaySummary(bestRouteToPlot);
+                bestRouteToPlot = JSON.parse(bestRoute); // in grib.routing.js, global.
+                if (ROUTING_VERBOSE) {
+                    displaySummary(bestRouteToPlot);
+                }
                 plotBestRoute(canvas, context);
             };
             getBestRoute(sampleRequest, callback);
