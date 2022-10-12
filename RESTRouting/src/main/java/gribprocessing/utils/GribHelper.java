@@ -1194,7 +1194,13 @@ public class GribHelper {
 					double speed = Math.sqrt(x * x + y * y); // m/s
 					speed *= 3.600D; // km/h
 					speed /= 1.852D; // knots
-					double dir = NMEAUtils.getDir(x, y);
+					double dir = 0d;
+					try {
+						dir = NMEAUtils.getDir(x, y);
+					} catch (NMEAUtils.AmbiguousException ae) {
+						// Absorb. Leave dir to 0
+						System.err.println(ae.getMessage());
+					}
 					gribCond.winddir = (int) Math.round(dir);
 					gribCond.windspeed = adjustWindSpeed((float) speed);
 					gribCond.hgt500 = wpd[l][g].getHgt();
@@ -1210,7 +1216,13 @@ public class GribHelper {
 					double cSpeed = Math.sqrt(xC * xC + yC * yC); // m/s
 					cSpeed *= 3.600D; // km/h
 					cSpeed /= 1.852D; // knots
-					double cDir = NMEAUtils.getDir(xC, yC);
+					double cDir = 0d;
+					try {
+						cDir = NMEAUtils.getDir(xC, yC);
+					} catch (NMEAUtils.AmbiguousException ae) {
+						// Aborb, leave dir to 0
+						System.err.println(ae.getMessage());
+					}
 					cDir += 180;
 					while (cDir > 360) {
 						cDir -= 360;
@@ -1266,7 +1278,13 @@ public class GribHelper {
 							speed = Math.sqrt(x * x + y * y); // m/s
 							speed *= 3.600D; // km/h
 							speed /= 1.852D; // knots
-							dir = NMEAUtils.getDir(x, y);
+							dir = 0d;
+							try {
+								dir = NMEAUtils.getDir(x, y);
+							} catch (NMEAUtils.AmbiguousException ae) {
+								// Absorb. Leave dir to 0
+								System.err.println(ae.getMessage());
+							}
 						}
 						gribCond.winddir = (int) Math.round(dir);
 						gribCond.windspeed = adjustWindSpeed((float) speed);
@@ -1287,7 +1305,13 @@ public class GribHelper {
 							speed = Math.sqrt(x * x + y * y); // m/s
 							speed *= 3.600D; // km/h
 							speed /= 1.852D; // knots
-							dir = NMEAUtils.getDir(x, y);
+							dir = 0d;
+							try {
+								dir = NMEAUtils.getDir(x, y);
+							} catch (NMEAUtils.AmbiguousException ae) {
+								// Absorb. Leave dir to 0
+								System.err.println(ae.getMessage());
+							}
 							dir += 180;
 							while (dir > 360) dir -= 360;
 						}

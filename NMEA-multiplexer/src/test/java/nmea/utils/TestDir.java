@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class TestDir {
 
@@ -15,16 +16,24 @@ public class TestDir {
 
         deltaX.forEach(x -> {
             deltaY.forEach(y -> {
-                double dirObsolete = NMEAUtils.getDirObsolete(x, y);
-                double newDir = NMEAUtils.getDir(x, y);
-                assertEquals(String.format("Old and new are not the same, for x:%f y:%f", x, y), dirObsolete, newDir, 0.0001);
+                try {
+                    double dirObsolete = NMEAUtils.getDirObsolete(x, y);
+                    double newDir = NMEAUtils.getDir(x, y);
+                    assertEquals(String.format("Old and new are not the same, for x:%f y:%f", x, y), dirObsolete, newDir, 0.0001);
+                } catch (NMEAUtils.AmbiguousException ae) {
+                    fail(ae.getMessage());
+                }
             });
         });
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = NMEAUtils.AmbiguousException.class)
     public void ambiguousGetDir() {
-        double dir = NMEAUtils.getDir(0d, 0d);
+        try {
+            double dir = NMEAUtils.getDir(0d, 0d);
+        } catch (NMEAUtils.AmbiguousException ae) {
+            fail(ae.getMessage());
+        }
     }
 
 }

@@ -120,7 +120,12 @@ public class NMEAUtils {
         double a = (rsX - rfX);
         double b = (rfY - rsY);
         csp = Math.sqrt((a * a) + (b * b));
-        cdr = getDir((float) a, (float) b);
+        try {
+            cdr = getDir((float) a, (float) b);
+        } catch (AmbiguousException ae) {
+            // Absorb
+            System.err.println(ae.getMessage());
+        }
 
         return new double[]{cdr, csp};
     }
@@ -166,15 +171,22 @@ public class NMEAUtils {
         return dir;
     }
 
+
+    public static class AmbiguousException extends Exception {
+        public AmbiguousException(String message) {
+            super(message);
+        }
+    }
+
     /**
      *
      * @param x deltaX
      * @param y deltaY
      * @return the dir, in degrees [0..360[
      */
-    public static double getDir(double x, double y) {
+    public static double getDir(double x, double y) throws AmbiguousException {
         if (x == 0d && y == 0d) {
-            throw new RuntimeException("Ambiguous... deltaX and deltaY set to zero.");
+            throw new AmbiguousException("Ambiguous... deltaX and deltaY set to zero.");
         }
         double direction = 180 + Math.toDegrees(Math.atan2(x, y));
         while (direction < 0) {
