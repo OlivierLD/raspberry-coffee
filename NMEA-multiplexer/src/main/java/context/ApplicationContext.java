@@ -2,6 +2,7 @@ package context;
 
 import nmea.parser.Angle180EW;
 import nmea.parser.GeoPos;
+import nmea.utils.MuxNMEAUtils;
 import nmea.utils.NMEAUtils;
 
 import java.util.List;

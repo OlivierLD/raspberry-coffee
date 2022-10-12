@@ -34,6 +34,7 @@ import nmea.parser.UTCTime;
 import nmea.parser.VHW;
 import nmea.parser.VLW;
 import nmea.parser.Wind;
+import nmea.utils.NMEAUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,8 +50,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-
-import static nmea.utils.NMEAUtils.longitudeToTime;
 
 /**
  * For AIS, see system property "put.ais.in.cache"
@@ -505,9 +504,9 @@ public class NMEADataCache
 										if (false) { // For comparison
 											System.out.printf("Solar Date with EoT: %s\n", SolarDate.FMT.format(solarDateFromEOT));
 											if (rmc.getRmcDate() != null) {
-												solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
+												solarTime = rmc.getRmcDate().getTime() + NMEAUtils.longitudeToTime(rmc.getGp().lng);
 											} else {
-												solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+												solarTime = rmc.getRmcTime().getTime() + NMEAUtils.longitudeToTime(rmc.getGp().lng);
 											}
 											Date solarDate = new Date(solarTime);
 											System.out.printf("Solar Date from G  : %s\n", SolarDate.FMT.format(solarDate));
@@ -515,9 +514,9 @@ public class NMEADataCache
 										}
 									} else {
 										if (rmc.getRmcDate() != null) {
-											solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
+											solarTime = rmc.getRmcDate().getTime() + NMEAUtils.longitudeToTime(rmc.getGp().lng);
 										} else {
-											solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+											solarTime = rmc.getRmcTime().getTime() + NMEAUtils.longitudeToTime(rmc.getGp().lng);
 										}
 										Date solarDate = new Date(solarTime);
 										this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
@@ -553,7 +552,7 @@ public class NMEADataCache
 									Date solarDateFromEOT = getSolarDateFromEOT(utc.getValue(), pos.lat, pos.lng);
 									this.put(GPS_SOLAR_TIME, new SolarDate(solarDateFromEOT));
 								} else {
-									long solarTime = utc.getValue().getTime() + longitudeToTime(pos.lng);
+									long solarTime = utc.getValue().getTime() + NMEAUtils.longitudeToTime(pos.lng);
 									Date solarDate = new Date(solarTime);
 									this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
 								}
@@ -574,7 +573,7 @@ public class NMEADataCache
 						break;
 					case "VLW": // Log
 						VLW vlw = StringParsers.parseVLW(nmeaSentence);
-						HashMap<String, Object> map = new HashMap<String, Object>(2);
+						HashMap<String, Object> map = new HashMap<>(2);
 						this.put(LOG, new Distance(vlw.getLog()));
 						this.put(DAILY_LOG, new Distance(vlw.getDaily()));
 						break;
@@ -643,7 +642,7 @@ public class NMEADataCache
 										Date solarDateFromEOT = getSolarDateFromEOT(date, pos.lat, pos.lng);
 										this.put(GPS_SOLAR_TIME, new SolarDate(solarDateFromEOT));
 									} else {
-										long solarTime = date.getTime() + longitudeToTime(pos.lng);
+										long solarTime = date.getTime() + NMEAUtils.longitudeToTime(pos.lng);
 										Date solarDate = new Date(solarTime);
 										this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
 									}

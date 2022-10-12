@@ -6,6 +6,7 @@ import nmea.api.Multiplexer;
 import nmea.api.NMEAParser;
 import nmea.computers.current.LongTimeCurrentCalculator;
 import nmea.parser.*;
+import nmea.utils.MuxNMEAUtils;
 import nmea.utils.NMEAUtils;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class ExtraDataComputer extends Computer {
 	private final static String DEFAULT_PREFIX = "OS"; // OlivSoft
 
 	private String generatedStringsPrefix = DEFAULT_PREFIX;
-	private List<LongTimeCurrentCalculator> longTimeCurrentCalculator = new ArrayList<>();
+	private final List<LongTimeCurrentCalculator> longTimeCurrentCalculator = new ArrayList<>();
 
 	private final List<String> requiredStrings = Arrays.asList(new String[]{
 			"RMC",   // Recommended Minimum
@@ -135,7 +136,7 @@ public class ExtraDataComputer extends Computer {
 								});
 								if (toRemove.size() > 0) {
 									synchronized (rmcMap) {
-										toRemove.forEach(k -> rmcMap.remove(k));
+										toRemove.forEach(rmcMap::remove);
 									}
 								}
 								cache.putAll(rmcMap);
@@ -232,7 +233,7 @@ public class ExtraDataComputer extends Computer {
 				int producedWith = -1;
 				if (cache != null) {
 					synchronized (cache) {
-						NMEAUtils.computeAndSendValuesToCache(cache);
+						MuxNMEAUtils.computeAndSendValuesToCache(cache);
 						// True Wind
 						try {
 							twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
@@ -324,7 +325,7 @@ public class ExtraDataComputer extends Computer {
 	public void close() {
 		System.out.println("- Stop Computing True Wind, " + this.getClass().getName());
 		if (this.longTimeCurrentCalculator != null) {
-			this.longTimeCurrentCalculator.stream().forEach(ltcc -> ltcc.stop());
+			this.longTimeCurrentCalculator.stream().forEach(LongTimeCurrentCalculator::stop);
 		}
 	}
 
@@ -333,8 +334,8 @@ public class ExtraDataComputer extends Computer {
 	}
 
 	public static class ComputerBean {
-		private String cls;
-		private String type = "tw-current";
+		private final String cls;
+		private final String type = "tw-current";
 		private String timeBufferLength = "600000"; // Default is 10 minutes.
 		private int cacheSize = 0;
 		private String tbSize = "";

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-// TODO Merge with NMEA-multiplexer's nmea.utils.NMEAUtils
+// Merged with NMEA-multiplexer's nmea.utils.NMEAUtils, Oct 12, 2022.
 public class NMEAUtils {
     public final static int ALL_IN_HEXA = 0;
     public final static int CR_NL = 1;
@@ -126,13 +126,14 @@ public class NMEAUtils {
     }
 
     /**
-     * TODO Use Math.atan2
      *
-     * @param x
-     * @param y
-     * @return
+     * @param x deltaX
+     * @param y deltaY
+     * @return the dir, in degrees
+     *
+     * @deprecated Use getDir (below)
      */
-    public static double getDir(float x, float y) {
+    public static double getDirObsolete(float x, float y) {
         double dir = 0.0D;
         if (y != 0) {
             dir = Math.toDegrees(Math.atan((double) x / (double) y));
@@ -163,6 +164,24 @@ public class NMEAUtils {
             dir -= 360D;
         }
         return dir;
+    }
+
+    /**
+     *
+     * @param x deltaX
+     * @param y deltaY
+     * @return the dir, in degrees [0..360[
+     */
+    public static double getDir(double x, double y) {
+        if (x == 0d && y == 0d) {
+            throw new RuntimeException("Ambiguous... deltaX and deltaY set to zero.");
+        }
+        double direction = 180 + Math.toDegrees(Math.atan2(x, y));
+        while (direction < 0) {
+            direction += 360;
+        }
+        direction %= 360;
+        return direction;
     }
 
     public static double getLeeway(double awa, double maxLeeway) {
