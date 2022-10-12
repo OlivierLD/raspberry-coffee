@@ -150,9 +150,14 @@ while [[ "${GO}" == "true" ]]; do
 	  "1")
   	  PROP_FILE=nmea.mux.no.gps.yaml
   	  NOHUP=""
-  	  if [[ "${WITH_NOHUP}" == "Y" ]]; then
-  	    NOHUP="nohup "
-  	    echo -e ">> Will use nohup"
+  	  if [[ "${WITH_NOHUP}" == "Y" ]] || [[ "${WITH_NOHUP}" == "N" ]]; then
+  	    if [[ "${WITH_NOHUP}" == "Y" ]]; then
+  	      NOHUP="nohup "
+  	      echo -e ">> Will use nohup"
+  	    else
+  	      NOHUP=""
+  	      echo -e ">> Will not use nohup"
+  	    fi
   	  else
   	    # Ask if nohup, just in this case
   	    echo -en " ==> Use nohup (y|n) ? > "
