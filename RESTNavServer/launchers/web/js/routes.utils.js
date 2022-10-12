@@ -129,13 +129,13 @@ let GreatCircle = function (from, to) {
 };
 
 /* Static Utils */
-if (toRadians === undefined) {
+if (typeof(toRadians) !== 'function') {
     let toRadians = (deg) => {
         return deg * (Math.PI / 180);
     };
 }
 
-if (toDegrees === undefined) {
+if (typeof(toDegrees) !== 'function') {
     let toDegrees = (rad) => {
         return rad * (180 / Math.PI);
     };
@@ -250,31 +250,33 @@ let toDegreePt = (pt) => {
 	return { lat: toDegrees(pt.lat), lng: toDegrees(pt.lng) };
 };
 
-let decToSex = (val, ns_ew) => {
-	let absVal = Math.abs(val);
-	let intValue = Math.floor(absVal);
-	let dec = absVal - intValue;
-	let i = intValue;
-	dec *= 60;
-//    let s = i + "°" + dec.toFixed(2) + "'";
-//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
-	let s = "";
-	if (ns_ew !== undefined) {
-		if (val < 0) {
-			s += (ns_ew === 'NS' ? 'S' : 'W');
+if (typeof(decToSex) !== 'function') {
+	let decToSex = (val, ns_ew) => {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		let i = intValue;
+		dec *= 60;
+	//    let s = i + "°" + dec.toFixed(2) + "'";
+	//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+		let s = "";
+		if (ns_ew !== undefined) {
+			if (val < 0) {
+				s += (ns_ew === 'NS' ? 'S' : 'W');
+			} else {
+				s += (ns_ew === 'NS' ? 'N' : 'E');
+			}
+			s += " ";
 		} else {
-			s += (ns_ew === 'NS' ? 'N' : 'E');
+			if (val < 0) {
+				s += '-'
+			}
 		}
-		s += " ";
-	} else {
-		if (val < 0) {
-			s += '-'
-		}
-	}
-	s += i + "\272" + dec.toFixed(2) + "'";
+		s += i + "\272" + dec.toFixed(2) + "'";
 
-	return s;
-};
+		return s;
+	};
+}
 
 /**
  * Get the direction
@@ -285,35 +287,38 @@ let decToSex = (val, ns_ew) => {
  * @param y vertical displacement
  * @return the angle, in degrees
  */
-let getDir = (x, y) => {
-	let dir = 0.0;
-	if (y !== 0) {
-		dir = toDegrees(Math.atan(x / y));
-	}
-	if (x <= 0 || y <= 0) {
-		if (x > 0 && y < 0) {
-			dir += 180;
-		} else if (x < 0 && y > 0) {
-			dir += 360;
-		} else if (x < 0 && y < 0) {
-			dir += 180;
-		} else if (x === 0) {
-			if (y > 0) {
-				dir = 0.0;
-			} else {
-				dir = 180;
-			}
-		} else if (y === 0) {
-			if (x > 0) {
-				dir = 90;
-			} else {
-				dir = 270;
+
+ if (typeof(getDir) !== 'function') {
+	let getDir = (x, y) => {
+		let dir = 0.0;
+		if (y !== 0) {
+			dir = toDegrees(Math.atan(x / y));
+		}
+		if (x <= 0 || y <= 0) {
+			if (x > 0 && y < 0) {
+				dir += 180;
+			} else if (x < 0 && y > 0) {
+				dir += 360;
+			} else if (x < 0 && y < 0) {
+				dir += 180;
+			} else if (x === 0) {
+				if (y > 0) {
+					dir = 0.0;
+				} else {
+					dir = 180;
+				}
+			} else if (y === 0) {
+				if (x > 0) {
+					dir = 90;
+				} else {
+					dir = 270;
+				}
 			}
 		}
-	}
-	while (dir >= 360) dir -= 360;
-	return dir;
-};
+		while (dir >= 360) dir -= 360;
+		return dir;
+	};
+}
 
 if (false) {
 // Main for tests

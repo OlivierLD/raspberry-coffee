@@ -185,87 +185,91 @@
                         console.debug(">>>> oneDateGRIB.typedData[idx].data, yCell:%d, undefined.", yCell);
                         break;
                     }
-                    var value = oneDateGRIB.typedData[idx].data[yCell][xCell];
+                    var value = oneDateGRIB.typedData[idx].data[yCell][xCell]; // TODO xCell === -1
                     var unit = oneDateGRIB.typedData[idx].gribType.unit;
                     var type = oneDateGRIB.typedData[idx].gribType.type;
 
                     // console.log("  >>> Type: %s, xCell: %d", type, xCell);
 
-                    var displayValue, displayUnit, displayType;
-                    switch (type) {
-                        case 'prmsl':
-                            displayType = 'PRMSL';
-                            displayValue = (value / 100).toFixed(2);
-                            displayUnit = 'hPa';
-                            break;
-                        case 'tmp':
-                            displayType = 'AIRTMP';
-                            displayValue = (value - 273.6).toFixed(2);
-                            displayUnit = 'C';
-                            break;
-                        case 'ugrd':
-                            if (!foundWind) {
-                                var vgrd;
-                                for (var i = 0; i < oneDateGRIB.typedData.length; i++) {
-                                    if (oneDateGRIB.typedData[i].gribType.type === 'vgrd') {
-                                        vgrd = oneDateGRIB.typedData[i].data;
-                                        break;
+                    if (value !== undefined) {  // xCell === -1 ?
+                        var displayValue, displayUnit, displayType;
+                        switch (type) {
+                            case 'prmsl':
+                                displayType = 'PRMSL';
+                                displayValue = (value / 100).toFixed(2);
+                                displayUnit = 'hPa';
+                                break;
+                            case 'tmp':
+                                displayType = 'AIRTMP';
+                                displayValue = (value - 273.6).toFixed(2);
+                                displayUnit = 'C';
+                                break;
+                            case 'ugrd':
+                                if (!foundWind) {
+                                    var vgrd;
+                                    for (var i = 0; i < oneDateGRIB.typedData.length; i++) {
+                                        if (oneDateGRIB.typedData[i].gribType.type === 'vgrd') {
+                                            vgrd = oneDateGRIB.typedData[i].data;
+                                            break;
+                                        }
                                     }
+                                    if (vgrd !== undefined) {
+                                        displayUnit = '';
+                                        displayType = "WIND";
+                                        var u = value;
+                                        var v = vgrd[yCell][xCell];
+                                        var tws = getSpeed(u, v);
+                                        var dir = getDir(u, v);
+                                        displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + "), Cell <b>" + yCell + "</b>, <b>" + xCell + "</b>.";
+                                        // console.log('w:%d, h:%d', yCell, xCell);
+                                        foundWind = true;
+                                    }
+                                } else {
+                                    skip = true;
                                 }
-                                if (vgrd !== undefined) {
-                                    displayUnit = '';
-                                    displayType = "WIND";
-                                    var u = value;
-                                    var v = vgrd[yCell][xCell];
-                                    var tws = getSpeed(u, v);
-                                    var dir = getDir(u, v);
-                                    displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + "), Cell <b>" + yCell + "</b>, <b>" + xCell + "</b>.";
-                                    // console.log('w:%d, h:%d', yCell, xCell);
-                                    foundWind = true;
-                                }
-                            } else {
+                                break;
+                            case 'vgrd':
                                 skip = true;
-                            }
-                            break;
-                        case 'vgrd':
-                            skip = true;
-                            break;
-                        case 'prate':
-                            displayType = 'PRATE';
-                            displayValue = (value * 3600).toFixed(2);
-                            displayUnit = "mm/h";
-                            break;
-                        case 'hgt':
-                            displayType = '500HGT';
-                            try {
-                                displayValue = (value).toFixed(2);
-                                displayUnit = "m";
-                            } catch (err) {
-                                displayValue = "xx";
-                                displayUnit = "-";
-                                // console.log(err);
-                                messageManager(err);
-                            }
-                            break;
-                        case 'htsgw':
-                            displayType = 'WAVES';
-                            if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
-                                // Re-adjust. Waves do not have the same grid size...
-                                let _xCell = Math.floor(xCell * oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
-                                value = oneDateGRIB.typedData[idx].data[yCell][_xCell];
-                            }
-                            try {
-                                displayValue = value.toFixed(2);
-                                displayUnit = unit;
-                            } catch (err) {
-                                displayValue = "xx";
-                                displayUnit = "-";
-                                // console.log(err);
-                                messageManager(err);
-                            }
-                            break;
-                        default:
-                            break;
+                                break;
+                            case 'prate':
+                                displayType = 'PRATE';
+                                displayValue = (value * 3600).toFixed(2);
+                                displayUnit = "mm/h";
+                                break;
+                            case 'hgt':
+                                displayType = '500HGT';
+                                try {
+                                    displayValue = (value).toFixed(2);
+                                    displayUnit = "m";
+                                } catch (err) {
+                                    displayValue = "xx";
+                                    displayUnit = "-";
+                                    // console.log(err);
+                                    messageManager(JSON.stringify(err, null, 2));
+                                }
+                                break;
+                            case 'htsgw':
+                                displayType = 'WAVES';
+                                if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
+                                    // Re-adjust. Waves do not have the same grid size...
+                                    let _xCell = Math.floor(xCell * oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
+                                    value = oneDateGRIB.typedData[idx].data[yCell][_xCell];
+                                }
+                                try {
+                                    displayValue = value.toFixed(2);
+                                    displayUnit = unit;
+                                } catch (err) {
+                                    displayValue = "xx";
+                                    displayUnit = "-";
+                                    // console.log(err);
+                                    messageManager(err);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        skip = true;
                     }
                     if (!skip) {
                         str += ("\n" + displayType + ": " + displayValue + " " + displayUnit);
@@ -1332,11 +1336,12 @@ Going to: Latitude:
        max="59.99"
        step="0.01"
        value="00.00"/>
-<button onclick="testRouting();" title="Early test, no UI" style="color: red;">Routing <b>Test</b></button>
+<button onclick="testRouting();" title="Early test, no UI. Work in Progress." style="color: red;">Routing <b><i>Test</i></b></button>
 <div style="min-height: 16px;">
     <span id="current-grib-location"></span>
 </div>
 <!-- End of Test -->
+
 <table width="100%" cellpadding="0" cellspacing="0" border="0"> <!--  style="position: fixed; bottom: 0;" -->
     <tr>
         <td align="left" valign="top" height="40">
@@ -1346,7 +1351,7 @@ Going to: Latitude:
     <tr>
         <td>
             <!-- Messages -->
-            <div id="message-zone" style="color: black; font-family: 'Courier New', 'Source Code Pro', Helvetica, Geneva; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 100px; overflow-y: scroll;"></div>
+            <div id="message-zone" style="color: black; font-family: 'Courier New', 'Source Code Pro', Helvetica, Geneva; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
             <button onclick="clearMessZone();">Clear</button>
         </td>
     </tr>
