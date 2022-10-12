@@ -29,6 +29,8 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 
 public class GribHelper {
+	private final static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
+
 	private static boolean alreadySaidTooOld;
 
 	public static void setAlreadySaidTooOld(boolean b) {
@@ -1199,7 +1201,11 @@ public class GribHelper {
 						dir = NMEAUtils.getDir(x, y);
 					} catch (NMEAUtils.AmbiguousException ae) {
 						// Absorb. Leave dir to 0
-						System.err.println(ae.getMessage());
+						if (verbose) {
+							final StackTraceElement[] stackTrace = ae.getStackTrace();
+							String from = stackTrace.length > 1 ? stackTrace[1].toString() + " - " : "";
+							System.err.println(from + ae.getMessage());
+						}
 					}
 					gribCond.winddir = (int) Math.round(dir);
 					gribCond.windspeed = adjustWindSpeed((float) speed);
@@ -1221,7 +1227,11 @@ public class GribHelper {
 						cDir = NMEAUtils.getDir(xC, yC);
 					} catch (NMEAUtils.AmbiguousException ae) {
 						// Aborb, leave dir to 0
-						System.err.println(ae.getMessage());
+						if (verbose) {
+							final StackTraceElement[] stackTrace = ae.getStackTrace();
+							String from = stackTrace.length > 1 ? stackTrace[1].toString() + " - " : "";
+							System.err.println(from + ae.getMessage());
+						}
 					}
 					cDir += 180;
 					while (cDir > 360) {
@@ -1283,7 +1293,11 @@ public class GribHelper {
 								dir = NMEAUtils.getDir(x, y);
 							} catch (NMEAUtils.AmbiguousException ae) {
 								// Absorb. Leave dir to 0
-								System.err.println(ae.getMessage());
+								if (verbose) {
+									final StackTraceElement[] stackTrace = ae.getStackTrace();
+									String from = stackTrace.length > 1 ? stackTrace[1].toString() + " - " : "";
+									System.err.println(from + ae.getMessage());
+								}
 							}
 						}
 						gribCond.winddir = (int) Math.round(dir);
@@ -1310,7 +1324,11 @@ public class GribHelper {
 								dir = NMEAUtils.getDir(x, y);
 							} catch (NMEAUtils.AmbiguousException ae) {
 								// Absorb. Leave dir to 0
-								System.err.println(ae.getMessage());
+								if (verbose) {
+									final StackTraceElement[] stackTrace = ae.getStackTrace();
+									String from = stackTrace.length > 1 ? stackTrace[1].toString() + " - " : "";
+									System.err.println(from + ae.getMessage());
+								}
 							}
 							dir += 180;
 							while (dir > 360) dir -= 360;

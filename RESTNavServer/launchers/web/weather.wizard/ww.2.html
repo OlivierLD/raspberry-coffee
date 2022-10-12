@@ -570,6 +570,7 @@
         };
 
         var DURATION_FMT = "Y-m-dTH:i:s";
+        var ROUTING_VERBOSE = true;
 
         var testRouting = function () {
 
@@ -605,7 +606,11 @@
                 "verbose": false
             };
             var callback = function (bestRoute) {
-                // console.log(bestRoute);
+
+                if (ROUTING_VERBOSE) {
+                    console.log(bestRoute);
+                }
+
                 bestRouteToPlot = JSON.parse(bestRoute); // in grib.routing.js
                 displaySummary(bestRouteToPlot);
                 plotBestRoute(canvas, context);

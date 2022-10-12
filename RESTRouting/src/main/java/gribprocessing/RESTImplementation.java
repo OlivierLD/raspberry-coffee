@@ -411,6 +411,9 @@ public class RESTImplementation {
 						default:
 							break;
 					}
+					if (verbose) {
+						System.out.println("Routing completed.");
+					}
 //					System.out.println(String.format("Content-type: %s", contentType));
 //					System.out.println(String.format("Content:\n%s", content));
 					RESTProcessorUtil.generateResponseHeaders(response, contentType, content.length());

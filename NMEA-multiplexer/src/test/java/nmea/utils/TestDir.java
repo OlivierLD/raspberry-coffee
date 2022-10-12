@@ -21,7 +21,9 @@ public class TestDir {
                     double newDir = NMEAUtils.getDir(x, y);
                     assertEquals(String.format("Old and new are not the same, for x:%f y:%f", x, y), dirObsolete, newDir, 0.0001);
                 } catch (NMEAUtils.AmbiguousException ae) {
-                    fail(ae.getMessage());
+                    final StackTraceElement[] stackTrace = ae.getStackTrace();
+                    String from = stackTrace.length > 1 ? stackTrace[1].toString() + " - " : "";
+                    fail(from + ae.getMessage());
                 }
             });
         });
@@ -32,7 +34,9 @@ public class TestDir {
         try {
             double dir = NMEAUtils.getDir(0d, 0d);
         } catch (NMEAUtils.AmbiguousException ae) {
-            fail(ae.getMessage());
+            final StackTraceElement[] stackTrace = ae.getStackTrace();
+            String from = stackTrace.length > 1 ? stackTrace[1].toString() + " - " : "";
+            fail(from + ae.getMessage());
         }
     }
 
