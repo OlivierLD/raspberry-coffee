@@ -8,7 +8,7 @@ import threading
 # There is a thread to receive
 # Send is done in the main thread
 
-machine_name: str = "127.0.0.1"
+machine_name: str = "127.0.0.1"  # localhost
 tcp_port: int = 7002
 verbose: bool = False
 
