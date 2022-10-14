@@ -13,7 +13,7 @@ Then, from one shell
 ```
 And from another one
 ```bash
- $> ./pitchroll
+ $> ./lsm303.sh  # was ./pitchroll
 
 ```
 Then from a browser, reach the machine where `node` is running:

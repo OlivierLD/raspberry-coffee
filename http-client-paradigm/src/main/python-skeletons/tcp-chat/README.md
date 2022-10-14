@@ -3,6 +3,13 @@
 
 This presents a multi-threaded server, and the corresponding client (several client instances can be spawned, lucky us!).
 
+> _**To Notice**_:  
+> This implements a **hub-and-spoke** architecture, even if it may look like
+> a peer-to-peer behavior.  
+> The server is sitting in the middle, and one or more clients are running aroun d the server.  
+> When a _client_ sends a message, it tells the _server_ who to send it to.  
+> The server is then sending the message to all the clients mentioned by the client.
+
 It is implementing only the basic features of a chat server. 
 One of the requirements was to keep the code as small as possible.  
 You can:

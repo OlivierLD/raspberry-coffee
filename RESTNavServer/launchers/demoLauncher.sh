@@ -102,6 +102,9 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "| 20. Get Data Cache (curl)                                                               |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
+	echo -e "+------------------------------------+----------------------------------------------------+"
+	echo -e "|  >> To get help on option X, type H:X                                                   |                                                    |"
+	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  Q. Quit ❎                        |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	if [[ "${USER_OPTION}" != "" ]]; then
@@ -144,6 +147,32 @@ while [[ "${GO}" == "true" ]]; do
 	    ;;
 	  "JVH" | "jvh")
 	    echo "More here soon..."
+	    echo -en "Hit [Return]"
+	    read a
+	    ;;
+	  H:*)
+	    # echo "Start with H: ${option}"
+	    HELP_ON=${option#*:}
+	    echo -e "Required help on option ${HELP_ON}"
+	    case "${HELP_ON}" in
+	      "1")
+	        PROP_FILE=nmea.mux.no.gps.yaml
+	        echo -e "--------------------------------"
+	        echo -e "Option ${HELP_ON}, property file is ${PROP_FILE}"
+	        cat ${PROP_FILE}
+	        echo -e "--------------------------------"
+	        ;;
+	      "2")
+	        PROP_FILE=nmea.mux.interactive.time.properties
+	        echo -e "--------------------------------"
+	        echo -e "Option ${HELP_ON}, property file is ${PROP_FILE}"
+	        cat ${PROP_FILE}
+	        echo -e "--------------------------------"
+	        ;;
+	      *)
+	        echo -e "No help implemented (yet) for option ${HELP_ON}"
+	        ;;
+	    esac
 	    echo -en "Hit [Return]"
 	    read a
 	    ;;
