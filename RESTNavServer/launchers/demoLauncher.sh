@@ -101,6 +101,8 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "| 20. Get Data Cache (curl)                                                               |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
+	echo -e "| 21. Sample Python TCP Client                                                            |"
+	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  >> To get help on option X, type H:X                                                   |                                                    |"
@@ -412,7 +414,16 @@ while [[ "${GO}" == "true" ]]; do
 	    fi
       echo -e "\nHit [Return]"
       read resp
-	    ;;	
+	    ;;
+	  "21")
+	    echo -e "This requires a Multiplexer to be running, and forwarding data on a TCP Port"
+	    echo -en " ==> Multiplexer machine name or IP: "
+      read MACHINE_NAME
+	    echo -en " ==> Multiplexer TCP port: "
+      read TCP_PORT
+	    COMMAND="python3 python-clients/tcp_mux_client.py --machine-name:${MACHINE_NAME} --port:${TCP_PORT}"
+	    ${COMMAND}
+	    ;;
 	  "S" | "s")
 	    echo -e "Nav Server processes:"
 	    ps -ef | grep navrest.NavServer | grep -v grep
