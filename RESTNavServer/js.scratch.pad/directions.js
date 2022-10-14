@@ -14,7 +14,7 @@ if (Math.toDegrees === undefined) {
 
 let directionFinder = (x, y) => {
 
-    // Prefer getDir (atan2)
+    // Note: Prefer getDir (using atan2), below.
     
     let dir = 0.0;
     if (y !== 0) {

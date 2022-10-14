@@ -3,7 +3,6 @@
 import socket
 import sys
 import traceback
-import json
 import threading
 
 # There is a thread to receive

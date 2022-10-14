@@ -44,5 +44,6 @@ Hit `Ctrl-C` in the Raspberry Pi's console to stop the server.
 
 ### TODO
 - Button management
+- A TCP client for the NMEA-multiplexer
 
 ---
