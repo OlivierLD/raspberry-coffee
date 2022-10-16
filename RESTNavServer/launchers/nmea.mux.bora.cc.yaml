@@ -19,6 +19,8 @@ channels:
 forwarders:
   - class: nmea.forwarders.CharacterConsoleWriter
     properties: char.console.properties
+  - type: "tcp"
+    port: 7001
 computers:
   - type: tw-current
     #  in seconds:      30s 1m  10m

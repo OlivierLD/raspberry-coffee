@@ -1,8 +1,10 @@
 #!/bin/bash
-# Describes different scenarios
+# Interactive script to launch the RESTNavServer in several configurations.
+# For demo and examples purpose.
+# Describes different scenarios.
 # Uses runNavServer.sh
 # 
-# Parameters --no-rmc-time --no-date : see in runNavServer.sh
+# For parameters --no-rmc-time --no-date : see in runNavServer.sh
 #
 HTTP_PORT=9999
 #
@@ -44,6 +46,13 @@ function openBrowser() {
   else
     open "$1"  # Darwin
   fi
+}
+#
+function displayHelp() {
+  echo -e "--------------------------------"
+  echo -e "Option $1, property file is $2"
+  cat $2
+  echo -e "--------------------------------"
 }
 #
 GO=true
@@ -100,12 +109,14 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "| 13. AIS Tests.                                                                          |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "| 20. Get Data Cache (curl)                                                               |"
+	echo -e "| 20b. Get REST operations list (curl)                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "| 21. Sample Python TCP Client                                                            |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
+	echo -e "|  K. Kill all running Multiplexers  |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
-	echo -e "|  >> To get help on option X, type H:X                                                   |                                                    |"
+	echo -e "|  >> To get help on option X, type H:X (like H:11, H:20b, etc)                           |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  Q. Quit ❎                        |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
@@ -152,23 +163,95 @@ while [[ "${GO}" == "true" ]]; do
 	    echo -en "Hit [Return]"
 	    read a
 	    ;;
-	  H:*)
+	  H:*)   # Help on options below
 	    # echo "Start with H: ${option}"
 	    HELP_ON=${option#*:}
 	    echo -e "Required help on option ${HELP_ON}"
 	    case "${HELP_ON}" in
 	      "1")
 	        PROP_FILE=nmea.mux.no.gps.yaml
-	        echo -e "--------------------------------"
-	        echo -e "Option ${HELP_ON}, property file is ${PROP_FILE}"
-	        cat ${PROP_FILE}
-	        echo -e "--------------------------------"
+	        displayHelp ${HELP_ON} ${PROP_FILE}
 	        ;;
 	      "2")
 	        PROP_FILE=nmea.mux.interactive.time.properties
+	        displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "3")
+	        PROP_FILE=nmea.mux.home.properties
+	        displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "4")
+	        PROP_FILE=nmea.mux.gps.properties
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "5")
+	        PROP_FILE=nmea.mux.no.gps.properties
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "6")
+	        PROP_FILE=nmea.mux.kayak.log.properties
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "6b")
+	        PROP_FILE=nmea.mux.kayak.etel.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "7")
+	        PROP_FILE=nmea.mux.driving.log.properties
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "8")
+	        PROP_FILE=nmea.mux.kayak.cc.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "9")
+	        PROP_FILE=nmea.mux.bora.cc.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "9b")
+	        PROP_FILE=nmea.mux.cc.op.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "9c")
+	        PROP_FILE=nmea.mux.nh.r.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "9d")
+	        PROP_FILE=nmea.mux.heading.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "10")
+	        PROP_FILE=nmea.mux.properties
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "11")
+	        PROP_FILE=nmea.mux.properties
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "12")
+	        PROP_FILE=nmea.mux.2.serial.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "13")
+	        PROP_FILE=nmea.mux.gps.ais.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "20")
+	      	echo -e "Uses a 'curl' to display the current data cache, using REST"
+	      	COMMAND="curl -X GET localhost:${HTTP_PORT}/mux/cache"
+	      	echo -e "Command is "
+	      	echo -e "\t${COMMAND}"
+	        ;;
+	      "20b")
+	      	echo -e "Uses a 'curl' to display the REST operations list, using REST"
+	        COMMAND="curl -X GET http://localhost:9999/oplist"
+	      	echo -e "Command is "
+	      	echo -e "\t${COMMAND}"
+	        ;;
+	      "21")
 	        echo -e "--------------------------------"
-	        echo -e "Option ${HELP_ON}, property file is ${PROP_FILE}"
-	        cat ${PROP_FILE}
+	        echo -e "Requires a MUX to be running, "
+	        echo -e "Starts a Python sample client."
 	        echo -e "--------------------------------"
 	        ;;
 	      *)
@@ -415,15 +498,49 @@ while [[ "${GO}" == "true" ]]; do
       echo -e "\nHit [Return]"
       read resp
 	    ;;
+	  "20b")
+	    COMMAND="curl -X GET http://localhost:9999/oplist"
+	    if [[ "$(which jq)" != "" ]]; then
+	      ${COMMAND} | jq
+	    else
+	      ${COMMAND}
+	    fi
+      echo -e "\nHit [Return]"
+      read resp
+	    ;;
 	  "21")
 	    echo -e "This requires a Multiplexer to be running, and forwarding data on a TCP Port"
-	    echo -en " ==> Multiplexer machine name or IP: "
+	    echo -en " ==> Enter Multiplexer machine name or IP (default 'localhost'): "
       read MACHINE_NAME
-	    echo -en " ==> Multiplexer TCP port: "
+      if [[ "${MACHINE_NAME}" == "" ]]; then
+        MACHINE_NAME=localhost
+        echo -e "Defaulting machine name to ${MACHINE_NAME}"
+      fi
+	    echo -en " ==> Enter Multiplexer TCP port (default 7001): "
       read TCP_PORT
-	    COMMAND="python3 python-clients/tcp_mux_client.py --machine-name:${MACHINE_NAME} --port:${TCP_PORT}"
+      if [[ "${TCP_PORT}" == "" ]]; then
+        TCP_PORT=7001
+        echo -e "Defaulting TCP port to ${TCP_PORT}"
+      fi
+	    echo -en " ==> With verbose option (default false): "
+      read VERBOSE
+      if [[ "${VERBOSE}" == "" ]]; then
+        VERBOSE=false
+        echo -e "Defaulting verbose to ${VERBOSE}"
+      fi
+      if [[ ${VERBOSE} =~ ^(yes|y|Y)$ ]]; then
+        VERBOSE=true
+      fi
+      #
+      pushd other-clients/python
+	    COMMAND="python3 tcp_mux_client.py --machine-name:${MACHINE_NAME} --port:${TCP_PORT} --verbose:${VERBOSE}"
 	    ${COMMAND}
+	    popd
+      echo -e "\nHit [Return]"
+      read resp
 	    ;;
+	# Others...
+	    # ;;
 	  "S" | "s")
 	    echo -e "Nav Server processes:"
 	    ps -ef | grep navrest.NavServer | grep -v grep
@@ -451,6 +568,14 @@ while [[ "${GO}" == "true" ]]; do
 	    echo -e "Proxy processes:"
 	    ps -ef | grep ProxyGUI | grep -v grep
 	    ps -ef | grep HTTPServer | grep -v grep
+	    #
+	    echo -en "Hit [return]"
+	    read ret
+	    ;;
+	  "K" | "k")
+	    ./killns.sh
+	    #
+	    sleep 5  # Wait for the kill to be completed.
 	    #
 	    echo -en "Hit [return]"
 	    read ret
