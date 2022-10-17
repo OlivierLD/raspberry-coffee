@@ -6,7 +6,7 @@
   - This example just echoes whatever NMEA sentence is received through the TCP channel.
   - Can be used as a skeleton, for devices accessible from Python (like e-Ink or Papirus, samples available in this repo).
 
-  TODO Manage exit
+  - Uses TKinter for the GUI. (See https://tkinter.com/, https://realpython.com/python-gui-tkinter/, etc)
 """
 
 import tkinter as tk
