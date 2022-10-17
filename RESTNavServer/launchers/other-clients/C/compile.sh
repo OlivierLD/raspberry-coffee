@@ -12,6 +12,7 @@ read RESP
 if [[  ${RESP} =~ ^(yes|y|Y)$ ]]; then
    DEBUG_FLAG="-D_DEBUG"
 fi
+# Here we go
 gcc ${DEBUG_FLAG} *.c -o httpClient
 #
 if [ $? -ne 0 ]; then

@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Running httpClient
+#
 echo -e "This requires a Multiplexer to be running, with a given HTTP Port"
 PRMS=""
 echo -en " ==> Enter Multiplexer machine name or IP (default 'localhost'): "
