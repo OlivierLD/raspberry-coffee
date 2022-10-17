@@ -89,9 +89,9 @@ public class AlmanacComputer {
 		}
 
 		String output = getPrm(args, "-out");
-		if (output == null)
+		if (output == null) {
 			out = System.out;
-		else {
+		} else {
 			try {
 				out = new PrintStream(output);
 			} catch (Exception ex) {
@@ -189,9 +189,9 @@ public class AlmanacComputer {
 		int startMonth = JANUARY, endMonth = DECEMBER;
 		int startDay = 1, endDay = 0;
 
-		if ("continuous".equals(type))
+		if ("continuous".equals(type)) {
 			startYear = Integer.parseInt(yearPrm);
-		else {
+		} else {
 			startYear = fromYear;
 			startMonth = fromMonth;
 			startDay = fromDay;
@@ -218,11 +218,14 @@ public class AlmanacComputer {
 				month = m + 1;
 //      while (month > 12) month -= 12;
 				out.println("<month value='" + month + "'>");
-				if (dayPrm == null)
+				if (dayPrm == null) {
 					endDay = getNbDays(year, month);
+				}
 				for (int d = (startDay - 1); keepLooping && d < endDay; d++) {
 					day = d + 1;
-					if (verbose) System.out.println("Computing " + year + "-" + month + "-" + day);
+					if (verbose) {
+						System.out.println("Computing " + year + "-" + month + "-" + day);
+					}
 					out.println("<day value='" + day + "'>");
 					for (int h = 0; h <= 24; h++) {
 						hour = h;
@@ -242,18 +245,20 @@ public class AlmanacComputer {
 						cal.set(Calendar.DAY_OF_MONTH, toDay);
 						Date t = cal.getTime();
 
-						if (current.compareTo(t) >= 0)
+						if (current.compareTo(t) >= 0) {
 							keepLooping = false;
+						}
 					}
 				} // Day loop
 				out.println("</month>");
-				if (fromTo)
+				if (fromTo) {
 					startDay = 1;
+				}
 			} // Month loop
 			out.println("</year>");
-			if (continuous)
+			if (continuous) {
 				keepLooping = false;
-			else {
+			} else {
 				year += 1;
 				startMonth = JANUARY;
 			}
@@ -284,7 +289,7 @@ public class AlmanacComputer {
 		System.out.println("D Sun: " + Context.DECsun);
 	}
 
-	private static final String getPrm(String[] args, String prm) {
+	private static String getPrm(String[] args, String prm) {
 		String ret = null;
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals(prm)) {
@@ -306,23 +311,23 @@ public class AlmanacComputer {
 
 	public static int getNbDays(int y, int m) {
 		int nd = 0;
-		if (m != 2)
+		if (m != 2) {
 			nd = dayPerMonth[m - 1];
-		else {
+		} else {
 			nd = 28;
 			boolean leap = false;
-			if (y % 4 == 0) // Leap
-			{
+			if (y % 4 == 0) { // Leap
 				leap = true;
-				if (y % 100 == 0) // Not leap
-				{
+				if (y % 100 == 0) { // Not leap
 					leap = false;
-					if (y % 400 == 0)
+					if (y % 400 == 0) {
 						leap = true;
+					}
 				}
 			}
-			if (leap)
+			if (leap) {
 				nd = 29;
+			}
 		}
 		return nd;
 	}
@@ -368,15 +373,15 @@ public class AlmanacComputer {
 
 	private final static int NB_BODIES = 7;
 
-	private static double[] prevGHA = new double[NB_BODIES];
-	private static double[] prevDec = new double[NB_BODIES];
+	private final static double[] prevGHA = new double[NB_BODIES];
+	private final static double[] prevDec = new double[NB_BODIES];
 
-	private static double[] prevLunar = new double[NB_BODIES];
-	private static double[] prevStarLunars = new double[Star.getCatalog().length];
+	private final static double[] prevLunar = new double[NB_BODIES];
+	private final static double[] prevStarLunars = new double[Star.getCatalog().length];
 
 	private static double prevEOT = Double.MAX_VALUE;
 
-	private final static void initPrevValues() {
+	private static void initPrevValues() {
 		for (int i = 0; i < prevGHA.length; i++) {
 			prevGHA[i] = Double.MAX_VALUE;
 			prevDec[i] = Double.MAX_VALUE;
@@ -404,8 +409,9 @@ public class AlmanacComputer {
 		if (prevGHA[bodyIndex] != Double.MAX_VALUE) {
 			deltaGHA[bodyIndex] = Context.GHAsun - prevGHA[bodyIndex];
 			deltaD[bodyIndex] = Math.abs(Context.DECsun - prevDec[bodyIndex]);
-			while (deltaGHA[bodyIndex] < 0) deltaGHA[bodyIndex] += 360d;
-
+			while (deltaGHA[bodyIndex] < 0) {
+				deltaGHA[bodyIndex] += 360d;
+			}
 			deltaLunar[bodyIndex] = Math.abs(Context.LDist - prevLunar[bodyIndex]);
 
 			deltaEOT = Context.EoT - prevEOT;
@@ -415,8 +421,12 @@ public class AlmanacComputer {
 		out.println("      GHA='" + Context.GHAsun + "'");
 		// SHA
 		double shaSun = Context.GHAAtrue - Context.GHAsun;
-		while (shaSun < 0) shaSun += 360;
-		while (shaSun > 360) shaSun += 360;
+		while (shaSun < 0) {
+			shaSun += 360;
+		}
+		while (shaSun > 360) {
+			shaSun += 360;
+		}
 		out.println("      SHA='" + shaSun + "'");
 		out.println("      varGHA='" + ((prevGHA[bodyIndex] != Double.MAX_VALUE) ? deltaGHA[bodyIndex] : "") + "'");
 		out.println("      RA='" + Context.RAsun + "'");
@@ -440,17 +450,19 @@ public class AlmanacComputer {
 			prevEOT = Context.EoT;
 		}
 		String sign = "";
-		if (Context.EoT < 0)
+		if (Context.EoT < 0) {
 			sign = "-";
-		else
+		} else {
 			sign = "+";
+		}
 		Context.EoT = Math.abs(Context.EoT);
 		int EOTmin = (int) Math.floor(Context.EoT);
 		int EOTsec = (int) Math.round(600 * (Context.EoT - EOTmin)) / 10;
-		if (EOTmin == 0)
+		if (EOTmin == 0) {
 			out.print("      eot='" + sign + EOTsec + "s'");
-		else
+		} else {
 			out.print("      eot='" + sign + EOTmin + "m " + EOTsec + "s'");
+		}
 
 		out.println("/>");
 
@@ -458,15 +470,21 @@ public class AlmanacComputer {
 		if (prevGHA[bodyIndex] != Double.MAX_VALUE) {
 			deltaGHA[bodyIndex] = Context.GHAmoon - prevGHA[bodyIndex];
 			deltaD[bodyIndex] = Math.abs(Context.DECmoon - prevDec[bodyIndex]);
-			while (deltaGHA[bodyIndex] < 0) deltaGHA[bodyIndex] += 360d;
+			while (deltaGHA[bodyIndex] < 0) {
+				deltaGHA[bodyIndex] += 360d;
+			}
 		}
 		//Moon
 		out.println("<body name='Moon'");
 		out.println("      GHA='" + Context.GHAmoon + "'");
 		// SHA
 		double shaMoon = Context.GHAAtrue - Context.GHAmoon;
-		while (shaMoon < 0) shaMoon += 360;
-		while (shaMoon > 360) shaMoon += 360;
+		while (shaMoon < 0) {
+			shaMoon += 360;
+		}
+		while (shaMoon > 360) {
+			shaMoon += 360;
+		}
 		out.println("      SHA='" + shaMoon + "'");
 		out.println("      varGHA='" + ((prevGHA[bodyIndex] != Double.MAX_VALUE) ? deltaGHA[bodyIndex] : "") + "'");
 		out.println("      RA='" + Context.RAmoon + "'");
@@ -478,7 +496,9 @@ public class AlmanacComputer {
 //  out.println("      phase-in-degrees='" + Context.moonPhase + "'");
 		out.println("      sun-moon='" + Context.LDist + "'");
 		double phase = Context.lambdaMapp - Context.lambda_sun;
-		if (phase < 0d) phase += 360d;
+		if (phase < 0d) {
+			phase += 360d;
+		}
 		out.println("      phase-in-degrees='" + phase + "'");
 		out.println("      age-in-days='" + (phase * 28D / 360D) + "'");
 		//Equation of time
@@ -486,10 +506,11 @@ public class AlmanacComputer {
 //  out.println("      EoT-in-minutes='" + Context.moonEoT + "'");
 //  out.println("      t-pass-in-hours='" + (12f - (Context.moonEoT / 60f)) + "'");
 		sign = "";
-		if (Context.moonEoT < 0)
+		if (Context.moonEoT < 0) {
 			sign = "-";
-		else
+		} else {
 			sign = "+";
+		}
 		Context.moonEoT = Math.abs(Context.moonEoT);
 		int EOThour = (int) Math.floor(Context.moonEoT / 60d);
 		EOTmin = (int) Math.floor(Context.moonEoT - (EOThour * 60));
@@ -506,7 +527,9 @@ public class AlmanacComputer {
 		bodyIndex = ARIES;
 		if (prevGHA[bodyIndex] != Double.MAX_VALUE) {
 			deltaGHA[bodyIndex] = Context.GHAAtrue - prevGHA[bodyIndex];
-			while (deltaGHA[bodyIndex] < 0) deltaGHA[bodyIndex] += 360d;
+			while (deltaGHA[bodyIndex] < 0) {
+				deltaGHA[bodyIndex] += 360d;
+			}
 		}
 		out.println("<body name='Aries'");
 		out.println("      GHA='" + Context.GHAAtrue + "'");
@@ -521,15 +544,21 @@ public class AlmanacComputer {
 		if (prevGHA[bodyIndex] != Double.MAX_VALUE) {
 			deltaGHA[bodyIndex] = Context.GHAvenus - prevGHA[bodyIndex];
 			deltaD[bodyIndex] = Math.abs(Context.DECvenus - prevDec[bodyIndex]);
-			while (deltaGHA[bodyIndex] < 0) deltaGHA[bodyIndex] += 360d;
+			while (deltaGHA[bodyIndex] < 0) {
+				deltaGHA[bodyIndex] += 360d;
+			}
 			deltaLunar[bodyIndex] = Math.abs(Context.moonVenusDist - prevLunar[bodyIndex]);
 		}
 		out.println("<body name='Venus'");
 		out.println("      GHA='" + Context.GHAvenus + "'");
 		// SHA
 		double shaVenus = Context.GHAAtrue - Context.GHAvenus;
-		while (shaVenus < 0) shaVenus += 360;
-		while (shaVenus > 360) shaVenus += 360;
+		while (shaVenus < 0) {
+			shaVenus += 360;
+		}
+		while (shaVenus > 360) {
+			shaVenus += 360;
+		}
 		out.println("      SHA='" + shaVenus + "'");
 		out.println("      varGHA='" + ((prevGHA[bodyIndex] != Double.MAX_VALUE) ? deltaGHA[bodyIndex] : "") + "'");
 		out.println("      RA='" + Context.RAvenus + "'");
@@ -539,7 +568,7 @@ public class AlmanacComputer {
 		out.println("      hp='" + Context.HPvenus + "'");
 		out.println("      moonDist='" + Context.moonVenusDist + "'");
 		out.println("      delta-lunar='" + ((prevLunar[bodyIndex] != Double.MAX_VALUE) ? deltaLunar[bodyIndex] : "") + "'");
-		out.println("      illum='" + Context.k_venus + "%'/>");
+		out.println("      illum='" + DF_X_02.format(Context.k_venus) + "%'/>");
 		if (hour < 24) {
 			prevGHA[bodyIndex] = Context.GHAvenus;
 			prevDec[bodyIndex] = Context.DECvenus;
@@ -551,15 +580,21 @@ public class AlmanacComputer {
 		if (prevGHA[bodyIndex] != Double.MAX_VALUE) {
 			deltaGHA[bodyIndex] = Context.GHAmars - prevGHA[bodyIndex];
 			deltaD[bodyIndex] = Math.abs(Context.DECmars - prevDec[bodyIndex]);
-			while (deltaGHA[bodyIndex] < 0) deltaGHA[bodyIndex] += 360d;
+			while (deltaGHA[bodyIndex] < 0) {
+				deltaGHA[bodyIndex] += 360d;
+			}
 			deltaLunar[bodyIndex] = Math.abs(Context.moonMarsDist - prevLunar[bodyIndex]);
 		}
 		out.println("<body name='Mars'");
 		out.println("      GHA='" + Context.GHAmars + "'");
 		// SHA
 		double shaMars = Context.GHAAtrue - Context.GHAmars;
-		while (shaMars < 0) shaMars += 360;
-		while (shaMars > 360) shaMars += 360;
+		while (shaMars < 0) {
+			shaMars += 360;
+		}
+		while (shaMars > 360) {
+			shaMars += 360;
+		}
 		out.println("      SHA='" + shaMars + "'");
 		out.println("      varGHA='" + ((prevGHA[bodyIndex] != Double.MAX_VALUE) ? deltaGHA[bodyIndex] : "") + "'");
 		out.println("      RA='" + Context.RAmars + "'");
@@ -569,7 +604,7 @@ public class AlmanacComputer {
 		out.println("      hp='" + Context.HPmars + "'");
 		out.println("      moonDist='" + Context.moonMarsDist + "'");
 		out.println("      delta-lunar='" + ((prevLunar[bodyIndex] != Double.MAX_VALUE) ? deltaLunar[bodyIndex] : "") + "'");
-		out.println("      illum='" + Context.k_mars + "%'/>");
+		out.println("      illum='" + DF_X_02.format(Context.k_mars) + "%'/>");
 		if (hour < 24) {
 			prevGHA[bodyIndex] = Context.GHAmars;
 			prevDec[bodyIndex] = Context.DECmars;
@@ -581,15 +616,21 @@ public class AlmanacComputer {
 		if (prevGHA[bodyIndex] != Double.MAX_VALUE) {
 			deltaGHA[bodyIndex] = Context.GHAjupiter - prevGHA[bodyIndex];
 			deltaD[bodyIndex] = Math.abs(Context.DECjupiter - prevDec[bodyIndex]);
-			while (deltaGHA[bodyIndex] < 0) deltaGHA[bodyIndex] += 360d;
+			while (deltaGHA[bodyIndex] < 0) {
+				deltaGHA[bodyIndex] += 360d;
+			}
 			deltaLunar[bodyIndex] = Math.abs(Context.moonJupiterDist - prevLunar[bodyIndex]);
 		}
 		out.println("<body name='Jupiter'");
 		out.println("      GHA='" + Context.GHAjupiter + "'");
 		// SHA
 		double shaJupiter = Context.GHAAtrue - Context.GHAjupiter;
-		while (shaJupiter < 0) shaJupiter += 360;
-		while (shaJupiter > 360) shaJupiter += 360;
+		while (shaJupiter < 0) {
+			shaJupiter += 360;
+		}
+		while (shaJupiter > 360) {
+			shaJupiter += 360;
+		}
 		out.println("      SHA='" + shaJupiter + "'");
 		out.println("      varGHA='" + ((prevGHA[bodyIndex] != Double.MAX_VALUE) ? deltaGHA[bodyIndex] : "") + "'");
 		out.println("      RA='" + Context.RAjupiter + "'");
@@ -599,7 +640,7 @@ public class AlmanacComputer {
 		out.println("      hp='" + Context.HPjupiter + "'");
 		out.println("      moonDist='" + Context.moonJupiterDist + "'");
 		out.println("      delta-lunar='" + ((prevLunar[bodyIndex] != Double.MAX_VALUE) ? deltaLunar[bodyIndex] : "") + "'");
-		out.println("      illum='" + Context.k_jupiter + "%'/>");
+		out.println("      illum='" + DF_X_02.format(Context.k_jupiter) + "%'/>");
 		if (hour < 24) {
 			prevGHA[bodyIndex] = Context.GHAjupiter;
 			prevDec[bodyIndex] = Context.DECjupiter;
@@ -611,15 +652,21 @@ public class AlmanacComputer {
 		if (prevGHA[bodyIndex] != Double.MAX_VALUE) {
 			deltaGHA[bodyIndex] = Context.GHAsaturn - prevGHA[bodyIndex];
 			deltaD[bodyIndex] = Math.abs(Context.DECsaturn - prevDec[bodyIndex]);
-			while (deltaGHA[bodyIndex] < 0) deltaGHA[bodyIndex] += 360d;
+			while (deltaGHA[bodyIndex] < 0) {
+				deltaGHA[bodyIndex] += 360d;
+			}
 			deltaLunar[bodyIndex] = Math.abs(Context.moonSaturnDist - prevLunar[bodyIndex]);
 		}
 		out.println("<body name='Saturn'");
 		out.println("      GHA='" + Context.GHAsaturn + "'");
 		// SHA
 		double shaSatrun = Context.GHAAtrue - Context.GHAsaturn;
-		while (shaSatrun < 0) shaSatrun += 360;
-		while (shaSatrun > 360) shaSatrun += 360;
+		while (shaSatrun < 0) {
+			shaSatrun += 360;
+		}
+		while (shaSatrun > 360) {
+			shaSatrun += 360;
+		}
 		out.println("      SHA='" + shaSatrun + "'");
 		out.println("      varGHA='" + ((prevGHA[bodyIndex] != Double.MAX_VALUE) ? deltaGHA[bodyIndex] : "") + "'");
 		out.println("      RA='" + Context.RAsaturn + "'");
@@ -629,7 +676,7 @@ public class AlmanacComputer {
 		out.println("      hp='" + Context.HPsaturn + "'");
 		out.println("      moonDist='" + Context.moonSaturnDist + "'");
 		out.println("      delta-lunar='" + ((prevLunar[bodyIndex] != Double.MAX_VALUE) ? deltaLunar[bodyIndex] : "") + "'");
-		out.println("      illum='" + Context.k_saturn + "%'/>");
+		out.println("      illum='" + DF_X_02.format(Context.k_saturn) + "%'/>");
 		if (hour < 24) {
 			prevGHA[bodyIndex] = Context.GHAsaturn;
 			prevDec[bodyIndex] = Context.DECsaturn;
@@ -650,8 +697,9 @@ public class AlmanacComputer {
 			out.println("<body name='" + escapeXML(Star.getCatalog()[i].getStarName()) + "'");
 			out.println("      loc='" + Star.getCatalog()[i].getConstellation() + "'"); // Like alpha Canis Majoris
 			Core.starPos(Star.getCatalog()[i].getStarName());
-			if (prevStarLunars[i] != Double.MAX_VALUE)
+			if (prevStarLunars[i] != Double.MAX_VALUE) {
 				deltaStarLunar[i] = Math.abs(Context.starMoonDist - prevStarLunars[i]);
+			}
 			out.println("      GHA='" + Context.GHAstar + "'");
 			out.println("      SHA='" + Context.SHAstar + "'");
 			out.println("      Dec='" + Context.DECstar + "'");
@@ -691,18 +739,18 @@ public class AlmanacComputer {
 			double[] rs = AlmanacComputer.sunRiseAndSet(lat);
 			out.println("<latitude val='" + Integer.toString((int) lat) + "'>");
 			out.println("<sun>");
-			if (Double.compare(rs[0], Double.NaN) == 0 || Double.compare(rs[1], Double.NaN) == 0)
+			if (Double.compare(rs[0], Double.NaN) == 0 || Double.compare(rs[1], Double.NaN) == 0) {
 				out.println("  <none/>");
-			else {
+			} else {
 				//  out.println(rs[0] + " - " + rs[1]);
 				out.println("  <rise z='" + Integer.toString((int) Math.round(rs[2])) + "'>" + GeomUtil.formatHM(rs[0]) + "</rise><set z='" + Integer.toString((int) Math.round(rs[3])) + "'>" + GeomUtil.formatHM(rs[1]) + "</set>");
 			}
 			out.println("</sun>");
 			rs = AlmanacComputer.moonRiseAndSet(lat);
 			out.println("<moon>");
-			if (Double.compare(rs[0], Double.NaN) == 0 || Double.compare(rs[1], Double.NaN) == 0)
+			if (Double.compare(rs[0], Double.NaN) == 0 || Double.compare(rs[1], Double.NaN) == 0) {
 				out.println("  <none/>");
-			else {
+			} else {
 				//  out.println(rs[0] + " - " + rs[1]);
 				out.println("  <rise>" + GeomUtil.formatHM(rs[0]) + "</rise><set>" + GeomUtil.formatHM(rs[1]) + "</set>");
 			}
