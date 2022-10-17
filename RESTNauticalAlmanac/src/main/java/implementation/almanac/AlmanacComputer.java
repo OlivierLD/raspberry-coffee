@@ -3,6 +3,8 @@ package implementation.almanac;
 
 import java.io.PrintStream;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,6 +25,7 @@ import utils.TimeUtil;
 public class AlmanacComputer {
 	private final static boolean verbose = true;
 
+	private final static NumberFormat DF_X_02 = new DecimalFormat("0.00");
 	private static int year = 0, month = 0, day = 0, hour = 0, minute = 0;
 	private static float second = 0f;
 	private static double deltaT = 0d;
@@ -471,7 +474,7 @@ public class AlmanacComputer {
 		out.println("      varD='" + ((prevGHA[bodyIndex] != Double.MAX_VALUE) ? deltaD[bodyIndex] : "") + "'");
 		out.println("      sd-minute='" + (Context.SDmoon / 60.0) + "'");
 		out.println("      hp-minute='" + (Context.HPmoon / 60.0) + "'");
-		out.println("      illum='" + Context.k_moon + "%" + Core.moonPhase() + "'");
+		out.println("      illum='" + DF_X_02.format(Context.k_moon) + "%" + Core.moonPhase() + "'");
 //  out.println("      phase-in-degrees='" + Context.moonPhase + "'");
 		out.println("      sun-moon='" + Context.LDist + "'");
 		double phase = Context.lambdaMapp - Context.lambda_sun;
