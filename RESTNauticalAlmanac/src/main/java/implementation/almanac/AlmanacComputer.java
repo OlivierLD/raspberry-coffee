@@ -1,26 +1,16 @@
 package implementation.almanac;
 
 
-import java.io.PrintStream;
+import calc.GeomUtil;
+import calc.calculation.nauticalalmanac.*;
+import utils.TimeUtil;
 
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
-import calc.calculation.nauticalalmanac.Anomalies;
-import calc.calculation.nauticalalmanac.Context;
-import calc.calculation.nauticalalmanac.Core;
-import calc.calculation.nauticalalmanac.Jupiter;
-import calc.calculation.nauticalalmanac.Mars;
-import calc.calculation.nauticalalmanac.Moon;
-import calc.calculation.nauticalalmanac.Saturn;
-import calc.calculation.nauticalalmanac.Star;
-import calc.calculation.nauticalalmanac.Venus;
-
-import calc.GeomUtil;
-import utils.TimeUtil;
 
 public class AlmanacComputer {
 	private final static boolean verbose = true;
@@ -306,9 +296,17 @@ public class AlmanacComputer {
 		return ret;
 	}
 
-	private static final int[] dayPerMonth = new int[]
-			{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	private static final int[] dayPerMonth = new int[]{
+			31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+	};
 
+	/**
+	 * Get the number of days for a given month and year. Takes care of leap years.
+	 *
+	 * @param y year
+	 * @param m month Jan:1, Dec:12
+	 * @return the number of days in the given month.
+	 */
 	public static int getNbDays(int y, int m) {
 		int nd = 0;
 		if (m != 2) {
@@ -319,10 +317,7 @@ public class AlmanacComputer {
 			if (y % 4 == 0) { // Leap
 				leap = true;
 				if (y % 100 == 0) { // Not leap
-					leap = false;
-					if (y % 400 == 0) {
-						leap = true;
-					}
+					leap = y % 400 != 0;
 				}
 			}
 			if (leap) {
