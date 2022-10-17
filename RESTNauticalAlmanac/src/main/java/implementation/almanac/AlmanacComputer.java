@@ -309,7 +309,7 @@ public class AlmanacComputer {
 	 */
 	public static int getNbDays(int y, int m) {
 		int nd = DAYS_PER_MONTH[m - 1];
-		if (m == 2) { // FEB
+		if (m == FEBRUARY) {
 			boolean leap = false;
 			if (y % 4 == 0) { // Leap
 				leap = true;
