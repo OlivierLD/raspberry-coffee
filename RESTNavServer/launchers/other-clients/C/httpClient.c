@@ -11,7 +11,10 @@
  * The server needs to be identified by its name or IP, and HTTP port.
  * 
  * This is just a scaffolding for similar utilities.
+ * 
+ * Use gcc -D_DEBUG ... to enable _DEBUG flag
  */
+
 
 #ifndef TRUE
 #define TRUE 1
@@ -22,12 +25,13 @@
 #define NL 10
 
 #define MESS_SIZE 1024
-#define RESPONSE_SIZE 16384  // Warning: this can be a limitation
+#define RESPONSE_SIZE 16384  // 16 Mb. Warning: this can be a limitation
 
 
 const char * VERBOSE_PRM = "--verbose:";
 const char * MACHINE_PRM = "--machine-name:";
-const char * PORT_PRM = "--port:";
+const char * PORT_PRM    = "--port:";
+const char * QUERY_PRM   = "--query:";
 
 char errorMess[MESS_SIZE];
 
@@ -55,32 +59,36 @@ int findPayloadOffset(char * fullResponse) {
     return payloadStartsAt;
 }
 
-const int DEBUG=FALSE;  // User set, in the code. TODO Replace with a define, ifdef, -D, etc.
-
 int main(int argc, char **argv) {
+
+    #ifdef _DEBUG
+    fprintf(stdout, "_DEBUG is defined\n");
+    // #else
+    // fprintf(stdout, "_DEBUG is NOT defined\n");
+    #endif
 
     // default values
     int portno = 9999;
     char * host = "localhost"; // "192.168.42.6";
-    char * rest_request = "GET /mux/cache HTTP/1.0\r\n\r\n";
-    // char * rest_request = "GET /oplist HTTP/1.0\r\n\r\n";
+    char * query = "/mux/cache"; // also try "/oplist"
+    char rest_request[256];
+    memset(rest_request, 0, sizeof(rest_request)); // init, all 0
+    sprintf(rest_request, "GET %s HTTP/1.0\r\n\r\n", query); // Will be like "GET /mux/cache HTTP/1.0\r\n\r\n"
     int verbose = FALSE;
-
 
     char prmValue[128];
 
-    // TODO override ALL values above from the args.
     if (argc > 1) {
         for (int i=1; i<argc; i++) {
             memset(prmValue, 0, sizeof(prmValue)); // init, all 0
-            if (DEBUG) {
+            #ifdef _DEBUG
               fprintf(stdout, "Prm #%d: [%s]\n", i, argv[i]);
-            }
+            #endif
             if (strncmp(argv[i], VERBOSE_PRM, strlen(VERBOSE_PRM)) == 0) {
                 memcpy(&prmValue[0], &argv[i][strlen(VERBOSE_PRM)], strlen(argv[i]) - strlen(VERBOSE_PRM));
-                if (DEBUG) {
+                #ifdef _DEBUG
                   fprintf(stdout, "Found VERBOSE prm:%s (value:%d)\n", prmValue, strcasecmp(prmValue, "TRUE")); // substr(argv[i], strlen(VERBOSE_PRM))); // prmValue);
-                }
+                #endif
                 if (strcasecmp(prmValue, "TRUE") == 0) {
                     verbose = TRUE;
                 }
@@ -91,17 +99,21 @@ int main(int argc, char **argv) {
             } else if (strncmp(argv[i], PORT_PRM, strlen(PORT_PRM)) == 0) {
                 memcpy(&prmValue[0], &argv[i][strlen(PORT_PRM)], strlen(argv[i]) - strlen(PORT_PRM));
                 portno = atoi(prmValue);
+            } else if (strncmp(argv[i], QUERY_PRM, strlen(QUERY_PRM)) == 0) {
+                memcpy(&prmValue[0], &argv[i][strlen(QUERY_PRM)], strlen(argv[i]) - strlen(QUERY_PRM));
+                query = (char *)calloc(128, sizeof(char));
+                strcpy(query, prmValue);
             } else {
                 fprintf(stdout, "Unsupported parameter %s\n", argv[i]);
             }
         }
-        if (DEBUG) {
-            fprintf(stdout, "verbose: %s, host: %s, port: %d\n", verbose ? "true" : "false", host, portno);
-        }
+        #ifdef _DEBUG
+            fprintf(stdout, "CLI prms: verbose: %s, host: %s, port: %d, query: %s\n", verbose ? "true" : "false", host, portno, query);
+        #endif
     }
 
     if (verbose) {
-        fprintf(stdout, "Will run request\n\t%s on %s:%d\n", rest_request, host, portno);
+        fprintf(stdout, "Will run request: %s on %s:%d\n", rest_request, host, portno);
     }
 
     struct hostent * server;

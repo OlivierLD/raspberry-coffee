@@ -12,6 +12,11 @@ read HTTP_PORT
 if [[ "${HTTP_PORT}" != "" ]]; then
     PRM="${PRM}--port:${HTTP_PORT} "
 fi
+echo -en " ==> Enter REST query (default '/mux/cache'): "
+read REST_QUERY
+if [[ "${REST_QUERY}" != "" ]]; then
+    PRM="${PRM}--query:${REST_QUERY} "
+fi
 echo -en " ==> With verbose option (default false): "
 read VERBOSE
 if [[ "${VERBOSE}" != "" ]]; then
@@ -25,8 +30,11 @@ fi
 #
 COMMAND="./httpClient ${PRM}"
 echo -e "Command will be: ${COMMAND}"
-echo -en "With jq y|n > ? "
-read RESP
+RESP="n"
+if [[ "$(which jq)" != "" ]]; then
+    echo -en "With jq y|n > ? "
+    read RESP
+fi
 if [[ ${RESP} =~ ^(yes|y|Y)$ ]]; then
    ${COMMAND} | jq
 else

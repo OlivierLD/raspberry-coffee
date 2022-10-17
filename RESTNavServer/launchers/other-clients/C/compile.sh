@@ -6,7 +6,13 @@ echo -e "-- GCC Version --"
 gcc --version
 echo -e "-----------------"
 #
-gcc *.c -o httpClient
+DEBUG_FLAG=""
+echo -en "Enable _DEBUG flag y|n ? > "
+read RESP
+if [[  ${RESP} =~ ^(yes|y|Y)$ ]]; then
+   DEBUG_FLAG="-D_DEBUG"
+fi
+gcc ${DEBUG_FLAG} *.c -o httpClient
 #
 if [ $? -ne 0 ]; then
     echo "Compile failed!.."
