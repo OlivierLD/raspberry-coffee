@@ -42,7 +42,7 @@ void error(const char *msg) {
  * @param fullResponse As it came from the server
  * @return int The required offset, -1 if not found.
  */
-int findPayloadStart(char * fullResponse) {
+int findPayloadOffset(char * fullResponse) {
     int payloadStartsAt = -1;
     for (int i=0; i<strlen(fullResponse); i++) {
         // fprintf(stdout, "Char at %d: %c (%d)\n", i, (char)response[i], (int)response[i]);
@@ -179,11 +179,11 @@ int main(int argc, char **argv) {
       fprintf(stdout, "Full response:\n%s\n", response);
     }
 
-    int payloadStartsAt = findPayloadStart(response);
-    if (payloadStartsAt > -1) {
+    int payloadOffset = findPayloadOffset(response);
+    if (payloadOffset > -1) {
         char payload[RESPONSE_SIZE];
         memset(payload, 0, sizeof(payload)); // init, all 0
-        memcpy(&payload[0], &response[payloadStartsAt], strlen(response) - payloadStartsAt);
+        memcpy(&payload[0], &response[payloadOffset], strlen(response) - payloadOffset);
         if (verbose) {
             fprintf(stdout, "Payload:\n");
         }
