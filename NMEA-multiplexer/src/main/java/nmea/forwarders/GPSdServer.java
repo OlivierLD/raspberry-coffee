@@ -97,32 +97,6 @@ public class GPSdServer implements Forwarder {
 		}
 	}
 
-	public static void main(String... args) {
-//	String gpsd = "{\"class\":\"TVP\",\"tag\":\"MID2\",\"time\":\"2010-04-30T11:48:20.10Z\",\"ept\":0.005,\"lat\":46.498204497,\"lon\":7.568061439,\"alt\":1327.689,\"epx\":15.319,\"epy\":17.054,\"epv\":124.484,\"track\":10.3797,\"speed\":0.091,\"climb\":-0.085,\"eps\",34.11,\"mode\":3}";
-		String gpsd = "?WATCH={...};";
-		String wpl = "$GPWPL,3739.856,N,12222.812,W,OPMRNA*59";
-		try {
-			GPSdServer tcpw = new GPSdServer(2947); // 2947
-//    TCPWriter tcpw = new TCPWriter(7001);
-//    TCPWriter tcpw = new TCPWriter(7001, "theketch-lap.mshome.net");
-			for (int i = 0; i < 50; i++) {
-				System.out.println("Ping...");
-				try {
-					tcpw.write(gpsd.getBytes());
-				} catch (Exception ex) {
-					System.err.println(ex.getLocalizedMessage());
-				}
-				try {
-					Thread.sleep(1_000L);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private class SocketThread extends Thread {
 		private GPSdServer parent = null;
 
@@ -135,6 +109,11 @@ public class GPSdServer implements Forwarder {
 			try {
 				parent.serverSocket = new ServerSocket(tcpPort);
 				while (true) { // Wait for the clients
+//					if (instance.props != null) {
+//						instance.props.forEach((k, v) -> System.out.printf("GPSd prop [%s]: [%s]", k, v));
+//					} else {
+//						System.out.println("GPSd: no props.");
+//					}
 					if (instance.props != null && "true".equals(instance.props.getProperty("verbose"))) {
 						System.out.println(".......... serverSocket waiting (GPSd:" + tcpPort + ").");
 					}
@@ -237,4 +216,32 @@ public class GPSdServer implements Forwarder {
 	public void setProperties(Properties props) {
 		this.props = props;
 	}
+
+	// This is for tests
+	public static void main(String... args) {
+//	String gpsd = "{\"class\":\"TVP\",\"tag\":\"MID2\",\"time\":\"2010-04-30T11:48:20.10Z\",\"ept\":0.005,\"lat\":46.498204497,\"lon\":7.568061439,\"alt\":1327.689,\"epx\":15.319,\"epy\":17.054,\"epv\":124.484,\"track\":10.3797,\"speed\":0.091,\"climb\":-0.085,\"eps\",34.11,\"mode\":3}";
+		String gpsd = "?WATCH={...};";
+		String wpl = "$GPWPL,3739.856,N,12222.812,W,OPMRNA*59";
+		try {
+			GPSdServer tcpw = new GPSdServer(2947); // 2947
+//    TCPWriter tcpw = new TCPWriter(7001);
+//    TCPWriter tcpw = new TCPWriter(7001, "theketch-lap.mshome.net");
+			for (int i = 0; i < 50; i++) {
+				System.out.println("Ping...");
+				try {
+					tcpw.write(gpsd.getBytes());
+				} catch (Exception ex) {
+					System.err.println(ex.getLocalizedMessage());
+				}
+				try {
+					Thread.sleep(1_000L);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

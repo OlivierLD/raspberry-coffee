@@ -58,8 +58,21 @@ Those programs are language-agnostic, they rely on standard protocols (Serial, T
 Programs like OpenCPN, SeaWi, and more, are perfectly happy with this. For example, it is quite easy
 to read data from a BME280 (Pressure, Air Temperature, Humidity), and see the Air Temperature in an OpenCPN dashboard.
 
-### TODO
-Note about GPSD, SignalK.
+### GPSd, SignalK
+All the above use NMEA format for the data. NMEA is a well documented standard, that has been around for decades
+(it's probably one of the oldest IT standards).
+
+Some other softs are using other formats (data are transformed into this format, from NMEA).
+
+**GPSd**, is a TCP server, that can be ping just like any other, and it returns data in its proprietary format.
+GPSd - written in C - comes for free, and is here by default on several Linux releases.  
+The NMEA-Multiplexer provides a GPSd forwarder that can be accessed by a GPSd client (like OpenCPN).
+
+**SignalK**, is more like a REST Server, that provides several REST resources to get to the data, returned in JSON format.
+JSON is a standard, REST is a standard, but the JSON Schema used to store the data is not. We are facing - in the NMEA-Multiplexer - the
+exact same problem. When you do a REST request like `GET /mux/cache HTTP/1.0`, you get a JSON Object that has an arbitrary structure, which you
+need to be aware of to get to the data you are interested in.  
+SignalK is in the pipe, but not there yet... Working on it.
 
 ## Now what ?
 In case you want to read the available data (or push your own to the NMEA-Multiplexer) from your own application, or your own code,

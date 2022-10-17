@@ -17,10 +17,13 @@ channels:
     path.in.zip: 2011-01-29.strait.to.tongareva.for.DR.txt.nmea
     verbose: false
 forwarders:
-  - class: nmea.forwarders.CharacterConsoleWriter
-    properties: char.console.properties
+#  - class: nmea.forwarders.CharacterConsoleWriter
+#    properties: char.console.properties
   - type: "tcp"
     port: 7001
+  - type: "gpsd"
+    port: 2947
+    properties: gpsd.properties
 computers:
   - type: tw-current
     #  in seconds:      30s 1m  10m
