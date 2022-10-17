@@ -13,6 +13,6 @@ implement your own extensions or satellites... We want here to provide some samp
   - Same as above, but with a TKinter (simple) GUI.
     - Good tutorial on TKinter [here](https://realpython.com/python-gui-tkinter/).
 
-... More to come (REST, WebSockets, tkinter, guizero, etc).
+... More to come (REST, WebSockets, etc).
 
 ---
