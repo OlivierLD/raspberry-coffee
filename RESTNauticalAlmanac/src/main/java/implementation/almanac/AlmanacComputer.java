@@ -296,7 +296,7 @@ public class AlmanacComputer {
 		return ret;
 	}
 
-	private static final int[] dayPerMonth = new int[]{
+	private static final int[] DAYS_PER_MONTH = new int[] {
 			31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 	};
 
@@ -308,7 +308,7 @@ public class AlmanacComputer {
 	 * @return the number of days in the given month.
 	 */
 	public static int getNbDays(int y, int m) {
-		int nd = dayPerMonth[m - 1];
+		int nd = DAYS_PER_MONTH[m - 1];
 		if (m == 2) { // FEB
 			boolean leap = false;
 			if (y % 4 == 0) { // Leap
