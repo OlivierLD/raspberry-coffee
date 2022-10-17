@@ -15,7 +15,7 @@ Several channels are available by default (ie built-in), to get NMEA data _**fro
   - LSM303
   - HTU21DF
   - ... and more
-  - Those sensors are producing data read by the Multiplexer, and turned into NMEA to be used like any other NMEA data. This way, those sensors can produce data regarding Air Temperature, Atmospheric Pressure, all thgis kind of things, that would be propably cheaper than a commercial NMEA station.
+  - Those sensors are producing data read by the Multiplexer, and turned into NMEA to be used like any other NMEA data. This way, those sensors can produce data regarding Air Temperature, Atmospheric Pressure, all this kind of things, this would be probably cheaper than a commercial NMEA station providing this kind of information.
 
 The Multiplexer can then send those data _**to**_ different channels, like - as above:
 - Serial ports
@@ -33,7 +33,7 @@ Same for AIS receivers. NMEA Stations also provide their data through serial por
 
 TCP and UDP are interesting protocols, in that sense that they are _connected_ protocols.
 This means that a TCP server expects TCP Clients connections, and whenever data are available, they are
-dispatched to all the connected clients _**without the client having to request them**_.
+dispatched to all the connected clients _**without having the client to request them**_.
 
 Web pages do not natively support TCP and UDP, you need to write some code for that (in Java, C, Python, etc).
 
@@ -45,17 +45,18 @@ through a REST interface. REST relies on HTTP. That means that it is a _disconne
 An HTTP (and REST) request goes this way:
 - The client creates an HTTP connection to the server.
 - It pushes a request to the server (verb, resource, headers, payload, etc).
-- Then it receives the response.
-- The connection with the server is interrupted.
+- It expects and receives the response.
+- Then the connection with the server is interrupted (disconnected).
+- Summary: _Connect, Request, Response, Disconnect._
 
-A subsequent REST request will follow the same steps, the previous connection cannot be re-used.
+A subsequent REST request will follow the same steps, the previous connection cannot be re-used, as it was closed.
 
 That is basically what is available out-of-the-box in the NMEA-Multiplexer and its avatars.
 
 Several already existing programs can use the data emitted by the NMEA-Multiplexer, though its different channels.
-Thos programs are language-agnostic, they rely on standard protocols (Serial, TCP, etc), and others (GPSD, SignalK, etc).
-Programs like OpenCPN, SeaWi, and more, are perfectly happy with this. It is quite easy
-to read data from a BME280 (Pressure, Air Temperature, Humidity), and see the Air Temperature in the OpenCPN dashboard.
+Those programs are language-agnostic, they rely on standard protocols (Serial, TCP, etc), and others (GPSD, SignalK, etc).
+Programs like OpenCPN, SeaWi, and more, are perfectly happy with this. For example, it is quite easy
+to read data from a BME280 (Pressure, Air Temperature, Humidity), and see the Air Temperature in an OpenCPN dashboard.
 
 ### TODO
 Note about GPSD, SignalK.
