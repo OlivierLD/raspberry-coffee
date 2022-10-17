@@ -22,6 +22,7 @@ The Multiplexer can then send those data _**to**_ different channels, like - as 
 - TCP ports
 - UDP ports (in progress)
 - WebSockets
+- MQTT (in progress)
 - REST Server (to be pinged and pulled by REST/HTTP requests)
 - Data files (aka log files)
 
