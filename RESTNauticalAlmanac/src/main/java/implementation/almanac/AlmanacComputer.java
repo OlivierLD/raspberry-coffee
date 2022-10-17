@@ -308,11 +308,8 @@ public class AlmanacComputer {
 	 * @return the number of days in the given month.
 	 */
 	public static int getNbDays(int y, int m) {
-		int nd = 0;
-		if (m != 2) {
-			nd = dayPerMonth[m - 1];
-		} else {
-			nd = 28;
+		int nd = dayPerMonth[m - 1];
+		if (m == 2) { // FEB
 			boolean leap = false;
 			if (y % 4 == 0) { // Leap
 				leap = true;
@@ -321,7 +318,7 @@ public class AlmanacComputer {
 				}
 			}
 			if (leap) {
-				nd = 29;
+				nd += 1; // 29;
 			}
 		}
 		return nd;
