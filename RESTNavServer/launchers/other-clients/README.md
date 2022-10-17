@@ -57,7 +57,7 @@ Programs like OpenCPN, SeaWi, and more, are perfectly happy with this. It is qui
 to read data from a BME280 (Pressure, Air Temperature, Humidity), and see the Air Temperature in the OpenCPN dashboard.
 
 ### TODO
-Note about GPSD, SignalK
+Note about GPSD, SignalK.
 
 ## Now what ?
 In case you want to read the available data (or push your own to the NMEA-Multiplexer) from your own application, or your own code,
