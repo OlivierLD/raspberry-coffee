@@ -1,4 +1,7 @@
 # Why this section ?
+OK. Why do we need this section here?  
+Well, in case you want to access the multiplexer's data and features from other languages than Java, or from another software than the ones provided out-of-the-box, you might want to know where to begin...  
+So, let's see what you have out-of-the-box, and what to do from there.
 
 ## Out-of-the-box
 The NMEA-multiplexer is equipped to deal (in input and output) with several channels.  
@@ -59,7 +62,7 @@ Those programs are language-agnostic, they rely on standard protocols (Serial, T
 Programs like OpenCPN, SeaWi, and more, are perfectly happy with this. For example, it is quite easy
 to read data from a BME280 (Pressure, Air Temperature, Humidity), and see the Air Temperature in an OpenCPN dashboard.
 
-### GPSd, SignalK
+### A note about GPSd, SignalK
 All the above use NMEA format for the data. NMEA is a well documented standard, that has been around for decades
 (it's probably one of the oldest IT standards).
 
