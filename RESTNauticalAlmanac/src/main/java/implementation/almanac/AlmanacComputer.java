@@ -314,7 +314,7 @@ public class AlmanacComputer {
 			if (y % 4 == 0) { // Leap
 				leap = true;
 				if (y % 100 == 0) { // Not leap
-					leap = y % 400 != 0;
+					leap = y % 400 == 0; // Except if %400 = 0
 				}
 			}
 			if (leap) {
