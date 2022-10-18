@@ -77,17 +77,18 @@ public class AlmanacComputer {
 	 * See in {@link RESTImplementation}, method generateAstroData.
 	 * Generates the xml output for the requested period.
 	 *
-	 * Try "java [...] AlmanacComputer -help yes" for details
+	 * Try "java [...] implementation.almanac.AlmanacComputer -help" for details
+	 * or "java [...] implementation.almanac.AlmanacComputer -type continuous -year 2009 -month 2 -day 20 -out " for an example
 	 */
 	public static void main(String... args) {
-		String help = getPrm(args, "-help");
-		if (help != null) {
+		boolean help = getPrm(args, "-help");
+		if (help) {
 			displayHelp();
 			System.exit(0);
 		}
 
-		String output = getPrm(args, "-out");
-		if (output == null) {
+		String output = getPrmValue(args, "-out");
+		if (output == null) { // In that case, -out must be the last argument.
 			out = System.out;
 		} else {
 			try {
@@ -97,23 +98,23 @@ public class AlmanacComputer {
 				System.out.println(ex.toString());
 			}
 		}
-		String type = getPrm(args, "-type"); // continuous or from-to
+		String type = getPrmValue(args, "-type"); // continuous or from-to
 		if (type == null) {
 			displayHelp();
 			throw new RuntimeException("-type parameter is mandatory.\nIt can be 'continuous' from 'from-to'");
 		}
 
-		String yearPrm = getPrm(args, "-year");
-		String monthPrm = getPrm(args, "-month");
-		String dayPrm = getPrm(args, "-day");
+		String yearPrm = getPrmValue(args, "-year");
+		String monthPrm = getPrmValue(args, "-month");
+		String dayPrm = getPrmValue(args, "-day");
 
-		String fromYearPrm = getPrm(args, "-from-year");
-		String fromMonthPrm = getPrm(args, "-from-month");
-		String fromDayPrm = getPrm(args, "-from-day");
+		String fromYearPrm = getPrmValue(args, "-from-year");
+		String fromMonthPrm = getPrmValue(args, "-from-month");
+		String fromDayPrm = getPrmValue(args, "-from-day");
 
-		String toYearPrm = getPrm(args, "-to-year");
-		String toMonthPrm = getPrm(args, "-to-month");
-		String toDayPrm = getPrm(args, "-to-day");
+		String toYearPrm = getPrmValue(args, "-to-year");
+		String toMonthPrm = getPrmValue(args, "-to-month");
+		String toDayPrm = getPrmValue(args, "-to-day");
 
 		minute = 0;
 		second = 0;
@@ -287,7 +288,7 @@ public class AlmanacComputer {
 		System.out.println("D Sun: " + Context.DECsun);
 	}
 
-	private static String getPrm(String[] args, String prm) {
+	private static String getPrmValue(String[] args, String prm) {
 		String ret = null;
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals(prm)) {
@@ -298,6 +299,17 @@ public class AlmanacComputer {
 					System.err.println("No value for " + prm + "?");
 					System.err.println(aioobe.toString());
 				}
+				break;
+			}
+		}
+		return ret;
+	}
+
+	private static boolean getPrm(String[] args, String prm) {
+		boolean ret = false;
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals(prm)) {
+				ret = true;
 				break;
 			}
 		}
