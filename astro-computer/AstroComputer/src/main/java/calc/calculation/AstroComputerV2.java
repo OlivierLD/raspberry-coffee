@@ -848,6 +848,29 @@ public class AstroComputerV2 {
         return cal.getTimeInMillis();
     }
 
+    /**
+     * Get the solar date at the time the calculate was doen, for the position given as parameters
+     * @param latitude User's latitude
+     * @param longitude User's longitude
+     * @return the Solar Date
+     */
+    public Date getSolarDateAtPos(double latitude, double longitude) {
+        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+        double eotInHours = this.getSunMeridianPassageTime(latitude, longitude);
+        // TimeUtil.DMS dms = TimeUtil.decimalToDMS(inHours);
+        cal.set(Calendar.YEAR, this.year);
+        cal.set(Calendar.MONTH, this.month - 1);
+        cal.set(Calendar.DAY_OF_MONTH, this.day);
+
+        cal.set(Calendar.HOUR_OF_DAY, this.hour);
+        cal.set(Calendar.MINUTE, this.minute);
+        cal.set(Calendar.SECOND, (int) Math.floor(this.second));
+
+        long ms = cal.getTimeInMillis();
+        Date solar = new Date(ms + Math.round((12 - eotInHours) * 3_600_000));
+        return solar;
+    }
+
     public double getSunElevAtTransit(double latitude, double longitude) {
         if (!this.calculateHasBeenInvoked) {
             throw new RuntimeException("Calculation was never invoked in this context");

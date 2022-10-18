@@ -1,5 +1,6 @@
 package astro;
 
+import calc.GeoPoint;
 import calc.GeomUtil;
 import calc.calculation.AstroComputerV2;
 import calc.calculation.SightReductionUtil;
@@ -16,6 +17,7 @@ public class ACV2Test01 {
     public static void main(String... args) {
 
         SimpleDateFormat SDF_UTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'");
+        SimpleDateFormat SDF_NO_UTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //		SDF_UTC.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 
         System.setProperty("deltaT", "AUTO");
@@ -126,5 +128,10 @@ public class ACV2Test01 {
         double moonTilt = astroComputerV2.getMoonTilt(lat, lng);
         Calendar calculationDateTime = astroComputerV2.getCalculationDateTime();
         System.out.println(String.format("At %s, Moon Tilt: %.03f", SDF_UTC.format(calculationDateTime.getTime()), moonTilt));
+
+        System.out.println(String.format("Solar Time for %s, at pos %s, => %s",
+                SDF_UTC.format(calculationDateTime.getTime()),
+                new GeoPoint(lat, lng).toString(),
+                SDF_NO_UTC.format(astroComputerV2.getSolarDateAtPos(lat, lng))));
     }
 }

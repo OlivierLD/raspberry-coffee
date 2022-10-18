@@ -6,7 +6,7 @@ plugins {
   id 'java'
   id 'scala'
   id 'idea'
-  id 'maven' // to be upgraded to 'maven-publish'
+  id 'maven-publish' // to be upgraded to 'maven-publish'
   id 'com.github.johnrengelman.shadow' // version '6.0.0' // Remove version if used in a gradle submodule.
   id "application"
 }

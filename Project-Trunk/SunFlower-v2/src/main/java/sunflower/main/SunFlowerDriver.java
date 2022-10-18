@@ -757,6 +757,7 @@ public class SunFlowerDriver {
 					sunElevation = dr.getHe();
 					// Calculate Solar Date and TIme
 					solarDate = getSolarDateFromEOT(date.getTime(), devicePosition.getLatitude(), devicePosition.getLongitude());
+					// TODO Compare with acv2.getSolarDateAtPos(devicePosition.getLatitude(), devicePosition.getLongitude())
 					if (ASTRO_VERBOSE) {
 						System.out.printf("At %s, from %s, Z: %.02f, Elev: %.02f \n", date.getTime(), devicePosition, sunAzimuth, sunElevation);
 					}
