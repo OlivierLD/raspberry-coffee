@@ -1,6 +1,7 @@
 package implementation.almanac;
 
 
+import astrorest.RESTImplementation;
 import calc.GeomUtil;
 import calc.calculation.nauticalalmanac.*;
 import utils.TimeUtil;
@@ -12,6 +13,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+/**
+ * Generates the Almanac XML representation for a given period, for almanac publication, in 1 hour steps.
+ * This XML can then be transformed using XSLT (Not in this module, see RESTNavServer for ideas)
+ */
 public class AlmanacComputer {
 	private final static boolean verbose = true;
 
@@ -67,9 +72,12 @@ public class AlmanacComputer {
 	private final static String AUTO = "AUTO";
 	private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06
 
-	/*
-	 * An example of a main.
+	/**
+	 * An example of a main (Can be - and is - invoked programmatically)
+	 * See in {@link RESTImplementation}, method generateAstroData.
 	 * Generates the xml output for the requested period.
+	 *
+	 * Try "java [...] AlmanacComputer -help yes" for details
 	 */
 	public static void main(String... args) {
 		String help = getPrm(args, "-help");
@@ -217,7 +225,7 @@ public class AlmanacComputer {
 						System.out.println("Computing " + year + "-" + month + "-" + day);
 					}
 					out.println("<day value='" + day + "'>");
-					for (int h = 0; h <= 24; h++) {
+					for (int h = 0; h <= 24; h++) {  // Hour by hour
 						hour = h;
 						AlmanacComputer.calculate();
 						AlmanacComputer.xmlOutput();
@@ -283,7 +291,7 @@ public class AlmanacComputer {
 		String ret = null;
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals(prm)) {
-				ret = "";
+				// ret = "";
 				try {
 					ret = args[i + 1];
 				} catch (ArrayIndexOutOfBoundsException aioobe) {
