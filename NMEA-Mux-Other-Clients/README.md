@@ -88,5 +88,7 @@ Each sub-folder will contain different language examples, along with `md` files 
 The code presented here should be 100% independent of the NMEA-multiplexer internal plumbing.
 The only "exception" could be the NMEA-Parser (which does not belong to the NMEA-multiplexer module, by the way).
 
+To give you another point of view, this would tell you how to start writing a client
+like OpenCPN or SeaWi...
 
 ---
