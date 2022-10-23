@@ -15,6 +15,7 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.function.Consumer;
 
 /**
  * JUST a simple TCP Client, expecting to receive NMEA Data.
@@ -23,15 +24,23 @@ import java.util.Date;
  * Also see tcptests.TCPClient.java, in NMEA-multiplexer tests.
  */
 public class NMEATCPClient {
+
+	private String hostName;
+	private int tcpPort;
+
 	private Socket clientSocket;
 	private PrintWriter out;
 	private BufferedReader in;
-	private String hostName;
-	private int tcpPort;
+
+	private Consumer<String> whatToDo; // Externalized consumer
 
 	private boolean goRead = true;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS");
+
+	public void setConsumer(Consumer<String> consumer) {
+		this.whatToDo = consumer;
+	}
 
 	private boolean canRead() {
 		return this.goRead;
@@ -80,33 +89,43 @@ public class NMEATCPClient {
 			int nbReadTest = 0;
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			while (canRead()) {
-				int bytesRead = theInput.read(buffer);
-				if (bytesRead == -1) {
-					System.out.println("Nothing to read...");
-					if (nbReadTest++ > 10) {
-						break;
-					}
-				} else {
-					baos.write(buffer, 0, bytesRead);
-					if (verbose) {
-						System.out.println("# Read " + bytesRead + " characters");
-						System.out.println("# " + (new Date()).toString());
-					}
-					if (buffer[bytesRead -1] == '\n') {
-						String message = baos.toString().trim();
-						// Manage message here
+				// synchronized (clientSocket) {
+					if (!clientSocket.isClosed()) {
+						int bytesRead = theInput.read(buffer);
+						if (bytesRead == -1) {
+							System.out.println("Nothing to read...");
+							if (nbReadTest++ > 10) {
+								break;
+							}
+						} else {
+							baos.write(buffer, 0, bytesRead);
+							if (verbose) {
+								System.out.println("# Read " + bytesRead + " characters");
+								System.out.println("# " + (new Date()).toString());
+							}
+							if (buffer[bytesRead - 1] == '\n') {
+								String message = baos.toString().trim();
+								// Manage message here
 //						DumpUtil.displayDualDump(message);
-						if (verbose) {
-							System.out.println("---- NMEA Mess ----");
-							System.out.println(message);
-							System.out.println("-------------------");
+								if (verbose) {
+									System.out.println("---- NMEA Mess ----");
+									System.out.println(message);
+									System.out.println("-------------------");
+								}
+								String[] split = message.split("\n"); // Separate sentences
+								Arrays.asList(split)
+										.stream()
+										.forEach(mess -> {
+											if (this.whatToDo != null) {
+												this.whatToDo.accept(mess.trim());
+											} else {
+												System.out.println(mess.trim());
+											}
+										});
+							}
 						}
-						String[] split = message.split("\n"); // Separate sentences
-						Arrays.asList(split)
-								.stream()
-								.forEach(mess -> System.out.println(mess.trim())); // Raw output
 					}
-				}
+				// }
 			}
 			System.out.printf("\tStop Reading TCP port, at %s\n", SDF.format(new Date()));
 			theInput.close();
@@ -190,6 +209,10 @@ public class NMEATCPClient {
 			boolean keepTrying = true;
 			while (keepTrying) {
 				final NMEATCPClient tcpClient = new NMEATCPClient();
+				// tcpClient.setConsumer(System.out::println); // Raw output
+				Consumer<String> nmeaConsumer = nmea -> System.out.printf("Received: [%s]\n", nmea);
+				tcpClient.setConsumer(nmeaConsumer);
+
 				try {
 					tcpClient.startConnection(
 							System.getProperty("tcp.host", "localhost"),
