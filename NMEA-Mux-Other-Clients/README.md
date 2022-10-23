@@ -1,6 +1,7 @@
 # Why this module, what is this section ?
 OK. Why do we need this section here?  
 Well, in case you want to access the multiplexer's data and features from other languages than Java, or from another software than the ones provided out-of-the-box, you might want to know where to begin...  
+
 So, let's see what you have out-of-the-box, and what to do from there.
 
 ## Out-of-the-box
@@ -83,5 +84,9 @@ In case you want to read the available data (or push your own to the NMEA-Multip
 you might be interested in seeing how to do that.  
 This folder (`NMEA-Mux-Other-Clients`) intends to provide some samples and re-usable pieces of code.  
 Each sub-folder will contain different language examples, along with `md` files to document them.
+
+The code presented here should be 100% independent of the NMEA-multiplexer internal plumbing.
+The only "exception" could be the NMEA-Parser (which does not belong to the NMEA-multiplexer module, by the way).
+
 
 ---

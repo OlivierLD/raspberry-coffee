@@ -812,7 +812,7 @@ public class AstroComputerV2 {
     }
 
     /**
-     * @param latitude  in degrees
+     * @param latitude  in degrees (Not used, I know)
      * @param longitude in degrees
      * @return meridian passage time in decimal hours.
      */
@@ -821,7 +821,7 @@ public class AstroComputerV2 {
             throw new RuntimeException("Calculation was never invoked in this context");
         }
         double t = (12d - (this.context.EoT / 60d));
-        double deltaG = longitude / 15.0;
+        double deltaG = longitude / 15.0; // in hours
         return t - deltaG;
     }
 
@@ -849,7 +849,7 @@ public class AstroComputerV2 {
     }
 
     /**
-     * A Date format, without a time-zone
+     * A Date format, without a time-zone, used to store Solar Time (that obviously has no time-zone)
      * All members are numbers.
      * Name of the class stands for Year-Month-Day-Hours-Minutes-Seconds
      */

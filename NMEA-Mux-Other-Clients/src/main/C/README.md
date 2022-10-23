@@ -1,4 +1,5 @@
 # Some C clients samples
+Each sub-directory contains the sc ripts used to compile and run the code.
 
 - In `http101`, `httpClient.c`
   - Make REST requests from C to the NMEA-Multiplexer.

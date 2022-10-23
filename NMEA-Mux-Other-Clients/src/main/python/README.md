@@ -12,6 +12,7 @@ implement your own extensions or satellites... We want here to provide some samp
 - `tcp_mux_client_gui.py`
   - Same as above, but with a TKinter (simple) GUI.
     - Good tutorial on TKinter [here](https://realpython.com/python-gui-tkinter/).
+    - Requires multi-threading (see the code for details)
 
 ... More to come (REST, WebSockets, etc).
 
