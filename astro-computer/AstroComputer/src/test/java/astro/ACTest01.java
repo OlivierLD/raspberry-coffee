@@ -13,6 +13,7 @@ import java.util.TimeZone;
 public class ACTest01 {
 
     // This is for tests
+    @SuppressWarnings("deprecation")
     public static void main(String... args) {
 
         SimpleDateFormat SDF_UTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'");

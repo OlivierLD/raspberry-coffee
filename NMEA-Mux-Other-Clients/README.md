@@ -30,7 +30,7 @@ The Multiplexer can then send those data _**to**_ different channels, like - as 
 - Data files (aka log files)
 
 All those inputs and outputs are declaratively driven by `yaml` or `properties` files.  
-See the [Multiplexer documentation](../../../NMEA-multiplexer/manual.md) for more details, there is much more to say about all that.
+See the [Multiplexer documentation](../NMEA-multiplexer/manual.md) for more details, there is much more to say about all that.
 
 A Serial Port can be continuously read, and the flow it spit out can be turned into NMEA Sentences. Most of the GPSs are providing Serial Ports outputs.
 Same for AIS receivers. NMEA Stations also provide their data through serial ports.
