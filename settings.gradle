@@ -9,10 +9,12 @@ include 'system-utils'
 include 'WeatherStation'
 include 'OtherJVMLanguages'
 include "RMI-sample"
+
 include "NMEA-multiplexer"
 include "NMEA-multiplexer-impl"
 include "NMEA-mux-extensions"
-// include "NMEA-mux-WebUI"
+include "NMEA-Mux-Other-Clients"
+
 include "Monitor-Battery"
 include "JavaSoundDemo"
 include "ukulele"
@@ -43,8 +45,10 @@ include "Joystick"
 //include "jsonQL"
 include "diozero-101"
 include "pi4j_v2-101"
+
 // Astro Computer
 include('astro-computer:AstroComputer')
+
 // Raspberry IO Pi4J
 include('raspberry-io-pi4j:Utils')
 include('raspberry-io-pi4j:ADC')
@@ -79,6 +83,7 @@ include(':NMEA-mux-WebUI:full-server-extended')
 include(':NMEA-mux-WebUI:full-server-extended-v2')
 include(':NMEA-mux-WebUI:small-server-extended')
 include(':NMEA-mux-WebUI:head-up')
+
 // Project-Trunk sub-projects
 include "Project-Trunk:RasPiRadar"
 include "Project-Trunk:PurePWM"

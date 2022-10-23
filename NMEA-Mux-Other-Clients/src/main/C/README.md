@@ -1,6 +1,6 @@
 # Some C clients samples
 
-- `httpClient.c`
+- In `http101`, `httpClient.c`
   - Make REST requests from C to the NMEA-Multiplexer.
     - The `compile.sh` script will compile, nd possibly run the generated executable
     - The runtime can take several user parameters

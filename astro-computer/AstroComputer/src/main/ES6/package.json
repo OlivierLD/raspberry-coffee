@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OlivierLD/AstroComputer.git"
+    "url": "https://github.com/OlivierLD/raspberry-coffee"
   },
   "keywords": [
     "celestial",
@@ -25,9 +25,9 @@
   "author": "Olivier LeDiouris",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/OlivierLD/AstroComputer/issues"
+    "url": "https://github.com/OlivierLD/raspberry-coffee/issues"
   },
-  "homepage": "https://github.com/OlivierLD/AstroComputer",
+  "homepage": "https://github.com/OlivierLD/raspberry-coffee/tree/master/astro-computer/AstroComputer",
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.1",

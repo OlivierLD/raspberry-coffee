@@ -1,4 +1,4 @@
-# Why this section ?
+# Why this module, what is this section ?
 OK. Why do we need this section here?  
 Well, in case you want to access the multiplexer's data and features from other languages than Java, or from another software than the ones provided out-of-the-box, you might want to know where to begin...  
 So, let's see what you have out-of-the-box, and what to do from there.
@@ -62,7 +62,7 @@ Those programs are language-agnostic, they rely on standard protocols (Serial, T
 Programs like OpenCPN, SeaWi, and more, are perfectly happy with this. For example, it is quite easy
 to read data from a BME280 (Pressure, Air Temperature, Humidity), and see the Air Temperature in an OpenCPN dashboard.
 
-### A note about GPSd, SignalK
+### A note (again) about GPSd, SignalK
 All the above use NMEA format for the data. NMEA is a well documented standard, that has been around for decades
 (it's probably one of the oldest IT standards).
 
@@ -81,7 +81,7 @@ SignalK is in the pipe, but not there yet... Working on it.
 ## Now what ?
 In case you want to read the available data (or push your own to the NMEA-Multiplexer) from your own application, or your own code,
 you might be interested in seeing how to do that.  
-This folder (`other-clients`) intends to provide some samples and re-usable pieces of code.  
+This folder (`NMEA-Mux-Other-Clients`) intends to provide some samples and re-usable pieces of code.  
 Each sub-folder will contain different language examples, along with `md` files to document them.
 
 ---

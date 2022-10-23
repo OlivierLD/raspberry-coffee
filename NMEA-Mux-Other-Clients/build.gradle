@@ -1,0 +1,28 @@
+plugins {
+  id 'java'
+  id 'maven'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]  // ["-Xlint:none"]
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://www.datanucleus.org/downloads/maven2" }
+}
+
+dependencies {
+  implementation project (':raspberry-sailor:NMEA-Parser')
+
+  testImplementation "junit:junit:$junit_version"
+}
+
+shadowJar {
+  zip64 true
+}

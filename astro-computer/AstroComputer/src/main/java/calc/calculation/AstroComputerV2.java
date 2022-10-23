@@ -849,13 +849,81 @@ public class AstroComputerV2 {
     }
 
     /**
-     * Get the solar date at the time the calculate was doen, for the position given as parameters
-     * @param latitude User's latitude
-     * @param longitude User's longitude
-     * @return the Solar Date
+     * A Date format, without a time-zone
+     * All members are numbers.
+     * Name of the class stands for Year-Month-Day-Hours-Minutes-Seconds
      */
-    public Date getSolarDateAtPos(double latitude, double longitude) {
-        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+    public static class YMDHMSs {
+        private int year;
+        private int month; // [1..12]
+        private int day;
+        private int h24;
+        private int minutes;
+        private float seconds;
+
+        public YMDHMSs() {}
+        public YMDHMSs year(int year) {
+            this.year = year;
+            return this;
+        }
+        public YMDHMSs month(int month) {
+            this.month = month;
+            return this;
+        }
+        public YMDHMSs day(int day) {
+            this.day = day;
+            return this;
+        }
+        public YMDHMSs h24(int h24) {
+            this.h24 = h24;
+            return this;
+        }
+        public YMDHMSs minutes(int minutes) {
+            this.minutes = minutes;
+            return this;
+        }
+        public YMDHMSs seconds(float seconds) {
+            this.seconds = seconds;
+            return this;
+        }
+
+        public int getYear() {
+            return year;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public int getDay() {
+            return day;
+        }
+
+        public int getH24() {
+            return h24;
+        }
+
+        public int getMinutes() {
+            return minutes;
+        }
+
+        public float getSeconds() {
+            return seconds;
+        }
+    }
+
+    /**
+     * Get the solar date at the time the "calculate" was invoked, for the position given as parameters
+     * @param latitude User's latitude, at the time when {@link AstroComputerV2#calculate()} was invoked
+     * @param longitude User's longitude, at the time when {@link AstroComputerV2#calculate()} was invoked
+     * @return the Solar Date (No TZ)
+     */
+    public synchronized YMDHMSs getSolarDateAtPos(double latitude, double longitude) {
+        if (!this.calculateHasBeenInvoked) {
+            throw new RuntimeException("Calculation was never invoked in this context");
+        }
+
+        Calendar cal = GregorianCalendar.getInstance(); // TimeZone.getTimeZone("etc/UTC"));
         double eotInHours = this.getSunMeridianPassageTime(latitude, longitude);
         // TimeUtil.DMS dms = TimeUtil.decimalToDMS(inHours);
         cal.set(Calendar.YEAR, this.year);
@@ -867,8 +935,32 @@ public class AstroComputerV2 {
         cal.set(Calendar.SECOND, (int) Math.floor(this.second));
 
         long ms = cal.getTimeInMillis();
+
         Date solar = new Date(ms + Math.round((12 - eotInHours) * 3_600_000));
-        return solar;
+
+        final SimpleDateFormat YEAR_FMT = new SimpleDateFormat("yyyy");
+        final SimpleDateFormat MONTH_FMT = new SimpleDateFormat("MM");
+        final SimpleDateFormat DAY_FMT = new SimpleDateFormat("dd");
+        final SimpleDateFormat HOUR_FMT = new SimpleDateFormat("HH");
+        final SimpleDateFormat MINUTE_FMT = new SimpleDateFormat("mm");
+        final SimpleDateFormat SECOND_FMT = new SimpleDateFormat("ss");
+
+        YEAR_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+        MONTH_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+        DAY_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+        HOUR_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+        MINUTE_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+        SECOND_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+
+        YMDHMSs solarDate = new YMDHMSs()
+                .year(Integer.parseInt(YEAR_FMT.format(solar)))
+                .month(Integer.parseInt(MONTH_FMT.format(solar)))
+                .day(Integer.parseInt(DAY_FMT.format(solar)))
+                .h24(Integer.parseInt(HOUR_FMT.format(solar)))
+                .minutes(Integer.parseInt(MINUTE_FMT.format(solar)))
+                .seconds(Float.parseFloat(SECOND_FMT.format(solar)));
+
+        return solarDate;
     }
 
     public double getSunElevAtTransit(double latitude, double longitude) {

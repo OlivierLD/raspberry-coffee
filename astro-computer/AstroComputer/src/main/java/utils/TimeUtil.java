@@ -96,8 +96,9 @@ public class TimeUtil {
 		String tzOffset = (new SimpleDateFormat("Z")).format(now);
 		int offset = 0;
 		try {
-			if (tzOffset.startsWith("+"))
+			if (tzOffset.startsWith("+")) {
 				tzOffset = tzOffset.substring(1);
+			}
 			offset = Integer.parseInt(tzOffset);
 		} catch (NumberFormatException nfe) {
 			nfe.printStackTrace();
@@ -113,8 +114,9 @@ public class TimeUtil {
 		String tzOffset = sdf.format(now);
 		int offset = 0;
 		try {
-			if (tzOffset.startsWith("+"))
+			if (tzOffset.startsWith("+")) {
 				tzOffset = tzOffset.substring(1);
+			}
 			offset = Integer.parseInt(tzOffset);
 		} catch (NumberFormatException nfe) {
 			nfe.printStackTrace();

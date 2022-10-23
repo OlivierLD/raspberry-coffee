@@ -8,6 +8,20 @@ It might not be the case for small boards like Raspberry Pi Zero or A+... See [N
 An illustration of the way to gather or aggregate several REST Services all in one place.
 This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA-multiplexer/README.md).
 
+```
+It combines the features of the NMEA-multiplexer (and others, like tide-computer, astro-computer) as well as exposition of those features
+as REST services.  
+This means that the NMEA-feautures can be used as they are, and that the exposed services
+can be consumed through a REST interface (that also means from a web page).
+```
+
+```
+Demos of what can be done are found in the launchers folder.  
+All the demos are launched from the script runNavServer.sh, that in turn launches the java class navrest.NavServer.  
+All you need to do to see all the available demos and use-cases is to start the scrip demoLauncher.sh from a console, in the launchers folder.
+```
+
+
 It uses:
 - [Tide](https://github.com/OlivierLD/raspberry-coffee/blob/master/RESTTideEngine/README.md) REST Service
 - [Astro](https://github.com/OlivierLD/raspberry-coffee/tree/master/RESTNauticalAlmanac) REST Service

@@ -12,7 +12,7 @@ void setup() {
     // Here you can use Java 8 syntax
     List<String> testListJava8 = Arrays.asList(new String[] {"One...", "Two...", "Three!"});
     testListJava8.stream().forEach(System.out::println);
-    // frameRate(1); // Default ~60. Number of 'draw' per second.
+    frameRate(5); // Default ~60. Number of 'draw' per second.
 }
 
 void draw() {
