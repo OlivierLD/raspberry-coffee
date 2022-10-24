@@ -1,8 +1,13 @@
 package clients.tcp;
 
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
@@ -76,7 +81,7 @@ public class NMEATCPSwing101 {
             frameSize.width = screenSize.width;
         }
         if (frameSize.width == 0 || frameSize.height == 0) {
-            frameSize = new Dimension(WIDTH, HEIGHT + 50); // 50: ... menu, title bar, etc.
+            frameSize = new Dimension(WIDTH, HEIGHT);
             frame.setSize(frameSize);
         }
         frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
@@ -98,7 +103,7 @@ public class NMEATCPSwing101 {
         nmeaLabel = new JLabel();
 //        nmeaLabel.setFont(nmeaLabel.getFont().deriveFont(Font.BOLD, 56f));
         nmeaLabel.setFont(new Font("Courier New", Font.BOLD, FONT_SIZE));
-        // >> HERE: Add the box to the JFrame
+        // >> HERE: Add the label to the JFrame
         frame.getContentPane().add(nmeaLabel, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display
@@ -122,7 +127,7 @@ public class NMEATCPSwing101 {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        new NMEATCPSwing101(); // This one has instantiated the box
+        new NMEATCPSwing101();
 
         // Off we go!
     }
