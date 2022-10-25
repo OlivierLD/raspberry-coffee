@@ -1,4 +1,6 @@
-package clients.tcp;
+package clients.tcp.raw;
+
+import clients.tcp.NMEATCPClient;
 
 import java.io.*;
 import java.net.*;

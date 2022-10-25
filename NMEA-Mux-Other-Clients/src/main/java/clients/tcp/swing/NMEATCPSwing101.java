@@ -1,5 +1,7 @@
-package clients.tcp;
+package clients.tcp.swing;
 
+
+import clients.tcp.NMEATCPClient;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

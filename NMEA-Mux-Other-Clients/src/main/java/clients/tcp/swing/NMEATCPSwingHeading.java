@@ -1,6 +1,7 @@
-package clients.tcp;
+package clients.tcp.swing;
 
 
+import clients.tcp.NMEATCPClient;
 import nmea.parser.HDG;
 import nmea.parser.StringParsers;
 import nmea.parser.VHW;

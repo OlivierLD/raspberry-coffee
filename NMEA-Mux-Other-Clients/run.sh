@@ -15,15 +15,15 @@ read RESP
 CLASS=
 case "${RESP}" in
 	  "1")
-	    CLASS=clients.tcp.RawNMEATCPClient
+	    CLASS=clients.tcp.raw.RawNMEATCPClient
 	    ;;
 	  "2")
-	    CLASS=clients.tcp.NMEATCPSwing101
+	    CLASS=clients.tcp.swing.NMEATCPSwing101
 	    ;;
 	  "3")
-	    CLASS=clients.tcp.NMEATCPSwingHeading
+	    CLASS=clients.tcp.swing.NMEATCPSwingHeading
 	    ;;
-	  "*")
+	  *)
 	    CLASS=
 	    echo -e "Option ${RESP} not implemented"
 	    ;;
