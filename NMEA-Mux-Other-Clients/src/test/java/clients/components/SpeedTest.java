@@ -17,10 +17,11 @@ public class SpeedTest {
     private boolean keepTicking = true;
     private final double maxSpeed = 15d;
     private double currentSpeed = 7.5;
+    private Thread speedThread;
 
     private void initSpeedClient() {
         // Start a thread to update the speed (randomly)
-        Thread speedThread = new Thread(() -> {
+        speedThread = new Thread(() -> {
             while (keepTicking) {
                 if (speedoDisplay != null) {
                     double delta = Math.random() * 0.5;
@@ -42,6 +43,7 @@ public class SpeedTest {
                     }
                 }
             }
+            System.out.println("Bye speedThread");
         }, "Speed");
         speedThread.start();
     }
@@ -67,10 +69,15 @@ public class SpeedTest {
         // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
+                System.out.println("Exiting...");
                 // Stop the thread here
                 keepTicking = false;
                 try {
-                    Thread.sleep(1_000L); // Wait for the thread to finish
+                    if (speedThread != null) {
+                        synchronized(speedThread) {
+                            speedThread.join();
+                        }
+                    }
                 } catch (InterruptedException ie) {
                     // Absorb
                 }
@@ -83,11 +90,11 @@ public class SpeedTest {
         speedoDisplay.setLabel("BSP");
         speedoDisplay.setSpeedUnit(SpeedPanel.SpeedUnit.KNOT);
 
-//        Dimension clockDim = new Dimension(150, 150);
-//        clockDisplay.setPreferredSize(clockDim);
-//        clockDisplay.setSize(clockDim);
+//        Dimension speedoDim = new Dimension(150, 150);
+//        speedoDisplay.setPreferredSize(speedoDim);
+//        speedoDisplay.setSize(speedoDim);
 
-        // >> HERE: Add the clock to the JFrame
+        // >> HERE: Add the speedo to the JFrame
         frame.getContentPane().add(speedoDisplay, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display all the frame

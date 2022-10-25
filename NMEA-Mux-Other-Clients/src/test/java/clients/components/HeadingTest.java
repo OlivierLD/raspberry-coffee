@@ -1,32 +1,34 @@
 package clients.components;
 
-import utils.swing.components.ClockDisplay;
+import utils.swing.components.HeadingPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Date;
 
-public class ClockTest {
+public class HeadingTest {
     private final JFrame frame;
-    private final ClockDisplay clockDisplay;
+    private final HeadingPanel headingPanel;
 
     private final static int WIDTH = 400;
-    private final static int HEIGHT = 400;
+    private final static int HEIGHT = 100;
 
     private boolean keepTicking = true;
+    private double currentHeading = 0;
+    private Thread headingThread;
 
-    private Thread clockThread;
-
-    private void initClockClient() {
-        // Start a thread to update the clock
-        clockThread = new Thread(() -> {
+    private void initHeadingClient() {
+        // Start a thread to update the heading (randomly)
+        headingThread = new Thread(() -> {
             while (keepTicking) {
-                Date now = new Date();
-                if (clockDisplay != null) {
-                    clockDisplay.setValue(now.getTime());
-                    clockDisplay.repaint();
+                if (headingPanel != null) {
+                    double value = Math.random() * 10;
+                    int sign = (Math.random() >= 0.5) ? 1 : -1;
+                    currentHeading = (currentHeading + (sign * value)) % 360;
+                    // System.out.printf("Speed is now: %f knt\n", currentSpeed);
+                    headingPanel.setValue(currentHeading);
+                    headingPanel.repaint();
                     try {
                         Thread.sleep(1_000L);
                     } catch (InterruptedException ie) {
@@ -34,15 +36,15 @@ public class ClockTest {
                     }
                 }
             }
-            System.out.println("Bye clockThread");
-        }, "Clock");
-        clockThread.start();
+            System.out.println("Bye headingThread");
+        }, "Heading");
+        headingThread.start();
     }
 
-    public ClockTest() {
+    public HeadingTest() {
 
         // The JFrame
-        frame = new JFrame("UTC Time Test");
+        frame = new JFrame("Compass Test");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -64,11 +66,9 @@ public class ClockTest {
                 // Stop the thread here
                 keepTicking = false;
                 try {
-                    if (clockThread != null) {
-                        synchronized(clockThread) {
-                            System.out.println("Joining...");
-                            clockThread.join();
-                            System.out.println("Joined!");
+                    if (headingThread != null) {
+                        synchronized (headingThread) {
+                            headingThread.join();
                         }
                     }
                 } catch (InterruptedException ie) {
@@ -79,23 +79,21 @@ public class ClockTest {
             }
         });
 
-        clockDisplay = new ClockDisplay("UTC", "00:00:00", "UTC Clock test", Color.darkGray);
-        // clockDisplay.setCustomBGColor(Color.white); // new Color(0f, 0f, 0f, 0f)); // Used if not glossy
-        clockDisplay.setWithGlossyBG(true);
-        clockDisplay.setDisplayColor(Color.cyan);
-        clockDisplay.setGridColor(Color.orange);
+        headingPanel = new HeadingPanel(HeadingPanel.ZERO_TO_360, true); // HeadingPanel.ROSE, true);
+        headingPanel.setSmooth(true);
+        headingPanel.setValue(0.0); // heading
 
-//        Dimension clockDim = new Dimension(150, 150);
-//        clockDisplay.setPreferredSize(clockDim);
-//        clockDisplay.setSize(clockDim);
+//        Dimension compassDim = new Dimension(150, 150);
+//        HeadingPanel.setPreferredSize(compassDim);
+//        clockDisplay.setSize(compassDim);
 
-        // >> HERE: Add the clock to the JFrame
-        frame.getContentPane().add(clockDisplay, BorderLayout.CENTER);
+        // >> HERE: Add the compass to the JFrame
+        frame.getContentPane().add(headingPanel, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display all the frame
 
         // Init and start reading time. AFTER instantiating the JFrame.
-        initClockClient();
+        initHeadingClient();
     }
 
     public static void main(String... args) {
@@ -113,7 +111,7 @@ public class ClockTest {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        new CarPlayLikeDisplay();
+        new HeadingTest();
 
         // Off we go!
     }

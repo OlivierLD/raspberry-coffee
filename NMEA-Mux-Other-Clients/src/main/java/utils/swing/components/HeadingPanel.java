@@ -1,7 +1,5 @@
 package utils.swing.components;
 
-// import coreutilities.ctx.CoreContext;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -11,8 +9,6 @@ import java.awt.event.MouseMotionListener;
 public class HeadingPanel
         extends JPanel
         implements MouseListener, MouseMotionListener {
-    @SuppressWarnings("compatibility:8059530136393454267")
-    private final static long serialVersionUID = 1L;
 
     public final static int ROSE = 0;
     public final static int ZERO_TO_360 = 1;
@@ -59,7 +55,7 @@ public class HeadingPanel
         }
     }
 
-    private void jbInit() throws Exception {
+    private void jbInit() {
         this.setLayout(null);
         this.setSize(new Dimension(200, 50));
         this.setMinimumSize(new Dimension(200, 50));
@@ -257,31 +253,15 @@ public class HeadingPanel
     public void setHdg(int heading) {
         if (!smooth) {
             this.hdg = heading;
-//    repaint();
             final HeadingPanel instance = this;
-            Thread thread = new Thread() {
-                public void run() {
+            Thread thread = new Thread(() -> {
                     try {
-//            SwingUtilities.invokeAndWait(new Runnable()
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                instance.repaint();
-                            }
-                        });
+                        SwingUtilities.invokeLater(() -> instance.repaint());
                     }
-//            catch (InvocationTargetException ite)
-//            {
-//              ite.printStackTrace();
-//            }
-//            catch (InterruptedException ie)
-//            {
-//              ie.printStackTrace();
-//            }
                     catch (Exception ex) {
                         ex.printStackTrace();
                     }
-                }
-            };
+                }, "NoSmoothMove");
             try {
                 thread.start();
                 thread.join();
@@ -296,10 +276,11 @@ public class HeadingPanel
             // Manage the case 350-10
             if (Math.abs(prevHdg - hdg) > 180) {
                 if (Math.signum(Math.cos(Math.toRadians(prevHdg))) == Math.signum(Math.cos(Math.toRadians(hdg)))) {
-                    if (from > to)
+                    if (from > to) {
                         to += 360;
-                    else
+                    } else {
                         to -= 360;
+                    }
                 }
             }
 
@@ -310,13 +291,13 @@ public class HeadingPanel
                 final int _h = h;
                 try {
                     // For a smooth move of the hand
-                    SwingUtilities.invokeAndWait(new Runnable() {
-                        public void run() {
-                            int _heading = _h % 360;
-                            while (_heading < 0) _heading += 360;
-                            hdg = _heading;
-                            repaint();
+                    SwingUtilities.invokeAndWait(() -> {
+                        int _heading = _h % 360;
+                        while (_heading < 0) {
+                            _heading += 360;
                         }
+                        hdg = _heading;
+                        repaint();
                     });
                 } catch (Exception ex) {
                     ex.printStackTrace();
