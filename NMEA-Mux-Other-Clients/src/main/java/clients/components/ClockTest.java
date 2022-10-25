@@ -75,6 +75,7 @@ public class ClockTest {
                     // Absorb
                 }
                 frame.setVisible(false);
+                System.out.println("Bye!");
                 System.exit(0);
             }
         });

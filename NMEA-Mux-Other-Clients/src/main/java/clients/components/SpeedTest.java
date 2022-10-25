@@ -1,50 +1,57 @@
 package clients.components;
 
-import utils.swing.components.HeadingPanel;
+import utils.swing.components.SpeedPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class HeadingTest {
+public class SpeedTest {
     private final JFrame frame;
-    private final HeadingPanel headingPanel;
+    private final SpeedPanel speedoDisplay;
 
     private final static int WIDTH = 400;
-    private final static int HEIGHT = 100;
+    private final static int HEIGHT = 300;
 
     private boolean keepTicking = true;
-    private double currentHeading = 0;
-    private Thread headingThread;
+    private final double maxSpeed = 15d;
+    private double currentSpeed = 7.5;
+    private Thread speedThread;
 
-    private void initHeadingClient() {
-        // Start a thread to update the heading (randomly)
-        headingThread = new Thread(() -> {
+    private void initSpeedClient() {
+        // Start a thread to update the speed (randomly)
+        speedThread = new Thread(() -> {
             while (keepTicking) {
-                if (headingPanel != null) {
-                    double value = Math.random() * 10;
+                if (speedoDisplay != null) {
+                    double delta = Math.random() * 0.5;
                     int sign = (Math.random() >= 0.5) ? 1 : -1;
-                    currentHeading = (currentHeading + (sign * value)) % 360;
+                    if (currentSpeed + (sign * delta) < 0) {
+                        sign *= -1;
+                    }
+                    if (currentSpeed + (sign * delta) > maxSpeed) {
+                        sign *= -1;
+                    }
+                    currentSpeed += (sign * delta);
                     // System.out.printf("Speed is now: %f knt\n", currentSpeed);
-                    headingPanel.setValue(currentHeading);
-                    headingPanel.repaint();
+                    speedoDisplay.setSpeed(currentSpeed);
+                    speedoDisplay.repaint();
                     try {
-                        Thread.sleep(1_000L);
+                        Thread.sleep(100L);
                     } catch (InterruptedException ie) {
                         // Absorb
                     }
                 }
             }
-            System.out.println("Bye headingThread");
-        }, "Heading");
-        headingThread.start();
+            System.out.println("Bye speedThread");
+        }, "Speed");
+        speedThread.start();
     }
 
-    public HeadingTest() {
+    public SpeedTest() {
 
         // The JFrame
-        frame = new JFrame("Compass Test");
+        frame = new JFrame("Speedometer Test");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -66,34 +73,36 @@ public class HeadingTest {
                 // Stop the thread here
                 keepTicking = false;
                 try {
-                    if (headingThread != null) {
-                        synchronized (headingThread) {
-                            headingThread.join();
-                        }
-                    }
+//                    if (speedThread != null) {
+//                        synchronized(speedThread) {
+//                            speedThread.join();
+//                        }
+//                    }
+                    Thread.sleep(500L);
                 } catch (InterruptedException ie) {
                     // Absorb
                 }
                 frame.setVisible(false);
+                System.out.println("Bye!");
                 System.exit(0);
             }
         });
 
-        headingPanel = new HeadingPanel(HeadingPanel.ZERO_TO_360, true); // HeadingPanel.ROSE, true);
-        headingPanel.setSmooth(true);
-        headingPanel.setValue(0.0); // heading
+        speedoDisplay = new SpeedPanel(maxSpeed, 0.25, 5, true);
+        speedoDisplay.setLabel("BSP");
+        speedoDisplay.setSpeedUnit(SpeedPanel.SpeedUnit.KNOT);
 
-//        Dimension compassDim = new Dimension(150, 150);
-//        HeadingPanel.setPreferredSize(compassDim);
-//        clockDisplay.setSize(compassDim);
+//        Dimension speedoDim = new Dimension(150, 150);
+//        speedoDisplay.setPreferredSize(speedoDim);
+//        speedoDisplay.setSize(speedoDim);
 
-        // >> HERE: Add the compass to the JFrame
-        frame.getContentPane().add(headingPanel, BorderLayout.CENTER);
+        // >> HERE: Add the speedo to the JFrame
+        frame.getContentPane().add(speedoDisplay, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display all the frame
 
         // Init and start reading time. AFTER instantiating the JFrame.
-        initHeadingClient();
+        initSpeedClient();
     }
 
     public static void main(String... args) {
@@ -111,7 +120,7 @@ public class HeadingTest {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        new HeadingTest();
+        new SpeedTest();
 
         // Off we go!
     }
