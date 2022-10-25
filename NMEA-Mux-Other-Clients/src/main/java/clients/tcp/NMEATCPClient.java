@@ -18,8 +18,8 @@ import java.util.Date;
 import java.util.function.Consumer;
 
 /**
- * JUST a simple TCP Client, expecting to receive NMEA Data.
- * Requires an NMEA-multiplexer to be running on TCP:7001 (See system variables verbose, tcp.host and tcp.port)
+ * Basic TCP plumbing.
+ * No main here.
  *
  * Also see tcptests.TCPClient.java, in NMEA-multiplexer tests.
  */
@@ -70,7 +70,7 @@ public class NMEATCPClient {
 
 	public void read(String request) {
 		boolean verbose = "true".equals((System.getProperty("verbose", "false")));
-		System.out.println("From " + getClass().getName() + " Reading TCP Port " + tcpPort + " on " + hostName);
+		System.out.println("From " + getClass().getName() + " Reading TCP Port " + tcpPort + " on " + hostName + ", verbose=" + verbose);
 		try {
 			if (request != null) {
 				OutputStream os = clientSocket.getOutputStream();
@@ -91,9 +91,22 @@ public class NMEATCPClient {
 			while (canRead()) {
 				// synchronized (clientSocket) {
 					if (!clientSocket.isClosed()) {
-						int bytesRead = theInput.read(buffer);
+						int bytesRead = -1;
+						try {
+							bytesRead = theInput.read(buffer);
+						} catch (SocketException se) {
+							if (se.getMessage().startsWith("Socket closed")) {
+								if (verbose) {
+									System.out.println("\nSocket closed (Managed).");
+								}
+							} else {
+								se.printStackTrace();
+							}
+						}
 						if (bytesRead == -1) {
-							System.out.println("Nothing to read...");
+							if (verbose) {
+								System.out.println("Nothing to read...");
+							}
 							if (nbReadTest++ > 10) {
 								break;
 							}
@@ -127,15 +140,13 @@ public class NMEATCPClient {
 					}
 				// }
 			}
-			System.out.printf("\tStop Reading TCP port, at %s\n", SDF.format(new Date()));
-			theInput.close();
-			// Signal waiter
-			if (waiter != null) {
-				synchronized (waiter) {
-					waiter.notify();
-				}
+			if (verbose) {
+				System.out.printf("\tStop Reading TCP port, at %s\n", SDF.format(new Date()));
 			}
-			System.out.printf("\tTchao! at %s\n", SDF.format(new Date()));
+			theInput.close();
+			if (verbose) {
+				System.out.printf("\tTchao! at %s\n", SDF.format(new Date()));
+			}
 		} catch (BindException be) {
 			System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpPort);
 			be.printStackTrace();
@@ -189,80 +200,15 @@ public class NMEATCPClient {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (verbose) {
+			System.out.println(">> End of 'read()'");
+		}
 	}
 
 	public void stopConnection() throws Exception {
-		in.close();
-		out.close();
-		clientSocket.close();
-	}
-
-	private static Thread waiter = null;
-
-	public static void main(String... args) {
-
-		System.out.println("Hit [Ctrl + C] to stop.");
-
-		waiter = Thread.currentThread();
-
-		try {
-			boolean keepTrying = true;
-			while (keepTrying) {
-				final NMEATCPClient tcpClient = new NMEATCPClient();
-				// tcpClient.setConsumer(System.out::println); // Raw output
-				Consumer<String> nmeaConsumer = nmea -> System.out.printf("Received: [%s]\n", nmea);
-				tcpClient.setConsumer(nmeaConsumer);
-
-				try {
-					tcpClient.startConnection(
-							System.getProperty("tcp.host", "localhost"),
-							Integer.parseInt(System.getProperty("tcp.port", String.valueOf(7001)))
-					);
-				} catch (Exception ex) {
-					// Ooch!
-					ex.printStackTrace();
-					System.exit(1);
-				}
-				System.out.println(new Date().toString() + ": New " + tcpClient.getClass().getName() + " created.");
-
-				Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-					if (tcpClient != null) {
-						System.out.printf("\n\t>> Stop reading requested, at %s\n.", SDF.format(new Date()));
-						try {
-							tcpClient.stopConnection();
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						synchronized (waiter) {
-							try {
-								waiter.wait();
-								System.out.printf("\tBye-bye. At %s\n", SDF.format(new Date()));
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
-					}
-				}, "Hook"));
-
-				try {
-					// Initiate. Request data
-					tcpClient.read();
-				} catch (Exception ex) {
-					System.err.println("TCP Reader:" + ex.getMessage());
-					ex.printStackTrace();
-
-					long howMuch = 1_000L;
-					System.out.println("Will try to reconnect in " + howMuch + "ms.");
-					try {
-						Thread.sleep(howMuch);
-					} catch (InterruptedException ignored) {
-						// Bam!
-					}
-				}
-				keepTrying = false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.in.close();
+		this.out.close();
+		this.clientSocket.close();
+		this.goRead = false;
 	}
 }

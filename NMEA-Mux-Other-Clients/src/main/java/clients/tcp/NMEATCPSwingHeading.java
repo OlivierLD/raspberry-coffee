@@ -1,39 +1,83 @@
 package clients.tcp;
 
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.UIManager;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
+import nmea.parser.HDG;
+import nmea.parser.StringParsers;
+import nmea.parser.VHW;
+import utils.swing.components.HeadingPanel;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
 
 /**
- * Basic Swing UI
- * Just displays the NMEA Sentence, as it is.
+ * Basic Swing UI, one display.
+ * Just displays the heading, if found in the NMEA Sentence.
  */
-public class NMEATCPSwing101 {
+public class NMEATCPSwingHeading {
     private final JFrame frame;
-    private final JLabel nmeaLabel;
+    private final HeadingPanel headingPanel;
 
     private NMEATCPClient tcpClient;
 
-    private final static int WIDTH = 1024;
+    private final static int WIDTH = 400;
     private final static int HEIGHT = 100;
-    private final static int FONT_SIZE = 24;
+
+    private final boolean VERBOSE = "true".equals(System.getProperty("verbose"));
 
     private void initTCPClient() {
         this.tcpClient = new NMEATCPClient();
+        // The NMEA Consumer
         this.tcpClient.setConsumer(nmea -> {
-            if (nmeaLabel != null) {
-                nmeaLabel.setText(nmea);
-                nmeaLabel.repaint();
+            if (headingPanel != null) {
+                // System.out.println(nmea);
+                final String sentenceID = StringParsers.getSentenceID(nmea);
+                boolean foundHeading = false;
+                double heading = 0.0;
+                // VHW, HDT, HDM, HDG
+                switch (sentenceID) {
+                    case "VHW":
+                        final VHW vhw = StringParsers.parseVHW(nmea);
+                        foundHeading = true;
+                        heading = vhw.getHdg();
+                        if (heading == 0d) { // TODO Something better
+                            heading = vhw.getHdm();
+                        }
+                        if (VERBOSE) {
+                            System.out.printf("Found VHW [%.02f] in %s\n", heading, nmea);
+                        }
+                        break;
+                    case "HDT":
+                        heading = StringParsers.parseHDT(nmea);
+                        foundHeading = true;
+                        if (VERBOSE) {
+                            System.out.printf("Found HDT [%.02f] in %s\n", heading, nmea);
+                        }
+                        break;
+                    case "HDM":
+                        heading = StringParsers.parseHDM(nmea);
+                        foundHeading = true;
+                        if (VERBOSE) {
+                            System.out.printf("Found HDM [%.02f] in %s\n", heading, nmea);
+                        }
+                        break;
+                    case "HDG":
+                        final HDG hdg = StringParsers.parseHDG(nmea);
+                        heading = hdg.getHeading();
+                        foundHeading = true;
+                        if (VERBOSE) {
+                            System.out.printf("Found HDG [%.02f] in %s\n", heading, nmea);
+                        }
+                        break;
+                }
+                if (foundHeading) {
+                    headingPanel.setValue(heading);
+                    headingPanel.repaint();
+                }
             } else {
-                System.out.printf("Received [%s]\n", nmea);
+                System.out.printf("Received [%s]\n", nmea); // In case headingPanel is null
             }
         });
 
@@ -56,21 +100,13 @@ public class NMEATCPSwing101 {
         } catch (Exception ex) {
             System.err.println("TCP Reader:" + ex.getMessage());
             ex.printStackTrace();
-
-            long howMuch = 1_000L;
-            System.out.println("Will try to reconnect in " + howMuch + "ms.");
-            try {
-                Thread.sleep(howMuch);
-            } catch (InterruptedException ignored) {
-                // Bam!
-            }
         }
     }
 
-    public NMEATCPSwing101() {
+    public NMEATCPSwingHeading() {
 
         // The JFrame
-        frame = new JFrame("Raw NMEA Sentences");
+        frame = new JFrame("Heading");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -96,16 +132,14 @@ public class NMEATCPSwing101 {
                     }
                 }
                 frame.setVisible(false);
-                System.out.println("Bye!");
                 System.exit(0);
             }
         });
 
-        nmeaLabel = new JLabel();
-//        nmeaLabel.setFont(nmeaLabel.getFont().deriveFont(Font.BOLD, 56f));
-        nmeaLabel.setFont(new Font("Courier New", Font.BOLD, FONT_SIZE));
+        headingPanel = new HeadingPanel(HeadingPanel.ZERO_TO_360, true);
+        headingPanel.setSmooth(true);
         // >> HERE: Add the label to the JFrame
-        frame.getContentPane().add(nmeaLabel, BorderLayout.CENTER);
+        frame.getContentPane().add(headingPanel, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display
 
@@ -128,7 +162,7 @@ public class NMEATCPSwing101 {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        new NMEATCPSwing101();
+        new NMEATCPSwingHeading();
 
         // Off we go!
     }
