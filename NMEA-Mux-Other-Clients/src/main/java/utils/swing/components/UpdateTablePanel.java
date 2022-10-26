@@ -54,7 +54,7 @@ public class UpdateTablePanel
         }
     }
 
-    private void jbInit() throws Exception {
+    private void jbInit() {
         this.setLayout(borderLayout1);
         this.setSize(new Dimension(580, 170));
         this.setPreferredSize(new Dimension(580, 170));
@@ -112,8 +112,9 @@ public class UpdateTablePanel
         int len = data.length;
         Object[][] newData = new Object[len + 1][names.length];
         for (int i = 0; i < len; i++) {
-            for (int j = 0; j < names.length; j++)
+            for (int j = 0; j < names.length; j++) {
                 newData[i][j] = data[i][j];
+            }
         }
         newData[len][0] = resource;
         newData[len][1] = (current == null) ? " - " : new Date(Long.parseLong(current)).toString();

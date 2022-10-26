@@ -1,15 +1,30 @@
 package utils.swing.components;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
+import utils.swing.utils.SwingUtils;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.RadialGradientPaint;
+import java.awt.RenderingHints;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class CircularDisplay extends JPanel {
-    public static final NumberFormat speedFmt = new DecimalFormat("00.00");
-    public static final NumberFormat angleFmt = new DecimalFormat("000");
+    public static final NumberFormat SPEED_FMT = new DecimalFormat("00.00");
+    public static final NumberFormat ANGLE_FMT = new DecimalFormat("000");
 
     private static CircularDisplay instance = null;
     private Font jumboFont = null;
@@ -57,10 +72,10 @@ public class CircularDisplay extends JPanel {
 
     private int jumboFontSize = 20;
 
-    private void jbInit() throws Exception {
+    private void jbInit() {
         try {
-            jumboFont = JumboDisplay.tryToLoadFont("TRANA___.TTF", this);
-            bgJumboFont = JumboDisplay.tryToLoadFont("TRANGA__.TTF", this);
+            jumboFont = SwingUtils.tryToLoadFont("TRANA___.TTF", this);
+            bgJumboFont = SwingUtils.tryToLoadFont("TRANGA__.TTF", this);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -103,7 +118,7 @@ public class CircularDisplay extends JPanel {
     private static Font loadDigiFont() {
         Font f = null;
         try {
-            f = tryToLoadFont("ds-digi.ttf", instance);
+            f = SwingUtils.tryToLoadFont("ds-digi.ttf", instance);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -115,26 +130,6 @@ public class CircularDisplay extends JPanel {
         return f;
     }
 
-    public static Font tryToLoadFont(String fontName, Object parent) {
-        final String RESOURCE_PATH = "resources" + "/"; // A slash! Not File.Separator, it is a URL.
-        try {
-            String fontRes = RESOURCE_PATH + fontName;
-            InputStream fontDef = parent.getClass().getResourceAsStream(fontRes);
-            if (fontDef == null) {
-                throw new NullPointerException("Could not find font resource \"" + fontName + "\"\n\t\tin \"" + fontRes + "\"\n\t\tfor \"" + parent.getClass().getName() + "\"\n\t\ttry: " + parent.getClass().getResource(fontRes));
-            } else {
-                return Font.createFont(Font.TRUETYPE_FONT, fontDef);
-            }
-        } catch (FontFormatException e) {
-            System.err.println("getting font " + fontName);
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("getting font " + fontName);
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void setName(String s) {
         dataNameLabel.setText(s);
     }
@@ -144,11 +139,11 @@ public class CircularDisplay extends JPanel {
     }
 
     public void setSpeed(double speed) {
-        dataValueLabel.setText(speedFmt.format(speed));
+        dataValueLabel.setText(SPEED_FMT.format(speed));
     }
 
     public void setAngleValue(double angle) {
-        dataValueLabel.setText(angleFmt.format(angle));
+        dataValueLabel.setText(ANGLE_FMT.format(angle));
     }
 
     public void setDisplayColor(Color c) {
@@ -158,10 +153,8 @@ public class CircularDisplay extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // Background
         //  Dimension dim =  this.getSize();
         //  System.out.println("Dim:" + dim.getWidth() + "x" + dim.getHeight());

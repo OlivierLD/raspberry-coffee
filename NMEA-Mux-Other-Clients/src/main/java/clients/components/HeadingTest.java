@@ -80,7 +80,7 @@ public class HeadingTest {
             }
         });
 
-        headingPanel = new HeadingPanel(HeadingPanel.ZERO_TO_360, true); // HeadingPanel.ROSE, true);
+        headingPanel = new HeadingPanel(HeadingPanel.ROSE, true); // HeadingPanel.ROSE, true);
         headingPanel.setSmooth(true);
         headingPanel.setValue(0.0); // heading
 

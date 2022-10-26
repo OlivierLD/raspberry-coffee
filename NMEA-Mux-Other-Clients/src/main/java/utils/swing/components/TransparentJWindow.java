@@ -6,7 +6,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 public abstract class TransparentJWindow extends JWindow {
-    private Robot robot = null; //new Robot();
+    private Robot robot = null; // new Robot();
     private BufferedImage screenImg;
     private Rectangle screenRect;
     private TransparentPanel contentPanel = new TransparentPanel();
@@ -140,8 +140,9 @@ public abstract class TransparentJWindow extends JWindow {
 
     protected void createScreenImage() {
         try {
-            if (robot == null)
+            if (robot == null) {
                 robot = new Robot();
+            }
         } catch (AWTException ex) {
             ex.printStackTrace();
         }
@@ -152,8 +153,7 @@ public abstract class TransparentJWindow extends JWindow {
 
     public void resetUnderImg() {
         if (robot != null && screenImg != null) {
-            if (false) // Quite demanding...
-            {
+            if (false) { // Quite demanding...
                 // Re-snapshot the background
                 setVisible(false);
                 createScreenImage();
@@ -173,11 +173,13 @@ public abstract class TransparentJWindow extends JWindow {
                 y = 0;
             }
             int w = frameRect.width; // - 10;
-            if (x + w > screenImg.getWidth())
+            if (x + w > screenImg.getWidth()) {
                 w = screenImg.getWidth() - x;
+            }
             int h = frameRect.height; // - 23 - 5;
-            if (y + h > screenImg.getHeight())
+            if (y + h > screenImg.getHeight()) {
                 h = screenImg.getHeight() - y;
+            }
             contentPanel.underFrameImg = screenImg.getSubimage(x, y, w, h);
         }
     }

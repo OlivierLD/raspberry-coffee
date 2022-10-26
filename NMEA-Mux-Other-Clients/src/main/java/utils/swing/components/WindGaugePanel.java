@@ -6,7 +6,6 @@ import utils.WindUtils;
 import javax.swing.*;
 import java.awt.*;
 
-@SuppressWarnings("serial")
 public class WindGaugePanel
         extends JPanel {
     float tws = 0f;
@@ -41,38 +40,36 @@ public class WindGaugePanel
         }
     }
 
-    private void jbInit()
-            throws Exception {
+    private void jbInit() {
         this.setLayout(null);
         this.setSize(new Dimension(30, 200));
     }
 
-    final private static Color[] colorfield = new Color[]
-            {
-                    Color.white,             // 0-5
-                    new Color(21, 200, 232), // Blue 5-10
-                    new Color(19, 234, 186), // Lighter blue 10-15
-                    new Color(48, 232, 21),  // Green 15-20
-                    new Color(211, 239, 14), // Yellow 20-25
-                    new Color(232, 180, 21), // Orange 25-30
-                    new Color(232, 100, 21), // Darker Orange 30-35
-                    new Color(180, 8, 0),    // Red 35-40
-                    new Color(147, 4, 0),    // Dark red 40-45
-                    new Color(148, 4, 161)   // Purple 45-
-            };
+    final private static Color[] colorfield = new Color[]{
+            Color.white,             // 0-5
+            new Color(21, 200, 232), // Blue 5-10
+            new Color(19, 234, 186), // Lighter blue 10-15
+            new Color(48, 232, 21),  // Green 15-20
+            new Color(211, 239, 14), // Yellow 20-25
+            new Color(232, 180, 21), // Orange 25-30
+            new Color(232, 100, 21), // Darker Orange 30-35
+            new Color(180, 8, 0),    // Red 35-40
+            new Color(147, 4, 0),    // Dark red 40-45
+            new Color(148, 4, 161)   // Purple 45-
+    };
 
     public static Color getWindColor(float w) {
         int i = (int) w;
         int colorIdx = (int) (i / 5d);
-        if (colorIdx > colorfield.length - 1) colorIdx = colorfield.length - 1;
+        if (colorIdx > colorfield.length - 1) {
+            colorIdx = colorfield.length - 1;
+        }
         return colorfield[colorIdx];
     }
 
     public void paintComponent(Graphics gr) {
-        ((Graphics2D) gr).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        ((Graphics2D) gr).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D) gr).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        ((Graphics2D) gr).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         Graphics2D g2d = (Graphics2D) gr;
         // Gauge background
 //  g2d.setColor(Color.black); 
@@ -148,10 +145,11 @@ public class WindGaugePanel
                 i += STEP;
                 y += (h + 2);
                 if (i > tws) {
-                    if (!last)
+                    if (!last) {
                         last = true;
-                    else
-                        go = false;
+//                    } else {
+//                        go = false;
+                    }
                     go = false;
                 }
             }
@@ -187,8 +185,7 @@ public class WindGaugePanel
 
         g2d.fillRoundRect(topLeft.x, topLeft.y, width, height, 10, 10);
 
-        Point gradientOrigin = new Point(topLeft.x + (width) / 2,
-                topLeft.y);
+        Point gradientOrigin = new Point(topLeft.x + (width) / 2, topLeft.y);
         GradientPaint gradient = new GradientPaint(gradientOrigin.x,
                 gradientOrigin.y,
                 lightColor,

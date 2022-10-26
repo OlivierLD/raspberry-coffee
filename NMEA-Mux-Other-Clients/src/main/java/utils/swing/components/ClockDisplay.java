@@ -1,9 +1,9 @@
 package utils.swing.components;
 
+import utils.swing.utils.SwingUtils;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,7 +80,7 @@ public class ClockDisplay extends JPanel {
     }
     private void jbInit(Color bg) {
         try {
-            digiFont = tryToLoadFont("ds-digi.ttf", this);
+            digiFont = SwingUtils.tryToLoadFont("ds-digi.ttf", this);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -135,7 +135,7 @@ public class ClockDisplay extends JPanel {
     private Font loadDigiFont() {
         Font f = null;
         try {
-            f = tryToLoadFont("ds-digi.ttf", instance);
+            f = SwingUtils.tryToLoadFont("ds-digi.ttf", instance);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -145,34 +145,6 @@ public class ClockDisplay extends JPanel {
             f = f.deriveFont(Font.BOLD, fontSize);
         }
         return f;
-    }
-
-    private static Font tryToLoadFont(String fontName, Object parent) {
-        // final String RESOURCE_PATH = "resources" + "/"; // A slash! Not File.Separator, it is a URL.
-        try {
-            String fontRes = /*RESOURCE_PATH +*/ fontName;
-            InputStream fontDef = null;
-            if (parent != null) {
-                fontDef = parent.getClass().getClassLoader().getResourceAsStream(fontRes);
-            } else {
-                fontDef = ClockDisplay.class.getClassLoader().getResourceAsStream(fontRes);
-            }
-            if (fontDef == null) {
-                throw new NullPointerException("Could not find font resource \"" + fontName +
-                        "\"\n\t\tin \"" + fontRes +
-                        "\"\n\t\tfor \"" + parent.getClass().getName() +
-                        "\"\n\t\ttry: " + parent.getClass().getResource(fontRes));
-            } else {
-                return Font.createFont(Font.TRUETYPE_FONT, fontDef);
-            }
-        } catch (FontFormatException e) {
-            System.err.println("getting font " + fontName);
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("getting font " + fontName);
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void setName(String s) {

@@ -1,17 +1,17 @@
 package utils.swing.components;
 
+import utils.swing.utils.SwingUtils;
+
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class JumboDisplay
         extends JPanel {
     private static JumboDisplay instance = null;
     private Font digiFont = null;
-    private GridBagLayout gridBagLayout1 = new GridBagLayout();
-    private JLabel dataNameLabel = new JLabel();
-    private JLabel dataValueLabel = new JLabel();
+    private final GridBagLayout gridBagLayout1 = new GridBagLayout();
+    private final JLabel dataNameLabel = new JLabel();
+    private final JLabel dataValueLabel = new JLabel();
     private Color displayColor = Color.green;
     private Color gridColor = Color.lightGray;
     private boolean withGlossyBG = true;
@@ -60,9 +60,9 @@ public class JumboDisplay
 
     private int jumboFontSize = 36;
 
-    private void jbInit() throws Exception {
+    private void jbInit() {
         try {
-            digiFont = tryToLoadFont("ds-digi.ttf", this);
+            digiFont = SwingUtils.tryToLoadFont("ds-digi.ttf", this);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
@@ -111,41 +111,16 @@ public class JumboDisplay
     private Font loadDigiFont() {
         Font f = null;
         try {
-            f = tryToLoadFont("ds-digi.ttf", instance);
+            f = SwingUtils.tryToLoadFont("ds-digi.ttf", instance);
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
-        if (f == null)
+        if (f == null) {
             f = new Font("Courier New", Font.BOLD, jumboFontSize);
-        else
+        } else {
             f = f.deriveFont(Font.BOLD, jumboFontSize);
-        return f;
-    }
-
-    public static Font tryToLoadFont(String fontName, Object parent) {
-        final String RESOURCE_PATH = "resources" + "/"; // A slash! Not File.Separator, it is a URL.
-        try {
-            String fontRes = RESOURCE_PATH + fontName;
-            InputStream fontDef = null;
-            if (parent != null)
-                fontDef = parent.getClass().getResourceAsStream(fontRes);
-            else
-                fontDef = JumboDisplay.class.getResourceAsStream(fontRes);
-            if (fontDef == null) {
-                throw new NullPointerException("Could not find font resource \"" + fontName +
-                        "\"\n\t\tin \"" + fontRes +
-                        "\"\n\t\tfor \"" + parent.getClass().getName() +
-                        "\"\n\t\ttry: " + parent.getClass().getResource(fontRes));
-            } else
-                return Font.createFont(Font.TRUETYPE_FONT, fontDef);
-        } catch (FontFormatException e) {
-            System.err.println("getting font " + fontName);
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("getting font " + fontName);
-            e.printStackTrace();
         }
-        return null;
+        return f;
     }
 
     public void setName(String s) {
@@ -163,10 +138,8 @@ public class JumboDisplay
     }
 
     public void paintComponent(Graphics g) {
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // resize(jumboFontSize);
 
 //    Dimension dim =  this.getSize();
@@ -182,14 +155,14 @@ public class JumboDisplay
             ((Graphics2D) g).setPaint(gradient);
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
         }
-        if (withGlossyBG)
+        if (withGlossyBG) {
             drawGlossyRectangularDisplay((Graphics2D) g,
                     new Point(0, 0),
                     new Point(this.getWidth(), this.getHeight()),
                     Color.gray,
                     Color.black,
                     1f);
-        else {
+        } else {
             // Use customBGColor
             drawFlatRectangularDisplay((Graphics2D) g,
                     new Point(0, 0),
@@ -226,11 +199,12 @@ public class JumboDisplay
         g2d.setColor(gridColor);
         Composite comp = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-        for (int n = 1; n < 4; n++)
+        for (int n = 1; n < 4; n++) {
             g2d.drawLine(0, n * (height / 4), width, n * (height / 4));
-        for (int n = 1; n < 6; n++)
+        }
+        for (int n = 1; n < 6; n++) {
             g2d.drawLine(n * (width / 6), 0, n * (width / 6), height);
-
+        }
         g2d.setComposite(comp);
     }
 
@@ -248,11 +222,12 @@ public class JumboDisplay
         g2d.setColor(gridColor);
         Composite comp = g2d.getComposite();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
-        for (int n = 1; n < 4; n++)
+        for (int n = 1; n < 4; n++) {
             g2d.drawLine(0, n * (height / 4), width, n * (height / 4));
-        for (int n = 1; n < 6; n++)
+        }
+        for (int n = 1; n < 6; n++) {
             g2d.drawLine(n * (width / 6), 0, n * (width / 6), height);
-
+        }
         g2d.setComposite(comp);
     }
 

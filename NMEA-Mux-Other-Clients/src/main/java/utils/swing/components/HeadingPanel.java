@@ -10,9 +10,9 @@ public class HeadingPanel
         extends JPanel
         implements MouseListener, MouseMotionListener {
 
-    public final static int ROSE = 0;
-    public final static int ZERO_TO_360 = 1;
-    public final static int MINUS_180_TO_PLUS_180 = 2;
+    public final static int ROSE = 0;                     // Card points, name every 45 degrees, value otherwise.
+    public final static int ZERO_TO_360 = 1;              // [0..360[
+    public final static int MINUS_180_TO_PLUS_180 = 2;    // [180..180]
 
     private int roseType = ROSE;
 
@@ -101,10 +101,8 @@ public class HeadingPanel
 
     public void paintComponent(Graphics gr) {
         Graphics2D g2d = (Graphics2D) gr;
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int w = this.getWidth();
         int h = this.getHeight();
 
@@ -131,22 +129,24 @@ public class HeadingPanel
                 GradientPaint gradient = new GradientPaint(0, this.getHeight(), startColor, 0, 0, endColor); // vertical, upside down
                 g2d.setPaint(gradient);
             } else {
-                if (!withCustomColors)
+                if (!withCustomColors) {
                     g2d.setColor(whiteOnBlack ? Color.black : Color.white);
-                else if (bgColor != null)
+                } else if (bgColor != null) {
                     g2d.setColor(bgColor);
-                else if (bgColor == null)
+                } else if (bgColor == null) {
                     doFill = false;
+                }
             }
-            if (doFill)
-
+            if (doFill) {
                 g2d.fillRect(0, 0, w, h);
+            }
         }
         // Width: 30 on each side = 60 (default)
-        if (!withCustomColors)
+        if (!withCustomColors) {
             g2d.setColor(whiteOnBlack ? Color.white : Color.black);
-        else
+        } else {
             g2d.setColor(tickColor);
+        }
         float oneDegree = (float) w / roseWidth; // 30 degrees each side
         // One graduation every 1 & 5, one label every 'labelStep'
         for (int rose = hdg - (int) (roseWidth / 2f); rose <= hdg + (int) (roseWidth / 2f); rose++) {
@@ -168,8 +168,9 @@ public class HeadingPanel
                 boolean cardinal = false;
                 if (withCardinalPoints) {
                     roseStr = getRoseStr(roseToDisplay);
-                    if (roseStr.trim().length() > 0)
+                    if (roseStr.trim().length() > 0) {
                         cardinal = true;
+                    }
                 }
 //      System.out.println("String:" + roseStr);
 //      try { int x = Integer.parseInt(roseStr); } catch (NumberFormatException nfe) { cardinal = true; } // Deprecated, see above
@@ -183,68 +184,78 @@ public class HeadingPanel
         g2d.setColor(Color.red);
         g2d.drawLine(w / 2, 0, w / 2, h);
         //
-        while (hdg < 0) hdg += 360;
+        while (hdg < 0) {
+            hdg += 360;
+        }
 //  this.setToolTipText(ttPrefix + Integer.toString(hdg % 360) + "\272");
     }
 
     private String getRoseStr(int rtd) {
         String roseStr = Integer.toString(rtd);
         if (rtd == 0) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "N";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "0";
-            else
+            } else {
                 roseStr = "0";
+            }
         } else if (rtd == 180) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "S";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "180";
-            else
+            } else {
                 roseStr = "180";
+            }
         } else if (rtd == 90) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "E";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "90";
-            else
+            } else {
                 roseStr = "90";
+            }
         } else if (rtd == 270) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "W";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "90";
-            else
+            } else {
                 roseStr = "270";
+            }
         } else if (rtd == 45) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "NE";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "45";
-            else
+            } else {
                 roseStr = "45";
+            }
         } else if (rtd == 135) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "SE";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "135";
-            else
+            } else {
                 roseStr = "135";
+            }
         } else if (rtd == 225) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "SW";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "135";
-            else
+            } else {
                 roseStr = "225";
+            }
         } else if (rtd == 315) {
-            if (roseType == ROSE)
+            if (roseType == ROSE) {
                 roseStr = "NW";
-            else if (roseType == MINUS_180_TO_PLUS_180)
+            } else if (roseType == MINUS_180_TO_PLUS_180) {
                 roseStr = "45";
-            else
+            } else {
                 roseStr = "315";
+            }
         }
 
         return roseStr;

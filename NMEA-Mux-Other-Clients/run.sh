@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Used to run the TCP Clients.
+# Used to run the Java TCP Clients.
 #
 CP=./build/libs/NMEA-Mux-Other-Clients-1.0-all.jar
 OPTIONS=

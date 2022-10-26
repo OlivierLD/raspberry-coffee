@@ -1,6 +1,8 @@
 package utils.swing.components;
 
 
+import utils.WindUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -12,8 +14,6 @@ import java.text.NumberFormat;
 public class PartCircularDisplay
         extends JPanel
         implements MouseMotionListener {
-    @SuppressWarnings("compatibility:-5990585320126728229")
-    public final static long serialVersionUID = 1L;
 
     private final static NumberFormat DF_2 = new DecimalFormat("##0.00");
 
@@ -23,8 +23,6 @@ public class PartCircularDisplay
 
     private final static double EXTERNAL_RADIUS_COEFF = 1.1; // 1.050;
     private final static double INTERNAL_RADIUS_COEFF = 1.05; // 1.025;
-
-    private final static int[] BEAUFORT_SCALE = new int[]{0, 1, 4, 7, 11, 16, 22, 28, 34, 41, 48, 56, 64};
 
     private double speed = 0D;
     private double prevSpeed = 0;
@@ -36,7 +34,7 @@ public class PartCircularDisplay
     private double minimumSpeed = Double.MAX_VALUE;
     private double maximumSpeed = -minimumSpeed;
 
-    private static int displayOffset = 5;
+    private final static int displayOffset = 5;
 
     private final static double INCREMENT_DEFAULT_VALUE = 0.25;
     private final static int TICK_DEFAULT_VALUE = 5;
@@ -50,17 +48,6 @@ public class PartCircularDisplay
 
     // The background font is transparent
     private final Color bgColor = new Color((Color.gray.getRed() / 255f), (Color.gray.getGreen() / 255f), (Color.gray.getBlue() / 255f), 0.5f);
-
-    public static int getBeaufort(double d) {
-        int b = 0;
-        for (int i = 0; i < BEAUFORT_SCALE.length; i++) {
-            if (d < BEAUFORT_SCALE[i]) {
-                b = i - 1;
-                break;
-            }
-        }
-        return b;
-    }
 
     public void setLabel(String label) {
         this.label = label;
@@ -106,8 +93,9 @@ public class PartCircularDisplay
             double tan = deltaY / (double) Math.abs(deltaX);
 //    System.out.println("Tan:" + tan);
             angle = Math.toDegrees(Math.atan(tan));
-            if (deltaX > 0)
+            if (deltaX > 0) {
                 angle = 180d - angle;
+            }
 //    tt = "Mouse moved-> " + Integer.toString((int)angle) + "\272";
         }
 //    if (angle > displayOffset && angle < (180 - displayOffset))
@@ -176,26 +164,19 @@ public class PartCircularDisplay
         }
     }
 
-    private void jbInit() throws Exception {
+    private void jbInit() {
         this.addMouseMotionListener(this);
         this.setLayout(null);
         if (!WITH_TEXTURE) {
             this.setOpaque(false);
             this.setBackground(new Color(0, 0, 0, 0));
         }
-//    SpeedoContext.getInstance().addApplicationListener(new SpeedoEventListener()
-//      {
-//        public void setSpeed(double d)
-//        {
-//          instance.setSpeed(d);
-//        }
-//      });
 
-//  jumboFont = JumboDisplay.tryToLoadFont("ds-digi.ttf", null);
-//  jumboFont = JumboDisplay.tryToLoadFont("CodenameCoderFree4F-Bold.ttf", this);
-//  jumboFont = JumboDisplay.tryToLoadFont("AUDIMSCB.TTF", this);
-        // jumboFont = coreutilities.gui.JumboDisplay.tryToLoadFont("TRANA___.TTF", this);
-        // bgJumboFont = coreutilities.gui.JumboDisplay.tryToLoadFont("TRANGA__.TTF", this);
+//  jumboFont = SwingUtils.tryToLoadFont("ds-digi.ttf", null);
+//  jumboFont = SwingUtils.tryToLoadFont("CodenameCoderFree4F-Bold.ttf", this);
+//  jumboFont = SwingUtils.tryToLoadFont("AUDIMSCB.TTF", this);
+        // jumboFont = SwingUtils.tryToLoadFont("TRANA___.TTF", this);
+        // bgJumboFont = SwingUtils.tryToLoadFont("TRANGA__.TTF", this);
 
         speedUnitRatio = ((180D + (2 * angleOverlap)) - (2 * displayOffset)) / (maxSpeed - minValue);
     }
@@ -217,10 +198,11 @@ public class PartCircularDisplay
         // Manage the case 350-10
         if (Math.abs(prevSpeed - speed) > 180) {
             if (Math.signum(Math.cos(Math.toRadians(prevSpeed))) == Math.signum(Math.cos(Math.toRadians(speed)))) {
-                if (from > to)
+                if (from > to) {
                     to += 360;
-                else
+                } else {
                     to -= 360;
+                }
             }
         }
 //  final double _to = to;
@@ -234,16 +216,13 @@ public class PartCircularDisplay
                     final double _h = h;
                     try {
                         // For a smooth move of the hand
-                        SwingUtilities.invokeAndWait(new Runnable()
-                                //        SwingUtilities.invokeLater(new Runnable()
-                        {
-                            public void run() {
-                                double _s = _h % 360;
-                                while (_s < 0) _s += 360;
-                                instance.speed = _s;
-                                //            System.out.println("-> Speed:" + speed + " (" + _to + ")");
-                                instance.repaint();
-                            }
+                        //        SwingUtilities.invokeLater(new Runnable()
+                        SwingUtilities.invokeAndWait(() -> {
+                            double _s = _h % 360;
+                            while (_s < 0) _s += 360;
+                            instance.speed = _s;
+              //            System.out.println("-> Speed:" + speed + " (" + _to + ")");
+                            instance.repaint();
                         });
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -341,9 +320,9 @@ public class PartCircularDisplay
             int internalScaleRadius = (int) (radius * INTERNAL_RADIUS_COEFF);
             Color[] bColor = new Color[]{Color.black, Color.white};
 //    Color[] bColor = new Color[] { Color.green, Color.red };
-            for (int b = 1; b < BEAUFORT_SCALE.length; b++) {
-                double fromSpeed = speedToAngle(BEAUFORT_SCALE[b - 1]);
-                double toSpeed = speedToAngle(BEAUFORT_SCALE[b] > maxSpeed ? maxSpeed : BEAUFORT_SCALE[b]);
+            for (int b = 1; b < WindUtils.BEAUFORT_SCALE.length; b++) {
+                double fromSpeed = speedToAngle(WindUtils.BEAUFORT_SCALE[b - 1]);
+                double toSpeed = speedToAngle(WindUtils.BEAUFORT_SCALE[b] > maxSpeed ? maxSpeed : WindUtils.BEAUFORT_SCALE[b]);
                 g2d.setColor(bColor[b % 2]);
                 Shape starBoardSide = new Arc2D.Float((center.x - externalScaleRadius),
                         (center.y - externalScaleRadius),
@@ -353,8 +332,9 @@ public class PartCircularDisplay
                         (float) (fromSpeed - toSpeed),
                         Arc2D.OPEN);
                 ((Graphics2D) g).draw(starBoardSide);
-                if (BEAUFORT_SCALE[b] > maxSpeed)
+                if (WindUtils.BEAUFORT_SCALE[b] > maxSpeed) {
                     break;
+                }
             }
             ((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
             ((Graphics2D) g).setStroke(origStroke);
@@ -409,8 +389,9 @@ public class PartCircularDisplay
         for (double s = minValue; s <= maxSpeed; s += increment) {
             double d = speedToAngle(s) - 90;
             int scaleRadius = internalScaleRadius;
-            if (s % bigTick == 0)
+            if (s % bigTick == 0) {
                 scaleRadius = externalScaleRadius;
+            }
             int fromX = center.x + (int) (radius * Math.sin(Math.toRadians(d - 180)));
             int fromY = center.y + (int) (radius * Math.cos(Math.toRadians(d - 180)));
             int toX = center.x + (int) (scaleRadius * Math.sin(Math.toRadians(d - 180)));
@@ -516,9 +497,9 @@ public class PartCircularDisplay
         int longRadius = (int) (radius * INTERNAL_RADIUS_COEFF * 0.8);
         int shortRadius = (int) (radius * INTERNAL_RADIUS_COEFF * 0.1);
 
-        if (this.speed > this.maxSpeed)
+        if (this.speed > this.maxSpeed) {
             this.speed = this.maxSpeed;
-
+        }
         double angle = 270 - speedToAngle(this.speed);
 
         int toX = center.x + (int) (longRadius * Math.sin(Math.toRadians(angle)));

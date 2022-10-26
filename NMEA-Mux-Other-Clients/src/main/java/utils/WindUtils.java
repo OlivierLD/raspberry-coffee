@@ -1,7 +1,7 @@
 package utils;
 
 public class WindUtils {
-    // Beaufort Scale                               0   1   2   3    4    5    6    7    8    9   10   11   12
+    // Beaufort Scale                              0   1   2   3    4    5    6    7    8    9   10   11   12
     public final static double[] BEAUFORT_SCALE = {0d, 1d, 4d, 7d, 11d, 16d, 22d, 28d, 34d, 41d, 48d, 56d, 64d};
 
     public static int getBeaufort(double d) {
@@ -27,13 +27,12 @@ public class WindUtils {
         String rose = "";
         float delta = 11.25f; // Un quart
 
-        String[] data = new String[]
-                {
-                        "N", "N\u00bcNE", "NNE", "NE\u00bcN", "NE", "NE\u00bcE", "ENE", "E\u00bcNE",
-                        "E", "E\u00bcSE", "ESE", "SE\u00bcE", "SE", "SE\u00bcS", "SSE", "S\u00bcSE",
-                        "S", "S\u00bcSW", "SSW", "SW\u00bcS", "SW", "SW\u00bcW", "WSW", "W\u00bcSW",
-                        "W", "W\u00bcNW", "WNW", "NW\u00bcW", "NW", "NW\u00bcN", "NNW", "N\u00bcNW"
-                };
+        String[] data = new String[]{
+                "N", "N\u00bcNE", "NNE", "NE\u00bcN", "NE", "NE\u00bcE", "ENE", "E\u00bcNE",
+                "E", "E\u00bcSE", "ESE", "SE\u00bcE", "SE", "SE\u00bcS", "SSE", "S\u00bcSE",
+                "S", "S\u00bcSW", "SSW", "SW\u00bcS", "SW", "SW\u00bcW", "WSW", "W\u00bcSW",
+                "W", "W\u00bcNW", "WNW", "NW\u00bcW", "NW", "NW\u00bcN", "NNW", "N\u00bcNW"
+        };
 
         int index = 0;
         if (twd > (360 - (delta / 2f)) || twd <= (delta / 2f)) {
