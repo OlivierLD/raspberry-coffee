@@ -641,8 +641,8 @@ public class StringParsers {
 		 */
 		// We're interested only in Speed in knots.
 		double speed = defaultBSP;
-		double hdm = 0d;
-		double hdg = 0d;
+		double hdm = -1d; // set to -1.Means not found.
+		double hdg = -1d;
 
 		try {
 			String[] nmeaElements = data.substring(0, data.indexOf("*")).split(",");

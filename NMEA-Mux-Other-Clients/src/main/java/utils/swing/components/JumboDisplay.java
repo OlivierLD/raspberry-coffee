@@ -8,6 +8,7 @@ import java.awt.*;
 public class JumboDisplay
         extends JPanel {
     private static JumboDisplay instance = null;
+    private boolean useDigiFont = true;
     private Font digiFont = null;
     private final GridBagLayout gridBagLayout1 = new GridBagLayout();
     private final JLabel dataNameLabel = new JLabel();
@@ -42,15 +43,20 @@ public class JumboDisplay
     }
 
     public JumboDisplay(String name, String value, String ttText) {
-        this(name, value, ttText, 36);
+        this(name, value, ttText, 36, true);
     }
 
     public JumboDisplay(String name, String value, String ttText, int basicSize) {
+        this(name, value, ttText, basicSize, true);
+    }
+
+    public JumboDisplay(String name, String value, String ttText, int basicSize, boolean useDigiFont) {
         instance = this;
         origName = name;
         origValue = value;
         toolTipText = ttText;
         this.jumboFontSize = basicSize;
+        this.useDigiFont = useDigiFont;
         try {
             jbInit();
         } catch (Exception e) {
@@ -61,15 +67,18 @@ public class JumboDisplay
     private int jumboFontSize = 36;
 
     private void jbInit() {
-        try {
-            digiFont = SwingUtils.tryToLoadFont("ds-digi.ttf", this);
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+        if (useDigiFont) {
+            try {
+                digiFont = SwingUtils.tryToLoadFont("ds-digi.ttf", this);
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
         }
-        if (digiFont == null)
+        if (digiFont == null) {
             digiFont = new Font("Courier New", Font.BOLD, jumboFontSize);
-        else
+        } else {
             digiFont = digiFont.deriveFont(Font.BOLD, jumboFontSize);
+        }
         digiFont = loadDigiFont();
         this.setLayout(gridBagLayout1);
         this.setBackground(Color.black);
@@ -110,10 +119,12 @@ public class JumboDisplay
 
     private Font loadDigiFont() {
         Font f = null;
-        try {
-            f = SwingUtils.tryToLoadFont("ds-digi.ttf", instance);
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+        if (useDigiFont) {
+            try {
+                f = SwingUtils.tryToLoadFont("ds-digi.ttf", instance);
+            } catch (Exception ex) {
+                System.err.println(ex.getMessage());
+            }
         }
         if (f == null) {
             f = new Font("Courier New", Font.BOLD, jumboFontSize);

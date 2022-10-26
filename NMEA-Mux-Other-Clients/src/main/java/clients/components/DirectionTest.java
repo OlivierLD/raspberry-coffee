@@ -1,48 +1,54 @@
 package clients.components;
 
-import utils.swing.components.ClockDisplay;
+import utils.swing.components.DirectionDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Date;
 
-/**
- * Eventually... WiP.
- */
-public class CarPlayLikeDisplay {
+public class DirectionTest {
     private final JFrame frame;
-    private final ClockDisplay clockDisplay;
+    private final DirectionDisplay twsPanel;
 
     private final static int WIDTH = 400;
     private final static int HEIGHT = 400;
 
     private boolean keepTicking = true;
+    private double currentTWD = 0;
+    private Thread twdThread;
 
-    private void initClockClient() {
-        // Start a thread
-        Thread clockThread = new Thread(() -> {
+    private void initHeadingClient() {
+        // Start a thread to update the heading (randomly)
+        twdThread = new Thread(() -> {
             while (keepTicking) {
-                Date now = new Date();
-                if (clockDisplay != null) {
-                    clockDisplay.setValue(now.getTime());
-                    clockDisplay.repaint();
+                if (twsPanel != null) {
+                    double value = Math.random() * 10;
+                    int sign = (Math.random() >= 0.5) ? 1 : -1;
+                    currentTWD = (currentTWD + (sign * value)) % 360;
+                    if (currentTWD < 0) {
+                        currentTWD = 360 - currentTWD;
+                    }
+                    // System.out.printf("Speed is now: %f knt\n", currentSpeed);
+                    twsPanel.setDirection(currentTWD);
+                    twsPanel.setAngleValue(currentTWD);
+                    twsPanel.repaint();
                     try {
-                        Thread.sleep(1_000L);
+                        Thread.sleep(500L);
                     } catch (InterruptedException ie) {
                         // Absorb
                     }
                 }
             }
-        }, "Clock");
-        clockThread.start();
+            System.out.println("Bye headingThread");
+        }, "Heading");
+        twdThread.start();
     }
 
-    public CarPlayLikeDisplay() {
+    public DirectionTest() {
 
         // The JFrame
-        frame = new JFrame("UTC Time");
+        frame = new JFrame("TWD Test");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -60,35 +66,37 @@ public class CarPlayLikeDisplay {
         // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent we) {
+                System.out.println("Exiting...");
                 // Stop the thread here
                 keepTicking = false;
                 try {
-                    Thread.sleep(1_000L); // Wait for the thread to finish
+                    if (twdThread != null) {
+                        synchronized (twdThread) {
+                            twdThread.join();
+                        }
+                    }
                 } catch (InterruptedException ie) {
                     // Absorb
                 }
                 frame.setVisible(false);
+                System.out.println("Bye!");
                 System.exit(0);
             }
         });
 
-        clockDisplay = new ClockDisplay("UTC", "00:00:00", "UTC Clock test", Color.darkGray);
-        // clockDisplay.setCustomBGColor(Color.white); // new Color(0f, 0f, 0f, 0f));
-        clockDisplay.setWithGlossyBG(true);
-        clockDisplay.setDisplayColor(Color.cyan);
-        clockDisplay.setGridColor(Color.orange); // clockTextFontColor);
+        twsPanel = new DirectionDisplay("TWD", "000", "True Wind");
 
-//        Dimension clockDim = new Dimension(150, 150);
-//        clockDisplay.setPreferredSize(clockDim);
-//        clockDisplay.setSize(clockDim);
+//        Dimension compassDim = new Dimension(150, 150);
+//        HeadingPanel.setPreferredSize(compassDim);
+//        clockDisplay.setSize(compassDim);
 
-        // >> HERE: Add the clock to the JFrame
-        frame.getContentPane().add(clockDisplay, BorderLayout.CENTER);
+        // >> HERE: Add the compass to the JFrame
+        frame.getContentPane().add(twsPanel, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display all the frame
 
-        // Init and start reading. AFTER instantiating the JFrame.
-        initClockClient();
+        // Init and start reading time. AFTER instantiating the JFrame.
+        initHeadingClient();
     }
 
     public static void main(String... args) {
@@ -106,7 +114,7 @@ public class CarPlayLikeDisplay {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        new CarPlayLikeDisplay();
+        new DirectionTest();
 
         // Off we go!
     }

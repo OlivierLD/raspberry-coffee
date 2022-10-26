@@ -114,7 +114,7 @@ public class ClockTest {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        new CarPlayLikeDisplay();
+        new ClockTest();
 
         // Off we go!
     }

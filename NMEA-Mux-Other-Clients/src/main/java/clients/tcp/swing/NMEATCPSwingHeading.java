@@ -29,7 +29,9 @@ public class NMEATCPSwingHeading {
     private final boolean VERBOSE = "true".equals(System.getProperty("verbose"));
 
     private void initTCPClient() {
+
         this.tcpClient = new NMEATCPClient();
+
         // The NMEA Consumer
         this.tcpClient.setConsumer(nmea -> {
             if (headingPanel != null) {
@@ -41,13 +43,15 @@ public class NMEATCPSwingHeading {
                 switch (sentenceID) {
                     case "VHW":
                         final VHW vhw = StringParsers.parseVHW(nmea);
-                        foundHeading = true;
-                        heading = vhw.getHdg();
-                        if (heading == 0d) { // TODO Something better
-                            heading = vhw.getHdm();
-                        }
-                        if (VERBOSE) {
-                            System.out.printf("Found VHW [%.02f] in %s\n", heading, nmea);
+                        if (vhw != null) {
+                            foundHeading = true;
+                            heading = vhw.getHdg();
+                            if (heading == -1d) {
+                                heading = vhw.getHdm();
+                            }
+                            if (VERBOSE) {
+                                System.out.printf("Found VHW [%.02f] in %s\n", heading, nmea);
+                            }
                         }
                         break;
                     case "HDT":
@@ -66,10 +70,12 @@ public class NMEATCPSwingHeading {
                         break;
                     case "HDG":
                         final HDG hdg = StringParsers.parseHDG(nmea);
-                        heading = hdg.getHeading();
-                        foundHeading = true;
-                        if (VERBOSE) {
-                            System.out.printf("Found HDG [%.02f] in %s\n", heading, nmea);
+                        if (hdg != null) {
+                            heading = hdg.getHeading();
+                            foundHeading = true;
+                            if (VERBOSE) {
+                                System.out.printf("Found HDG [%.02f] in %s\n", heading, nmea);
+                            }
                         }
                         break;
                 }
@@ -137,7 +143,7 @@ public class NMEATCPSwingHeading {
             }
         });
 
-        headingPanel = new HeadingPanel(HeadingPanel.ZERO_TO_360, true);
+        headingPanel = new HeadingPanel(HeadingPanel.ROSE, true);
         headingPanel.setSmooth(true);
         // >> HERE: Add the label to the JFrame
         frame.getContentPane().add(headingPanel, BorderLayout.CENTER);

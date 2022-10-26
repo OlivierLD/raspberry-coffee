@@ -18,7 +18,8 @@ repositories {
 }
 
 dependencies {
-  implementation project (':raspberry-sailor:NMEA-Parser')
+  implementation project(':raspberry-sailor:NMEA-Parser')
+  implementation project(':astro-computer:AstroComputer')
 
   testImplementation "junit:junit:$junit_version"
 }

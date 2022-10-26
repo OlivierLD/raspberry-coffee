@@ -1,34 +1,40 @@
 package clients.components;
 
-import utils.swing.components.HeadingPanel;
+import calc.GeomUtil;
+import utils.swing.components.JumboDisplay;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class HeadingTest {
+public class JumboTest {
     private final JFrame frame;
-    private final HeadingPanel headingPanel;
+    private final JumboDisplay jumbo;
 
-    private final static int WIDTH = 400;
-    private final static int HEIGHT = 100;
+    private final static int WIDTH = 600;
+    private final static int HEIGHT = 200;
 
     private boolean keepTicking = true;
-    private double currentHeading = 0;
-    private Thread headingThread;
+    private double currentLatitude = 37.1234;
+    private Thread laltitudeThread;
 
-    private void initHeadingClient() {
-        // Start a thread to update the heading (randomly)
-        headingThread = new Thread(() -> {
+    private void initJumboClient() {
+        // Start a thread to update the latitude (randomly)
+        laltitudeThread = new Thread(() -> {
             while (keepTicking) {
-                if (headingPanel != null) {
-                    double value = Math.random() * 10;
+                if (jumbo != null) {
+                    double value = Math.random() * 0.0025;
                     int sign = (Math.random() >= 0.5) ? 1 : -1;
-                    currentHeading = (currentHeading + (sign * value)) % 360;
-                    // System.out.printf("Speed is now: %f knt\n", currentSpeed);
-                    headingPanel.setValue(currentHeading);
-                    headingPanel.repaint();
+                    currentLatitude = (currentLatitude + (sign * value));
+                    if (currentLatitude > 90) {
+                        currentLatitude -= value;
+                    }
+                    if (currentLatitude < -90) {
+                        currentLatitude += value;
+                    }
+                    jumbo.setValue(GeomUtil.decToSex(currentLatitude, GeomUtil.SWING /*.NO_DEG*/, GeomUtil.NS));
+                    jumbo.repaint();
                     try {
                         Thread.sleep(1_000L);
                     } catch (InterruptedException ie) {
@@ -38,13 +44,13 @@ public class HeadingTest {
             }
             System.out.println("Bye headingThread");
         }, "Heading");
-        headingThread.start();
+        laltitudeThread.start();
     }
 
-    public HeadingTest() {
+    public JumboTest() {
 
         // The JFrame
-        frame = new JFrame("Compass Test");
+        frame = new JFrame("Jumbo Test");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -66,9 +72,9 @@ public class HeadingTest {
                 // Stop the thread here
                 keepTicking = false;
                 try {
-                    if (headingThread != null) {
-                        synchronized (headingThread) {
-                            headingThread.join();
+                    if (laltitudeThread != null) {
+                        synchronized (laltitudeThread) {
+                            laltitudeThread.join();
                         }
                     }
                 } catch (InterruptedException ie) {
@@ -80,21 +86,20 @@ public class HeadingTest {
             }
         });
 
-        headingPanel = new HeadingPanel(HeadingPanel.ROSE, true);
-        headingPanel.setSmooth(true);
-        headingPanel.setValue(0.0); // heading
+        jumbo = new JumboDisplay("LAT", GeomUtil.decToSex(currentLatitude, GeomUtil.SWING /*.NO_DEG*/, GeomUtil.NS), "Latitude", 72, false);
+        jumbo.setDisplayColor(Color.cyan);
 
 //        Dimension compassDim = new Dimension(150, 150);
 //        HeadingPanel.setPreferredSize(compassDim);
 //        clockDisplay.setSize(compassDim);
 
         // >> HERE: Add the compass to the JFrame
-        frame.getContentPane().add(headingPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(jumbo, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display all the frame
 
         // Init and start reading time. AFTER instantiating the JFrame.
-        initHeadingClient();
+        initJumboClient();
     }
 
     public static void main(String... args) {
@@ -112,7 +117,7 @@ public class HeadingTest {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        new HeadingTest();
+        new JumboTest();
 
         // Off we go!
     }

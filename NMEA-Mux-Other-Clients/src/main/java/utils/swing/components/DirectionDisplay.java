@@ -22,16 +22,16 @@ import java.awt.RenderingHints;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-public class CircularDisplay extends JPanel {
+public class DirectionDisplay extends JPanel {
     public static final NumberFormat SPEED_FMT = new DecimalFormat("00.00");
     public static final NumberFormat ANGLE_FMT = new DecimalFormat("000");
 
-    private static CircularDisplay instance = null;
+    private static DirectionDisplay instance = null;
     private Font jumboFont = null;
     private Font bgJumboFont = null;
-    private GridBagLayout gridBagLayout1 = new GridBagLayout();
-    private JLabel dataNameLabel = new JLabel();
-    private JLabel dataValueLabel = new JLabel();
+    private final GridBagLayout gridBagLayout1 = new GridBagLayout();
+    private final JLabel dataNameLabel = new JLabel();
+    private final JLabel dataValueLabel = new JLabel();
     private Color displayColor = Color.green;
     // Color for the background font.
     private final Color bgColor = new Color((Color.gray.getRed() / 255f), (Color.gray.getGreen() / 255f), (Color.gray.getBlue() / 255f), 0.5f);
@@ -47,17 +47,17 @@ public class CircularDisplay extends JPanel {
     protected double radius = 0;
     protected Point center = null;
 
-    public CircularDisplay(String name, String value) {
+    public DirectionDisplay(String name, String value) {
         instance = this;
         origName = name;
         origValue = value;
     }
 
-    public CircularDisplay(String name, String value, String ttText) {
+    public DirectionDisplay(String name, String value, String ttText) {
         this(name, value, ttText, 36);
     }
 
-    public CircularDisplay(String name, String value, String ttText, int basicFontSize) {
+    public DirectionDisplay(String name, String value, String ttText, int basicFontSize) {
         instance = this;
         origName = name;
         origValue = value;
@@ -91,7 +91,7 @@ public class CircularDisplay extends JPanel {
         if (toolTipText != null) {
             this.setToolTipText(toolTipText);
         }
-        //  this.add(dataNameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        this.add(dataNameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
         this.add(dataValueLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 //  dataNameLabel.setFont(digiFont.deriveFont(Font.BOLD, 20));
@@ -162,7 +162,8 @@ public class CircularDisplay extends JPanel {
         Color endColor = new Color(0, 64, 64); // Color.gray; // new Color(102, 102, 102);
         GradientPaint gradient = new GradientPaint(0, this.getHeight(), startColor, 0, 0, endColor); // vertical, upside down
 
-        if (false) {
+        boolean bgColor = false; // Opposite of shaded bevel. TODO Make it a prm
+        if (bgColor) { // BG Color
             //  GradientPaint gradient = new GradientPaint(0, 0, startColor, this.getWidth(), this.getHeight(), endColor); // Diagonal, top-left to bottom-right
             //  GradientPaint gradient = new GradientPaint(0, this.getHeight(), startColor, this.getWidth(), 0, endColor); // Horizontal
             //  GradientPaint gradient = new GradientPaint(0, 0, startColor, 0, this.getHeight(), endColor); // vertical
@@ -173,7 +174,7 @@ public class CircularDisplay extends JPanel {
         radius = 0.9 * (Math.min(dim.width, dim.height) - 10d) / 2d;
         if (true) {
             center = new Point((dim.width / 2), (dim.height / 2));
-            if (true) { // With shaded bevel
+            if (!bgColor) { // With shaded bevel
                 RadialGradientPaint rgp = new RadialGradientPaint(center,
                         (int) (radius * 1.15),
                         new float[]{0f, 0.9f, 1f},
@@ -183,7 +184,7 @@ public class CircularDisplay extends JPanel {
             }
             drawGlossyCircularDisplay((Graphics2D) g, center, (int) radius, Color.lightGray, Color.black, 1f);
         }
-        // Boat
+        // Boat ?
 
         // Rose
         g.setColor(Color.lightGray);
@@ -194,13 +195,24 @@ public class CircularDisplay extends JPanel {
             int y2 = (dim.height / 2) + (int) ((radius) * Math.sin(Math.toRadians(i)));
             g.drawLine(x1, y1, x2, y2);
         }
-//  g.setColor(Color.lightGray);
+        // Font color for labels
+        // g.setColor(Color.lightGray);
         g.setColor(Color.white);
-        String n = "N";
+        // Card points
+        String label = "N";
         int fontSize = 14;
         g.setFont(g.getFont().deriveFont(Font.BOLD, fontSize));
-        int strWidth = g.getFontMetrics(g.getFont()).stringWidth(n);
-        g.drawString(n, (dim.width / 2) - strWidth / 2, (int) (fontSize * 1.5));
+        int strWidth = g.getFontMetrics(g.getFont()).stringWidth(label);
+        g.drawString(label, (dim.width / 2) - strWidth / 2, (int) (fontSize * 1.5));
+        label = "S";
+        strWidth = g.getFontMetrics(g.getFont()).stringWidth(label);
+        g.drawString(label, (dim.width / 2) - strWidth / 2, (int) ((dim.height) - (fontSize * 1.0)));
+        label = "E";
+        strWidth = g.getFontMetrics(g.getFont()).stringWidth(label);
+        g.drawString(label, (int)((dim.width / 2) + (radius + 10) - (strWidth / 2)), (int) ((dim.height / 2) + (fontSize * 0.45)));
+        label = "W";
+        strWidth = g.getFontMetrics(g.getFont()).stringWidth(label);
+        g.drawString(label, (int)((dim.width / 2) - (radius + 10) - (strWidth / 2)), (int) ((dim.height / 2) + (fontSize * 0.45)));
 
         // Hand
         drawHand((Graphics2D) g);
