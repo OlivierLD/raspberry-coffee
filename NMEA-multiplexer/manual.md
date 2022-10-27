@@ -179,7 +179,7 @@ channels:
     > the `path.in.zip`. If `path.in.zip` is null or invalid, the first entry in the archive will be used.
     > This can be usefull, as the archive may very well contain several log files.
 - `ws`
-    - WebSocket input
+    - WebSocket input. This is acting as a WebSocket client.
     ```properties
     mux.02.type=ws
     mux.02.wsuri=ws://192.168.1.136:9876/
@@ -369,7 +369,7 @@ The lines above means that:
     forward.XX.append=true
     forward.XX.flush=true
     ```
-    > Explanations:
+    > _Explanations_:
     > - `timebase.filename` default value is `false`
     > - if `timebase.filename` is `false` then a `filename` is expected to be provided (default is `data.nmea`).
     > - if `timebase.filename` is `true` then log file name will be based on the time the logging was started, like `2018-10-22_20:04:00_UTC.nmea`.
@@ -380,13 +380,21 @@ The lines above means that:
 
 
 - `ws`
-    - WebSocket server
+    - WebSocket server. 
+    > Pushes NMEA data to an _**external**_ WebSocket server (NodeJS for example, does the job). Unlike for `tcp` where the NMEA-multiplexer acts as a TCP server,
+    the NMEA-multiplexer is _**not**_ acting as a WebSocket server.  
+    For a NodeJS server example, see `wsnmea.js`. Can be started with an `npm start`.
     ```properties
     forward.07.type=ws
     forward.07.wsuri=ws://localhost:9876/
     ```
 - `wsp`
-    - WebSocket Processor
+    - WebSocket Processor.  
+    > This is more like an example of a transformer.    
+    To be used with other apps, like the pebble one.  
+    The transformer turns the content of the NMEA Cache into the expected format.    
+    _May require some customization!!!_    
+    See <https://github.com/OlivierLD/SmartWatches/tree/master/pebble/NMEA>
     ```properties
     forward.07.type=wsp
     forward.07.wsuri=ws://localhost:9876/

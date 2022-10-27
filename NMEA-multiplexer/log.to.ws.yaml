@@ -13,5 +13,5 @@ channels:
     path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
     verbose: false
 forwarders:
-  - type: ws
+  - type: ws   # Requires a ws server to be on. See wsnmea.js
     wsuri: ws://localhost:9876/

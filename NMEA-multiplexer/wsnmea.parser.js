@@ -1,6 +1,7 @@
 "use strict";  // http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
 /**
  * WebSocket server for NMEA
+ *
  * This one receives NMEA Strings, parses them (with NMEAParser.autoparse), and pushes the result into
  * a JSON cache (call fullContext, see below).
  *
