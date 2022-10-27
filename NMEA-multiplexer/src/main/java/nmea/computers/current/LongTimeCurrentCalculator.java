@@ -4,7 +4,6 @@ import calc.GreatCircle;
 import calc.GreatCirclePoint;
 import context.ApplicationContext;
 import context.NMEADataCache;
-import nmea.computers.Computer;
 import nmea.parser.Angle360;
 import nmea.parser.GeoPos;
 import nmea.parser.Speed;

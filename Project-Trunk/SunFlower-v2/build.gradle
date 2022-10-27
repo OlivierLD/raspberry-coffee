@@ -39,7 +39,7 @@ dependencies {
   implementation project(':http-tiny-server')
   implementation project(':raspberry-io-pi4j:I2C-SPI')        // For the Motor Hat, includes common-utils, AstroComputer. 'gradlew dependencies' is your friend...
   implementation project(':raspberry-sailor:NMEA-Parser')
-//  implementation project(':NMEA-multiplexer')
+  implementation project(':astro-computer:AstroUtilities')
   implementation project(':astro-computer:AstroComputer')
   // For tests
   testImplementation "junit:junit:$junit_version"

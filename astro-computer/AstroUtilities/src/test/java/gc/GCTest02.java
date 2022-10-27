@@ -1,9 +1,9 @@
 package gc;
 
+
 import calc.GeomUtil;
 import calc.GreatCircle;
 import calc.GreatCirclePoint;
-
 
 public class GCTest02 {
     public static void main(String... args) {

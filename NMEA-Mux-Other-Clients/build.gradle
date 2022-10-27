@@ -18,8 +18,8 @@ repositories {
 }
 
 dependencies {
-  implementation project(':raspberry-sailor:NMEA-Parser')
-  implementation project(':astro-computer:AstroComputer')
+  implementation project(':raspberry-sailor:NMEA-Parser')  // For the NMEA Parsers
+  implementation project(':astro-computer:AstroUtilities')  // For GeoPos & GeomUtil
 
   testImplementation "junit:junit:$junit_version"
 }

@@ -3,13 +3,13 @@ package clients.tcp.swing;
 
 import calc.GeomUtil;
 import clients.tcp.NMEATCPClient;
-import nmea.parser.HDG;
-import nmea.parser.StringParsers;
-import nmea.parser.VHW;
+import nmea.parser.*;
 import utils.swing.components.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Date;
@@ -19,12 +19,28 @@ import java.util.Date;
  * Update the data, if found in the NMEA Sentences.
  */
 public class NMEATCPSwingMultiDisplay {
+
+    public static class LabeledJPanel {
+        JPanel panel;
+        String label;
+        public LabeledJPanel(JPanel panel, String label) {
+            this.panel = panel;
+            this.label = label;
+        }
+    }
+
     private final JFrame frame;
 
     private final JPanel displayHolder = new JPanel(new BorderLayout()); // new FlowLayout()); // new GridBagLayout());
+    private final JPanel buttonHolder = new JPanel(new BorderLayout()); // new FlowLayout()); // new GridBagLayout());
+
+    private final JButton goRightButton = new JButton(">");
+    private final JButton goLeftButton  = new JButton("<");
+
+    private final JLabel displayLabel = new JLabel("-");
 
     private final HeadingPanel headingPanel;
-    private final DirectionDisplay twsPanel;
+    private final DirectionDisplay twdPanel;
     private final JumboDisplay jumboLatitude;
     private final JumboDisplay jumboLongitude;
     private final SpeedPanel bspPanel;
@@ -37,9 +53,9 @@ public class NMEATCPSwingMultiDisplay {
 
     private final boolean VERBOSE = "true".equals(System.getProperty("verbose"));
 
-    private final static boolean CONNECT_TO_TCP = false; // For development...
+    private final static boolean CONNECT_TO_TCP = true; // Set to false for development...
 
-    private JPanel[] displayArray;
+    private final LabeledJPanel[] displayArray;
     private int displayIndex = 0;
 
     private void initTCPClient() {
@@ -48,12 +64,24 @@ public class NMEATCPSwingMultiDisplay {
 
         // The NMEA Consumer. Update the displays
         this.tcpClient.setConsumer(nmea -> {
-            if (headingPanel != null) {
+            if (true) {  //headingPanel != null) {
                 // System.out.println(nmea);
                 final String sentenceID = StringParsers.getSentenceID(nmea);
                 boolean foundHeading = false;
+                boolean foundBsp = false;
+                boolean foundPos = false;
+                boolean foundTwd = false;
+                boolean foundUTC = false;
                 double heading = 0.0;
-                // VHW, HDT, HDM, HDG
+                double bsp = 0.0;
+                double latitude = 0.0, longitude = 0.0;
+                double twd = 0.0;
+                Date utc = null;
+                // Heading: VHW, HDT, HDM, HDG
+                // Position: RMC, GLL
+                // Boat Speed: VHW
+                // True Wind Dir: MWD (App Wind Dir: MWV)
+                // UTC: RMC, ZDA
                 switch (sentenceID) {
                     case "VHW":
                         final VHW vhw = StringParsers.parseVHW(nmea);
@@ -63,8 +91,10 @@ public class NMEATCPSwingMultiDisplay {
                             if (heading == -1d) {
                                 heading = vhw.getHdm();
                             }
+                            bsp = vhw.getBsp();
+                            foundBsp = true;
                             if (VERBOSE) {
-                                System.out.printf("Found VHW [%.02f] in %s\n", heading, nmea);
+                                System.out.printf("Found VHW [%.02f] and [%.02f] in %s\n", heading, bsp, nmea);
                             }
                         }
                         break;
@@ -92,10 +122,74 @@ public class NMEATCPSwingMultiDisplay {
                             }
                         }
                         break;
+                    case "RMC":
+                        final RMC rmc = StringParsers.parseRMC(nmea);
+                        if (rmc != null) {
+                            final GeoPos gp = rmc.getGp();
+                            latitude = gp.lat;
+                            longitude = gp.lng;
+                            foundPos = true;
+                            utc = rmc.getRmcDate();
+                            foundUTC = true;
+                            if (VERBOSE) {
+                                System.out.printf("Found Position [%s], and date [%s] in %s\n", gp, utc, nmea);
+                            }
+                        }
+                        break;
+                    case "GLL":
+                        final GLL gll = StringParsers.parseGLL(nmea);
+                        if (gll != null) {
+                            final GeoPos gllPos = gll.getGllPos();
+                            latitude = gllPos.lat;
+                            longitude = gllPos.lng;
+                            foundPos = true;
+                            if (VERBOSE) {
+                                System.out.printf("Found Position [%s] in %s\n", gllPos, nmea);
+                            }
+                        }
+                        break;
+                    case "ZDA":
+                        final UTCDate utcDate = StringParsers.parseZDA(nmea);
+                        if (utcDate != null) {
+                            utc = utcDate.getValue();
+                            foundUTC = true;
+                            if (VERBOSE) {
+                                System.out.printf("Found UTC date [%s] in %s\n", utc, nmea);
+                            }
+                        }
+                        break;
+                    case "MWD":
+                        // System.out.println("Found MWD (TWD)");
+                        final TrueWind trueWind = StringParsers.parseMWD(nmea);
+                        twd = trueWind.getAngle();
+                        foundTwd = true;
+                        break;
+//                    case "MWV":
+//                        System.out.println("Found MWV");
+//                        break;
                 }
                 if (foundHeading) {
                     headingPanel.setValue(heading);
                     headingPanel.repaint();
+                }
+                if (foundBsp) {
+                    bspPanel.setSpeed(bsp);
+                    bspPanel.repaint();
+                }
+                if (foundPos) {
+                    jumboLatitude.setValue(GeomUtil.decToSex(latitude, GeomUtil.SWING /*.NO_DEG*/, GeomUtil.NS));
+                    jumboLongitude.setValue(GeomUtil.decToSex(longitude, GeomUtil.SWING /*.NO_DEG*/, GeomUtil.EW));
+                    jumboLatitude.repaint();
+                    jumboLongitude.repaint();
+                }
+                if (foundTwd) {
+                    twdPanel.setDirection(twd);
+                    twdPanel.setAngleValue(twd);
+                    twdPanel.repaint();
+                }
+                if (foundUTC && utc != null) {
+                    clockPanel.setValue(utc.getTime());
+                    clockPanel.repaint();
                 }
             } else {
                 System.out.printf("Received [%s]\n", nmea); // In case headingPanel is null
@@ -138,7 +232,8 @@ public class NMEATCPSwingMultiDisplay {
             frameSize.width = screenSize.width;
         }
         if (frameSize.width == 0 || frameSize.height == 0) {
-            frameSize = new Dimension(WIDTH, (HEIGHT + 24)); // 24: title bar, etc.
+            int extra = 60; // title bar, buttons, etc.
+            frameSize = new Dimension(WIDTH, (HEIGHT + extra));
             frame.setSize(frameSize);
         }
         frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
@@ -170,14 +265,14 @@ public class NMEATCPSwingMultiDisplay {
         headingHolder.setPreferredSize(headingDim);
         headingHolder.add(headingPanel, BorderLayout.CENTER);
 
-        twsPanel = new DirectionDisplay("TWD", "000", "True Wind");
+        twdPanel = new DirectionDisplay("TWD", "000", "True Wind");
         Dimension twsDim = new Dimension(WIDTH, HEIGHT);
-        twsPanel.setPreferredSize(twsDim);
-        twsPanel.setSize(twsDim);
-        JPanel twsHolder = new JPanel(new BorderLayout());
-        twsHolder.setSize(panelHolderDim);
-        twsHolder.setPreferredSize(panelHolderDim);
-        twsHolder.add(twsPanel, BorderLayout.CENTER);
+        twdPanel.setPreferredSize(twsDim);
+        twdPanel.setSize(twsDim);
+        JPanel twdHolder = new JPanel(new BorderLayout());
+        twdHolder.setSize(panelHolderDim);
+        twdHolder.setPreferredSize(panelHolderDim);
+        twdHolder.add(twdPanel, BorderLayout.CENTER);
 
         jumboLatitude = new JumboDisplay("LAT", GeomUtil.decToSex(00.00, GeomUtil.SWING /*.NO_DEG*/, GeomUtil.NS), "Latitude", 40, false);
         jumboLatitude.setDisplayColor(Color.cyan);
@@ -185,7 +280,7 @@ public class NMEATCPSwingMultiDisplay {
         jumboLatitude.setPreferredSize(jumboDim);
         jumboLatitude.setSize(jumboDim);
 
-        jumboLongitude = new JumboDisplay("LONG", GeomUtil.decToSex(00.00, GeomUtil.SWING /*.NO_DEG*/, GeomUtil.NS), "Longitude", 40, false);
+        jumboLongitude = new JumboDisplay("LONG", GeomUtil.decToSex(00.00, GeomUtil.SWING /*.NO_DEG*/, GeomUtil.EW), "Longitude", 40, false);
         jumboLongitude.setDisplayColor(Color.cyan);
         // Dimension jumboDim = new Dimension(WIDTH, 100);
         jumboLongitude.setPreferredSize(jumboDim);
@@ -223,35 +318,72 @@ public class NMEATCPSwingMultiDisplay {
         clockHolder.add(clockPanel, BorderLayout.CENTER);
 
         displayHolder.add(headingHolder, BorderLayout.CENTER); //, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-        displayHolder.add(twsHolder, BorderLayout.CENTER); //, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        displayHolder.add(twdHolder, BorderLayout.CENTER); //, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
         displayHolder.add(jumboHolder, BorderLayout.CENTER); //, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
         displayHolder.add(bspHolder, BorderLayout.CENTER); //, new GridBagConstraints(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
         displayHolder.add(clockHolder, BorderLayout.CENTER); //, new GridBagConstraints(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
+        goRightButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // +1
+                if (displayArray != null) {
+                    displayIndex++;
+                    displayIndex %= displayArray.length;
+                    for (int i = 0; i < displayArray.length; i++) {
+                        // System.out.printf("CurrIndex=%d, Display #%d : %s\n", displayIndex, i, i == displayIndex ? "on" : "off");
+                        displayArray[i].panel.setVisible(i == displayIndex);
+                        if (i == displayIndex) {
+                            displayLabel.setText(displayArray[i].label);
+                            displayLabel.repaint();
+                        }
+                    }
+                }
+            }
+        });
+        goLeftButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // -1
+                if (displayArray != null) {
+                    displayIndex--;
+                    if (displayIndex < 0) {
+                        displayIndex = displayArray.length - 1;
+                    }
+                    displayIndex %= displayArray.length;
+                    for (int i = 0; i < displayArray.length; i++) {
+                        // System.out.printf("CurrIndex=%d, Display #%d : %s\n", displayIndex, i, i == displayIndex ? "on" : "off");
+                        displayArray[i].panel.setVisible(i == displayIndex);
+                        if (i == displayIndex) {
+                            displayLabel.setText(displayArray[i].label);
+                            displayLabel.repaint();
+                        }
+                    }
+                }
+            }
+        });
+        buttonHolder.add(goLeftButton, BorderLayout.WEST);
+        buttonHolder.add(displayLabel, BorderLayout.CENTER);
+        buttonHolder.add(goRightButton, BorderLayout.EAST);
+
         // >> HERE: Add the components to the JFrame
+        frame.getContentPane().add(buttonHolder, BorderLayout.NORTH);
         frame.getContentPane().add(displayHolder, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display
 
         headingHolder.setVisible(true);
-        twsHolder.setVisible(false);
+        twdHolder.setVisible(false);
         jumboHolder.setVisible(false);
         bspHolder.setVisible(false);
         clockHolder.setVisible(false);
 
-//        headingPanel.setVisible(true);
-//        twsPanel.setVisible(false);
-//        jumbo.setVisible(false);
-//        bspPanel.setVisible(false);
-//        clockPanel.setVisible(false);
-
-        displayArray = new JPanel[] {
-                headingHolder,
-                twsHolder,
-                jumboHolder,
-                bspHolder,
-                clockHolder
+        displayArray = new LabeledJPanel[] {
+                new LabeledJPanel(headingHolder, "HDG"),
+                new LabeledJPanel(twdHolder, "TWD"),
+                new LabeledJPanel(jumboHolder, "POS"),
+                new LabeledJPanel(bspHolder, "BSP"),
+                new LabeledJPanel(clockHolder, "UTC")
         };
+        displayLabel.setText(displayArray[0].label);
 
         // Init and start reading. AFTER instantiating the JFrame.
         if (CONNECT_TO_TCP) {
@@ -264,7 +396,11 @@ public class NMEATCPSwingMultiDisplay {
                         displayIndex %= displayArray.length;
                         for (int i = 0; i < displayArray.length; i++) {
                             System.out.printf("CurrIndex=%d, Display #%d : %s\n", displayIndex, i, i == displayIndex ? "on" : "off");
-                            displayArray[i].setVisible(i == displayIndex);
+                            displayArray[i].panel.setVisible(i == displayIndex);
+                            if (i == displayIndex) {
+                                displayLabel.setText(displayArray[i].label);
+                                displayLabel.repaint();
+                            }
                         }
                         System.out.println("---------------------------------------------");
                     }

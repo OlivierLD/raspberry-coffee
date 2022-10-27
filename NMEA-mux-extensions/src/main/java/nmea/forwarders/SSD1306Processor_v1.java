@@ -1,5 +1,6 @@
 package nmea.forwarders;
 
+import calc.GeomUtil;
 import com.pi4j.io.gpio.RaspiPin;
 import context.ApplicationContext;
 import context.NMEADataCache;
@@ -26,7 +27,6 @@ import nmea.forwarders.pushbutton.PushButtonObserver;
 import nmea.forwarders.pushbutton.PushButtonMaster;
 
 import java.util.Properties;
-import calc.GeomUtil;
 
 /**
  * This is an example of a <b>transformer</b>.

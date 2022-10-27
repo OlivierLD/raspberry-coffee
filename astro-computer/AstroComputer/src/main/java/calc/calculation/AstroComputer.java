@@ -1,10 +1,6 @@
 package calc.calculation;
 
-import calc.GeoPoint;
-import calc.GeomUtil;
-import calc.GreatCircle;
-import calc.GreatCirclePoint;
-import calc.GreatCircleWayPoint;
+import calc.*;
 import calc.calculation.nauticalalmanac.Anomalies;
 import calc.calculation.nauticalalmanac.Context;
 import calc.calculation.nauticalalmanac.Core;

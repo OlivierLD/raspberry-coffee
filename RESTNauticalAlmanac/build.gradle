@@ -29,6 +29,7 @@ dependencies {
   implementation project(':http-tiny-server')
   implementation project(':NMEA-multiplexer')
   implementation project(':raspberry-sailor:NMEA-Parser')
+  implementation project(':astro-computer:AstroUtilities')
   implementation project(':astro-computer:AstroComputer')
   testImplementation "junit:junit:$junit_version"
   testImplementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'

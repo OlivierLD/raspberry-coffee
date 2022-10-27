@@ -1,5 +1,7 @@
 package nmea.parser;
 
+import calc.GeomUtil;
+
 import java.io.PrintStream;
 import java.text.NumberFormat;
 
@@ -18,8 +20,6 @@ import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import calc.GeomUtil;
 
 /**
  * Generic form is

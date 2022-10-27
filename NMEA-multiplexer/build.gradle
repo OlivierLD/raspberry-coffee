@@ -48,6 +48,7 @@ dependencies {
     implementation project(':http-tiny-server')
     implementation project(':common-utils')
     implementation project(':raspberry-io-pi4j:I2C-SPI')
+    implementation project(':astro-computer:AstroUtilities')
     implementation project(':astro-computer:AstroComputer')
 //    implementation project(':SunFlower')
 //    implementation project(':GPS.sun.servo')

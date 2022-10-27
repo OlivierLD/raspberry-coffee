@@ -1,6 +1,7 @@
 package tables;
 
 import calc.GeomUtil;
+
 import java.text.DecimalFormat;
 
 public class Bataille {

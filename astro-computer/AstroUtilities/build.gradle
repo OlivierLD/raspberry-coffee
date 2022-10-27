@@ -4,11 +4,9 @@ buildscript {
 
 plugins {
   id 'java'
-  id 'scala'
   id 'idea'
   id 'maven-publish' // to be upgraded to 'maven-publish'
   id 'com.github.johnrengelman.shadow' // version '6.0.0' // Remove version if used in a gradle submodule.
-  id "application"
 }
 
 //compileJava.options.encoding = 'ISO-8859-1'
@@ -16,9 +14,6 @@ compileJava.options.compilerArgs += ["-Xlint:unchecked"]
 
 group = 'astro.computer'
 version = '1.0'
-
-//sourceCompatibility = 1.8
-//targetCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
   if (JavaVersion.current() != project.targetCompatibility) {
@@ -34,27 +29,13 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    implementation project(':astro-computer:AstroUtilities')
-
-    implementation "org.scala-lang:scala-library:$scala_version"   // 2.12.5"
-    implementation "org.scala-lang:scala-compiler:$scala_version"  // 2.12.5"
     testImplementation 'junit:junit:4.13.1'
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
-    // maven { url "https://mvnrepository.com/artifact" }
-    maven { url "https://www.datanucleus.org/downloads/maven2" }
-    maven { url "https://oss.sonatype.org/content/groups/public" }
 }
-
-//gradle.beforeSettings {
-//    println 'Before project'
-//}
-
-// Try using ../gradlew run --args="--now"
-mainClassName = "celestial.almanac.JavaSample"
 
 shadowJar {
     zip64 true

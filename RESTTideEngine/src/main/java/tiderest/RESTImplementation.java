@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public class RESTImplementation {
 
-	private TideRequestManager tideRequestManager;
+	private final TideRequestManager tideRequestManager;
 
 	private final static String TIDE_PREFIX = "/tide";
 

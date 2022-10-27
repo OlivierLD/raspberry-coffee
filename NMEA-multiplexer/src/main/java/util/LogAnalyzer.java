@@ -1,10 +1,10 @@
 package util;
 
+//import calc.calculation.AstroComputer;
 import calc.GeoPoint;
 import calc.GeomUtil;
 import calc.GreatCircle;
 import calc.GreatCirclePoint;
-//import calc.calculation.AstroComputer;
 import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;

@@ -25,7 +25,7 @@ compileJava {
 
 dependencies {
     implementation project(':common-utils')
-    implementation project(':astro-computer:AstroComputer')
+    implementation project(':astro-computer:AstroUtilities')
     testImplementation "junit:junit:$junit_version"
 }
 

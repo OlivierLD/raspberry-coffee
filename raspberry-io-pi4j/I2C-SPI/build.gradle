@@ -29,7 +29,7 @@ dependencies {
   implementation project(':common-utils')
   implementation project(':raspberry-io-pi4j:Utils')
   implementation project(':http-tiny-server')
-  implementation project(':astro-computer:AstroComputer')
+  implementation project(':astro-computer:AstroUtilities')
 }
 
 // Warning: Must be run as root

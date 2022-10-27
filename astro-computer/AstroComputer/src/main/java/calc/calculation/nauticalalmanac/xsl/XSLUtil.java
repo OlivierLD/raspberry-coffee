@@ -12,31 +12,31 @@ public class XSLUtil {
 
 	private final static DecimalFormat dfi2 = new DecimalFormat("00");
 
-	public final static String formatI2(double d) {
+	public static String formatI2(double d) {
 		return dfi2.format(d);
 	}
 
-	public final static String formatX4(double d) {
+	public static String formatX4(double d) {
 		return df4.format(d);
 	}
 
-	public final static String formatX3(double d) {
+	public static String formatX3(double d) {
 		return df3.format(d);
 	}
 
-	public final static String formatX2(double d) {
+	public static String formatX2(double d) {
 		return df2.format(d);
 	}
 
-	public final static String formatX1(double d) {
+	public static String formatX1(double d) {
 		return df1.format(d);
 	}
 
-	public final static String toNbsp(String s) {
+	public static String toNbsp(String s) {
 		return s.replaceAll(" ", "&nbsp;");
 	}
 
-	public final static String initCap(String s) {
+	public static String initCap(String s) {
 		String str = "";
 		try {
 			str = s.toLowerCase();
@@ -50,15 +50,15 @@ public class XSLUtil {
 		return str;
 	}
 
-	public final static String decToSex(double d, int a, int b) {
+	public static String decToSex(double d, int a, int b) {
 		return GeomUtil.decToSex(d, a, b);
 	}
 
-	public final static String decToSex(double d, int a, int b, int c) {
+	public static String decToSex(double d, int a, int b, int c) {
 		return GeomUtil.decToSex(d, a, b, c);
 	}
 
-	public final static String decToSexTrunc(double d, int a, int b) {
+	public static String decToSexTrunc(double d, int a, int b) {
 		return GeomUtil.decToSex(d, a, b, true);
 	}
 
@@ -66,7 +66,7 @@ public class XSLUtil {
 	 * @param d eot in hours
 	 * @return formatted string
 	 */
-	public final static String eotToString(double d) {
+	public static String eotToString(double d) {
 		int m = (int) Math.floor(Math.abs(d) * 60d);
 		int s = (int) Math.round((3600d * Math.abs(d)) - (m * 60d));
 		return ((d > 0 ? "+" : "-") + Integer.toString(m) + "m" + Integer.toString(s) + "s");

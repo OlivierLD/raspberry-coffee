@@ -10,6 +10,7 @@ clear
 echo -e "1: Raw TCP Client "
 echo -e "2: Basic Swing UI "
 echo -e "3: Swing Compass "
+echo -e "4: Multiple Displays "
 echo -en "You choose > "
 read RESP
 CLASS=
@@ -23,6 +24,9 @@ case "${RESP}" in
 	  "3")
 	    CLASS=clients.tcp.swing.NMEATCPSwingHeading
 	    ;;
+	  "4")
+	    CLASS=clients.tcp.swing.NMEATCPSwingMultiDisplay
+	    ;;
 	  *)
 	    CLASS=
 	    echo -e "Option ${RESP} not implemented"
@@ -33,4 +37,6 @@ esac
 # java -cp ${CP} ${OPTIONS} clients.tcp.NMEATCPSwing101
 if [[ "${CLASS}" != "" ]]; then
   java -cp ${CP} ${OPTIONS} ${CLASS}
+else
+  echo -e "Try again"
 fi

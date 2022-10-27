@@ -6,13 +6,8 @@ import oracle.xml.parser.v2.XMLDocument;
 import oracle.xml.parser.v2.XMLElement;
 import org.w3c.dom.NodeList;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.RenderingHints;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.List;
 

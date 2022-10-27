@@ -48,6 +48,7 @@ include "pi4j_v2-101"
 
 // Astro Computer
 include('astro-computer:AstroComputer')
+include('astro-computer:AstroUtilities')
 
 // Raspberry IO Pi4J
 include('raspberry-io-pi4j:Utils')

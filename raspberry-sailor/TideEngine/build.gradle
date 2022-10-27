@@ -34,6 +34,7 @@ dependencies {
   // implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'oracle:xmlparser:2.0'
 //  implementation project(':common-utils')
+  implementation project(':astro-computer:AstroUtilities')
   implementation project(':astro-computer:AstroComputer')
   implementation 'com.google.code.findbugs:jsr305:3.0.0'
   implementation 'org.xerial:sqlite-jdbc:3.34.0'

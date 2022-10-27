@@ -1,5 +1,6 @@
 package almanac;
 
+import calc.GeomUtil;
 import calc.calculation.AstroComputerV2;
 import calc.calculation.SightReductionUtil;
 import java.util.Calendar;
@@ -8,7 +9,6 @@ import java.util.TimeZone;
 import calc.calculation.nauticalalmanac.Anomalies;
 import calc.calculation.nauticalalmanac.Context;
 import calc.calculation.nauticalalmanac.Core;
-import calc.GeomUtil;
 
 public class Main4Tests {
 	public static void main(String... args) {

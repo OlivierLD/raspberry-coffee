@@ -28,6 +28,7 @@ dependencies {
   implementation project(':common-utils')
   implementation project(':http-tiny-server')
 //  implementation 'astro.computer:astro.computer:1.0'
+  implementation project(':astro-computer:AstroUtilities')
   implementation project(':astro-computer:AstroComputer')
   implementation project(':RESTNauticalAlmanac')   // For the astronomical calculus
   implementation project(':raspberry-io-pi4j:Utils')
