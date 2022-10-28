@@ -37,7 +37,7 @@ public class NMEATCPSwingMultiDisplay {
     private final JButton goRightButton = new JButton(">");
     private final JButton goLeftButton  = new JButton("<");
 
-    private final JLabel displayLabel = new JLabel("-");
+    private final JLabel displayLabel = new JLabel("-", SwingConstants.CENTER);
 
     private final HeadingPanel headingPanel;
     private final DirectionDisplay twdPanel;
@@ -260,10 +260,10 @@ public class NMEATCPSwingMultiDisplay {
         Dimension headingDim = new Dimension(WIDTH, 60);
         headingPanel.setPreferredSize(headingDim);
         headingPanel.setSize(headingDim);
-        JPanel headingHolder = new JPanel(new BorderLayout());
-        headingHolder.setSize(headingDim);
-        headingHolder.setPreferredSize(headingDim);
-        headingHolder.add(headingPanel, BorderLayout.CENTER);
+        JPanel headingHolder = new JPanel(new GridBagLayout());
+        headingHolder.setSize(panelHolderDim);
+        headingHolder.setPreferredSize(panelHolderDim);
+        headingHolder.add(headingPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0)); // BorderLayout.CENTER);
 
         twdPanel = new DirectionDisplay("TWD", "000", "True Wind");
         Dimension twsDim = new Dimension(WIDTH, HEIGHT);
@@ -286,23 +286,23 @@ public class NMEATCPSwingMultiDisplay {
         jumboLongitude.setPreferredSize(jumboDim);
         jumboLongitude.setSize(jumboDim);
 
-        JPanel jumboHolder = new JPanel(new BorderLayout());
+        JPanel jumboHolder = new JPanel(new GridBagLayout());
         jumboHolder.setSize(panelHolderDim);
         jumboHolder.setPreferredSize(panelHolderDim);
-        jumboHolder.add(jumboLatitude, BorderLayout.NORTH);
-        jumboHolder.add(jumboLongitude, BorderLayout.SOUTH);
+        jumboHolder.add(jumboLatitude, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0)); // BorderLayout.NORTH);
+        jumboHolder.add(jumboLongitude, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0)); // BorderLayout.SOUTH);
 
         bspPanel = new SpeedPanel(15.0, 0.25, 5, true);
         bspPanel.setLabel("BSP");
         bspPanel.setSpeedUnit(SpeedPanel.SpeedUnit.KNOT);
         bspPanel.setSpeed(0.0);
-        Dimension speedoDim = new Dimension(WIDTH, HEIGHT);
+        Dimension speedoDim = new Dimension(WIDTH, 250);
         bspPanel.setPreferredSize(speedoDim);
         bspPanel.setSize(speedoDim);
-        JPanel bspHolder = new JPanel(new BorderLayout());
+        JPanel bspHolder = new JPanel(new GridBagLayout());
         bspHolder.setSize(panelHolderDim);
         bspHolder.setPreferredSize(panelHolderDim);
-        bspHolder.add(bspPanel, BorderLayout.NORTH);
+        bspHolder.add(bspPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0)); // BorderLayout.NORTH);
 
         clockPanel = new ClockDisplay("UTC", "00:00:00", "UTC Clock", Color.darkGray);
         // clockPanel.setCustomBGColor(Color.white); // new Color(0f, 0f, 0f, 0f)); // Used if not glossy
@@ -377,13 +377,15 @@ public class NMEATCPSwingMultiDisplay {
         clockHolder.setVisible(false);
 
         displayArray = new LabeledJPanel[] {
-                new LabeledJPanel(headingHolder, "HDG"),
-                new LabeledJPanel(twdHolder, "TWD"),
-                new LabeledJPanel(jumboHolder, "POS"),
-                new LabeledJPanel(bspHolder, "BSP"),
-                new LabeledJPanel(clockHolder, "UTC")
+                new LabeledJPanel(headingHolder, "Heading"),
+                new LabeledJPanel(twdHolder, "True Wind Direction"),
+                new LabeledJPanel(jumboHolder, "GPS Position"),
+                new LabeledJPanel(bspHolder, "Boat Speed"),
+                new LabeledJPanel(clockHolder, "UTC Time")
         };
         displayLabel.setText(displayArray[0].label);
+        final Font labelFont = displayLabel.getFont();
+        displayLabel.setFont(labelFont.deriveFont(Font.BOLD | Font.ITALIC));
 
         // Init and start reading. AFTER instantiating the JFrame.
         if (CONNECT_TO_TCP) {
