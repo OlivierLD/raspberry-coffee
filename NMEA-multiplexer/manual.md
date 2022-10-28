@@ -172,6 +172,8 @@ channels:
     mux.01.filename=./sample.data/archived.logged.data.zip
     mux.01.zip=true
     mux.01.path.in.zip=2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    mux.01.loop=true             # Default true
+    mux.01.between-records=500   # Default 500ms
     ```
     > The `filename` can be an archive (zip) or a text file (containing NMEA sentences)
     >

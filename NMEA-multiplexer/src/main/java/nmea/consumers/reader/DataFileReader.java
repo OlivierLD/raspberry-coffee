@@ -18,7 +18,7 @@ import java.util.zip.ZipFile;
 public class DataFileReader extends NMEAReader {
 	private String dataFileName = null;
 	private InputStream fis;
-	private long betweenRecords = 500L;
+	private long betweenRecords = 500L; // in ms
 	private boolean loop = true;
 	private boolean zip = false;
 	private String pathInArchive = "";
