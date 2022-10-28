@@ -66,17 +66,20 @@ public class NMEATCPSwingMultiDisplay {
         this.tcpClient.setConsumer(nmea -> {
             if (true) {  //headingPanel != null) {
                 // System.out.println(nmea);
-                final String sentenceID = StringParsers.getSentenceID(nmea);
                 boolean foundHeading = false;
                 boolean foundBsp = false;
                 boolean foundPos = false;
                 boolean foundTwd = false;
                 boolean foundUTC = false;
+
                 double heading = 0.0;
                 double bsp = 0.0;
                 double latitude = 0.0, longitude = 0.0;
                 double twd = 0.0;
                 Date utc = null;
+
+                final String sentenceID = StringParsers.getSentenceID(nmea);
+
                 // Heading: VHW, HDT, HDM, HDG
                 // Position: RMC, GLL
                 // Boat Speed: VHW

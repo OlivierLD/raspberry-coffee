@@ -4,7 +4,7 @@
 #
 CP=./build/libs/NMEA-Mux-Other-Clients-1.0-all.jar
 OPTIONS=
-# OPTIONS="-Dverbose=true -Dtcp.host=localhost -Dtcp.port=7001"
+# OPTIONS="-Dverbose=true -Dtcp.host=192.168.1.106 -Dtcp.port=7001"
 #
 clear
 echo -e "1: Raw TCP Client "
