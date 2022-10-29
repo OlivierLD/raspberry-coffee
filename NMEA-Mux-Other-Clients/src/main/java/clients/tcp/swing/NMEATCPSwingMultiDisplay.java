@@ -32,7 +32,7 @@ public class NMEATCPSwingMultiDisplay {
     private final JFrame frame;
 
     private final JPanel displayHolder = new JPanel(new BorderLayout()); // new FlowLayout()); // new GridBagLayout());
-    private final JPanel buttonHolder = new JPanel(new BorderLayout()); // new FlowLayout()); // new GridBagLayout());
+    private final JPanel buttonHolder = new JPanel(new BorderLayout());  // new FlowLayout()); // new GridBagLayout());
 
     private final JButton goRightButton = new JButton(">");
     private final JButton goLeftButton  = new JButton("<");
@@ -66,7 +66,7 @@ public class NMEATCPSwingMultiDisplay {
         this.tcpClient.setConsumer(nmea -> {
             if (true) {  //headingPanel != null) {
                 // System.out.println(nmea);
-                boolean foundHeading = false;
+                boolean foundHdg = false;
                 boolean foundBsp = false;
                 boolean foundPos = false;
                 boolean foundTwd = false;
@@ -89,7 +89,7 @@ public class NMEATCPSwingMultiDisplay {
                     case "VHW":
                         final VHW vhw = StringParsers.parseVHW(nmea);
                         if (vhw != null) {
-                            foundHeading = true;
+                            foundHdg = true;
                             heading = vhw.getHdg();
                             if (heading == -1d) {
                                 heading = vhw.getHdm();
@@ -103,14 +103,14 @@ public class NMEATCPSwingMultiDisplay {
                         break;
                     case "HDT":
                         heading = StringParsers.parseHDT(nmea);
-                        foundHeading = true;
+                        foundHdg = true;
                         if (VERBOSE) {
                             System.out.printf("Found HDT [%.02f] in %s\n", heading, nmea);
                         }
                         break;
                     case "HDM":
                         heading = StringParsers.parseHDM(nmea);
-                        foundHeading = true;
+                        foundHdg = true;
                         if (VERBOSE) {
                             System.out.printf("Found HDM [%.02f] in %s\n", heading, nmea);
                         }
@@ -119,7 +119,7 @@ public class NMEATCPSwingMultiDisplay {
                         final HDG hdg = StringParsers.parseHDG(nmea);
                         if (hdg != null) {
                             heading = hdg.getHeading();
-                            foundHeading = true;
+                            foundHdg = true;
                             if (VERBOSE) {
                                 System.out.printf("Found HDG [%.02f] in %s\n", heading, nmea);
                             }
@@ -171,7 +171,7 @@ public class NMEATCPSwingMultiDisplay {
 //                        System.out.println("Found MWV");
 //                        break;
                 }
-                if (foundHeading) {
+                if (foundHdg) {
                     headingPanel.setValue(heading);
                     headingPanel.repaint();
                 }

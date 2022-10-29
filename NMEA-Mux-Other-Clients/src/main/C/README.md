@@ -38,7 +38,7 @@ Each sub-directory contains the sc ripts used to compile and run the code.
       ```
     - default REST Query is `/mux/cache`, also try `/oplist`...
 
-More to come
+More to come (see GTK, <https://www.raspberrypi.com/news/an-introduction-to-c-gui-programming-the-new-book-from-raspberry-pi-press/>)
 
 --- 
 
