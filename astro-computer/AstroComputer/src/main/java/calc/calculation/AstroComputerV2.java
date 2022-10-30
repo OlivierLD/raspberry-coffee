@@ -945,12 +945,12 @@ public class AstroComputerV2 {
         final SimpleDateFormat MINUTE_FMT = new SimpleDateFormat("mm");
         final SimpleDateFormat SECOND_FMT = new SimpleDateFormat("ss");
 
-        YEAR_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-        MONTH_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-        DAY_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-        HOUR_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-        MINUTE_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-        SECOND_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+//        YEAR_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+//        MONTH_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+//        DAY_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+//        HOUR_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+//        MINUTE_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+//        SECOND_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 
         YMDHMSs solarDate = new YMDHMSs()
                 .year(Integer.parseInt(YEAR_FMT.format(solar)))

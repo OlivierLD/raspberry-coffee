@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 public class TestSolarDate {
 
     private final static SimpleDateFormat SDF_01 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final static SimpleDateFormat SDF_02 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     //                                                                           |    |  |  |  |  |
     //                                                                           |    |  |  |  |  17
     //                                                                           |    |  |  |  14,16
@@ -21,6 +22,7 @@ public class TestSolarDate {
     //                                                                           |    |  8,10
     //                                                                           |    5,7
     //                                                                           0,4
+
     static {
         SDF_01.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
     }
@@ -51,11 +53,20 @@ public class TestSolarDate {
     public void testSolarDateCalculation() {
         Date utc = new Date();
 
-//        System.out.println(String.format("- UTC 0: %s", utc));
-//        System.out.println(String.format("- UTC 1: %s", SDF_01.format(utc)));
+        System.out.println(String.format("- UTC 0: %s", utc));
+        System.out.println(String.format("- UTC 1: %s", SDF_01.format(utc)));
+
+        String utcString = SDF_01.format(utc);
 
         Calendar current = GregorianCalendar.getInstance();
-        current.setTime(utc);
+        // current.setTime(utc);
+        current.set(Integer.parseInt(utcString.substring( 0,  4)),
+                    Integer.parseInt(utcString.substring( 5,  7)) - 1,
+                    Integer.parseInt(utcString.substring( 8, 10)),
+                    Integer.parseInt(utcString.substring(11, 13)),
+                    Integer.parseInt(utcString.substring(14, 16)),
+                    Integer.parseInt(utcString.substring(17)));
+
         acv2.setDateTime(current.get(Calendar.YEAR),
                 current.get(Calendar.MONTH) + 1,
                 current.get(Calendar.DAY_OF_MONTH),
@@ -64,10 +75,10 @@ public class TestSolarDate {
                 current.get(Calendar.SECOND));
         acv2.calculate(); // Set the timestamp.
 
-        Date one = getSolarDateFromEOT(utc, LATITUDE, LONGITUDE);
+        Date one = getSolarDateFromEOT(current.getTime(), LATITUDE, LONGITUDE);
         AstroComputerV2.YMDHMSs two = acv2.getSolarDateAtPos(LATITUDE, LONGITUDE);
 
-        String formatted = SDF_01.format(one);
+        String formatted = SDF_02.format(one);
         System.out.println(String.format(">> Test >> UTC: %s, Solar: %s", SDF_01.format(utc), formatted ));
 
         assertEquals("Wrong year.",    Integer.parseInt(formatted.substring( 0,  4)), two.getYear());

@@ -1770,12 +1770,12 @@ function gatherOutput(noPlanets=false, withStars=false) {
 	let ms = currentDate.getTime();
 	let solar = new Date(ms + Math.round((12 - eotInHours) * 3600000));
 	return {
-		year: solar.getFullYear(),
-		month: solar.getMonth() + 1,
-		day: solar.getDate(),
-		hour: solar.getHours(),
-		minute: solar.getMinutes(),
-		second: solar.getSeconds()
+		year: solar.getUTCFullYear(),
+		month: solar.getUTCMonth() + 1,
+		day: solar.getUTCDate(),
+		hour: solar.getUTCHours(),
+		minute: solar.getUTCMinutes(),
+		second: solar.getUTCSeconds()
 	};
 };
 
