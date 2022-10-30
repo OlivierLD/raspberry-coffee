@@ -1771,7 +1771,7 @@ function gatherOutput(noPlanets=false, withStars=false) {
 	let solar = new Date(ms + Math.round((12 - eotInHours) * 3600000));
 	return {
 		year: solar.getFullYear(),
-		month: solar.getMonth( + 1,
+		month: solar.getMonth() + 1,
 		day: solar.getDate(),
 		hour: solar.getHours(),
 		minute: solar.getMinutes(),
