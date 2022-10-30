@@ -27,12 +27,16 @@ public class TestSolarDate {
 
     static AstroComputerV2 acv2 = new AstroComputerV2();
     // SF~ish
-    static double LATITUDE = 37d;
-    static double LONGITUDE = -122d;
+//    static double LATITUDE = 37d;
+//    static double LONGITUDE = -122d;
 
     // Chair Mn drive
 //    static double LATITUDE = 39.167398801021655;
 //    static double LONGITUDE = -107.24753700739706;
+
+    // Belz
+    static double LATITUDE = 47.67766666666667;
+    static double LONGITUDE = -3.135666666666667;
 
     private static Date getSolarDateFromEOT(Date utc, double latitude, double longitude) {
         // Get Equation of time, used to calculate solar time.

@@ -95,10 +95,13 @@ if (STANDALONE_2) {
 	// let date = "2011-02-06T14:41:42.000Z";
 	// let lat = -10.761383333333333, lng = -156.24046666666666;
 
-	let date = "2022-03-20T10:41:42.000Z";
-	let lat = 47.661667, lng = -2.758167;
+	// let date = "2022-03-20T10:41:42.000Z";
+	// let lat = 47.661667, lng = -2.758167;
 
-    let duration = parseDuration(date);
+	let date = "2022-10-30T09:12:45.000Z";
+	let lat = 37.0, lng = -122.0;
+
+	let duration = parseDuration(date);
 
 	// let year = 2011, month = 2, day = 6, hour = 14, minute = 41, second = 42;
 	let year = duration.year, month = duration.month, day = duration.day, hour = duration.hour, minute = duration.minute, second = duration.second;
@@ -133,6 +136,10 @@ if (STANDALONE_2) {
 														  result.sun.HP.raw, 
 														  result.sun.SD.raw, 
 														  result.EOT.raw);
+
+    let solarDate = CelestialComputer.getSolarDateAtPos(lat, lng, result.EOT.raw, year, month, day, hour, minute, second, delta_t);
+	console.log(`Solar Date at ${lat}/${lng}: ${solarDate.year}-${solarDate.month}-${solarDate.day} ${solarDate.hour}:${solarDate.minute}:${solarDate.second}`);
+
     // returned by the Java equivalent
     // let expectedReturn = {           
 	// 	"epoch" : 1297003302000,

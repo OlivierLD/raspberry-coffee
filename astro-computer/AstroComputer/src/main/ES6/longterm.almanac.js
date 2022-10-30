@@ -6,6 +6,7 @@
  * http://www.titulosnauticos.net/astro/
  *
  * DeltaT can be found at http://maia.usno.navy.mil/ (will be back to life in 2020... in your dreams)
+ * Also known as CelestialComputer.
  */
 
 if (Math.toRadians === undefined) {
@@ -1745,6 +1746,37 @@ function gatherOutput(noPlanets=false, withStars=false) {
 	let t = (12.0 - (sunEoT / 60.0));
 	let deltaG = longitude / 15.0;
 	return t - deltaG;
+};
+
+/**
+ * 
+ * @param {float} lat 
+ * @param {float} lng 
+ * @param {float} sunEoT 
+ * @param {int} year
+ * @param {int} month [1..12]
+ * @param {int} day
+ * @param {int} hour
+ * @param {int} minute
+ * @param {int} second
+ * @param {float} delta_t
+ * @returns The solar date and time (NO time-zone)
+ */
+ export function getSolarDateAtPos(latitude, longitude, sunEoT, year, month, day, hour, minute, second, delta_t) {
+	let eotInHours = getSunMeridianPassageTime(latitude, longitude, sunEoT);
+
+	let currentDate = new Date(`${year}-${lpad(month, '0', 2)}-${lpad(day, '0', 2)} ${lpad(hour, '0', 2)}:${lpad(minute, '0', 2)}:${lpad(second, '0', 2)} GMT+0000`);
+
+	let ms = currentDate.getTime();
+	let solar = new Date(ms + Math.round((12 - eotInHours) * 3600000));
+	return {
+		year: solar.getFullYear(),
+		month: solar.getMonth( + 1,
+		day: solar.getDate(),
+		hour: solar.getHours(),
+		minute: solar.getMinutes(),
+		second: solar.getSeconds()
+	};
 };
 
 /**
