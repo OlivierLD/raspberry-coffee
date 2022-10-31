@@ -446,6 +446,19 @@ while [[ "${GO}" == "true" ]]; do
 	    fi
 	    GO=false
 	    ;;
+	  "9e")
+	    PROP_FILE=nmea.mux.bora.fwd.yaml
+	    echo -e "Launching Nav Server with ${PROP_FILE}"
+	    export INFRA_VERBOSE=false
+	    # Get date and time from the file
+	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:${HTTP_PORT}/web/index.html"
+	    fi
+	    GO=false
+	    ;;
 	  "10")
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with ${PROP_FILE}"
