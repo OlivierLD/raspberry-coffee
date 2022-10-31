@@ -24,7 +24,7 @@ let connection;
 		displayMessage('Sorry, but there is some problem with your connection or the server is down.');
 	};
 
-	// most important part - incoming messages
+	// most important part - incoming messages. TODO Override (Consumer ?)
 	connection.onmessage = (message) => {
 //      console.log('onmessage:' + message);
 		if (filters.value.length > 0) {

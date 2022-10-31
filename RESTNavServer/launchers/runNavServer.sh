@@ -149,11 +149,11 @@ if [[ "${RMC_TIME_OK}" == "false" ]]; then
 fi
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=47.705 -Ddefault.mux.longitude=-3.105" # Locoal.
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=47.661667 -Ddefault.mux.longitude=-2.758167" # Vannes.
-# JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=47.677667 -Ddefault.mux.longitude=-3.135667" # Belz.
+JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=47.677667 -Ddefault.mux.longitude=-3.135667" # Belz.
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=48.48518833333333 -Ddefault.mux.longitude=-123.07788833333333" # False Bay, San Juan Island
 # JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=48.60448 -Ddefault.mux.longitude=-122.819285" # Olga, Orcas Island
-JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=39.167398801021655 -Ddefault.mux.longitude=-107.24753700739706" # Redstone, CO.
+# JAVA_OPTS="${JAVA_OPTS} -Ddefault.mux.latitude=39.167398801021655 -Ddefault.mux.longitude=-107.24753700739706" # Redstone, CO.
 #
 # Polar file (coeffs)
 #
