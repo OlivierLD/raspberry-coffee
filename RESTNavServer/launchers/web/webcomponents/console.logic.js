@@ -275,7 +275,11 @@ function setMinMax(cb, id) {
 }
 
 function resetMinMax(id) {
-	document.getElementById(id).resetMinMax();
+    if (document.getElementById(id).resetMinMax) {
+	    document.getElementById(id).resetMinMax();
+	} else {
+	    console.log(`No resetMinMax in element ${id}.`);
+	}
 }
 
 function setTransparency(wcId, cb) {
