@@ -100,12 +100,14 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "|  9c. Replay logged sailing data (Nuku-Hiva - Rangiroa), ANSI console display            |"
 	echo -e "|            (Big file)                                                                   |"
 	echo -e "|  9d. Replay logged sailing data (Oyster Point), heading back in.                        |"
+	echo -e "|  9e. Replay logged sailing data (Bora-Bora - Tongareva), forwarders TCP, WS, GPSd       |"
+	echo -e "|            (requires a NodeJS WebSocket server to be running)                           |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "| 11. Same as 10, with proxy.                                                             |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "| 12. With 2 input serial ports.                                                          |"
-	echo -e "|     - See or modify nmea.mux.2.serial.yaml for details.                                 |"
+	echo -e "|     - See or modify nmea.mux.2.serial.yaml for details. Or try option H:12              |"
 	echo -e "| 13. AIS Tests.                                                                          |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "| 20. Get Data Cache (curl)                                                               |"
@@ -218,6 +220,10 @@ while [[ "${GO}" == "true" ]]; do
 	        ;;
 	      "9d")
 	        PROP_FILE=nmea.mux.heading.yaml
+	      	displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "9e")
+	        PROP_FILE=nmea.mux.bora.fwd.yaml
 	      	displayHelp ${HELP_ON} ${PROP_FILE}
 	        ;;
 	      "10")

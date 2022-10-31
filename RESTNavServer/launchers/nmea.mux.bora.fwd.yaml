@@ -11,7 +11,6 @@ context:
   damping: 30
 channels:
   - type: file
-    # filename: ../sample.data/2011-01-29.strait.to.tongareva.for.DR.txt.nmea
     filename: ./sample.data/logged.data.archive.zip
     zip: true
     path.in.zip: 2011-01-29.strait.to.tongareva.for.DR.txt.nmea
@@ -19,8 +18,8 @@ channels:
     loop: true
     verbose: false
 forwarders:
-  - class: nmea.forwarders.CharacterConsoleWriter
-    properties: char.console.properties
+  - type: ws
+    wsuri: ws://localhost:9876/
   - type: "tcp"
     port: 7001
   - type: "gpsd"
