@@ -116,7 +116,7 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
 	echo -e "|  K. Kill all running Multiplexers  |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
-	echo -e "|  >> To get help on option X, type H:X (like H:11, H:20b, etc)                           |                                                    |"
+	echo -e "|  >> To get help on option X, type H:X (like H:11, H:20b, etc)                           |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  Q. Quit ❎                        |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"

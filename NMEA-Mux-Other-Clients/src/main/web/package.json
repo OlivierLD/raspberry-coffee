@@ -1,0 +1,28 @@
+{
+  "name": "node-nmea",
+  "version": "0.0.1",
+  "description": "NMEA WebSocket on NodeJS",
+  "keywords": [
+    "RaspberryPI",
+    "WebSocket",
+    "NMEA"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "websocket": "^1.0.23"
+  },
+  "main": "wsnmea.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node node.wsnmea.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OlivierLD/raspberry-coffee"
+  },
+  "author": "Olivier LeDiouris <olivier.lediouris@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/OlivierLD/raspberry-coffee/issues"
+  },
+  "homepage": "https://github.com/OlivierLD/raspberry-coffee#readme"
+}
