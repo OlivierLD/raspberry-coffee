@@ -11,8 +11,8 @@ let connection;
 
 	// open ws connection
 	let rootUri = "ws://" + (document.location.hostname === "" ? "localhost" : document.location.hostname) + ":" +
-			(document.location.port === "" ? "8080" : document.location.port);
-	console.log(rootUri);
+			                (document.location.port === "" ? "8080" : document.location.port);
+	console.log(`wsuri : ${rootUri}`);
 	connection = new WebSocket(rootUri); // 'ws://localhost:9876');
 
 	connection.onopen = () => {
@@ -47,6 +47,8 @@ let connection;
 			displayMessage('Unable to communicate with the WebSocket server. Try again.');
 		}
 	}, 3000); // Ping every 3 seconds
+
+	console.log("ws connection initialization completed.");
 })();
 
 function displayMessage(mess) {
