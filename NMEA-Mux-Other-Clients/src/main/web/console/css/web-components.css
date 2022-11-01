@@ -1,0 +1,168 @@
+:root {
+    --opacity: 0.5; /* Not used for now */
+}
+
+.worldmap-display {
+	--canvas-background: rgba(0, 0, 100, 1.0);
+	--default-plot-point-color: red;
+	--travel-color: gray;
+	--arrow-body-color: rgba(255, 255, 255, 0.5);
+	--globe-background: black;
+	--globe-gradient-from: navy;
+	--globe-gradient-to: blue;
+	--grid-color: rgba(0, 255, 255, 0.3);
+	--tropic-color: LightGray;
+	--chart-color: cyan;
+	--chart-color-behind: yellow; /* rgba(0, 255, 255, 0.5); */
+	--chart-line-width: 1;
+	--user-pos-color: red;
+	--sun-color: rgb(255, 255, 0);
+	--sun-arrow-color: rgba(255, 255, 0, 0.5);
+	--moon-color: rgb(255, 255, 255);
+	--moon-arrowcolor: rgba(255, 255, 255, 0.5);
+	--aries-color: LightGray;
+	--venus-color: orange;
+	--mars-color: red;
+	--jupiter-color: LightPink;
+	--saturn-color: LightYellow;
+	--stars-color: white;
+	--night-color: rgba(192, 192, 192, 0.3);
+	--display-position-color: white;
+}
+
+.worldmap-display-bg {
+	--canvas-background: rgba(0, 0, 0, 0.25);
+	--default-plot-point-color: red;
+	--travel-color: gray;
+	--arrow-body-color: rgba(255, 255, 255, 0.5);
+	--globe-background: rgba(0, 0, 0, 0.25);
+	--globe-gradient-from: rgba(0, 0, 128, 0.5);
+	--globe-gradient-to: rgba(0, 0, 255, 0.75);
+	--grid-color: rgba(0, 255, 255, 0.3);
+	--tropic-color: rgba(255, 165, 0, 0.75);
+	--chart-color: rgba(0, 255, 255, 0.6);
+	--chart-color-behind: rgba(0, 255, 255, 0.4);
+	--chart-line-width: 1;
+	--user-pos-color: red;
+	--sun-color: rgb(255, 255, 0);
+	--sun-arrow-color: rgba(255, 255, 0, 0.5);
+	--moon-color: rgb(255, 255, 255);
+	--moon-arrowcolor: rgba(255, 255, 255, 0.5);
+	--aries-color: LightGray;
+	--venus-color: orange;
+	--mars-color: red;
+	--jupiter-color: LightPink;
+	--saturn-color: LightYellow;
+	--stars-color: white;
+	--night-color: rgba(192, 192, 192, 0.3);
+	--display-position-color: rgba(255, 255, 255, 0.5);
+}
+
+.calendar-01 {
+	--bg-color: white;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white;
+	--day-color: red;
+	--month-year-color: black;
+	--value-font: Arial;
+}
+
+.split-flap-night {
+	--bg-color: transparent;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--display-color: white;
+	--frame-color: silver;
+	--value-font: Arial;
+}
+
+.split-flap-night-bg {
+	--bg-color: transparent;
+	--display-background-gradient-from: rgba(0, 0, 0, 0.5);
+	--display-background-gradient-to: rgba(190, 190, 190, 0.5);
+	--display-color: rgba(255, 255, 255, 0.5);
+	--frame-color: silver;
+	--value-font: Arial;
+}
+
+.jumbo-01 {
+	--bg-color: white;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--grid-color: rgba(255, 255, 255, 0.7);
+	--display-color: cyan;
+	--value-nb-decimal: 0;
+	--label-font: 'Courier New';
+	--value-font: DigiFont;
+}
+
+.jumbo-02 {
+	--bg-color: black;
+	--display-background-gradient-from: white;
+	--display-background-gradient-to: gray;
+	--grid-color: rgba(0, 0, 0, 0.7);
+	--display-color: navy;
+	--value-nb-decimal: 2;
+	--label-font: 'Courier New';
+	--value-font: 'Helvetica Neue';
+}
+
+.jumbo-plus-transparent {
+	--bg-color: rgba(0, 0, 0, 0.0);
+	--display-background-gradient-from: rgba(0, 0, 0, 0.0);
+	--display-background-gradient-to: rgba(0, 0, 0, 0.0);
+	--grid-color: rgba(0, 0, 0, 0.5);
+	--display-color: rgba(0, 255, 255, 0.5);
+	--label-font: 'Courier New';
+	--value-font: 'Courier New';
+}
+
+.marquee-01 {
+	--bg-color-from: rgba(0, 0, 0, 0);
+	--bg-color-to: rgba(0, 0, 0, 0);
+	--fg-color-from: cyan;
+	--fg-color-to: rgb(144, 188, 238);
+}
+
+.one-decimal {
+	--value-nb-decimal: 1;
+}
+
+@font-face {
+	font-family: DigiFont;
+	src: url(./fonts/ds-digi.ttf) format("truetype");
+}
+
+jumbo-display .digital-font-orange {
+	--display-color: rgba(255, 165, 0, 0.75);
+	--label-font: DigiFont;
+	--value-font: DigiFont;
+}
+
+jumbo-display .digital-font-green {
+	--display-color: rgba(144, 238, 144, 0.75);
+	--label-font: DigiFont;
+	--value-font: DigiFont;
+}
+
+jumbo-display .digital-font-red {
+	--display-color: rgba(255, 0, 0, 0.75);
+	--label-font: DigiFont;
+	--value-font: DigiFont;
+}
+
+jumbo-display .digital-font-cyan {
+	--display-color: rgba(0, 255, 255, 0.75);
+	--label-font: DigiFont;
+	--value-font: DigiFont;
+}
+
+.scroll-digit-01 {
+	--bg-color: transparent;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--display-color: rgba(255, 255, 255, 0.5);
+	--frame-color: silver;
+	/* --value-font: Arial; */
+	--value-font: 'Courier New';
+}

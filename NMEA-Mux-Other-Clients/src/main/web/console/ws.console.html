@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<!--
+ | All the skill in the "compute" function below, invoked on click.
+ | Dynamic background test.
+ | Some (if not many) functions returning baot data are faked (or simulated)
+ |
+ | Good grid stuff: https://css-tricks.com/snippets/css/complete-guide-grid/
+ +-->
+<html lang="en_US">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/jpg" href="./palm.04.jpg">
+    <title>ES6 Celestial Computer, NMEA over WebSockets</title>
+    <script type="module" src="app.js"></script>
+
+    <script type="module" src="./webcomponents/WorldMap.js"></script>
+    <script type="module" src="./webcomponents/MarqueePanel.js"></script>
+    <!--script type="module" src="./webcomponents/CalendarDisplay.js"></script-->
+    <script type="module" src="./webcomponents/SplitFlapDisplay.js"></script>
+    <script type="module" src="./webcomponents/JumboDisplay.js"></script>
+    <script type="module" src="./webcomponents/JumboPlusDisplay.js"></script>
+    <script type="module" src="./webcomponents/ScrollDigit.js"></script>
+    <!--script type="module" src="./webcomponents/MoonPhase.js"></script-->
+    <script type="module" src="./webcomponents/moonphase.2/MoonPhase.js"></script>
+    <script type="module" src="./webcomponents/SunPath.js"></script>
+
+    <script type="text/javascript" src="date.proto.js"></script>
+
+    <script type="text/javascript">
+
+let globalAstroData;
+let globalSRUSun;
+let globalSRUMoon;
+
+let marqueeScrollUpAnimationInterval;
+// let defaultMarqueeTextArray = [ 'Raspberry Pi', 'Web Components', 'Java & Processing', 'HTML5, CSS3, ES6', 'NodeJS', 'Python', '3D Printing', 'Arduino & Co', 'AI, ML, DL', 'Artificial Intelligence', 'Artificial Insanity', 'and other toys...' ];
+
+let marqueeScrollUp = (marqueeId) => {
+    if (marqueeScrollUpAnimationInterval !== undefined) {
+        window.clearInterval(marqueeScrollUpAnimationInterval); // Stop.
+        marqueeScrollUpAnimationInterval = undefined;
+    } else {
+        let marqueeObj = document.getElementById(marqueeId);
+        let x = marqueeObj.nbCols;
+        let yOffset = marqueeObj.yOffset;
+        let y = 12;
+        marqueeScrollUpAnimationInterval = window.setInterval(function() { // Start
+            let data = JSON.parse(marqueeObj.displayData); // { text-array: txt, x: x, y: y };
+            let arrayCardinality = 1;
+            if (data['text-array'] !== undefined) {
+                arrayCardinality = data['text-array'].length;
+            }
+            yOffset -= 1;
+            if (yOffset < -(arrayCardinality * 12)) {
+                yOffset = marqueeObj.nbLines;
+            }
+            marqueeObj.yOffset = yOffset;
+
+            let toDisplay = [];
+            toDisplay.push(new Date(epoch).format('d M Y H:i:s Z')); // TODO Display UTC date ?
+            // defaultMarqueeTextArray.forEach(item => {
+            //     toDisplay.push(item);
+            // });
+            // Other values    
+            if (globalAstroData !== undefined) {        
+                toDisplay.push("Sun GHA: " + globalAstroData.sun.GHA.fmt);
+                toDisplay.push("Sun D: " + globalAstroData.sun.DEC.fmt);
+                toDisplay.push("Moon GHA: " + globalAstroData.moon.GHA.fmt);
+                toDisplay.push("Moon D: " + globalAstroData.moon.DEC.fmt);
+                toDisplay.push("Venus GHA: " + globalAstroData.venus.GHA.fmt);
+                toDisplay.push("Venus D: " + globalAstroData.venus.DEC.fmt);
+                toDisplay.push("Mars GHA: " + globalAstroData.mars.GHA.fmt);
+                toDisplay.push("Mars D: " + globalAstroData.mars.DEC.fmt);
+                toDisplay.push("Jupiter GHA: " + globalAstroData.jupiter.GHA.fmt);
+                toDisplay.push("Jupiter D: " + globalAstroData.jupiter.DEC.fmt);
+                toDisplay.push("Saturn GHA: " + globalAstroData.saturn.GHA.fmt);
+                toDisplay.push("Saturn D: " + globalAstroData.saturn.DEC.fmt);
+            }
+            if (userPos !== undefined && userPos.longitude !== undefined) {
+                let lhaSun  = calcLHA(globalAstroData.sun.GHA.raw, userPos.longitude);
+                let lhaMoon = calcLHA(globalAstroData.moon.GHA.raw, userPos.longitude);
+                toDisplay.push("-----------------------");
+                toDisplay.push(`LHA Sun: ${decToSex(lhaSun)}`);
+                toDisplay.push(`LHA Moon: ${decToSex(lhaMoon)}`);
+            }
+            if (globalSRUSun !== undefined) {
+                toDisplay.push("-----------------------");
+                toDisplay.push(`Sun Elev: ${globalSRUSun.alt.toFixed(2)}°`);
+                toDisplay.push(`Sun Z: ${globalSRUSun.Z.toFixed(1)}°`);
+            }
+            if (globalSRUMoon !== undefined) {
+                toDisplay.push(`Moon Elev: ${globalSRUMoon.alt.toFixed(2)}°`);
+                toDisplay.push(`Moon Z: ${globalSRUMoon.Z.toFixed(1)}°`);
+            }
+            toDisplay.push("-----------------------");
+            // toDisplay.push('And more to come!');
+
+            data['text-array'] = toDisplay;
+            marqueeObj.displayData = JSON.stringify(data);
+            marqueeObj.repaint();
+        }, 30);
+    }
+};
+
+// console.log("marqueeScrollUp defined");
+
+let setNewTilt = (range, id) => {
+    let elem = document.getElementById(id);
+    var val = range.value;
+    if (elem !== undefined) {
+        elem.tilt = val;
+        elem.repaint();
+    }
+};
+
+let setNewZOffset = (range, id) => {
+    let elem = document.getElementById(id);
+    var val = range.value;
+    if (elem !== undefined) {
+        elem.zOffset = val;
+        elem.repaint();
+    }
+};
+
+    </script>
+
+    <script type="text/javascript" src="js/nav-bar.js"></script>
+    <script type="text/javascript" src="js/ajax.manager.js"></script>
+
+    <script type="text/javascript">
+
+let transformDataForWorldWebComp = json => {
+    let newObj = {};
+    newObj.deltaT = json.deltaT;
+    // let pos = {
+    //     latitude: 37.7489,
+    //     longitude: -122.507
+    // };
+    newObj.from = userPos; // pos;
+
+    // GRID coordinates
+    let maidenHeadGridSquare = gridSquare(userPos.latitude, userPos.longitude); // exposed in app.js
+    newObj.gridSquare = maidenHeadGridSquare;
+
+    let sun = {
+        decl: json.sun.DEC.raw,
+        gha: json.sun.GHA.raw
+    };
+    newObj.sun = sun;
+    let moon ={
+        decl: json.moon.DEC.raw,
+        gha: json.moon.GHA.raw
+    }; 
+    newObj.moon = moon;
+
+    newObj.moonPhase = json.moon.phase.phaseAngle;
+
+    newObj.eclipticObliquity = json.trueObliq.raw;
+
+    newObj.ghaAries = json.aries.GHA.raw;
+
+    if (json.venus !== undefined) {
+        wanderingBodies = [];
+
+        wanderingBodies.push({
+            name: "aries",
+            decl: 0,
+            gha: json.aries.GHA.raw
+        });
+
+        wanderingBodies.push({
+            name: "venus",
+            decl: json.venus.DEC.raw,
+            gha: json.venus.GHA.raw
+        });
+        wanderingBodies.push({
+            name: "mars",
+            decl: json.mars.DEC.raw,
+            gha: json.mars.GHA.raw
+        });
+        wanderingBodies.push({
+            name: "jupiter",
+            decl: json.jupiter.DEC.raw,
+            gha: json.jupiter.GHA.raw
+        });
+        wanderingBodies.push({
+            name: "saturn",
+            decl: json.saturn.DEC.raw,
+            gha: json.saturn.GHA.raw
+        });
+        newObj.wanderingBodies = wanderingBodies;
+    }
+
+    if (json.stars !== undefined) {
+        newObj.stars = json.stars;
+    }
+    
+    return newObj;
+};
+
+let displayWorldData = (astroData) => {
+    let worldMap = document.getElementById('world-map-01');
+
+    // Set user position!!
+    if (astroData === undefined) {
+        worldMap.setUserPosition({ longitude: -122.507, latitude: 37.7489 });
+    } else {
+        worldMap.setUserPosition({ longitude: astroData.from.longitude, latitude: astroData.from.latitude, gridSquare: astroData.gridSquare });
+        worldMap.setAstronomicalData(astroData);
+        worldMap.repaint();
+    }
+};        
+
+let setTransparency = (wcId, cb) => {
+	document.getElementById(wcId).transparentGlobe = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setSun = (wcId, cb) => {
+	document.getElementById(wcId).withSun = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setSolarDate = (wcId, cb) => {
+	document.getElementById(wcId).style.display = (cb.checked ? 'block' : 'none');
+	// document.getElementById(wcId).repaint();
+};
+
+let setGrid = (wcId, cb) => {
+	document.getElementById(wcId).withGrid = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setMoon = (wcId, cb) => {
+	document.getElementById(wcId).withMoon = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setSunlight = (wcId, cb) => {
+	document.getElementById(wcId).withSunlight = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setMoonlight = (wcId, cb) => {
+	document.getElementById(wcId).withMoonlight = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setWanderingBodies = (wcId, cb) => {
+	document.getElementById(wcId).withWanderingBodies = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setStars = (wcId, cb) => {
+	document.getElementById(wcId).withStars = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setTropics = (wcId, cb) => {
+	document.getElementById(wcId).withTropics = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+};
+
+let setProjection = (id, radio) => {
+	document.getElementById(id).projection = radio.value;
+	document.getElementById(id).repaint();
+};
+
+// Used by setGeolocation
+let geoInterval;
+const options = {
+    enableHighAccuracy: true,
+    maximumAge: 0,
+    timeout: 5000
+};
+
+// Called from navigator.geolocation.getCurrentPosition
+// Used by setGeolocation
+const onPosSuccess = (pos) => {
+    document.getElementById('geo-mess').style.display = 'block'; // Display message
+    // Doc at https://w3c.github.io/geolocation-api/
+    // Position object at https://w3c.github.io/geolocation-api/#position_interface
+    //
+    console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude); // + ' hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+    //  console.log("Pos data:" + pos.coords);
+    // Feed the fields: 
+    // pos-lat-sign-01, pos-lat-deg-01, pos-lat-min-01
+    // pos-lng-sign-01, pos-lng-deg-01, pos-lng-min-01
+    let latSign = (pos.coords.latitude < 0) ? 'S' : 'N';
+    document.getElementById('pos-lat-sign-01').value = latSign;
+    let lat = Math.abs(pos.coords.latitude);
+    let lngSign = (pos.coords.longitude < 0) ? 'W' : 'E';
+    document.getElementById('pos-lng-sign-01').value = lngSign;
+    let lng = Math.abs(pos.coords.longitude);
+    // Latitude value
+    let latDegVal = Math.floor(lat);
+    document.getElementById('pos-lat-deg-01').value = latDegVal;
+    let latMinVal = parseFloat(((lat - latDegVal) * 60.0).toFixed(2));
+    document.getElementById('pos-lat-min-01').value = latMinVal;
+    // Longitude Value
+    let lngDegVal = Math.floor(lng);
+    document.getElementById('pos-lng-deg-01').value = lngDegVal;
+    let lngMinVal = parseFloat(((lng - lngDegVal) * 60.0).toFixed(2));
+    document.getElementById('pos-lng-min-01').value = lngMinVal;
+};
+
+// Called from navigator.geolocation.getCurrentPosition
+// Used by setGeolocation
+const onPosError = (err) => {
+    let errMess;
+    if (err.code === err.PERMISSION_DENIED) {
+        errMess = 'Location access was denied by the user.';
+    } else {
+        errMess = 'location error (' + err.code + '): ' + err.message;
+    }
+    console.error(errMess);
+};
+
+let setGeolocation = (slider) => {
+    console.log(`GeoLocation turned ${slider.checked ? 'ON' : 'OFF'}`);
+    if (slider.checked) {
+        geoInterval = setInterval(() => {
+           /* let watchId = */ navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
+        }, 1000);
+    } else {
+        document.getElementById('geo-mess').style.display = 'none';
+        if (geoInterval) {
+            clearInterval(geoInterval);
+        }
+    }
+};
+
+// expandCollapseSetPosData
+let userPosDataExpanded = false;
+let userDateExpanded = false;
+
+let expandCollapseSetPosData = () => {
+
+    document.getElementById('user-pos-widgets').classList.toggle('visible-div');
+
+    if (userPosDataExpanded) {
+        // document.getElementById('user-pos-widgets').style.display = 'none';
+        document.getElementById('pos-char').innerHTML = '&#9658;'; // '\u142f Position on Earth';
+    } else {
+        //document.getElementById('user-pos-widgets').style.display = 'block';
+        document.getElementById('pos-char').innerHTML = '&#9660;'; // '\u1431 Position on Earth';
+    }
+    userPosDataExpanded = !userPosDataExpanded;
+};
+let expandCollapseDateData = () => {
+
+    document.getElementById('user-date-widgets').classList.toggle('visible-div');
+
+    if (userDateExpanded) {
+        // document.getElementById('user-date-widgets').style.display = 'none';
+        document.getElementById('date-char').innerHTML = '&#9658;';
+    } else {
+        // document.getElementById('user-date-widgets').style.display = 'block';
+        document.getElementById('date-char').innerHTML = '&#9660;';
+    }
+    userDateExpanded = !userDateExpanded;
+};
+
+let updatePosition = () => {
+    let sgnLat = document.getElementById("pos-lat-sign-01").value;
+    let degLat = parseInt(document.getElementById("pos-lat-deg-01").value);
+    let minLat = parseFloat(document.getElementById("pos-lat-min-01").value);
+    let lat = (degLat + (minLat / 60.0)) * (sgnLat === 'N' ? 1 : -1);
+
+    let sgnLng = document.getElementById("pos-lng-sign-01").value;
+    let degLng = parseInt(document.getElementById("pos-lng-deg-01").value);
+    let minLng = parseFloat(document.getElementById("pos-lng-min-01").value);
+    let lng = (degLng + (minLng / 60.0)) * (sgnLng === 'E' ? 1 : -1);
+
+//		console.log("Setting pos to " + lat + "/" + lng);
+    setUserPos(lat, lng);
+    // URL to bookmark
+    let toBookmark = `${window.location.protocol}//${window.location.hostname}:${window.location.pathname}?lat=${lat}&long=${lng}`;
+
+    console.log("Bookmark this URL: " + toBookmark);
+    document.getElementById("url-to-bookmark").innerText = toBookmark;
+    document.getElementById("url-placeHolder").style.display = "block";
+};
+
+let updateFromUserPos = () => {
+    document.getElementById("pos-lat-sign-01").value = userPos.latitude < 0 ? "S" : "N"; 
+    document.getElementById("pos-lng-sign-01").value = userPos.longitude < 0 ? "W" : "E";
+    let absLat = Math.abs(userPos.latitude);
+    let absLong = Math.abs(userPos.longitude);
+    document.getElementById("pos-lat-deg-01").value = Math.trunc(absLat);
+    document.getElementById("pos-lat-min-01").value = ((absLat - Math.trunc(absLat)) * 60).toFixed(2);
+    document.getElementById("pos-lng-deg-01").value = Math.trunc(absLong);
+    document.getElementById("pos-lng-min-01").value = ((absLong - Math.trunc(absLong)) * 60).toFixed(2);
+};
+
+let userPos = {
+    latitude: 37.7489,
+    longitude: -122.507
+};
+
+let epoch = 0;
+
+let setUserPos = (lat, lng) => {
+    userPos.latitude = lat;
+    userPos.longitude = lng;
+
+    let worldMap = document.getElementById('world-map-01');
+
+    // Set user position!!
+    worldMap.setUserPosition(userPos);
+    worldMap.repaint();
+};
+
+let hidden = true;
+let showHideData = () => {
+    let dataZone = document.getElementById("raw-data");
+    if (hidden) {
+        dataZone.style.display = "block";
+    } else {
+        dataZone.style.display = "none";
+    }
+    hidden = !hidden;
+};
+
+const FRAME_WIDTH  = 160;
+const FRAME_HEIGHT = 160;
+// let DEBUG = false;
+
+if (Math.toRadians === undefined) {
+    Math.toRadians = deg => {
+        return (deg / 180) * Math.PI;
+    };
+}
+
+// XMLNS Required.
+const XMLNS = "http://www.w3.org/2000/svg";
+
+/**
+ * Draw a wind direction arrow, using SVG
+ *
+ * @param divId ID of the div to draw the arrow in
+ * @param dir Direction to represent in degrees, number [0..360], or object { value: number, label: 'string' }.
+ *            label would be like "ENE" when dir is 67.5, for example.
+ * @param force Optional. Used for wind (Beaufort)
+ * @returns {{svgContent: SVGSVGElement, x: number, y: number}} if divId is undefined.
+ */
+let drawArrow = (divId, dir, body) => {
+    let label = '';
+    let fillColor = 'white';
+    let direction;  // = dir; //  + 180;
+    if (typeof(dir) === 'number') {
+        direction = dir - 180;
+        label += `${body} Z: ${dir.toFixed(1)}°`
+    } else {
+        try {
+            direction = dir.value;
+            label += dir.label;
+        } catch (oops) {
+            console.log('Akeu what?')
+            direction = 0;
+        }
+    }
+    let title = null;
+    direction = -direction;
+
+    let parent = (divId !== null) ? document.getElementById(divId) : null;
+    if (title !== null && parent !== null) {
+        parent.setAttribute('title', title);
+
+    }
+    let svg = document.createElementNS(XMLNS, 'svg');
+    // svg.setAttribute('xmlns', xmlns);
+    svg.setAttributeNS(null, 'width', FRAME_WIDTH.toString());
+    svg.setAttributeNS(null, 'height', FRAME_HEIGHT.toString());
+    svg.setAttribute('style', 'background-color: transparent; border-radius: 10px; border: 2px solid rgba(128, 128, 128, 0.25);');
+
+    if (parent !== null) {
+        parent.appendChild(svg);
+    }
+
+    let circle = document.createElementNS(XMLNS, 'circle');
+    circle.setAttributeNS(null, 'cx', (FRAME_WIDTH / 2).toString());
+    circle.setAttributeNS(null, 'cy', (FRAME_HEIGHT / 2).toString());
+    circle.setAttributeNS(null, 'r', '40');
+    circle.setAttributeNS(null, 'stroke', 'rgba(255, 255, 2550, 0.35)');
+    circle.setAttributeNS(null, 'stroke-width', '4');
+    circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 128, 0.15)');
+    svg.appendChild(circle);
+
+    let polygon = document.createElementNS(XMLNS, 'polygon');
+    polygon.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2;`);
+
+    let headX = (FRAME_WIDTH / 2) + (60 * Math.sin(Math.toRadians(direction)));
+    let headY = (FRAME_HEIGHT / 2) + (60 * Math.cos(Math.toRadians(direction)));
+    let arrow = [{
+        // head
+        x: headX,
+        y: headY
+    }, {
+        // tail - left
+        x: (FRAME_WIDTH / 2) - (60 * Math.sin(Math.toRadians(direction + 10))),
+        y: (FRAME_HEIGHT / 2) - (60 * Math.cos(Math.toRadians(direction + 10)))
+    }, {
+        // tail - center
+        x: (FRAME_WIDTH / 2) - (55 * Math.sin(Math.toRadians(direction))),
+        y: (FRAME_HEIGHT / 2) - (55 * Math.cos(Math.toRadians(direction)))
+    }, {
+        // tail - right
+        x: (FRAME_WIDTH / 2) - (60 * Math.sin(Math.toRadians(direction - 10))),
+        y: (FRAME_HEIGHT / 2) - (60 * Math.cos(Math.toRadians(direction - 10)))
+    }];
+    // Draw polygon points here
+    let points = ""; // `${head.x.toFixed(0)},${head.y.toFixed(0)} ${tailRight.x.toFixed(0)},${tailRight.y.toFixed(0)} ${tail.x.toFixed(0)},${tail.y.toFixed(0)} ${tailLeft.x.toFixed(0)},${tailLeft.y.toFixed(0)}`;
+    arrow.forEach(pt => {
+        points += `${pt.x.toFixed(0)},${pt.y.toFixed(0)} `;
+    });
+    // console.log('Points:' + points.trim());
+    polygon.setAttributeNS(null, 'points', points.trim());
+    svg.appendChild(polygon);
+
+    let text = document.createElementNS(XMLNS, 'text');
+    text.setAttributeNS(null, 'x', '10');
+    text.setAttributeNS(null, 'y', '25');
+    text.setAttributeNS(null, 'font-size', '16');
+    text.setAttributeNS(null, 'font-weight', 'bold');
+    text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
+    text.setAttributeNS(null, 'fill', 'rgba(255, 244, 255, 0.75)');
+    text.appendChild(document.createTextNode(`${label}`));
+    svg.appendChild(text);
+
+    if (parent !== null && DEBUG) {
+        console.log(parent.innerHTML);
+    }
+    //debugger;
+    let svgContent = {x: headX, y: headY, svgContent: svg};
+    if (divId !== undefined) {
+        let svgDiv = document.getElementById(divId);
+        // It's a replace, remove first.
+        let content = svgDiv.firstElementChild;
+        if (content !== null && content !== undefined) {
+            svgDiv.removeChild(content);
+        }
+        svgDiv.appendChild(svg);
+    } else {
+        return svgContent;
+    }
+};
+
+// SVG widget for the Sun's altitude.
+let drawElevation = (divId, elev, color, circleColor) => { // colors in hex, like #ffff00
+    // console.log(`Sun Elevation: ${elev.toFixed(2)}`);
+    // document.getElementById(divId).innerHTML = `Sun Elevation: ${elev.toFixed(2)}&deg;`;
+    let fillColor = 'rgba(255, 255, 255, 0.5)';
+    let parent = (divId !== null) ? document.getElementById(divId) : null;
+
+    let svg = document.createElementNS(XMLNS, 'svg');
+    // svg.setAttribute('xmlns', xmlns);
+    svg.setAttributeNS(null, 'width', FRAME_WIDTH.toString());
+    svg.setAttributeNS(null, 'height', FRAME_HEIGHT.toString());
+    svg.setAttribute('style', 'background-color: transparent; border-radius: 10px; border: 2px solid rgba(128, 128, 128, 0.25);');
+
+    if (parent !== null) {
+        parent.appendChild(svg);
+    }
+
+    // Arc
+    /*
+    <path d="M150 0 L75 200 L225 200 Z" />
+        */
+    let path = document.createElementNS(XMLNS, 'path');
+    path.setAttribute('style', `fill: ${fillColor}; stroke: rgba(128, 128, 128, 0.5); stroke-width: 2;`);
+    let pathDef = `M5,10 A30,30 0 0,1 5,${FRAME_HEIGHT - 10}`;
+    //              |                 |
+    //              |                 To 5,XX
+    //              From 5,10
+    path.setAttribute('d', pathDef);
+    svg.appendChild(path);
+
+    // Horizontal
+    let horizon = document.createElementNS(XMLNS, 'path');
+    horizon.setAttribute('style', `fill: ${fillColor}; stroke: rgba(255, 255, 255, 0.35); stroke-width: 1;`);
+    let horizonDef = `M5,${FRAME_HEIGHT / 2} L${FRAME_WIDTH - 5},${FRAME_HEIGHT / 2}`;
+    horizon.setAttribute('d', horizonDef);
+    svg.appendChild(horizon);
+
+    // To the Sun
+    let radius = FRAME_HEIGHT / 2;
+    let x = radius * Math.cos(Math.toRadians(elev));
+    let y = radius * Math.sin(Math.toRadians(elev));
+    let toSun = document.createElementNS(XMLNS, 'path');
+    toSun.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 1;`);
+    let toSunDef = `M5,${FRAME_HEIGHT / 2} L${x},${(FRAME_HEIGHT / 2) - y}`;
+    toSun.setAttribute('d', toSunDef);
+    svg.appendChild(toSun);
+
+    // The sun
+    /*
+    <circle cx="40" cy="40" r="24" style="stroke:#006600; fill:#00cc00"/>
+        */
+    let sun = document.createElementNS(XMLNS, 'circle');
+    sun.setAttribute('style', `stroke:${circleColor !== undefined ? circleColor : '#ff0000'}; fill:${color !== undefined ? color : '#ffff00'};`);
+    sun.setAttribute('cx', `${x}`);
+    sun.setAttribute('cy', `${(FRAME_HEIGHT / 2) - y}`);
+    sun.setAttribute('r', '6');
+    svg.appendChild(sun);
+
+    // Text
+    /*
+    <text x="20" y="40">Example SVG text 1</text>
+        */
+    let label = `Elev:${elev.toFixed(1)}°`;
+    let text = document.createElementNS(XMLNS, 'text');
+    let fontSize = 11;
+    text.setAttribute('x', 5);
+    text.setAttribute('y', `${(FRAME_HEIGHT / 2) + (fontSize / 2) - 2}`);
+    text.setAttributeNS(null, 'font-size', fontSize);
+    text.setAttributeNS(null, 'font-weight', 'bold');
+    text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
+    text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.75)');
+
+    text.appendChild(document.createTextNode(`${label}`));
+    svg.appendChild(text);
+
+    if (parent !== null) {
+        parent.title = `${label}`;
+    }
+
+    let svgContent = {svgContent: svg};
+    if (divId !== undefined) {
+        let svgDiv = document.getElementById(divId);
+        // It's a replace, remove first.
+        let content = svgDiv.firstElementChild;
+        if (content !== null && content !== undefined) {
+            svgDiv.removeChild(content);
+        }
+        svgDiv.appendChild(svg);
+    } else {
+        return svgContent;
+    }
+};
+
+let showForeGround = true;
+let toggleForeground = () => {
+    showForeGround = !showForeGround;
+    document.getElementById('full-foreground').style.display = showForeGround ? 'block' : 'none';
+
+};
+    </script>
+
+    <link rel="stylesheet" href="css/web-components.css">
+    <link rel="stylesheet" href="css/nav-bar.css">
+
+    <style>
+        :root {
+        --slide-width: 500px;
+        --slide-height: 400px;
+        --expanded-nav-width: 450px;
+        --slider-scale: 0.5;
+        }
+
+        h1 {
+            color: silver;
+            font-family: Verdana,sans-serif;
+            font-style: italic;
+        }
+
+        body {
+            font-family: Verdana,sans-serif;
+            /* color: cyan; */
+            color: white;
+            background-color: black;
+        }
+
+        .background {
+            /*color: #999999;*/
+            position: absolute;
+            width: 100%;
+            /*text-align: center;*/
+            top: 0;
+            left: 0;
+            z-index: -100;
+        }
+
+        .day {
+            width: 40px;
+            text-align: center;
+        }
+
+        .year {
+            width: 80px;
+            text-align: center;
+        }
+
+        .result {
+            margin: auto;
+            margin-top: 10px;
+            border: solid silver 1px;
+            border-radius: 5px;
+            width: 90%;
+            height: 200px;
+            max-height: 200px;
+            font-family: "Courier New",sans-serif;
+            overflow-y: auto;
+        }
+
+        .black-frame {
+            padding: 3px;
+            margin: 1px;
+            border-radius: 5px;
+            border: 1px solid silver;
+            box-shadow: 0 2px 2px #ccc;
+        }
+
+        .centered {
+            text-align: center;
+        }
+
+        .smooth {
+            /*height: 0;*/
+            /*visibility: hidden;*/
+            /*opacity: 0;*/
+            /*transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;*/
+            height: 0;
+            max-height: 0;
+            margin: auto;
+            /*transition: transform 0.5s, max-height 1s, height 1s;*/
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: scaleY(0);
+            transform-origin: top;
+            overflow: hidden;
+        }
+
+        .visible-div {
+            opacity: 1;
+            width: auto;
+            height: auto;
+            max-height: 1600px;
+            transform: scaleY(1);
+            margin-top: 5px;
+        }
+
+		button {
+			padding: 4px 20px;
+			/* give the background a gradient */
+			background:#ffae00; /* fallback for browsers that don't support gradients */
+			/* background: -webkit-linear-gradient(top, #ffae00, #d67600); */
+			background: -webkit-linear-gradient(top, rgba(255, 174, 0, 0.6), rgba(214, 118, 0, 0.6));
+			background: -moz-linear-gradient(top, #ffae00, #d67600);
+			background: -o-linear-gradient(top, #ffae00, #d67600);
+			/* background: linear-gradient(top, #ffae00, #d67600); */
+			background: linear-gradient(top, rgba(255, 174, 0, 0.6), rgba(214, 118, 0, 0.6));
+			border: 2px outset #dad9d8;
+			/* style the text */
+			font-family: Lato, Verdana, Andika, Arial, sans-serif; /* Andkia is available at http://www.google.com/webfonts/specimen/Andika */
+			font-size: 1.1em;
+			letter-spacing: 0.05em;
+			text-transform: upperlo;
+			color: #fff;
+			text-shadow: 0px 1px 10px #000;
+			/* add to small curve to the corners of the button */
+			-webkit-border-radius: 15px;
+			-moz-border-radius: 15px;
+			border-radius: 15px;
+			/* give the button a drop shadow */
+			-webkit-box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+			-moz-box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+			box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+		}
+		/* NOW STYLE THE BUTTON'S HOVER STATE */
+		/*	button#rCoffee:hover, button#rCoffee:focus { */
+		button:hover, button:focus {
+			border:2px solid #dad9d8;
+		}
+
+        button:disabled {
+            background: silver;
+            color: gray;
+        }
+
+		/* Switch starts here */
+		.rocker {
+			display: inline-block;
+			position: relative;
+			/*
+			SIZE OF SWITCH
+			==============
+			All sizes are in em - therefore
+			changing the font-size here
+			will change the size of the switch.
+			See .rocker-small below as example.
+			*/
+			font-size: 2em;
+			font-weight: bold;
+			text-align: center;
+			text-transform: uppercase;
+			color: #888;
+			width: 7em;
+			height: 4em;
+			overflow: hidden;
+			border-bottom: 0.5em solid #eee;
+		}
+
+		.rocker-small {
+			font-size: 0.75em; /* Sizes the switch */
+			margin: 1em;
+		}
+
+		.rocker-tiny {
+			font-size: 0.50em; /* Sizes the switch */
+			margin: 1em;
+		}
+
+		.rocker::before {
+			content: "";
+			position: absolute;
+			top: 0.5em;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #999;
+			border: 0.5em solid #eee;
+			border-bottom: 0;
+		}
+
+		.rocker input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.switch-left,
+		.switch-right {
+			cursor: pointer;
+			position: absolute;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 2.5em;
+			width: 3em;
+			transition: 0.2s;
+		}
+
+		.switch-left {
+			height: 2.4em;
+			width: 2.75em;
+			left: 0.85em;
+			bottom: 0.4em;
+			background-color: #ddd;
+			transform: rotate(15deg) skewX(15deg);
+		}
+
+		.switch-right {
+			right: 0.5em;
+			bottom: 0;
+			background-color: #bd5757;
+			color: #fff;
+		}
+
+		.switch-left::before,
+		.switch-right::before {
+			content: "";
+			position: absolute;
+			width: 0.4em;
+			height: 2.45em;
+			bottom: -0.45em;
+			background-color: #ccc;
+			transform: skewY(-65deg);
+		}
+
+		.switch-left::before {
+			left: -0.4em;
+		}
+
+		.switch-right::before {
+			right: -0.375em;
+			background-color: transparent;
+			transform: skewY(65deg);
+		}
+
+		input:checked + .switch-left {
+			background-color: #4d9c41; /* #0084d0; */
+			color: #fff;
+			bottom: 0px;
+			left: 0.5em;
+			height: 2.5em;
+			width: 3em;
+			transform: rotate(0deg) skewX(0deg);
+		}
+
+		input:checked + .switch-left::before {
+			background-color: transparent;
+			width: 3.0833em;
+		}
+
+		input:checked + .switch-left + .switch-right {
+			background-color: #ddd;
+			color: #888;
+			bottom: 0.4em;
+			right: 0.8em;
+			height: 2.4em;
+			width: 2.75em;
+			transform: rotate(-15deg) skewX(-15deg);
+		}
+
+		input:checked + .switch-left + .switch-right::before {
+			background-color: #ccc;
+		}
+
+        .bookmark {
+            font-family: 'Courier New', Courier, monospace; 
+            background-color: rgba(240, 255, 240, 0.75); 
+            color:black; 
+            margin-left:20px; 
+            margin-right: 20px; 
+            margin-bottom: 4px;
+            margin-top: 8px;
+            padding-left: 5px; 
+            padding-right: 5px; 
+            border-radius: 8px;
+        }
+
+	/*  select {
+			font-size: 30px;
+		} */
+
+        .bg-container {
+            width: 1386px;
+            display: grid;
+            grid-template-columns: 800px 250px 280px;
+            grid-template-rows: auto;
+            grid-template-areas: 
+                "wm jumbos prmsl"
+                "utc utc utc"
+                "solar solar solar";
+        }
+        /* For the switch (slider) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: calc(var(--slider-scale) * 60px);
+            height: calc(var(--slider-scale) * 34px);
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: calc(var(--slider-scale) * 26px);
+            width: calc(var(--slider-scale) * 26px);
+            left: calc(var(--slider-scale) * 4px);
+            bottom: calc(var(--slider-scale) * 4px);
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196f3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196f3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(calc(var(--slider-scale) * 26px));
+            -ms-transform: translateX(calc(var(--slider-scale) * 26px));
+            transform: translateX(calc(var(--slider-scale) * 26px));
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: calc(var(--slider-scale) * 34px);
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* Switch grid */
+        .switch-container {
+            display: grid;
+            grid-template-columns: calc(var(--slider-scale) * 80px) 200px;
+        }
+        .switch-element {
+            place-self: flex-start;
+        }
+
+        /* Button tooltips, used below */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: silver;
+            color: navy;
+            text-transform: none;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            top: 150%;
+            left: 50%;
+            margin-left: -100px;
+
+            /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .tooltip .tooltiptext-right {
+            top: -5px;
+            left: 140%;
+            /*width: 200px;*/
+            margin-left: -60px;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent silver transparent;
+        }
+
+        .tooltip .tooltiptext-right::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            margin-left: -110px;
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent silver transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- alert-dialog -->
+    <dialog id="custom-alert" class="shadow-menu" style="z-index: 10;">
+        <div class="dialog-header">
+            <span id="alert-header">Alert Title</span>
+            <span class="dialog-header-close" onclick="closeCustomAlert();">&times</span>
+        </div>
+        <div style="margin-bottom: 10px;" id="alert-content">
+            <!-- Place holder for message -->
+        </div>
+    </dialog>
+    
+    <!-- help-dialog -->
+    <dialog id="help-dialog" class="shadow-menu" style="z-index: 10;">
+        <div class="dialog-header">
+            <span>Help!</span>
+            <span class="dialog-header-close" onclick="closeHelpDialog();">&times</span>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <p>
+                This page shows how to display graphical components in background, always present, even if other elements
+                are displayed on top.
+            </p>
+            <p>
+                Use the Background Parameters link in the menu to configure the globe.
+            </p>
+            <p>
+                Use the Show/Hide Computed Data button to display the computed data in the foreground.
+            </p>
+            <p>
+                The Marquee panel (available from the hamburger &#8801; menu) will show the same data, formatted, 
+                in a dialog, on top of others.
+            </p>
+            <p>
+                <sppan style="font-style: italic; font-weight: bold;">Featuring:</sppan>
+                <ul>
+                    <li>Web Components</li>
+                    <li>Custom Tooltips</li>
+                    <li>Custom Alerts</li>
+                    <li>SVG</li>
+                    <li>Celestial Calculations (all in ES6)</li>
+                    <li>Copy-to-clipboard</li>
+                    <li>etc !</li>
+                </ul>
+            </p>
+        </div>
+    </dialog>
+
+    <!-- BG parameters -->
+    <dialog id="background-prms-dialog" class="shadow-menu" style="z-index: 10;">
+        <div class="dialog-header">
+          <span>Background Parameters...</span>
+          <span class="dialog-header-close" onclick="closePrmsDialog();">&times</span>
+        </div>
+
+        <div>
+            <!--
+             |  WORLD MAP CTRL
+             +-->
+            <div id="world-map-ctrl" title="Map Controls">
+                <div class="black-frame centered">
+                    <!--input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Make globe transparent">
+                        <label class="switch switch-element">
+                          <input id="transp-slider" type="checkbox" onchange="setTransparency('world-map-01', this);">
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Transparent Globe</span>
+                    </div>
+                    <!--input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display grid on the map">
+                        <label class="switch switch-element">
+                          <input id="grid-slider" type="checkbox" onchange="setGrid('world-map-01', this);" checked>
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Display Polar Grid</span>
+                    </div>
+                    <!--input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display the Sun">
+                        <label class="switch switch-element">
+                          <input id="sun-slider" type="checkbox" onchange="setSun('world-map-01', this);" checked>
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Display Sun</span>
+                    </div>
+                    <!--input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display the Moon">
+                        <label class="switch switch-element">
+                          <input id="moon-slider" type="checkbox" onchange="setMoon('world-map-01', this);" checked>
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Display Moon</span>
+                    </div>
+                    <!--input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display Sun light and Sun shadow">
+                        <label class="switch switch-element">
+                          <input id="sunlight-slider" type="checkbox" onchange="setSunlight('world-map-01', this);">
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Display Sun Light</span>
+                    </div>
+                    <!--input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display Moon light and Moon shadow">
+                        <label class="switch switch-element">
+                          <input id="moonlight-slider" type="checkbox" onchange="setMoonlight('world-map-01', this);">
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Display Moon Light</span>
+                    </div>
+                    <!--input type="checkbox"
+                            onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering bodies -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display wandering bodies">
+                        <label class="switch switch-element">
+                          <input id="wb-slider" type="checkbox" onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);">
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Wandering Bodies</span>
+                    </div>
+                    <!--input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display stars">
+                        <label class="switch switch-element">
+                          <input id="stars-slider" type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);">
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Display Stars</span>
+                    </div>
+                    <!--input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display polar circles and tropics">
+                        <label class="switch switch-element">
+                          <input id="tropic-slider" type="checkbox" onchange="setTropics('world-map-01', this);">
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Tropics &amp; Polar Circles</span>
+                    </div>
+                    <!--input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun -->
+                    <div class="switch-container" style="margin-left: 30px;" title="Display the Foreground Solar Date/Time">
+                        <label class="switch switch-element">
+                          <input id="solar-slider" type="checkbox" onchange="setSolarDate('solar-jumbo-wrapper', this);" checked>
+                          <span class="slider round"></span>
+                        </label>
+                        <span class="switch-element">Solar Date Foreground</span>
+                    </div>
+
+                    <!--
+                    <br/>
+                    <input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
+                    <input type="checkbox" id="iss-01" title="Requires Internet connection"/>ISS
+                    <input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
+                    <input type="checkbox" id="moon-sun-path-01"/>Moon to Sun
+                    -->
+                    <!--
+                    <br/>
+                    <input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe
+                    <input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
+                    <input type="radio" name="proj-01" value="ANAXIMANDRE" onchange="setProjection('world-map-01', this);">Square
+                    -->
+                </div>
+            </div>
+        </div>
+        
+    </dialog>    
+
+    <!-- Marquee values -->
+    <dialog id="marquee-dialog" class="shadow-menu" style="z-index: 10;">
+        <div class="dialog-header">
+            <span>Astro Data Marquee</span>
+            <span class="dialog-header-close" onclick="closeMarqueeDialog();">&times</span>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <!-- See defaultMarqueeTextArray -->
+            <marquee-panel id="marquee-panel-01"
+                        class="marquee-01"
+                        width="600"
+                        height="350"
+                        nb-cols="200"
+                        nb-lines="68"
+                        title="Computed Data"
+                        display-data='{ "text-array": ["You must have", "triggered a computation", "to see something", "in here..."], "x": 4, "y": 12 }'/>
+        </div>    
+    </dialog>
+
+    <!-- Sun Path - Draggable dialog (drag it from the header)
+        See in window.onload the 
+        ondragover, ondrop functions.
+    -->
+    <dialog id="sun-path-dialog" 
+            class="shadow-menu" 
+            style="z-index: 10; width: 470px;" >
+            <!--
+            draggable="true"
+            ondragstart="dragStartSP(event)" 
+            ondrag="draggingSP(event)"> -->
+        <!-- Draggable header -->
+        <div class="dialog-header"
+             draggable="true"
+             ondragstart="dragStartSP(event)" 
+             ondrag="draggingSP(event)">
+            <span>Sun Path</span> <!-- This is tweak by the window.onload -->
+            <span id="sun-path-header-title" style="color: rgba(255, 255, 255, 0.25);"></span>
+            <span class="dialog-header-close" onclick="closeSunPathDialog();">&times</span>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <table style="width: 98%;">
+                <tr>
+                    <td>
+                        <div class="black-frame centered">
+                            <sun-path id="sun-path-01"
+                                    class="sun-path-01"
+                                    width="450"
+                                    height="450"
+                                    tilt="-10"></sun-path>
+                        </div>    
+                    </td>
+                    <td>
+                        <input type="range"
+                        style="-webkit-appearance: slider-vertical; width: 8px; height: 440px; margin-left: 0;" min="-90"
+                        max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
+                     </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="range" style="/*width: 566px;*/ width: 450px; height: 8px; margin-left: 0;" min="-90" max="90" value="0"
+                               onchange="setNewZOffset(this, 'sun-path-01');">
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </dialog>
+
+  <!--
+    The Big Main Menu on the left
+
+    ◄ = &#9668;
+    ► = &#9658;
+    ▼ = &#9660;
+    ▲ = &#9650;
+  -->
+<div id="side-nav" class="sidenav" onmouseleave="closeNav()"> 
+    <a href="javascript:void(0)" id="close-nav-button" class="closebtn" onclick="closeNav()">&times;</a>
+
+    <a href="javascript:void(0)" class="active-link list-link" style="margin-top: 20px; margin-right: 20px; text-align: right;" onclick="showHelpDialog();">Help!</a>
+    <hr style="color: rgb(192,192,192, 0.5); width: 90%;"/>
+    <a href="javascript:void(0)" class="active-link list-link" style="margin-top: 20px;" onclick="showPrmsDialog();">Background parameters</a>
+    <a href="javascript:void(0)" class="active-link list-link" onclick="toggleForeground();">Toggle foreground</a>
+    <a href="javascript:void(0)" class="active-link list-link" onclick="showMarqueeDialog();">Marquee Panel</a>
+    <a href="javascript:void(0)" class="active-link list-link" onclick="showSunPathDialog();">Sun Path</a>
+    <hr style="color: rgb(192,192,192, 0.5); width: 90%;"/>
+    <a href="javascript:void(0)" class="active-link" style="margin-top: 20px;">More links here, some day...</a>
+
+    <a href="javascript:void(0)" class="active-link" style="margin-top: 20px;"><span style="font-size: 40px;" title="Call for details.">&phone;</span></a>
+
+    <!-- More links go here if/when needed -->
+</div>
+
+<div style="display: grid; grid-template-columns: auto auto;" title="Single Page Application with Background SVG &amp; Web Components">
+    <div><h1 style="vertical-align: top; margin-top: 0; font-style: normal; text-shadow: 1px 1px 2px black, 0 0 25px white, 0 0 5px silver;"><span style="cursor: pointer;" onclick="openNav()" onmouseover="openNav()" title="Hamburger">&nbsp; &#8801;</span> ES6 Celestial Computer, NMEA over WebSockets</h1></div>
+</div>
+<div class="background bg-container" 
+     style="margin: 10px; margin-top: 50px; border: 2px solid rgba(0, 255, 255, 0.5); border-radius: 10px;">
+    <!--
+        WORLD MAP BG
+    +-->
+    <div id="world-map" style="grid-area: wm; text-align: right;">
+        <div class="centered" style="width: 600px; border: 0px solid silver; border-radius: 5px;">
+            <world-map id="world-map-01"
+                       class="worldmap-display-bg"
+                       title="World Map&#13;Background"
+                       with-anti-sun-moon="true"
+                       width="800"
+                       height="600"></world-map>
+        </div>
+    </div>
+
+    <!-- JUMBO -->
+    <div class="centered" style="grid-area: jumbos; width: 240px; border: 0px solid silver; border-radius: 5px;">
+
+        <div style="margin-top: 50px; margin-bottom: 20px; font-weight: bold; color: rgba(0, 255, 255, 0.5);">JUMBOS</div>
+        <!-- HDG -->
+        <jumbo-display id="jumbo-01"
+                       title="True Heading"
+                       class="jumbo-01 digital-font-orange"
+                       value="000"
+                       label="HDG"
+                       width="180"
+                       height="80"></jumbo-display>
+        <!-- BSP -->
+        <jumbo-display id="jumbo-02"
+                       title="Boat Speed"
+                       class="jumbo-01 digital-font-green one-decimal"
+                       value="00.0"
+                       label="BSP"
+                       width="180"
+                       height="80"></jumbo-display>
+        <!-- COG -->               
+        <jumbo-display id="jumbo-03"
+                       title="Course Over Ground"
+                       class="jumbo-01 digital-font-red one-decimal"
+                       value="00.0"
+                       label="COG"
+                       width="180"
+                       height="80"></jumbo-display>
+        <!-- SOG -->               
+        <jumbo-display id="jumbo-04"
+                       title="Speed Over Ground"
+                       class="jumbo-01 digital-font-cyan one-decimal"
+                       value="00.0"
+                       label="SOG"
+                       width="180"
+                       height="80"></jumbo-display>
+        <!-- MOON PHASE and TILT -->                
+        <moon-phase-2 id="moon-phase-01"
+                      width="180"
+                      height="180"
+                      title="Moon Phase"
+                      phase="0"
+                      tilt="0"
+                      label="Moon phase"
+                      small-label="..."/>
+    </div>
+
+    <!-- SCROLL-DISPLAY (PRMSL) -->
+    <div class="centered" style="grid-area: prmsl; width: 240px; border: 0px solid silver; border-radius: 5px;">
+
+        <div style="margin-top: 50px; margin-bottom: 20px; font-weight: bold; color: rgba(0, 255, 255, 0.5);">PRMSL</div>
+        <scroll-digit-display id="scroll-digit-display-01"
+                              class="scroll-digit-01"
+                              nb-char="6"
+                              font-size="40"
+                              justified="RIGHT"
+                              nb-dec="1"
+                              value="1013.5"></scroll-digit-display>
+        <div style="margin-top: 50px; margin-top: 20px; font-weight: bold; color: rgba(0, 255, 255, 0.5);">Sun & Moon</div>                      
+        <!--div id="sru-elev-z" style="margin-top: 10px; text-align: left; color: rgba(0, 255, 255, 0.5);"-->
+        <div id="sru-elev-z" style="margin-top: 0px; display: grid; grid-template-columns: auto auto;">
+            <!-- Sun Z -->
+            <div style="text-align: left; margin: 20px 0 0 0;" id="sun-azimuth" title="Sun Azimuth">
+                <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                    <small>Sun Azimuth (SVG)...</small>
+                </div>
+            </div>
+            <!-- Sun Altitude -->
+            <div style="text-align: left; margin: 20px 0 0 0;" id="sun-elevation" title="Sun Elevation">
+                <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                    <small>Sun Elevation (SVG)...</small>
+                </div>
+            </div>
+            <!-- Moon Z -->
+            <div style="text-align: left; margin: 0 0 0 0;" id="moon-azimuth" title="Moon Azimuth">
+                <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                    <small>Moon Azimuth (SVG)...</small>
+                </div>
+            </div>
+            <!-- Moon Altitude -->
+            <div style="text-align: left; margin: 0 0 0 0;" id="moon-elevation" title="Moon Elevation">
+                <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                    <small>Moon Elevation (SVG)...</small>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: left;">
+            <span id="lha-sun"></span>
+            <br/>
+            <span id="lha-moon"></span>
+        </div>
+    </div>
+
+    <div class="centered" style="grid-area: utc">
+        <!-- SPLIT-FLAP UTC -->
+        <div style="margin: 10px;">
+            <split-flap-display id="split-flap-utc-date-display"
+                                class="split-flap-night-bg"
+                                nb-char="15"
+                                font-size="30"
+                                justified="LEFT"
+                                title="UTC Date"
+                                value="Mon 01 Jan 1970"></split-flap-display>
+
+            <split-flap-display id="split-flap-utc-display"
+                                class="split-flap-night-bg"
+                                style="margin-left: 10px;"
+                                nb-char="12"
+                                font-size="30"
+                                justified="LEFT"
+                                title="UTC Time"
+                                value="00:00:00 UTC"></split-flap-display>
+        </div>    
+    </div>
+
+    <div class="centered" style="grid-area: solar">
+        <!-- SPLIT-FLAP Solar -->
+        <div style="margin: 10px;">
+            <split-flap-display id="split-flap-solar-date-display"
+                                class="split-flap-night-bg"
+                                nb-char="18"
+                                font-size="30"
+                                justified="LEFT"
+                                title="Solar Date"
+                                value="SOLAR: 01 Jan 1970"></split-flap-display>
+
+            <split-flap-display id="split-flap-solar-display"
+                                class="split-flap-night-bg"
+                                style="margin-left: 10px;"
+                                nb-char="8"
+                                font-size="30"
+                                justified="LEFT"
+                                title="Solar Time"
+                                value="00:00:00"></split-flap-display>
+        </div>    
+    </div>
+
+</div>
+
+<div id="full-foreground" style="display: block;">
+    <div style="padding: 6px; border: 0px solid rgba(0, 255, 255, 0.25); border-radius: 5px;">
+        <small>
+            Once the page is loaded, all calculations and renderings happen only in the browser, it generates absolutely NO network traffic.<br/>
+            Guaranteed <b><i>0%</i></b> external libraries (100% pure organic HTML5/CSS3/ES6), no GMO.
+        </small>
+    </div>
+    <table style="width: 96%;">
+        <tr>
+            <td style="text-align: left;" colspan="1">
+                <div style="border: 0px solid rgba(0, 255, 255, 0.25); border-radius: 5px;">
+                    <!-- See https://unicode-table.com/en/sets/arrow-symbols/ -->
+                    <div id="user-pos-switch" onclick="expandCollapseSetPosData();" title="Click to expand/collase"
+                        style="margin: 3px; padding-left: 5px; padding-right: 5px; cursor: pointer;"><span id="pos-char">&#9658;</span> Position on Earth</div>
+
+                    <div id="user-pos-widgets" class="smooth" style="padding: 2px; border: 1px solid rgba(0, 255, 255, 0.25); border-radius: 5px;"> <!-- display: none;  -->
+                        Latitude:
+                        <select id="pos-lat-sign-01">
+                            <option value="N" selected>N</option> <!-- Default value -->
+                            <option value="S">S</option>
+                        </select>
+                        <input type="number"
+                            id="pos-lat-deg-01"
+                            placeholder="Deg"
+                            title="Lat degrees to set"
+                            style="width: 40px; text-align: center;"
+                            min="0"
+                            max="90"
+                            step="1"
+                            value="37"/> <!-- Default value -->
+                        <input type="number"
+                            id="pos-lat-min-01"
+                            placeholder="Minutes"
+                            title="Lat minutes to set"
+                            style="width: 60px; text-align: center;"
+                            min="0"
+                            max="59.99"
+                            step="0.01"
+                            value="44.93"/> <!-- Default value -->
+                        &nbsp;&nbsp;Longitude:
+                        <select id="pos-lng-sign-01">
+                            <option value="E">E</option>
+                            <option value="W" selected>W</option> <!-- Default value -->
+                        </select>
+                        <input type="number"
+                            id="pos-lng-deg-01"
+                            placeholder="Deg"
+                            title="Lng degrees to set"
+                            style="width: 40px; text-align: center;"
+                            min="0"
+                            max="180"
+                            step="1"
+                            value="122"/> <!-- Default value -->
+                        <input type="number"
+                            id="pos-lng-min-01"
+                            placeholder="Minutes"
+                            title="Lng minutes to set"
+                            style="width: 60px; text-align: center;"
+                            min="0"
+                            max="59.99"
+                            step="0.01"
+                            value="30.42"/> <!-- Default value -->
+                        &nbsp;&nbsp;
+                        <button id="update-position"
+                                class="tooltip" 
+                                onclick="updatePosition();"
+                                style="margin-top: 3px;">Set Position
+                            <span class="tooltiptext tooltiptext-right">Set position value on the map</span>
+                        </button>
+                        <br/>
+                        <!-- Enable Geolocation APIs -->        
+                        <div class="switch-container" style="margin-left: 30px;" title="Enable GeoLocation APIs">
+                            <label class="switch switch-element">
+                              <input id="geoloc-slider" type="checkbox" onchange="setGeolocation(this);">
+                              <span class="slider round"></span>
+                            </label>
+                            <span class="switch-element">Enable GeoLocation</span>
+                        </div>
+                        <div id="geo-mess" style="display: none;"><small style="font-style: italic; color: yellow;">(hit "Set Position" when GeoLocation is obtained)</small></div>
+    
+                        <div id="url-placeHolder" style="display: none;">
+                            <div id="alert-zone" class="smooth" style="padding: 2px; border: 1px solid red; border-radius: 5px; padding: 5px;"> <!-- display: none;  -->
+                                <div id="alert-mess" style="color: green; background-color: orange; border-radius: 5px; padding: 5px;"></div>
+                            </div>    
+                    
+
+                            <div style="display: grid; grid-template-columns: auto auto auto; align-items: center; border: 1px solid rgba(128, 128, 128, 0.75); border-radius: 5px; margin: 5px; padding: 3px;">
+                                <small style="text-align: right;">Bookmark this URL:</small>
+                                <div id="url-to-bookmark" class="bookmark" style="white-space: nowrap; overflow-x: scroll; height: fit-content;"></div>
+                                <button onclick="copyToClipboard('url-to-bookmark')" style="max-width: 55px; padding: 4px;">
+                                    <img src="icons8-copy-to-clipboard-50.png" style="width: 40px; height: auto;" title="Copy URL to Clipboard">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: top; min-width: 50px; max-width: 55px; width: 50px; border: 0px solid silver; border-radius: 4px;" rowspan="2">
+                <div id="moon-phase-div" style="text-align: right;" title=""></div>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;" colspan="1">
+                <div style="border: 0px solid rgba(0, 255, 255, 0.25); border-radius: 5px;">
+                    <div id="user-date-switch" onclick="expandCollapseDateData();" title="Click to expand/collase"
+                        style="margin: 3px; padding-left: 5px; padding-right: 5px; cursor: pointer;"><span id="date-char">&#9658;</span> UTC Date, and options</div>
+
+                    <div id="user-date-widgets" class="smooth" style="padding: 2px; border: 1px solid rgba(0, 255, 255, 0.25); border-radius: 5px;">
+                        <small>Enter UTC date and time, then click the Compute button.</small>
+                        <div>
+                            <input class="day" type="number" id="UTC-day" placeholder="day" min="1" max="31" title="Day of the Month">
+                            <select class="month" id="UTC-month" title="Month of the year">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">Mar</option>
+                                <option value="4">Apr</option>
+                                <option value="5">May</option>
+                                <option value="6">Jun</option>
+                                <option value="7">Jul</option>
+                                <option value="8">Aug</option>
+                                <option value="9">Sep</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
+                            </select>
+                            <input class="year" type="number" id="UTC-year" placeholder="year" min="0" title="year">
+                            at
+                            <input class="day" type="number" id="UTC-hour" placeholder="hours" min="0" max="23" title="Hour of the day [0..23]">:
+                            <input class="day" type="number" id="UTC-minute" placeholder="minutes" min="0" max="59" title="minutes">:
+                            <input class="day" type="number" id="UTC-second" placeholder="seconds" min="0" max="59" title="seconds"> UTC
+                        </div>
+                        <div>
+                            <input type="checkbox" id="no-planet"><small>Skip planets calculations</small>
+                            <input type="checkbox" id="no-star"><small>Skip stars calculations</small>
+                            <input type="checkbox" id="verbose" onchange="verbose(this);"><small>Console Verbose</small>
+                        </div>
+                    </div>    
+                </div>    
+            </td>
+        </tr>
+    </table>
+    <p style="margin: 20px;">
+        <i>How-to:</i> Use the hamburger (&#8801;) at the top left to set the background parameters (Wandering bodies, Sunlight, Real Time...)
+        <br/>
+        Then you can show or hide the computed data... And you can use the "Help" in the sliding menu.
+    </p>
+
+    <button class="tooltip" onclick="showHideData();" style="margin: 10px;">Show/Hide Computed Data
+        <span class="tooltiptext">Computed data will show below</span>
+    </button>
+
+    <div id="solar-jumbo-wrapper" class="black-frame" style="border: 2px solid cyan; width: 400px; margin-left: 10px;">
+        <jumbo-plus-display id="jumbo-plus-01"
+                            class="jumbo-plus-transparent"
+                            title="Solar Date and Time"
+                            value="01-JAN-1970|00:00:00"
+                            label="Solar Date & Time"
+                            width="400"
+                            height="140"></jumbo-plus-display>
+    </div>
+
+    <div id="raw-data" style="display: none;">
+        <div id="result" class="result"></div>
+
+        <div id="details" class="result" style="background-color: rgba(0,0,0,0.5);"></div>
+    </div>
+</div>
+
+</body>
+
+<script src="./js/wsclient.js"></script>
+<script src="./js/NMEAParser.js"></script>
+
+<script type="text/javascript">
+    // This is just an example. Override the onmessage of websocket.
+    // This will displatch the processed/parsed data to the right components.
+    if (true) {
+        console.log('Overriding onmessage');
+        try {
+            connection.onmessage = (mess) => {
+                // console.log(`Received ${mess.data}`);
+                // NMEA Part
+                let sentenceId = validate(mess.data);
+                switch (sentenceId.id) {
+                    case 'RMC':
+                        let rmc = parseRMC(mess.data);
+                        let position = rmc.pos;
+                        setUserPos(position.lat, position.lon);
+                        updateFromUserPos();
+                        let cog = rmc.cog;
+                        document.getElementById('jumbo-03').value = cog;
+                        let sog = rmc.sog;
+                        document.getElementById('jumbo-04').value = sog;
+                        epoch = rmc.epoch;
+                        updateUTCDate(new Date(rmc.epoch));
+                        compute();
+                        break;
+                    case 'VHW':
+                        let vhw = parseVHW(mess.data);
+                        let hdm = vhw.heading.magnetic;
+                        hdg = hdm;
+                        let bsp = vhw.speed.knots;
+                        document.getElementById("jumbo-01").value = hdg;
+                        document.getElementById("jumbo-02").value = bsp;
+                        break;
+                    // TODO PRMSL (XDR) etc
+                    default:
+                        break;
+                }
+                // console.log('Ah');
+            }
+        } catch (error) {
+            console.debug(`Oops: ${JSON.stringify(error)}`);
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+
+    const MONTHS = [ "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
+                     "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" ];
+    const DELTA_T = 69.2201; // Will be re-calculated
+
+    let consoleVerbose = false;
+
+    // Compute and display
+    let compute = () => {
+
+        let calculationData = {
+            utcyear: parseInt(document.getElementById('UTC-year').value),
+            utcmonth: parseInt(document.getElementById('UTC-month').value),
+            utcday: parseInt(document.getElementById('UTC-day').value),
+            utchour: parseInt(document.getElementById('UTC-hour').value),
+            utcminute: parseInt(document.getElementById('UTC-minute').value),
+            utcsecond: parseInt(document.getElementById('UTC-second').value),
+            deltaT: DELTA_T,
+            noPlanets: document.getElementById('no-planet').checked,
+            noStars: !document.getElementById('no-star').checked
+        };
+
+        let testResult = sampleMain(calculationData); // in app.js
+        globalAstroData = testResult;  // Now includes the solar date.
+        if (consoleVerbose) {
+            console.log("Calculation done %d-%d-%d %d:%d:%d UTC :", calculationData.utcyear, calculationData.utcmonth, calculationData.utcday, calculationData.utchour, calculationData.utcminute, calculationData.utcsecond);
+            console.log("Result:\n", JSON.stringify(testResult, null, 2));
+        }
+        // SRU - Sight Reduction Utility
+        try {
+            let sruSun = sightReduction(userPos.latitude, userPos.longitude, testResult.sun.GHA.raw, testResult.sun.DEC.raw);
+            globalSRUSun = sruSun;
+            // document.getElementById('sru-elev-z').innerHTML =
+            //     `SUN<br/>Elev: ${sru.alt.toFixed(2)}&deg;<br/>Z: ${sru.Z.toFixed(1)}&deg;`;
+
+            // Background data display
+            drawArrow('sun-azimuth', sruSun.Z, 'Sun');
+            // Sun Altitude: json.CELESTIAL_DATA.elevation
+            drawElevation('sun-elevation', sruSun.alt);
+    
+            let sruMoon = sightReduction(userPos.latitude, userPos.longitude, testResult.moon.GHA.raw, testResult.moon.DEC.raw);
+            globalSRUMoon = sruMoon;
+            drawArrow('moon-azimuth', sruMoon.Z, 'Moon');
+            // Sun Altitude: json.CELESTIAL_DATA.elevation
+            drawElevation('moon-elevation', sruMoon.alt, '#ffffff', '#808080');
+        } catch (error) {
+            console.debug(error);
+        }
+
+        // LHA Sun & Moon. userPos.longitude & globalAstroData.[sun-moon].GHA.raw
+        let lhaSun  = calcLHA(globalAstroData.sun.GHA.raw, userPos.longitude);
+        let lhaMoon = calcLHA(globalAstroData.moon.GHA.raw, userPos.longitude);
+        // console.log(`LHA Sun : ${decToSex(lhaSun)}`);
+        // console.log(`LHA Moon: ${decToSex(lhaMoon)}`);
+        document.getElementById('lha-sun').innerText = `LHA Sun: ${decToSex(lhaSun)}`;
+        document.getElementById('lha-moon').innerText = `LHA Moon: ${decToSex(lhaMoon)}`;
+
+        document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(testResult, null, 2) + '</pre>';
+        // More here, ...
+        let detailsContent =
+            " Sun     : GHA: " + testResult.sun.GHA.fmt + ", RA: " + testResult.sun.RA.fmt + ", Dec: " + testResult.sun.DEC.fmt + ", sd:" + testResult.sun.SD.fmt + ", hp:" + testResult.sun.HP.fmt + "\n" +
+            " Moon    : GHA: " + testResult.moon.GHA.fmt + ", RA: " + testResult.moon.RA.fmt + ", Dec: " + testResult.moon.DEC.fmt + ", sd:" + testResult.moon.SD.fmt + ", hp:" + testResult.moon.HP.fmt + "\n" +
+            "     Moon Phase:" + testResult.moon.phase.phaseAngle + "&deg;, " + testResult.moon.phase.phase + "\n" +
+            ` LHA Sun : ${decToSex(lhaSun)}\n` +
+            ` LHA Moon: ${decToSex(lhaMoon)}\n`;
+
+        if (!document.getElementById('no-planet').checked) {
+            detailsContent +=
+                " Venus   : GHA: " + testResult.venus.GHA.fmt + ", RA: " + testResult.venus.RA.fmt + ", Dec: " + testResult.venus.DEC.fmt + ", sd:" + testResult.venus.SD.fmt + ", hp:" + testResult.venus.HP.fmt + "\n" +
+                " Mars    : GHA: " + testResult.mars.GHA.fmt + ", RA: " + testResult.mars.RA.fmt + ", Dec: " + testResult.mars.DEC.fmt + ", sd:" + testResult.mars.SD.fmt + ", hp:" + testResult.mars.HP.fmt + "\n" +
+                " Jupiter : GHA: " + testResult.jupiter.GHA.fmt + ", RA: " + testResult.jupiter.RA.fmt + ", Dec: " + testResult.jupiter.DEC.fmt + ", sd:" + testResult.jupiter.SD.fmt + ", hp:" + testResult.jupiter.HP.fmt + "\n" +
+                " Saturn  : GHA: " + testResult.saturn.GHA.fmt + ", RA: " + testResult.saturn.RA.fmt + ", Dec: " + testResult.saturn.DEC.fmt + ", sd:" + testResult.saturn.SD.fmt + ", hp:" + testResult.saturn.HP.fmt + "\n" +
+                "\n" +
+                " Polaris : GHA: " + testResult.polaris.GHA.fmt + ", RA: " + testResult.polaris.RA.fmt + ", Dec: " + testResult.polaris.DEC.fmt + "\n";
+        }
+        if (!document.getElementById('no-star').checked) {
+            // TODO
+        }
+        detailsContent +=
+            " Equation of time: " + testResult.EOT.fmt + "\n" +
+            " Lunar Distance: " + testResult.lunarDist.fmt + "\n" +
+            " Day of Week: " + testResult.dayOfWeek;
+
+        document.getElementById('details').innerHTML = '<pre>' + detailsContent + '</pre>';
+
+        // Update World Map
+        displayWorldData(transformDataForWorldWebComp(testResult));
+        // Update Calendar
+        let utcOffsetInMinutes = new Date().getTimezoneOffset();
+        let utcTime = new Date(testResult.epoch + (utcOffsetInMinutes * 60 * 1000)); // .getUTCDate();
+
+//      let date = utcTime.format("d-m-Y-l");
+        let date = utcTime.format("D d M Y");
+        let splitFlapDate = document.getElementById('split-flap-utc-date-display');
+        splitFlapDate.value = date;
+        splitFlapDate.repaint();
+
+        // let calendar = document.getElementById('calendar-01');
+        // calendar.value = date;
+        // calendar.repaint();
+        // Update UTC time
+        let time = utcTime.format("H:i:s");
+        let splitFlap = document.getElementById('split-flap-utc-display');
+        splitFlap.value = time + " UTC";
+        splitFlap.repaint();
+
+        // Solar date and time if available
+        let solarDate = testResult.solarDate;
+        let splitFlapSolarDate = document.getElementById('split-flap-solar-date-display'); // Date
+        splitFlapSolarDate.value = `SOLAR: ${lpad(solarDate.day.toFixed(0), '0', 2)} ${MONTHS[solarDate.month - 1]} ${solarDate.year.toFixed(0)}`;
+        splitFlapSolarDate.repaint();
+
+        let splitFlapSolar = document.getElementById('split-flap-solar-display'); // Time
+        splitFlapSolar.value = `${lpad(solarDate.hour.toFixed(0), '0', 2)}:${lpad(solarDate.minute.toFixed(0), '0', 2)}:${lpad(solarDate.second.toFixed(0), '0', 2)}`;
+        splitFlapSolar.repaint();
+
+        // Big Jumbo
+        let bigUTCJumbo = document.getElementById('jumbo-plus-01');
+        bigUTCJumbo.value = `${lpad(solarDate.day.toFixed(0), '0', 2)} ${MONTHS[solarDate.month - 1]} ${solarDate.year.toFixed(0)}` +
+                            `|${lpad(solarDate.hour.toFixed(0), '0', 2)}:${lpad(solarDate.minute.toFixed(0), '0', 2)}:${lpad(solarDate.second.toFixed(0), '0', 2)}`;
+        bigUTCJumbo.repaint();
+
+        // Moon-tilt
+        // userPos.latitude, userPos.longitude
+        let moonTilt = getMoonTilt({lat: userPos.latitude, lng: userPos.longitude}, 
+							{gha: testResult.sun.GHA.raw, dec: testResult.sun.DEC.raw}, 
+							{gha: testResult.moon.GHA.raw, dec: testResult.moon.DEC.raw});
+        // console.log(`Moon Tilt: ${moonTilt}`);
+        let moonPhase = document.getElementById('moon-phase-01');
+        moonPhase.phase = testResult.moon.phase.phaseAngle;
+        moonPhase.tilt = moonTilt;   
+        let illum = `${testResult.moon.illum.toFixed(0)} %`;
+        moonPhase.title = `Tilt:${moonTilt.toFixed(1)}°\nIllum:${illum}`; // Update tooltip
+		// Update small label
+		moonPhase.smallLabel = `Tilt:${moonTilt.toFixed(1)}°`;
+    };
+
+    let updateUTCDate = (date) => {
+        let now;
+        if (date !== undefined) {
+            now = date;
+        } else {
+            now = new Date();
+        }
+        document.getElementById('UTC-day').value = now.getUTCDate();
+        document.getElementById('UTC-month').value = now.getUTCMonth() + 1;
+        document.getElementById('UTC-year').value = now.getUTCFullYear();
+        document.getElementById('UTC-hour').value = (now.getUTCHours().toString().length < 2 ? "0" : "") + now.getUTCHours();
+        document.getElementById('UTC-minute').value = (now.getUTCMinutes().toString().length < 2 ? "0" : "") + now.getUTCMinutes();
+        document.getElementById('UTC-second').value = (now.getUTCSeconds().toString().length < 2 ? "0" : "") + now.getUTCSeconds();
+    };
+
+    let interval = undefined;
+    const INTERVAL = 1000;
+
+    let autoRefresh = (cb) => {
+        document.getElementById('compute').disabled = cb.checked;
+        document.getElementById('now').disabled = cb.checked;
+        if (cb.checked) {
+            interval = window.setInterval(() => {
+                updateUTCDate();
+                compute();
+            }, INTERVAL);
+        } else {
+            window.clearInterval(interval);
+        }
+    };
+
+    let verbose = (cb) => {
+        consoleVerbose = cb.checked;
+    };
+
+    let getQueryParameterByName = (name, url) => {
+        if (!url) {
+            url = window.location.href;
+        }
+        name = name.replace(/[\[\]]/g, "\\$&");
+        let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) {
+            return null;
+        }
+        if (!results[2]) {
+            return '';
+        }
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    };
+
+    function setScrollDigitValue(id, value) {
+        let elem = document.getElementById(id);
+        // Character by character
+        let original = elem.paddedValue;
+        let newPaddedValue = elem.getPaddedValue(elem.cleanString(value));
+        //        console.log("Old [%s], new [%s]", original, newPaddedValue);
+        //        assert(old.length === new.length);
+        let floatFrom = parseFloat(original);
+        let floatTo = parseFloat(newPaddedValue);
+        let sign = 0;
+        if (floatFrom !== floatTo) {
+            sign = (floatTo > floatFrom) ? +1 : -1;
+        }
+        let scroll = Math.abs(floatFrom - floatTo) <= Math.pow(10, -elem.nbDec);
+
+        function updateValue(idx) { // Now THIS is balaise.
+            if (original.charAt(idx).toUpperCase() !== newPaddedValue.charAt(idx).toUpperCase()) {
+                setTimeout(() => {
+                    let next = elem.getNextChar(original.charAt(idx), sign);
+//                                        console.log("Updating %s with %s", original, next);
+                    elem.setCharAt(idx, next, sign);
+                    original = elem.paddedValue;
+                    updateValue(idx);
+                }, 50);
+            }
+        }
+
+        if (scroll || true) {
+            if (sign !== 0) {
+                for (let idx = 0; idx < original.length; idx++) {
+                    updateValue(idx);
+                }
+            }
+        } else { // No scroll
+            elem.value = value;
+            elem.repaint();
+        }
+    }
+
+    let hdg = 0.0;
+    let prmsl = 1013.5;
+    
+    // Random Simulation
+    let sensorUpdater = () => {
+        let diff = (Math.random() - 0.5) * 2.0; // [-1..1]
+        hdg += diff;
+        let _hdg = Math.trunc(hdg);
+        // _hdg %= 360;
+        while (_hdg < 0) {
+            _hdg += 360;
+        } 
+        while (_hdg >= 360) {
+            _hdg -= 360;
+        }
+        document.getElementById("jumbo-01").value = _hdg; // .toFixed(0);
+        document.getElementById("jumbo-02").value = 0.0;
+        document.getElementById("jumbo-03").value = 0.0;
+        document.getElementById("jumbo-04").value = 0.0;
+    };
+
+    let prmslUpdater = () => {
+        let prmslDiff = (Math.random() - 0.5) * 0.2; // [-0.1..0.1]
+        prmsl += prmslDiff;
+        if (prmsl > 1040) {
+            prmsl -= (2 * prmslDiff);
+        }
+        if (prmsl < 950) {
+            prmsl += (2 * prmslDiff);
+        }
+
+        // document.getElementById("scroll-digit-display-01").value = prmsl.toFixed(1);
+        setScrollDigitValue("scroll-digit-display-01", prmsl.toFixed(1));
+    };
+
+    let extraDrawingWorldMap = (wm, context) => {
+
+        // https://www.w3schools.com/tags/canvas_arc.asp
+
+        let width = wm.width;
+        let height = wm.height;
+        let radius = (height / 2) * 0.9;
+
+        context.beginPath();
+
+        // External Compass Circle
+        context.arc(width / 2, height / 2, radius, 0, 2 * Math.PI, false);
+		context.lineWidth = 3;
+
+        context.strokeStyle = 'rgba(0, 255, 255, 0.25)'; // Circle
+		context.stroke();
+		context.closePath();
+
+        let numberTicks = 30;
+        let majorTicks  = 10;
+        let minorTicks  =  1;
+
+        context.beginPath();
+		for (let i = 0; i < 360; i += majorTicks) {
+			let heading = i - hdg;
+			let xFrom = (width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (heading / 360)));
+			let yFrom = (height / 2) - ((radius * 0.95) * Math.sin(2 * Math.PI * (heading / 360)));
+			let xTo = (width / 2) - ((radius * 0.85) * Math.cos(2 * Math.PI * (heading / 360)));
+			let yTo = (height / 2) - ((radius * 0.85) * Math.sin(2 * Math.PI * (heading / 360)));
+			context.moveTo(xFrom, yFrom);
+			context.lineTo(xTo, yTo);
+		}
+		context.lineWidth = 3;
+		context.strokeStyle = 'rgba(0, 255, 255, 0.25)'; // Major ticks
+		context.stroke();
+		context.closePath();
+
+		// Minor Ticks
+		if (minorTicks > 0) {
+			context.beginPath();
+			for (let i = 0; i <= 360; i += minorTicks) {
+				let heading = i - hdg;
+				let xFrom = (width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (heading / 360)));
+				let yFrom = (height / 2) - ((radius * 0.95) * Math.sin(2 * Math.PI * (heading / 360)));
+				let xTo = (width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (heading / 360)));
+				let yTo = (height / 2) - ((radius * 0.90) * Math.sin(2 * Math.PI * (heading / 360)));
+				context.moveTo(xFrom, yFrom);
+				context.lineTo(xTo, yTo);
+			}
+			context.lineWidth = 1;
+			context.strokeStyle = 'rgba(0, 255, 255, 0.25)'; // Minor ticks
+			context.stroke();
+			context.closePath();
+		}
+		// Numbers
+        let digitColor = 'rgba(0, 255, 255, 0.5)'; // Numbers
+		context.beginPath();
+		let scale = 1;
+		for (let i = 0; i < 360; i += numberTicks) {
+			let heading = i - hdg;
+			context.save();
+			context.translate(width / 2, (height / 2));
+			context.rotate((2 * Math.PI * (heading / 360)));
+			context.font = "bold " + Math.round(scale * 15) + "px Arial"; // Like "bold 15px Arial"
+			context.fillStyle = (i === 0) ? 'cyan' : digitColor;
+			let str = i.toString();
+			let len = context.measureText(str).width;
+			context.fillText(str, -len / 2, (-(radius * .8) + 10));
+			context.lineWidth = 1;
+			context.strokeStyle = 'rgba(0, 255, 255, 0.5)';           // Numbers
+			context.strokeText(str, -len / 2, (-(radius * .8) + 10)); // Outlined
+			context.restore();
+		}
+		context.closePath();
+
+    };
+
+    // Set default date values, start process(es)
+    window.onload = () => {
+
+        console.log('On Load, ready.');
+        updateUTCDate();
+        // Check QS for location, default position
+        let qsLat = getQueryParameterByName('lat');
+        let qsLong = getQueryParameterByName('long');
+        if (qsLat !== null && qsLong !== null) {
+            let latitude = parseFloat(qsLat);
+            let longitude = parseFloat(qsLong);
+
+            setUserPos(latitude, longitude);
+            updateFromUserPos();
+        }
+
+        document.getElementById("world-map-01").setDoAfter(extraDrawingWorldMap);
+
+        // let hdgUpdater = window.setInterval(sensorUpdater, 1000); // Simulation
+        // let prmslData = window.setInterval(prmslUpdater, 2000);   // Simulation
+
+        initAjax(); // ISS Station?
+
+        document.ondragover = (event) => { // Used for Sun-Path dialog
+            // console.log("On drag Over");
+            event.preventDefault();
+        };
+
+        document.ondrop = (event) => { // Used for Sun-Path dialog
+            // console.log("On drop");
+            event.preventDefault();
+            let data = event.dataTransfer.getData("drag-data"); // Set in dragStartSP
+            console.log("Dropped -> ", data);
+            // event.target.appendChild(document.getElementById(data));
+            // document.getElementById("demo").innerHTML = "The SunPath dialog was dropped";
+        };
+
+        document.getElementById('sun-path-header-title').innerText = (navigator.userAgent.indexOf("Chrome") > -1 ? "(draggable header)" : "");
+
+        console.log('On Load, done.');
+    };
+</script>
+</html>
