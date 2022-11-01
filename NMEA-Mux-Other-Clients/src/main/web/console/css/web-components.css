@@ -93,7 +93,7 @@
 	--display-color: cyan;
 	--value-nb-decimal: 0;
 	--label-font: 'Courier New';
-	--value-font: DigiFont;
+	--value-font: 'Courier New';
 }
 
 .jumbo-02 {
@@ -128,33 +128,33 @@
 	--value-nb-decimal: 1;
 }
 
-@font-face {
+/* @font-face {
 	font-family: DigiFont;
 	src: url(./fonts/ds-digi.ttf) format("truetype");
-}
+} */
 
 jumbo-display .digital-font-orange {
 	--display-color: rgba(255, 165, 0, 0.75);
-	--label-font: DigiFont;
-	--value-font: DigiFont;
+	/* --label-font: DigiFont; */
+	/* --value-font: DigiFont; */
 }
 
 jumbo-display .digital-font-green {
 	--display-color: rgba(144, 238, 144, 0.75);
-	--label-font: DigiFont;
-	--value-font: DigiFont;
+	/* --label-font: DigiFont; */
+	/* --value-font: DigiFont; */
 }
 
 jumbo-display .digital-font-red {
 	--display-color: rgba(255, 0, 0, 0.75);
-	--label-font: DigiFont;
-	--value-font: DigiFont;
+	/* --label-font: DigiFont; */
+	/* --value-font: DigiFont; */
 }
 
 jumbo-display .digital-font-cyan {
 	--display-color: rgba(0, 255, 255, 0.75);
-	--label-font: DigiFont;
-	--value-font: DigiFont;
+	/* --label-font: DigiFont; */
+	/* --value-font: DigiFont; */
 }
 
 .scroll-digit-01 {

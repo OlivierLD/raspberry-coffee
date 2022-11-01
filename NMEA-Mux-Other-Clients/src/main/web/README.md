@@ -27,3 +27,9 @@ $ npm start
 A basic html page - for test - can be hosted by the same NodeJS server, once the
 NodeJS server is started, reach `http://localhost:9876/data/wsconsole.html` from a browser.
 
+## A Single Page Web App, NMEA over WebSockets
+Based on the exact same structure (same servers as above), try to reach `http://localhost:9876/data/console/ws.console.html`
+from a browser.  
+It consumes the NMEA sentences coming through a WebSocket client, and computes the celestial data,
+based on the UTC time read from the RMC sentences.
+
