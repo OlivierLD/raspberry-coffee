@@ -24,7 +24,7 @@ let connection;
 		displayMessage('Sorry, but there is some problem with your connection or the server is down.');
 	};
 
-	// most important part - incoming messages. TODO Override (Consumer ?)
+	// most important part - incoming messages. Can be overridden (Consumer ?)
 	connection.onmessage = (message) => {
 //      console.log('onmessage:' + message);
 		if (filters.value.length > 0) {
@@ -57,7 +57,7 @@ function displayMessage(mess) {
         messList = statusFld.innerHTML;
         if (messList !== undefined) {
             let lines = messList.split('<br>');
-            while (lines.length > 10) { // Limit number of messages to 10.
+            while (lines.length > 20) { // Limit number.
                 lines.shift();
             }
             messList = '';
