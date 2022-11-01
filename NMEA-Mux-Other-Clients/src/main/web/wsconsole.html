@@ -51,7 +51,7 @@
     console.log('Overriding onmessage');
     try {
         connection.onmessage = (mess) => {
-            console.log(`Received ${mess}`);
+            console.log(`Received ${mess.data}`);
         }
     } catch (error) {
         console.debug(`Oops: ${JSON.stringify(error)}`);
