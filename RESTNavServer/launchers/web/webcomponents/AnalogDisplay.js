@@ -445,6 +445,11 @@ class AnalogDisplay extends HTMLElement {
 		this.drawDisplay(this._value, this._value_2);
 	}
 
+	resetMinMax() {
+        this.miniVal =  10000000;
+        this.maxiVal = -10000000;
+    }
+
 	getColorConfig(classNames) {
 		let colorConfig = defaultAnalogDisplayColorConfig;
 		let classes = classNames.split(" ");

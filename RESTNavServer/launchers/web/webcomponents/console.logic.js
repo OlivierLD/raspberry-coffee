@@ -278,7 +278,7 @@ function resetMinMax(id) {
     if (document.getElementById(id).resetMinMax) {
 	    document.getElementById(id).resetMinMax();
 	} else {
-	    console.log(`No resetMinMax in element ${id}.`);
+	    console.log(`No resetMinMax in element ${id}.`); // TODO Fix that!
 	}
 }
 
