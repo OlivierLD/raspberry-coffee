@@ -52,20 +52,25 @@ let connection;
 })();
 
 function displayMessage(mess) {
-	let messList = statusFld.innerHTML;
-	if (messList !== undefined) {
-		let lines = messList.split('<br>');
-		while (lines.length > 10) { // Limit number of messages to 10.
-			lines.shift();
-		}
-		messList = '';
-		for (let i = 0; i < lines.length; i++) {
-			messList += (lines[i] + '<br>');
-		}
+	let messList; //  = statusFld.innerHTML;
+	if (statusFld) {
+        messList = statusFld.innerHTML;
+        if (messList !== undefined) {
+            let lines = messList.split('<br>');
+            while (lines.length > 10) { // Limit number of messages to 10.
+                lines.shift();
+            }
+            messList = '';
+            for (let i = 0; i < lines.length; i++) {
+                messList += (lines[i] + '<br>');
+            }
+        }
+        messList = (((messList !== undefined && messList.length) > 0 ? messList + (messList.endsWith('<br>') ? '' : '<br>') : '') + mess);
+        statusFld.innerHTML = messList;
+        statusFld.scrollTop = statusFld.scrollHeight; // Scroll down
+	} else {
+	    console.log(mess);
 	}
-	messList = (((messList !== undefined && messList.length) > 0 ? messList + (messList.endsWith('<br>') ? '' : '<br>') : '') + mess);
-	statusFld.innerHTML = messList;
-	statusFld.scrollTop = statusFld.scrollHeight; // Scroll down
 }
 
 function resetStatus() {
