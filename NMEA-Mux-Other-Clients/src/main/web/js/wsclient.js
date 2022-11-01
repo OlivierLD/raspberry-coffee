@@ -48,7 +48,7 @@ let connection;
 		}
 	}, 3000); // Ping every 3 seconds
 
-	console.log("ws connection initialization completed.");
+	console.log("ws client connection initialization completed.");
 })();
 
 function displayMessage(mess) {

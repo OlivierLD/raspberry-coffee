@@ -1,6 +1,6 @@
 "use strict";  // http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
 /**
- * WebSocket server for NMEA, to use with NodeJS
+ * WebSocket (and http) server for NMEA, to use with NodeJS
  *
  * Static requests must be prefixed with /data/, like in http://machine:9876/data/console.html
  *
