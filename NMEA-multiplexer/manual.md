@@ -181,11 +181,13 @@ channels:
     > the `path.in.zip`. If `path.in.zip` is null or invalid, the first entry in the archive will be used.
     > This can be usefull, as the archive may very well contain several log files.
 - `ws`
-    - WebSocket input. This is acting as a WebSocket client.
+    - WebSocket input. This is acting as a WebSocket _client_. 
     ```properties
     mux.02.type=ws
     mux.02.wsuri=ws://192.168.1.136:9876/
     ```
+    > See the examples of WebSocket servers suitable for this channel (like `wsnmea.js`, running on NodeJS).  
+      The server is designed to push to every connected client the NMEA data pushed to it (see the `ws` forwarder about that).
 - `htu21df`
     - Temperature, humidity
     ```properties
