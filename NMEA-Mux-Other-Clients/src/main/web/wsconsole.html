@@ -48,13 +48,15 @@
 <hr/>
 <script src="js/wsclient.js"></script>
 <script type="text/javascript">
-    console.log('Overriding onmessage');
-    try {
-        connection.onmessage = (mess) => {
-            console.log(`Received ${mess.data}`);
+    if (false) { // This is just an example. Override the onmessage of websocket.
+        console.log('Overriding onmessage');
+        try {
+            connection.onmessage = (mess) => {
+                console.log(`Received ${mess.data}`);
+            }
+        } catch (error) {
+            console.debug(`Oops: ${JSON.stringify(error)}`);
         }
-    } catch (error) {
-        console.debug(`Oops: ${JSON.stringify(error)}`);
     }
 </script>
 </body>
