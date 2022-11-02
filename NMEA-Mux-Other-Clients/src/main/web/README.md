@@ -33,3 +33,6 @@ from a browser.
 It consumes the NMEA sentences coming through a WebSocket client, and computes the celestial data,
 based on the UTC time read from the RMC sentences.
 
+Example: Replay of some logged data.    
+![Replay](./NMEA.ws.console.png)
+

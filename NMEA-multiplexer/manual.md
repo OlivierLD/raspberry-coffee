@@ -381,9 +381,9 @@ The lines above means that:
     >   - if `log.dir` exists (default is `.`) log files will be generated in this directory (located under the working directory).
     >   - if `split` exists (default is `null`) and one of `min`, `hour`, `day`, `week`, `month`, `year`, then a new log file will generated every `min`, `hour`, `day`, `week`, `month`, or `year`.
     > - `flush` will write to the disk every time a record is written. Default is `false`.
-
-
+    
 - `ws`
+    <!-- TODO: See https://www.baeldung.com/java-websockets -->
     - WebSocket server. 
     > Pushes NMEA data to an _**external**_ WebSocket server (NodeJS for example, does the job). Unlike for `tcp` where the NMEA-multiplexer acts as a TCP server,
     the NMEA-multiplexer is _**not**_ acting as a WebSocket server.  

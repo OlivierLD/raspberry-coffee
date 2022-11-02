@@ -1,83 +1,126 @@
 "use strict";
 
-// TODO Move to ES6
+/*
+ * Basic NMEA Parser
+ *
+ * For details on the available parser functions, try this in NodeJS:
+ * $ node
+Welcome to Node.js v14.4.0.
+Type ".help" for more information.
+> var vm = require("vm");
+> var fs = require("fs");
+> 
+> var data = fs.readFileSync('./console/js/NMEAParser.js');
+> const script = new vm.Script(data);
+> script.runInThisContext();
+> matcher
+{
+  RMC: {
+    parser: [Function: parseRMC],
+    desc: 'Recommended Minimum Navigation Information'
+  },
+    . . .
+}
+  > tests()
+  . . .
+ */
 
-var checksum = function (str) {
-    var cs = 0;
-    for (var i = 0; i < str.length; i++) {
-        var c = str.charCodeAt(i);
+/**
+ * Calculate the checksum of a NMEA String.
+ * @param {String} str The NMEA sentence to get the checksum of.
+ * @returns {String} the checksum, on 2 characters.
+ * 
+ * Use a string truncated at the existing checksum, like
+ * 'OSMWV,157.0,T,010.4,N,A' for a valid full string like  '$OSMWV,157.0,T,010.4,N,A*21\r\n'
+ */
+let checksum = (str) => {
+    let cs = 0;
+    for (let i = 0; i < str.length; i++) {
+        let c = str.charCodeAt(i);
         cs ^= c;
     }
-    var ccs = cs.toString(16).toUpperCase();
+    let ccs = cs.toString(16).toUpperCase();
     while (ccs.length < 2) {
         ccs = '0' + ccs;
     }
     return ccs;
 };
 
-var validate = function (str) {
+/**
+ * Validate the NMEA String. Structure, and checksum.
+ * @param {String} str The NMEA Sentence to validate.
+ * @returns {Object} TalkerID, SentenceID if valid
+ * @throws Exception if validation failed.
+ */
+let validate = (str) => {
     if (str.charAt(0) !== '$') {
-        throw({
+        throw ({
             desc: 'Does not start with $',
             data: str
         });
     }
     if (str.charAt(6) !== ',') {
-        throw({
+        throw ({
             desc: 'Invalid key length',
             data: str
         });
     }
-    var starIdx = str.indexOf('*');
+    let starIdx = str.indexOf('*');
     if (starIdx === -1) {
-        throw({
+        throw ({
             desc: 'Missing checksum',
             data: str
         });
     }
-    var checksumStr = str.substring(starIdx + 1).replace(/\n$/, "").replace(/\r$/, ""); // trim
-    var nmea = str.substring(1, starIdx);
-    var cs = checksum(nmea);
+    let checksumStr = str.substring(starIdx + 1).replace(/\n$/, "").replace(/\r$/, ""); // trim
+    let nmea = str.substring(1, starIdx);
+    let cs = checksum(nmea);
     if (checksumStr !== cs) {
         console.log("Expected", cs, "in", str, "[" + checksumStr + "]");
-        throw({
+        throw ({
             desc: 'Invalid checksum',
             expected: cs,
             found: checksumStr,
             data: str
         });
     }
-    var talker = str.substring(1, 3);
-    var sentenceId = str.substring(3, 6);
-    return {talker: talker, id: sentenceId};
+    let talker = str.substring(1, 3);
+    let sentenceId = str.substring(3, 6);
+    return { talker: talker, id: sentenceId };
 };
 
-var getChunks = function (str) {
-    var starIdx = str.indexOf('*');
+/**
+ * Returns an array of the data contained in the sentence, and its validity.
+ * @param {String} str The NMEA Sentence to get the elements of.
+ * @returns {Object} Sentence validity, and an array of all its elements.
+ */
+let getChunks = (str) => {
+    let starIdx = str.indexOf('*');
+    let valid;
     try {
-        var valid = validate(str);
+        valid = validate(str);
     } catch (err) {
         throw {
             validating: str,
             error: err
         };
     }
-    var nmea = str.substring(1, starIdx);
-    var chunks = nmea.split(",");
+    let nmea = str.substring(1, starIdx);
+    let chunks = nmea.split(",");
     return {
         valid: valid,
         data: chunks
     };
 };
 
-var parseRMC = function (str) {
+let parseRMC = (str) => {
     /* Structure is
-     *         1      2 3        4 5         6 7     8     9      10    11      <- Indexes in getChunks.
+     *  Idx:   1      2 3        4 5         6 7     8     9      10    11      <- Indexes in getChunks.
      *  $ddRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
      *         |      | |        | |         | |     |     |      |     |
      *         |      | |        | |         | |     |     |      |     Variation sign
      *         |      | |        | |         | |     |     |      Variation value
-     *         |      | |        | |         | |     |     Date DDMMYY
+     *         |      | |        | |         | |     |     UTC Date DDMMYY
      *         |      | |        | |         | |     COG
      *         |      | |        | |         | SOG
      *         |      | |        | |         Longitude Sign
@@ -87,35 +130,35 @@ var parseRMC = function (str) {
      *         |      Active or Void
      *         UTC
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
 
     if (data[2] === 'V') { // Void
         return;
     }
-    var latDeg = data[3].substring(0, 2);
-    var latMin = data[3].substring(2);
-    var lat = sexToDec(parseInt(latDeg), parseFloat(latMin)) * (data[4] === 'S' ? -1 : 1);
+    let latDeg = data[3].substring(0, 2);
+    let latMin = data[3].substring(2);
+    let lat = sexToDec(parseInt(latDeg), parseFloat(latMin)) * (data[4] === 'S' ? -1 : 1);
 
-    var lonDeg = data[5].substring(0, 3);
-    var lonMin = data[5].substring(3);
-    var lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin)) * (data[6] === 'W' ? -1 : 1);
+    let lonDeg = data[5].substring(0, 3);
+    let lonMin = data[5].substring(3);
+    let lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin)) * (data[6] === 'W' ? -1 : 1);
 
-    var hours = parseInt(data[1].substring(0, 2));
-    var minutes = parseInt(data[1].substring(2, 4));
-    var seconds = parseInt(data[1].substring(4, 6));
+    let hours = parseInt(data[1].substring(0, 2));
+    let minutes = parseInt(data[1].substring(2, 4));
+    let seconds = parseInt(data[1].substring(4, 6));
 
-    var day = parseInt(data[9].substring(0, 2));
-    var month = parseInt(data[9].substring(2, 4)) - 1;
-    var year = parseInt(data[9].substring(4, 6)) + 2000;
-    var d = new Date(Date.UTC(year, month, day, hours, minutes, seconds, 0));
+    let day = parseInt(data[9].substring(0, 2));
+    let month = parseInt(data[9].substring(2, 4)) - 1;
+    let year = parseInt(data[9].substring(4, 6)) + 2000;
+    let d = new Date(Date.UTC(year, month, day, hours, minutes, seconds, 0));
 
-    var sog = parseFloat(data[7]);
-    var cog = parseFloat(data[8]);
-    var W = parseFloat(data[10]) * (data[11] === 'W' ? -1 : 1);
-    return {type: "RMC", epoch: d.getTime(), sog: sog, cog: cog, variation: W, pos: {lat: lat, lon: lon}};
+    let sog = parseFloat(data[7]);
+    let cog = parseFloat(data[8]);
+    let W = parseFloat(data[10]) * (data[11] === 'W' ? -1 : 1);
+    return { type: "RMC", epoch: d.getTime(), sog: sog, cog: cog, variation: W, pos: { lat: lat, lon: lon } };
 };
 
-var parseDBT = function (str) {
+let parseDBT = (str) => {
     /* Structure is
      *         1     2 3    4 5    6
      *  $aaDBT,011.0,f,03.3,M,01.8,F*18
@@ -127,7 +170,7 @@ var parseDBT = function (str) {
      *         |     f for feet
      *         Depth in feet
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "DBT",
         feet: parseFloat(data[1]),
@@ -136,7 +179,7 @@ var parseDBT = function (str) {
     };
 };
 
-var parseDPT = function (str) {
+let parseDPT = (str) => {
     /* Structure is
      *         1     2
      *  $IIDPT,001.7,+0.7,*46
@@ -144,7 +187,7 @@ var parseDPT = function (str) {
      *         |     correction
      *         Depth in meters
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "DPT",
         depth: parseFloat(data[1]),
@@ -152,7 +195,7 @@ var parseDPT = function (str) {
     };
 };
 
-var parseGLL = function (str) {
+let parseGLL = (str) => {
     /* Structure is
      *         1       2 3       4 5         6
      *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
@@ -164,23 +207,23 @@ var parseGLL = function (str) {
      *         |       Lat sign :N/S
      *         Latitude
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     if ("A" !== data[6]) {
-        throw {err: "No data available"};
+        throw { err: "No data available" };
     }
-    var latDeg = data[1].substring(0, 2);
-    var latMin = data[1].substring(2);
-    var lat = sexToDec(parseInt(latDeg), parseFloat(latMin)) * (data[2] === 'S' ? -1 : 1);
+    let latDeg = data[1].substring(0, 2);
+    let latMin = data[1].substring(2);
+    let lat = sexToDec(parseInt(latDeg), parseFloat(latMin)) * (data[2] === 'S' ? -1 : 1);
 
-    var lonDeg = data[3].substring(0, 3);
-    var lonMin = data[3].substring(3);
-    var lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin)) * (data[4] === 'W' ? -1 : 1);
+    let lonDeg = data[3].substring(0, 3);
+    let lonMin = data[3].substring(3);
+    let lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin)) * (data[4] === 'W' ? -1 : 1);
 
-    var hours = parseInt(data[5].substring(0, 2));
-    var minutes = parseInt(data[5].substring(2, 4));
-    var seconds = parseInt(data[5].substring(4, 6));
-    var now = new Date();
-    var d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hours, minutes, seconds, 0));
+    let hours = parseInt(data[5].substring(0, 2));
+    let minutes = parseInt(data[5].substring(2, 4));
+    let seconds = parseInt(data[5].substring(4, 6));
+    let now = new Date();
+    let d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hours, minutes, seconds, 0));
 
     return {
         type: "GLL",
@@ -190,7 +233,7 @@ var parseGLL = function (str) {
     };
 };
 
-var parseGGA = function (str) {
+let parseGGA = (str) => {
     /* Structure is
      *  $GPGGA,014457,3739.853,N,12222.821,W,1,03,5.4,1.1,M,-28.2,M,,*7E
      *
@@ -211,20 +254,20 @@ var parseGGA = function (str) {
      *         |         Latitude
      *         UTC of position
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
 
-    var hours = parseInt(data[1].substring(0, 2));
-    var minutes = parseInt(data[1].substring(2, 4));
-    var seconds = parseInt(data[1].substring(4, 6));
-    var now = new Date();
-    var d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hours, minutes, seconds, 0));
+    let hours = parseInt(data[1].substring(0, 2));
+    let minutes = parseInt(data[1].substring(2, 4));
+    let seconds = parseInt(data[1].substring(4, 6));
+    let now = new Date();
+    let d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), hours, minutes, seconds, 0));
 
-    var latDeg = data[2].substring(0, 2);
-    var latMin = data[2].substring(2);
-    var lat = sexToDec(parseInt(latDeg), parseFloat(latMin)) * (data[3] === 'S' ? -1 : 1);
-    var lonDeg = data[4].substring(0, 3);
-    var lonMin = data[4].substring(3);
-    var lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin)) * (data[5] === 'W' ? -1 : 1);
+    let latDeg = data[2].substring(0, 2);
+    let latMin = data[2].substring(2);
+    let lat = sexToDec(parseInt(latDeg), parseFloat(latMin)) * (data[3] === 'S' ? -1 : 1);
+    let lonDeg = data[4].substring(0, 3);
+    let lonMin = data[4].substring(3);
+    let lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin)) * (data[5] === 'W' ? -1 : 1);
 
     return {
         type: "GGA",
@@ -249,7 +292,7 @@ var parseGGA = function (str) {
     };
 };
 
-var parseGSA = function (str) {
+let parseGSA = (str) => {
     /*
      *        1 2 3                           15  16  17
      * $GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*35
@@ -262,9 +305,9 @@ var parseGSA = function (str) {
      *        Mode: M=Manual, forced to operate in 2D or 3D
      *              A=Automatic, 3D/2D
      */
-    var data = getChunks(str).data;
-    var satId = [];
-    for (var i = 3; i <= 15; i++) {
+    let data = getChunks(str).data;
+    let satId = [];
+    for (let i = 3; i <= 15; i++) {
         if (data[i].trim().length > 0) {
             satId.push(parseInt(data[i]));
         } else {
@@ -281,9 +324,9 @@ var parseGSA = function (str) {
     };
 };
 
-var gsvData = {};
+let gsvData = {};
 
-var parseGSV = function (str) {
+let parseGSV = (str) => {
     /* Structure is
      *        1 2 3  4  5  6   7  8  9  10  11 12 13 14  15 16 17 18  19
      * $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
@@ -310,19 +353,19 @@ var parseGSV = function (str) {
      *  $GPGSV,3,3,12,08,34,273,11,11,27,310,14,01,13,315,,22,08,278,*70
      *  $GPGSV,3,3,12,08,34,273,11,11,27,310,14,01,13,315,,22,08,278,*70
      */
-    var data = getChunks(str).data;
-    var nbMess = parseInt(data[1]);
-    var messNum = parseInt(data[2]);
-    var numSat = parseInt(data[3]);
+    let data = getChunks(str).data;
+    let nbMess = parseInt(data[1]);
+    let messNum = parseInt(data[2]);
+    let numSat = parseInt(data[3]);
     if (messNum === 1) { // First message of the list
-        gsvData = {type: "GSV", satData: []};
-        for (var s = 0; s < numSat; s++) {
+        gsvData = { type: "GSV", satData: [] };
+        for (let s = 0; s < numSat; s++) {
             gsvData.satData.push({});
         }
     }
 
-    for (var i = 0; i < 4; i++) {
-        var sat = {
+    for (let i = 0; i < 4; i++) {
+        let sat = {
             prn: parseInt(data[4 + (4 * i)]),
             elevation: parseInt(data[4 + (4 * i) + 1]),
             azimuth: parseInt(data[4 + (4 * i) + 2]),
@@ -333,11 +376,11 @@ var parseGSV = function (str) {
     if (messNum === nbMess) { // Last message of the list
         return gsvData;
     } else {
-        return {type: "GSV"};
+        return { type: "GSV" };
     }
 };
 
-var parseHDG = function (str) {
+let parseHDG = (str) => {
     /* Structure is
      *        1   2   3 4   5
      * $xxHDG,x.x,x.x,a,x.x,a*CS
@@ -349,12 +392,12 @@ var parseHDG = function (str) {
      *        |   Magnetic Deviation, degrees
      *        Magnetic Sensor heading in degrees
      */
-    var data = getChunks(str).data;
-    var hdg = parseFloat(data[1]);
-    var dev = parseFloat(data[2]);
-    var dec = parseFloat(data[4]);
+    let data = getChunks(str).data;
+    let hdg = parseFloat(data[1]);
+    let dev = parseFloat(data[2]);
+    let dec = parseFloat(data[4]);
     if (isNaN(hdg)) {
-      hdg = null;
+        hdg = null;
     }
     if (isNaN(dev)) {
         dev = null;
@@ -373,7 +416,7 @@ var parseHDG = function (str) {
     };
 };
 
-var parseHDM = function (str) {
+let parseHDM = (str) => {
     /*
      * Structure is
      *        1   2
@@ -382,14 +425,14 @@ var parseHDM = function (str) {
      *        |   magnetic
      *        Heading, magnetic, in degrees
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "HDM",
         heading: parseFloat(data[1])
     };
 };
 
-var parseMDA = function (str) {
+let parseMDA = (str) => {
     /*                                             13    15    17    19
      *        1   2 3   4 5   6 7   8 9   10  11  12    14    16    18    20
      * $--MDA,x.x,I,x.x,B,x.x,C,x.x,C,x.x,x.x,x.x,C,x.x,T,x.x,M,x.x,N,x.x,M*hh
@@ -407,7 +450,7 @@ var parseMDA = function (str) {
      *
      * Example: $WIMDA,29.4473,I,0.9972,B,17.2,C,,,,,,,,,,,,,,*3E
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "MDA",
         pressure: {
@@ -436,7 +479,7 @@ var parseMDA = function (str) {
     };
 };
 
-var parseMMB = function (str) {
+let parseMMB = (str) => {
     /*
      * Structure is
      *        1       2 3      4
@@ -447,7 +490,7 @@ var parseMMB = function (str) {
      *        |       Inches of Hg
      *        Pressure in inches of Hg
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "MMB", pressure: {
             inches: parseFloat(data[1]),
@@ -456,7 +499,7 @@ var parseMMB = function (str) {
     };
 };
 
-var parseMTA = function (str) {
+let parseMTA = (str) => {
     /*
      * Structure is
      *        1   2
@@ -465,11 +508,11 @@ var parseMTA = function (str) {
      *        |   Celcius
      *        Value
      */
-    var data = getChunks(str).data;
-    return {type: "MTA", temp: parseFloat(data[1]), unit: data[2]};
+    let data = getChunks(str).data;
+    return { type: "MTA", temp: parseFloat(data[1]), unit: data[2] };
 };
 
-var parseMTW = function (str) {
+let parseMTW = (str) => {
     /*
      * Structure is
      *         1    2
@@ -478,11 +521,11 @@ var parseMTW = function (str) {
      *         |    Celcius
      *         Value
      */
-    var data = getChunks(str).data;
-    return {type: "MTW", temp: parseFloat(data[1]), unit: data[2]};
+    let data = getChunks(str).data;
+    return { type: "MTW", temp: parseFloat(data[1]), unit: data[2] };
 };
 
-var parseMWV = function (str) {
+let parseMWV = (str) => {
     /*
      * Structure is:
      *         1    2 3    4 5
@@ -495,9 +538,9 @@ var parseMWV = function (str) {
      *         |    reference R=relative, T=true
      *         Wind angle 0 to 360 degrees
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     if (data[5] !== 'A') {
-        throw {err: "No data available for MWV"}
+        throw { err: "No data available for MWV" };
     } else {
         return {
             type: "MWV",
@@ -511,7 +554,7 @@ var parseMWV = function (str) {
     }
 };
 
-var parseRMB = function (str) {
+let parseRMB = (str) => {
     /*        1 2   3 4    5    6       7 8        9 10  11  12  13
      * $GPRMB,A,x.x,a,c--c,d--d,llll.ll,e,yyyyy.yy,f,g.g,h.h,i.i,j*kk
      *        | |   | |    |    |       | |        | |   |   |   |
@@ -529,17 +572,17 @@ var parseRMB = function (str) {
      *        | Crosstrack error in nm
      *        Data Status (Active or Void)
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     if (data[1] === 'A') {
-        var latDeg = data[6].substring(0, 2);
-        var latMin = data[6].substring(2);
-        var lat = sexToDec(parseInt(latDeg), parseFloat(latMin));
+        let latDeg = data[6].substring(0, 2);
+        let latMin = data[6].substring(2);
+        let lat = sexToDec(parseInt(latDeg), parseFloat(latMin));
         if (data[7] === 'S') {
             lat = -lat;
         }
-        var lonDeg = data[8].substring(0, 3);
-        var lonMin = data[8].substring(3);
-        var lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin));
+        let lonDeg = data[8].substring(0, 3);
+        let lonMin = data[8].substring(3);
+        let lon = sexToDec(parseInt(lonDeg), parseFloat(lonMin));
         if (data[9] === 'W') {
             lon = -lon;
         }
@@ -572,7 +615,7 @@ var parseRMB = function (str) {
     }
 };
 
-var parseVDR = function (str) {
+let parseVDR = (str) => {
     /*
      * Structure is
      *        1   2 3   4 5   6
@@ -585,7 +628,7 @@ var parseVDR = function (str) {
      *        |   True
      *        Degrees, true
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: " VDR",
         current: {
@@ -600,7 +643,7 @@ var parseVDR = function (str) {
     };
 };
 
-var parseVHW = function (str) {
+let parseVHW = (str) => {
     /* Structure is
      *         1   2 3   4 5   6 7   8
      *  $aaVHW,x.x,T,x.x,M,x.x,N,x.x,K*hh
@@ -610,7 +653,7 @@ var parseVHW = function (str) {
      *         |     Heading in degrees, Magnetic
      *         Heading in degrees, True
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "VHW",
         heading: {
@@ -621,10 +664,10 @@ var parseVHW = function (str) {
             knots: parseFloat(data[5]),
             kmh: parseFloat(data[7])
         }
-    }
+    };
 };
 
-var parseVLW = function (str) {
+let parseVLW = (str) => {
     /*
      * Structure is
      *        1     2 3     4
@@ -635,7 +678,7 @@ var parseVLW = function (str) {
      *        |     Nautical miles
      *        Total cumulative distance
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "VLW",
         total: parseFloat(data[1]),
@@ -643,7 +686,7 @@ var parseVLW = function (str) {
     };
 };
 
-var parseVTG = function (str) {
+let parseVTG = (str) => {
     /*
      * Structure is
      *        1   2 3   4 5   6 7   8 9
@@ -659,7 +702,7 @@ var parseVTG = function (str) {
      *        |   true
      *        Track, degrees
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "VTG",
         cmg: {
@@ -673,7 +716,7 @@ var parseVTG = function (str) {
     };
 };
 
-var parseVWR = function (str) {
+let parseVWR = (str) => {
     /*
      * Structure is
      *         1   2 3   4 5   6 7   8
@@ -685,7 +728,7 @@ var parseVWR = function (str) {
      *         |   L=port, R=starboard
      *         Wind angle 0 to 180 degrees
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: " VWR",
         wind: {
@@ -699,7 +742,7 @@ var parseVWR = function (str) {
     };
 };
 
-var parseVWT = function (str) {
+let parseVWT = (str) => {
     /*
      * Structure is
      *        1    2 3   4 5   6 7   8
@@ -714,7 +757,7 @@ var parseVWT = function (str) {
      *        |    Left or Right
      *        Wind angle
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: " VWT",
         wind: {
@@ -728,7 +771,7 @@ var parseVWT = function (str) {
     };
 };
 
-var parseMWD = function (str) {
+let parseMWD = (str) => {
     /*
      * Structure is:
      *        1     2 3     4 5   6 7   8
@@ -743,7 +786,7 @@ var parseMWD = function (str) {
      *        |     True
      *        wind dir
      */
-    var data = getChunks(str).data;
+    let data = getChunks(str).data;
     return {
         type: "MWD",
         wind: {
@@ -759,7 +802,7 @@ var parseMWD = function (str) {
     };
 };
 
-var parseXDR = function (str) {
+let parseXDR = (str) => {
     /*
      *        1 2      3 4
      * $RPXDR,P,1.0280,B,0*7B
@@ -807,14 +850,14 @@ var parseXDR = function (str) {
      switch or valve        S           none (null)            1 = ON/ CLOSED, 0 = OFF/ OPEN
      salinity               L           S = ppt                ppt = parts per thousand
      */
-    var data = getChunks(str).data;
-    var txIdx = 0;
-    var moreData = true;
-    var parsed = [];
+    let data = getChunks(str).data;
+    let txIdx = 0;
+    let moreData = true;
+    let parsed = [];
     while (moreData) {
-        var type = data[(txIdx * 4) + 1];
+        let type = data[(txIdx * 4) + 1];
         if (type !== undefined) {
-            var txData = {};
+            let txData = {};
             switch (type) {
                 case "C":
                     txData.type = "temperature";
@@ -873,27 +916,25 @@ var parseXDR = function (str) {
             moreData = false;
         }
     }
-    return {type: "XDR", data: parsed};
+    return { type: "XDR", data: parsed };
 };
 
-
-var sexToDec = function (deg, min) {
-    return deg + ((min * 10 / 6) / 100);
-};
+// Utilites
+let sexToDec = (deg, min) => deg + ((min * 10 / 6) / 100);
 
 /**
- * Converts decimal degrees into Deg Min.dd
- * @param val value in decimal degrees
- * @param ns_ew 'NS' or 'EW'
- * @returns {string}
+ * Converts decimal degrees into Sexagesimal Deg Min.dd
+ * @param {Number} val value in decimal degrees
+ * @param {String} ns_ew 'NS' or 'EW'
+ * @returns {String}
  */
-var decToSex = function (val, ns_ew) {
-    var absVal = Math.abs(val);
-    var intValue = Math.floor(absVal);
-    var dec = absVal - intValue;
-    var i = intValue;
+let decToSex = (val, ns_ew) => {
+    let absVal = Math.abs(val);
+    let intValue = Math.floor(absVal);
+    let dec = absVal - intValue;
+    let i = intValue;
     dec *= 60;
-    var s = i + "°" + dec.toFixed(2) + "'";
+    let s = i + "°" + dec.toFixed(2) + "'";
 
     if (val < 0) {
         s += (ns_ew === 'NS' ? 'S' : 'W');
@@ -903,7 +944,7 @@ var decToSex = function (val, ns_ew) {
     return s;
 };
 
-var matcher = {};
+let matcher = {};
 matcher["RMC"] = {parser: parseRMC, desc: "Recommended Minimum Navigation Information"};
 matcher["DBT"] = {parser: parseDBT, desc: "Depth Below Transducer"};
 matcher["DPT"] = {parser: parseDPT, desc: "Depth"};
@@ -928,43 +969,43 @@ matcher["VWT"] = {parser: parseVWT, desc: "True Windspeed and Angle"};
 matcher["XDR"] = {parser: parseXDR, desc: "Transducer Values"};
 matcher["VLW"] = {parser: parseVLW, desc: "Distance Traveled through Water"};
 
-var autoparse = function (str) {
-    var id = getChunks(str).valid.id;
-    var parser = matcher[id].parser;
+let autoparse = (str) => {
+    let id = getChunks(str).valid.id;
+    let parser = matcher[id].parser;
     if (parser !== undefined) {
-        var autoParsed = parser(str);
+        let autoParsed = parser(str);
         autoParsed.type = id;
         return autoParsed; // parser(str);
     } else {
-        throw {err: "No parser found for sentence [" + str + "]"}
+        throw { err: "No parser found for sentence [" + str + "]" };
     }
 };
 
 // Tests
-var tests = function () {
-    var val = sexToDec(333, 22.07);
+let tests = function () {
+    let val = sexToDec(333, 22.07);
     console.log(val);
-    var ret = decToSex(val, 'EW');
+    let ret = decToSex(val, 'EW');
     console.log(ret);
 
-    var rmc = "$IIRMC,225158,A,3730.075,N,12228.854,W,,,021014,15,E,A*3C";
+    let rmc = "$IIRMC,225158,A,3730.075,N,12228.854,W,,,021014,15,E,A*3C";
     console.log(rmc);
     console.log(validate(rmc));
-    var parsed = parseRMC(rmc);
+    let parsed = parseRMC(rmc);
     console.log(parsed);
     console.log("Pos: " + decToSex(parsed.pos.lat, 'NS') + " " + decToSex(parsed.pos.lon, 'NS'));
-    var date = new Date(parsed.epoch);
+    let date = new Date(parsed.epoch);
     console.log(date);
 
     console.log('--- AutoParse ---');
-    var auto = autoparse("$IIHDG,217,,,10,E*17");
+    let auto = autoparse("$IIHDG,217,,,10,E*17");
     console.log(auto);
 };
 
 
 // tests();
 
-// Made public.
+// Made public (if to be used in NodeJS).
 /*
 exports.validate = validate;
 exports.autoparse = autoparse;
