@@ -88,6 +88,13 @@ Each sub-folder will contain different language examples, along with `md` files 
 The code presented here should be 100% independent of the NMEA-multiplexer internal plumbing.
 The only "exception" could be the NMEA-Parser (which does not belong to the NMEA-multiplexer module, by the way).
 
+<!-- TODO NMEA Parsers in Python (WiP), C -->
+
+The NMEA-Multiplexer - and its extensions - can be easily accessed through HTTP, TCP, and other protocols,
+this makes its integration with Web pages smooth and easy, and the Raspberry Pi can emit its own network, so it can be accessed
+by any device connected on this very network (that brings us back to this concept of flake computing - as opposed to cloud computing, network without Internet).  
+But one may very well want to use another language than ES6 or HTML5 to get to the data...
+
 To give you another point of view, this would tell you how to start writing a client
 like OpenCPN or SeaWi...
 

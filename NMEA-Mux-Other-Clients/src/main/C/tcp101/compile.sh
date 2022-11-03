@@ -13,7 +13,7 @@ if [[  ${RESP} =~ ^(yes|y|Y)$ ]]; then
    DEBUG_FLAG="-D_DEBUG"
 fi
 # Here we go
-gcc ${DEBUG_FLAG} *.c -o httpClient
+gcc ${DEBUG_FLAG} *.c -o tcpClient
 #
 if [[ $? -ne 0 ]]; then
     echo "Compilation failed!.."
@@ -29,4 +29,6 @@ if [[ ! ${RESP} =~ ^(yes|y|Y)$ ]]; then
    exit 0
 fi
 #
-./run.sh
+# ./run.sh
+echo -e "Type [Ctrl+C] to stop the program"
+./tcpClient
