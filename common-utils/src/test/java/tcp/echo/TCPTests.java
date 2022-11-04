@@ -17,12 +17,12 @@ public class TCPTests {
 
 	@Before
 	public void setup() {
-		System.out.println(">>> Test Setup");
+		System.out.printf("(%s) >>> Test Setup\n", this.getClass().getName());
 		Thread tcpServer = new Thread(() -> {
 			try {
 				server = new TCPServer();
 				server.start(port);
-				System.out.println("TCP Server is started on port " + port);
+				System.out.printf("(%s) TCP Server is started on port %d\n", this.getClass().getName(), port);
 			} catch (Exception ex) {
 				fail(ex.toString());
 			}
@@ -30,7 +30,7 @@ public class TCPTests {
 		tcpServer.start(); // A Thread
 		// Wait?
 		try {
-			System.out.println(">>> Waiting for the server to come up.");
+			System.out.printf("(%s) >>> Waiting for the server to come up.\n", this.getClass().getName());
 			Thread.sleep(2_000L);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -62,12 +62,12 @@ public class TCPTests {
 			String resp1 = client.sendMessage("hello");
 			String resp2 = client.sendMessage("world");
 			String resp3 = client.sendMessage("!");
-			String resp4 = client.sendMessage(".");
+			String resp4 = client.sendMessage("."); // Exit signal
 
-			System.out.println("Returned 1: " + resp1);
-			System.out.println("Returned 2: " + resp2);
-			System.out.println("Returned 3: " + resp3);
-			System.out.println("Returned 4: " + resp4);
+			System.out.printf("(%s) Returned 1: %s\n", this.getClass().getName(), resp1);
+			System.out.printf("(%s) Returned 2: %s\n", this.getClass().getName(), resp2);
+			System.out.printf("(%s) Returned 3: %s\n", this.getClass().getName(), resp3);
+			System.out.printf("(%s) Returned 4: %s\n", this.getClass().getName(), resp4);
 
 			assertEquals("hello", resp1);
 			assertEquals("world", resp2);

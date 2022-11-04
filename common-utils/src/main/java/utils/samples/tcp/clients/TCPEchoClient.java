@@ -31,7 +31,7 @@ public class TCPEchoClient {
 	public static void main(String... args) {
 		TCPEchoClient client = new TCPEchoClient();
 		try {
-			client.startConnection("127.0.0.1", 1024);
+			client.startConnection("127.0.0.1", 1_024);
 			String response = client.sendMessage("hello server!");
 			System.out.printf("Server responded %s\n", response);
 		} catch (Exception ex) {

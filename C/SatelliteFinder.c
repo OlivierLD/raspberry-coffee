@@ -1,4 +1,6 @@
 /*
+ * Among 4 geo-stationary satellites, find the one to target (highest elevation).
+ *
  * Compile with
  * gcc -o SatelliteFinder SatelliteFinder.c
  ***********************************************************************
@@ -17,6 +19,7 @@
 typedef struct {
   char name[48];
   double longitude;
+  // latitude is always 0
 } Satellite;
 
 typedef struct {
@@ -36,10 +39,12 @@ double toRadians(double val) {
 double azimuth(double satLng, double earthStationLat, double earthStationLng) {
   double deltaG = toRadians(earthStationLng - satLng);
   double earthStationAzimuth = 180 + toDegrees(atan(tan(deltaG) / sin((toRadians(earthStationLat)))));
-  if (earthStationLat < 0)
+  if (earthStationLat < 0) {
     earthStationAzimuth -= 180;
-  if (earthStationAzimuth < 0)
+  }
+  if (earthStationAzimuth < 0) {
     earthStationAzimuth += 360;
+  }
   return earthStationAzimuth;
 }
 
@@ -82,11 +87,16 @@ char * toHexStr(double val, char type) {
 }
 
 int main(int argc, char **argv) {
-// 2010 48th Ave, SF
-  double lat = 37.7489;
-  double lng = -122.5070;
+// 2010 48th Ave, SF (default position)
+  // double lat = 37.7489;
+  // double lng = -122.5070;
+
+// Belz
+  double lat = 47.677667;
+  double lng = -3.135667;
 
 //fprintf(stdout, "Received %d arguments\n", argc);
+  // Parse CLI parameters
   int arg;
   for (arg=1; arg<argc; arg++) {
     char * argument = argv[arg];
@@ -106,6 +116,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  // Their latitude is 0 (Equator)
   const Satellite one   = { "I-4 F1 Asia-Pacific", 143.5 };
   const Satellite two   = { "I-4 F2 EMEA (Europe, Middle East and Africa)", 63.0 };
   const Satellite three = { "I-4 F3 Americas", -97.6 };
@@ -126,16 +137,18 @@ int main(int argc, char **argv) {
   Satellite toUse;
   Result finalResult;
   double maxAlt = -DBL_MAX;
+  // Find the highest one (maximum elevation)
   for (i=0; i<4; i++) {
     Result result = aim(satellites[i], lat, lng);
-//  fprintf(stdout, "-> %s: Z: %f° (true), el: %f°, tilt: %f°\n", satellites[i].name, result.zDegrees, result.elevDegrees, result.tilt);
+    fprintf(stdout, "\t... -> %s: \tZ: %f° (true), \tel: %f°, \ttilt: %f°\n", satellites[i].name, result.zDegrees, result.elevDegrees, result.tilt);
     if (result.elevDegrees > maxAlt) {
       maxAlt = result.elevDegrees;
       toUse = satellites[i];
       finalResult = result;
     }
   }
-  fprintf(stdout, "\nuse %s: El %.02f°, Z %.02f° (true), Tilt %.02f°\n", toUse.name, finalResult.elevDegrees, finalResult.zDegrees, finalResult.tilt);
+  fprintf(stdout, "\nUse %s: El %.02f°, Z %.02f° (true), Tilt %.02f°\n", toUse.name, finalResult.elevDegrees, finalResult.zDegrees, finalResult.tilt);
+
   return 0; // All good!
 }
 

@@ -4,24 +4,34 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import utils.samples.tcp.clients.TCPEchoClient;
+import utils.samples.tcp.echo.TCPMultiServer;
 import utils.samples.tcp.echo.TCPServer;
+
+import java.net.SocketException;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.fail;
 
 public class TCPMultiTests {
 
-	private TCPServer server;
+	private TCPMultiServer server;
 	private final int PORT = 5_555;
 
 	@Before
 	public void setup() {
-		System.out.println(">>> Test Setup");
+		System.out.printf(">>> (%s) Test Setup\n", this.getClass().getName());
 		Thread tcpServer = new Thread(() -> {
 			try {
-				server = new TCPServer();
+				server = new TCPMultiServer();
 				server.start(PORT);
-				System.out.println("TCP Server is started on port " + PORT);
+				System.out.printf("(%s) TCP Server is started on port %d\n", this.getClass().getName(), PORT);
+			} catch (SocketException se) {
+				if (se.getMessage().startsWith("Socket closed")) {
+					System.out.printf("(managed exception) Socket closed...\n");
+				} else {
+					se.printStackTrace();
+					fail(se.toString());
+				}
 			} catch (Exception ex) {
 				fail(ex.toString());
 			}
@@ -29,7 +39,7 @@ public class TCPMultiTests {
 		tcpServer.start(); // A Thread
 		// Wait?
 		try {
-			System.out.println(">>> Waiting for the server to come up.");
+			System.out.printf(">>> (%s) Waiting for the server to come up.\n", this.getClass().getName());
 			Thread.sleep(2_000L);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -39,7 +49,7 @@ public class TCPMultiTests {
 	@After
 	public void tearDown() {
 		try {
-			System.out.println("Tearing down...");
+			System.out.printf("(%s) Tearing down...\n", this.getClass().getName());
 //			client.sendMessage("/exit");
 			server.stop();
 		} catch (Exception ex) {
@@ -47,23 +57,22 @@ public class TCPMultiTests {
 		}
 	}
 
-
 	@Test
 	public void givenClient1_whenServerResponds_thenCorrect() {
 		TCPEchoClient client1 = new TCPEchoClient();
 		try {
 			client1.startConnection("127.0.0.1", PORT);
-			String msg1 = client1.sendMessage("hello");
-			String msg2 = client1.sendMessage("world");
+			String msg1 = client1.sendMessage("HELLO");
+			String msg2 = client1.sendMessage("WORLD");
 			String terminate = client1.sendMessage(".");
 
-			System.out.println("msg1:" + msg1);
-			System.out.println("msg2:" + msg2);
-			System.out.println("terminate:" + terminate);
+			System.out.printf("(%s) msg1: %s\n", this.getClass().getName(), msg1);
+			System.out.printf("(%s) msg2: %s\n", this.getClass().getName(), msg2);
+			System.out.printf("(%s) terminate: %s\n", this.getClass().getName(), terminate);
 
-			assertEquals(msg1, "hello");
-			assertEquals(msg2, "world");
-			assertEquals(terminate, "good bye");
+			assertEquals(msg1, "OLLEH");
+			assertEquals(msg2, "DLROW");
+			assertEquals(terminate, "bye");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			fail();
@@ -85,13 +94,13 @@ public class TCPMultiTests {
 			String msg2 = client2.sendMessage("world");
 			String terminate = client2.sendMessage(".");
 
-			System.out.println("msg1:" + msg1);
-			System.out.println("msg2:" + msg2);
-			System.out.println("terminate:" + terminate);
+			System.out.printf("(%s) msg1: %s\n", this.getClass().getName(), msg1);
+			System.out.printf("(%s) msg2: %s\n", this.getClass().getName(), msg2);
+			System.out.printf("(%s) terminate: %s\n", this.getClass().getName(), terminate);
 
-			assertEquals(msg1, "hello");
-			assertEquals(msg2, "world");
-			assertEquals(terminate, "good bye");
+			assertEquals(msg1, "olleh");
+			assertEquals(msg2, "dlrow");
+			assertEquals(terminate, "bye");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			fail();

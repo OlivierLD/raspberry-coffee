@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 
-// An example...
+// An example (GTK)...
 
 int count = 0;
 

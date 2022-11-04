@@ -21,7 +21,7 @@ public class TCPServer {
 		String inputLine;
 		while ((inputLine = in.readLine()) != null) {
 			if (".".equals(inputLine)) {
-				out.println("good bye");
+				out.println("good bye"); // Response
 				break;
 			}
 			out.println(inputLine);
@@ -29,14 +29,23 @@ public class TCPServer {
 	}
 
 	public void stop() throws Exception {
-		in.close();
-		out.close();
+		System.out.printf("(%s) Stopping server\n", this.getClass().getName());
+		if (in != null) {
+			in.close();
+		} else {
+			System.out.printf("(%s) InputStream is null\n", this.getClass().getName());
+		}
+		if (out != null) {
+			out.close();
+		} else {
+			System.out.printf("(%s) OutputStream is null\n", this.getClass().getName());
+		}
 		clientSocket.close();
 		serverSocket.close();
 	}
 
 	public static void main(String... args) throws Exception {
 		TCPServer server = new TCPServer();
-		server.start(4444);
+		server.start(4_444);
 	}
 }

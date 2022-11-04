@@ -1,3 +1,5 @@
+package utils;
+
 import org.junit.Test;
 import utils.StaticUtil;
 

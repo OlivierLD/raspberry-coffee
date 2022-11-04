@@ -31,7 +31,7 @@ public class TCPGreetingsClient {
 	public static void main(String... args) {
 		TCPGreetingsClient client = new TCPGreetingsClient();
 		try {
-			client.startConnection("127.0.0.1", 6666);
+			client.startConnection("127.0.0.1", 6_666);
 			String response = client.sendMessage("hello server");
 			System.out.printf("Server responded %s\n", response);
 		} catch (Exception ex) {

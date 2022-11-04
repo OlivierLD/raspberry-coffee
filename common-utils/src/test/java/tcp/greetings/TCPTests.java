@@ -30,12 +30,12 @@ public class TCPTests {
 				ex.printStackTrace();
 				fail();
 			}
-			System.out.println("Server started, ready for clients");
+			System.out.printf("\t>> (%s) Server started, ready for clients\n", this.getClass().getName());
 		}, "server-thread");
 		serverThread.start();
 		// Wait for the server to start (there might be a better way ;) )
 		TimeUtil.delay(2_000L);
-		System.out.println("Ready for tests, let's go.");
+		System.out.printf("\t(%s) Ready for tests, let's go.\n", this.getClass().getName());
 
 		client = new TCPGreetingsClient();
 		try {

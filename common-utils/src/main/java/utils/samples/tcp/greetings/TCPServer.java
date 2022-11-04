@@ -13,11 +13,11 @@ public class TCPServer {
 	private BufferedReader in;
 
 	public void start(int port) throws Exception {
-		System.out.println("Starting server");
+		System.out.printf("(%s) Starting server\n", this.getClass().getName());
 		serverSocket = new ServerSocket(port);
-		System.out.println("Server waiting for connection");
+		System.out.printf("(%s) Server waiting for connection\n", this.getClass().getName());
 		clientSocket = serverSocket.accept();
-		System.out.println("Server accepted connection");
+		System.out.printf("(%s) Server accepted connection\n", this.getClass().getName());
 		out = new PrintWriter(clientSocket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		String greeting = in.readLine();
@@ -26,7 +26,7 @@ public class TCPServer {
 		} else {
 			out.println("unrecognized greeting");
 		}
-		System.out.println("One time greeting delivered, Server is done.");
+		System.out.printf("(%s) One time greeting delivered, Server is done.\n", this.getClass().getName());
 	}
 
 	public void stop() throws Exception {
@@ -38,6 +38,6 @@ public class TCPServer {
 
 	public static void main(String... args) throws Exception {
 		TCPServer server = new TCPServer();
-		server.start(6666);
+		server.start(6_666);
 	}
 }
