@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+    id "application"
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://mvnrepository.com/artifact" }
+}
+
+// sourceCompatibility = 1.8
+
+dependencies {
+    testImplementation "junit:junit:$junit_version"
+}
+
+mainClassName = "tcp.server.TCPMultiServer"
+
+shadowJar {
+    zip64 true
+    // to create an executable jar-file. Requires mainClassName.
+    mergeServiceFiles()
+}

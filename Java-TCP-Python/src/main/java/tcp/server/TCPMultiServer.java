@@ -1,4 +1,4 @@
-package utils.samples.tcp.echo;
+package tcp.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class TCPMultiServer {
 	}
 
 	/**
-	 * Stop the server
+     * Stop the server
 	 * @throws Exception
 	 */
 	public void stop() throws Exception {
@@ -96,6 +96,7 @@ public class TCPMultiServer {
 						break;
 					} else {
 						// The actual server's job.
+						// Sends a line (finished with a LF) to the client.
 						out.println(new StringBuilder(inputLine).reverse().toString()); // Return what's received, backwards.
 					}
 				}
@@ -120,6 +121,9 @@ public class TCPMultiServer {
 	private final static String PORT_PREFIX = "--port:";
 
 	public static void main(String... args) throws Exception {
+
+		System.out.println("Type [Ctrl-C] stop stop the server.");
+
 		final AtomicInteger port = new AtomicInteger(5_555);
 		// Parse CLI prms
 		Arrays.asList(args).forEach(arg -> {
@@ -132,6 +136,7 @@ public class TCPMultiServer {
 			}
 		});
 		TCPMultiServer server = new TCPMultiServer();
+		final Thread me = Thread.currentThread();
 
 		// Manage Ctrl-C
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -139,7 +144,13 @@ public class TCPMultiServer {
 			try {
 				server.clientList.forEach(clientThread -> {
 					try {
-						clientThread.join();
+						synchronized(me) {
+							if (clientThread.isAlive()) {
+								System.out.printf("Server detected a live client!\n");
+								clientThread.interrupt();
+							}
+							clientThread.join(500L);
+						}
 					} catch (InterruptedException e) {
 						System.err.println("In joining...");
 						e.printStackTrace();

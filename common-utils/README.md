@@ -96,7 +96,14 @@ The labels are applied to the *physical* pin numbers.
 
 ---
 ## Astro Computer
-> Moved to a sub-module.
+> Moved to a `astro-computer/AstroComputer`.
+
+
+## Misc clients
+### TCP
+- From one terminal, start `./start.tcp.server.sh`
+- From another terminal (one or more terminals), start `./start.tcp.client.sh`
+- And see for yourself!
 
 ... and more to come!
 
