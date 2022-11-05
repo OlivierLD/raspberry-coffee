@@ -7,6 +7,7 @@ import sys
 import traceback
 import threading
 import signal
+import json
 from typing import List
 
 
@@ -55,8 +56,9 @@ print('...Connected')
 
 
 def help() -> None:
-    print("To exit, type Q, QUIT, or EXIT (lower or upper case)")
+    print("To exit, type Q, QUIT, or EXIT (lower or upper case). Or try '.'")
     print("To see this message again, type H (lower or upper case)")
+    print("To set/unset the output message to JSON, type J (lower or upper case)")
     print("To pause the continuous display, type P (lower or upper case)")
     print("To resume a paused display, type R (lower or upper case)")
     input(">> Hit return NOW to move on")
@@ -66,11 +68,13 @@ help()
 
 keep_looping: bool = True
 paused: bool = False
+json_output: bool = False
 
 RED_ON: str = "\033[031m"
 RED_OFF: str = "\033[0m"
 
 NMEA_EOS: str = "\r\n"  # aka CR-LF
+LF: str = "\n"
 
 
 def keep_receiving(_socket: socket.socket) -> None:
@@ -129,17 +133,26 @@ while keep_looping:
                     paused = True
                 elif user_input.upper() == 'R':  # Resume
                     paused = False
-                else:  # Send to server, with a NL at the end.
-                    sock.sendall((user_input + '\n').encode())
+                elif user_input.upper() == 'J':  # JSON output on/off
+                    json_output = not json_output
+                    print(f"json_output is now {json_output}")
+                else:  # Send to server, with a LF at the end.
+                    mess: str
+                    if json_output and user_input != '.':
+                        data = {}
+                        data['client-data'] = user_input
+                        mess = json.dumps(data) + LF
+                    else:
+                        mess = user_input + LF
+                    sock.sendall(mess.encode())  # As byte array
             else:
-                print("No empty message please.")
+                print("Empty message. Doing nothing.")
         except Exception as ex:
             print("Exception: {}".format(ex))
             traceback.print_exc(file=sys.stdout)
         # finally:
         #     print('closing socket')
         #     sock.close()
-
 
 print('closing socket')
 sock.close()

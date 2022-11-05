@@ -1,14 +1,15 @@
 package tcp.server;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,6 +17,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Sends back to the client what the client told the server.
  */
 public class TCPMultiServer {
+
+	private final static ObjectMapper mapper = new ObjectMapper(); // Jackson
+
 	private ServerSocket serverSocket;
 	private int nbConnectedClients = 0;
 	private final List<EchoClientHandler> clientList = new ArrayList<>();
@@ -95,7 +99,24 @@ public class TCPMultiServer {
 					} else {
 						// The actual server's job.
 						// Sends a line (finished with a LF) to the client.
-						out.println(new StringBuilder(inputLine).reverse()); // Return what's received, backwards.
+
+						boolean json = false;
+						// Is that a JSON payload ?
+						try {
+							Object obj = mapper.readValue(inputLine, Object.class);
+							System.out.println("Returned a " + obj.getClass().getName());
+							json = true;
+							String value = ((Map<String, Object>)obj).get("client-data").toString();
+							Map<String, Object> serverData = new HashMap<>();
+							serverData.put("server-data", new StringBuilder(value).reverse().toString());
+							out.println(mapper.writeValueAsString(serverData));
+						} catch (JsonParseException jpe) {
+							// Send back as a String
+							json = false;
+						}
+						if (!json) {
+							out.println(new StringBuilder(inputLine).reverse()); // Return what's received, backwards.
+						}
 					}
 				}
 
