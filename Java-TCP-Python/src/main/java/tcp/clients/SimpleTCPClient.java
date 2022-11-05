@@ -26,8 +26,8 @@ public class SimpleTCPClient {
 
 	public String sendMessage(String msg) throws Exception {
 		out.println(msg);
-		String resp = in.readLine();
-		return resp;
+		/*String resp =*/ return in.readLine();
+		// return resp;
 	}
 
 	public void stopConnection() throws Exception {
@@ -44,12 +44,12 @@ public class SimpleTCPClient {
 		final AtomicInteger port = new AtomicInteger(5_555);
 		final AtomicReference<String> host = new AtomicReference<>("127.0.0.1");
 
-		// Parse CLI prms
+		// Parse CLI parameters
 		Arrays.asList(args).forEach(arg -> {
 			if (arg.startsWith(PORT_PREFIX)) {
 				try {
 					port.set(Integer.parseInt(arg.substring(PORT_PREFIX.length())));
-					System.out.printf("(%s) Port now set to %d\n", SimpleTCPClient.class.getName(), port);
+					System.out.printf("(%s) Port now set to %d\n", SimpleTCPClient.class.getName(), port.get());
 				} catch (NumberFormatException nfe) {
 					System.out.printf("Invalid port in [%s], keeping default %d\n", arg, port.get());
 					System.out.printf("(%s) Host is now %s\n", SimpleTCPClient.class.getName(), host);

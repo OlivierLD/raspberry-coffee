@@ -18,17 +18,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TCPMultiServer {
 	private ServerSocket serverSocket;
 	private int nbConnectedClients = 0;
-	private List<EchoClientHandler> clientList = new ArrayList<>();
+	private final List<EchoClientHandler> clientList = new ArrayList<>();
 	/**
 	 * Start the server
 	 * @param port TCP Port
-	 * @throws Exception
+	 * @throws Exception just in case...
 	 */
 	public void start(int port) throws Exception {
 		System.out.printf("(%s) - Starting server on port %d\n", this.getClass().getName(), port);
 		serverSocket = new ServerSocket(port);
-		while (true) {
-			EchoClientHandler newClient = new EchoClientHandler(this, serverSocket.accept());
+		while (true) { // Breaks on Exception
+			EchoClientHandler newClient = new EchoClientHandler(this, serverSocket.accept()); // Each accept loops.
 			newClient.start();
 			clientList.add(newClient);
 		}
@@ -36,7 +36,7 @@ public class TCPMultiServer {
 
 	/**
      * Stop the server
-	 * @throws Exception
+	 * @throws Exception Bam!
 	 */
 	public void stop() throws Exception {
 		System.out.printf("(%s) Stopping TCP Server\n", this.getClass().getName());
@@ -68,8 +68,6 @@ public class TCPMultiServer {
 	private static class EchoClientHandler extends Thread {
 		private final TCPMultiServer server;
 		private final Socket clientSocket;
-		private PrintWriter out;
-		private BufferedReader in;
 
 		public EchoClientHandler(TCPMultiServer server, Socket socket) {
 			this.server = server;
@@ -84,8 +82,8 @@ public class TCPMultiServer {
 
 		public void run() {
 			try {
-				out = new PrintWriter(this.clientSocket.getOutputStream(), true);
-				in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+				PrintWriter out = new PrintWriter(this.clientSocket.getOutputStream(), true);
+				BufferedReader in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
 
 				String inputLine;
 				// Loops until a "." is received from the client.
@@ -97,7 +95,7 @@ public class TCPMultiServer {
 					} else {
 						// The actual server's job.
 						// Sends a line (finished with a LF) to the client.
-						out.println(new StringBuilder(inputLine).reverse().toString()); // Return what's received, backwards.
+						out.println(new StringBuilder(inputLine).reverse()); // Return what's received, backwards.
 					}
 				}
 
@@ -108,7 +106,7 @@ public class TCPMultiServer {
 
 				System.out.printf("(%s) - End of Client Thread (%s), %d client%s left.\n",
 						this.getClass().getName(),
-						this.clientSocket.toString(),
+						this.clientSocket,
 						this.server.nbConnectedClients,
 						this.server.nbConnectedClients > 1 ? "s" : "");
 
@@ -146,7 +144,7 @@ public class TCPMultiServer {
 					try {
 						synchronized(me) {
 							if (clientThread.isAlive()) {
-								System.out.printf("Server detected a live client!\n");
+								System.out.println("Server detected a live client!");
 								clientThread.interrupt();
 							}
 							clientThread.join(500L);
