@@ -98,4 +98,16 @@ But one may very well want to use another language than ES6 or HTML5 to get to t
 To give you another point of view, this would tell you how to start writing a client
 like OpenCPN or SeaWi...
 
+### TCP Channel
+The NMEA-multiplexer implements and supports a TCP channel. In other words, the TCP channel is a TCP client that assumes that the server
+will send NMEA sentences through this channel. The client connects to the server (with its name or IP, and port), and starts receiving.    
+This TCP server can indeed be implemented in many languages...  
+See in [Java-TCP-Python](../Java-TCP-Python/src/main/python/nmea/README.md) for a Python example of such a TCP server.
+
+
+# TODO (in progress)
+NMEA Parsers
+- in Python
+- in C
+
 ---

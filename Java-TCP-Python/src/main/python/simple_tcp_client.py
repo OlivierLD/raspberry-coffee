@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
+# This is a simple TCP Client.
+#
+# There is a thread to receive
+# User input is done in the main thread
+#
 # Good doc at https://realpython.com/python-sockets/#echo-client
-
+#
 import socket
 import sys
 import traceback
@@ -9,10 +14,6 @@ import threading
 import signal
 import json
 from typing import List
-
-
-# There is a thread to receive
-# User input is done in the main thread
 
 machine_name: str = "127.0.0.1"  # localhost
 tcp_port: int = 7002
@@ -55,13 +56,16 @@ sock.connect(server_address)
 print('...Connected')
 
 
-def help() -> None:
+def help(wait: bool = False) -> None:
+    print("---------------------- H E L P --------------------------------------")
     print("To exit, type Q, QUIT, or EXIT (lower or upper case). Or try '.'")
     print("To see this message again, type H (lower or upper case)")
     print("To set/unset the output message to JSON, type J (lower or upper case)")
     print("To pause the continuous display, type P (lower or upper case)")
     print("To resume a paused display, type R (lower or upper case)")
-    input(">> Hit return NOW to move on")
+    print("---------------------------------------------------------------------")
+    if wait:
+        input(">> Hit return NOW to move on")
 
 
 help()
@@ -128,7 +132,7 @@ while keep_looping:
         try:
             if len(user_input) > 0:   # User's message must not be empty. I've decided.
                 if user_input.upper() == 'H':    # Help
-                    help()
+                    help(True)
                 elif user_input.upper() == 'P':  # Pause
                     paused = True
                 elif user_input.upper() == 'R':  # Resume
