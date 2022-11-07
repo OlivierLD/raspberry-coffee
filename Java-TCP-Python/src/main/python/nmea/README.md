@@ -1,5 +1,5 @@
 # Python TCP Server
-Can be used from the NMEA-multiplexer, using its `TCP` channel (but not only).
+Can be used from the NMEA-multiplexer, using its `TCP` channel.
 
 ## Several components
 - `checksum.py` contains utilities for NMEA CheckSum.
@@ -15,12 +15,12 @@ Can be used from the NMEA-multiplexer, using its `TCP` channel (but not only).
 ---
 
 ## At work
-To start the server (port - and other parameters - can be overridden):
+To start the server (port - and other parameters - can be overridden)
 ```
 $ python src/main/python/nmea/TCP_ZDA_server.py --port:7002 --verbose:true
 ```
 
-To start a client (just an example):
+To start a client (just an example)
 ```
 $ python src/main/python/simple_tcp_client.py --machine-name:localhost --port:7002
 ```
@@ -35,21 +35,17 @@ context:
   init.cache: true
 channels:
   - type: tcp
-    server: localhost
     port: 7002
     verbose: true
 forwarders:
   - type: "tcp"
     port: 7001
 ```
-Notice that this TCP server can run anywhere (see the `server` property above), as long as it is on a network accessible from the NMEA-multiplexer. Which brings us back to the concept of "flake computing".
 
 ## And then
 The structure of `TCP_ZDA_server.py` can be used as the scaffolding for 
 other TCP servers, using sensors to get the data to forward to the TCP channels.  
 Many - if not all - the drivers coming with the breakout board are written in Python.
 Wrapping this Python code into a similar TCP structure should be a no-brainer.
-
-More to come about that.
 
 --- 
