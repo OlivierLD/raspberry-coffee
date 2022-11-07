@@ -85,6 +85,8 @@ while [[ "${GO}" == "true" ]]; do
 	echo -e "| >> Hint: use './killproxy.sh' to stop any running Proxy Server 💣                       |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  1. Time simulated by a ZDA generator; HTTP Server, rich Web UI. Does not require a GPS |"
+	echo -e "|  1a. Time from a TCP ZDA generator (port 7002); HTTP Server, rich Web UI.               |"
+	echo -e "|      Does not require a GPS                                                             |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
 	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
@@ -172,6 +174,10 @@ while [[ "${GO}" == "true" ]]; do
 	    case "${HELP_ON}" in
 	      "1")
 	        PROP_FILE=nmea.mux.no.gps.yaml
+	        displayHelp ${HELP_ON} ${PROP_FILE}
+	        ;;
+	      "1a")
+	        PROP_FILE=nmea.mux.tcp.zda.yaml
 	        displayHelp ${HELP_ON} ${PROP_FILE}
 	        ;;
 	      "2")
@@ -297,6 +303,26 @@ while [[ "${GO}" == "true" ]]; do
 	      echo -e "Running command: [${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &]"
 	    fi
 	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5  # Wait (5s) for the server to be operational
+		    openBrowser "http://localhost:${HTTP_PORT}/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    fi
+	    echo -e "Also try: curl -X GET http://localhost:${HTTP_PORT}/mux/cache | jq"
+	    GO=false
+	    ;;
+	  "1a")
+  	  PROP_FILE=nmea.mux.tcp.zda.yaml
+	    echo -e "Launching Nav Server with ${PROP_FILE}"
+	    # QUESTION: a 'screen' option ?
+	    # screen -S navserver -dm "sleep 5; ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS}"
+	    # echo -e "A screen session 'navserver' was started"
+	    #
+	    # bash -c "exec -a ProcessName Command"
+	    if [[ "${CMD_VERBOSE}" == "Y" ]]; then
+	      echo -e "Running command: [./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &]"
+	    fi
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5  # Wait (5s) for the server to be operational

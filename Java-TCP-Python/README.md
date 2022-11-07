@@ -32,6 +32,15 @@ the Python TCP wrapper should not be a big deal. And on top of that, it could be
 Let's see if we can come up with some scaffolding for this structure.
 
 ## Examples
+As opposed to HTTP, TCP is a connected protocol.  
+An HTTP request works like this: 
+- connect to the server
+- make a request
+- get the response
+- disconnect from the server
+
+A TCP client would connect to the server; once connected, it can make requests, and/or get responses.
+And this until the client explicitly disconnects.
 
 ### All Java (Java Server, Java Client(s))
 This is a simple client-server duo. They both exchange _lines_ (finished with a NL).
@@ -48,5 +57,9 @@ Same server as above, start a TCP client in python:
 - `python src/main/python/simple_tcp_client.py --port:5555`  
 
 This is - as above - an interactive client. 
+
+### Python Server, Java Client(s)
+Look into the `python/nmea` folder.  
+
 
 ---
