@@ -63,7 +63,7 @@ public class BME280Reader extends NMEAReader {
 									String.valueOf(deviceIdx++)), // %, Humidity
 							new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
 									temperature,
-									String.valueOf(deviceIdx++)), // Celcius, Temperature
+									String.valueOf(deviceIdx++)), // Celsius, Temperature
 							new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
 									pressure,
 									String.valueOf(deviceIdx++))); // Pascal, pressure

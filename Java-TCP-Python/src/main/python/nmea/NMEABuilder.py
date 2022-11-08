@@ -11,18 +11,18 @@ def build_ZDA(utc_ms: int = None) -> str:
     Builds the ZDA sentence for given timestamp.
     :param utc_ms: if provided, in ms !!! (python default is seconds)
     :return: the NMEA ZDA sentence
-    """
 
-    # Structure is:
-    # $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
-    # $GPZDA,201530.00,04,07,2002,00,00*60
-    #        |         |  |  |    |  |
-    #        |         |  |  |    |  local zone minutes 0..59
-    #        |         |  |  |    local zone hours -13..13
-    #        |         |  |  year
-    #        |         |  month
-    #        |         day
-    #        HrMinSec(UTC)
+    Structure is:
+    $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
+    $GPZDA,201530.00,04,07,2002,00,00*60
+           |         |  |  |    |  |
+           |         |  |  |    |  local zone minutes 0..59
+           |         |  |  |    local zone hours -13..13
+           |         |  |  year
+           |         |  month
+           |         day
+           HrMinSec(UTC)
+    """
     sentence: str = "PYZDA,"
 
     if utc_ms is None:
@@ -61,7 +61,45 @@ def build_ZDA(utc_ms: int = None) -> str:
     return "$" + sentence
 
 
+def build_MTA(temperature: float) -> str:
+    """
+    Build the MTA String, for the given temperature.
+    """
+    sentence: str = "PYMTA,"
+    sentence += f"{temperature:0.1f}"
+    cs: int = checksum.calculate_check_sum(sentence)
+    str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
+    while len(str_cs) < 2:
+        str_cs = '0' + str_cs
+    sentence += ("*" + str_cs.upper())
+
+    return "$" + sentence
+
+
+def build_MMB(mb_pressure: float) -> str:
+    """
+    Build MMB sentence. 
+    mbPressure: pressure, in mb
+    """
+    sentence: str = "PYMMB,"
+    sentence += f"{mb_pressure / 33.8600:0.4f},I,"   # Inches of Hg
+    sentence += f"{mb_pressure / 1_000:0.4f},B"      # Bars. 1 mb = 1 hPa
+    cs: int = checksum.calculate_check_sum(sentence)
+    str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
+    while len(str_cs) < 2:
+        str_cs = '0' + str_cs
+    sentence += ("*" + str_cs.upper())
+
+    return "$" + sentence
+
+
 # This is for tests
 if __name__ == '__main__':
     print(f"Generated ZDA: {build_ZDA()}")
+    
+    print(f"Generated MTA: {build_MTA(12.34)}")
+    print(f"Generated MTA: {build_MTA(.34)}")
+    print(f"Generated MTA: {build_MTA(12.34567)}")
+
+    print(f"Generated MMB: {build_MMB(1013.25)}")
 

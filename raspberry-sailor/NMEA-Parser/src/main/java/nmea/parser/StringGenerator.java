@@ -88,7 +88,7 @@ public class StringGenerator {
    */
 
 	public enum XDRTypes { // See above for more details
-		TEMPERATURE("C", "C"), // in Celcius
+		TEMPERATURE("C", "C"), // in Celsius
 		ANGULAR_DISPLACEMENT("A", "D"), // In degrees
 		LINEAR_DISPLACEMENT("D", "M"), // In meters
 		FREQUENCY("F", "H"), // In Hertz
@@ -311,8 +311,7 @@ public class StringGenerator {
 	/*
 	 * Barometric pressure
 	 */
-	public static String generateMMB(String devicePrefix, double mbPressure) // pressure in mb
-	{
+	public static String generateMMB(String devicePrefix, double mbPressure) { // pressure in mb
 		String mmb = devicePrefix + "MMB,";
 		mmb += (PRMSL_FMT.format(mbPressure / 33.8600) + ",I,"); // Inches of Hg
 		mmb += (PRMSL_FMT.format(mbPressure / 1_000) + ",B");     // Bars. 1 mb = 1 hPa
@@ -326,8 +325,7 @@ public class StringGenerator {
 	/*
 	 * Air temperature
 	 */
-	public static String generateMTA(String devicePrefix, double temperature) // in Celcius
-	{
+	public static String generateMTA(String devicePrefix, double temperature) { // in Celsius
 		String mta = devicePrefix + "MTA,";
 		mta += (TEMP_FMT.format(temperature) + ",C");
 		// Checksum

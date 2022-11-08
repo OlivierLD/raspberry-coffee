@@ -322,6 +322,7 @@ while [[ "${GO}" == "true" ]]; do
 	    if [[ "${CMD_VERBOSE}" == "Y" ]]; then
 	      echo -e "Running command: [./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &]"
 	    fi
+	    # TODO ? Make sure the TCP server is started...
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "${LAUNCH_BROWSER}" == "Y" ]]; then
 		    echo -e ">>> Waiting for the server to start..."

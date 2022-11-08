@@ -11,6 +11,7 @@ DEBUG: bool = False
 
 def rmc_parser(sentence: str) -> Dict[str, Dict]:
     """
+    Recommended Minimum Navigation Information, C
     RMC Structure is
                                                                          12
               1      2 3        4 5         6 7     8     9      10    11
@@ -29,6 +30,8 @@ def rmc_parser(sentence: str) -> Dict[str, Dict]:
               |      Active or Void
               UTC
     
+    :param sentence: Original sentence, souyrce
+    :return: A Dict containing parsed elements
     """
     RMC_UTC: int = 1
     RMC_ACTIVE_VOID: int = 2
@@ -43,7 +46,7 @@ def rmc_parser(sentence: str) -> Dict[str, Dict]:
     RMC_VARIATION_SIGN: int = 11
     RMC_TYPE: int = 12
 
-    rmc_dict = {}
+    rmc_dict: Dict = { "source": sentence }
     sentence = sentence.strip()  # drops the \r\n
     members: list = sentence.split(',')
 
@@ -93,7 +96,9 @@ def rmc_parser(sentence: str) -> Dict[str, Dict]:
             if members[RMC_VARIATION_SIGN] == 'W':
                 variation = -variation
             rmc_dict["variation"] = variation
-
+    else:
+        rmc_dict["status"] = "void"
+        
     return {"rmc": rmc_dict}
 
 
@@ -101,8 +106,66 @@ def gsa_parser(sentence: str) -> Dict[str, str]:
     return {"gsa": sentence}
 
 
-def gll_parser(sentence: str) -> Dict[str, str]:
-    return {"gll": sentence}
+def gll_parser(sentence: str) -> Dict[str, Dict]:
+    """
+    Geographical Lat & Long
+
+    Structure is
+           1       2 3       4 5         6 7
+    $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A,D*hh
+           |       | |       | |         | |
+           |       | |       | |         | Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator (not always there)
+           |       | |       | |         A:data valid (Active), V: void
+           |       | |       | UTC of position
+           |       | |       Long sign :E/W
+           |       | Longitude
+           |       Lat sign :N/S
+           Latitude
+    
+    :param sentence: Original sentence, source
+    :return: A Dict containing parsed elements
+    """
+    GLL_LATITUDE_VALUE: int = 1
+    GLL_LATITUDE_SIGN: int = 2
+    GLL_LONGITUDE_VALUE: int = 3
+    GLL_LONGITUDE_SIGN: int = 4
+    GLL_UTC: int = 5
+    GLL_ACTIVE_VOID: int = 6
+    GLL_TYPE: int = 7
+
+    gll_dict: Dict = { "source": sentence }
+    sentence = sentence.strip()  # drops the \r\n
+    members: list = sentence.split(',')
+
+    if len(members[GLL_ACTIVE_VOID]) > 0 and members[GLL_ACTIVE_VOID] == 'A':
+        if len(members[GLL_UTC]) > 0:
+            hour: int = int(members[GLL_UTC][0:2])
+            minute: int = int(members[GLL_UTC][2:4])
+            second: float = float(members[GLL_UTC][4:])
+            gll_dict["utc"] = {
+                "hour": hour,
+                "minute": minute,
+                "second": second
+            }
+        if len(members[GLL_LATITUDE_VALUE]) > 0 and len(members[GLL_LATITUDE_SIGN]) > 0 and len(members[GLL_LONGITUDE_VALUE]) > 0 and len(members[GLL_LONGITUDE_SIGN]) > 0:
+            deg: str = members[GLL_LATITUDE_VALUE][0:2]
+            min: str = members[GLL_LATITUDE_VALUE][2:]
+            lat: float = utils.sex_to_dec(deg, min)
+            if members[GLL_LATITUDE_SIGN] == 'S':
+                lat = -lat
+            deg = members[GLL_LONGITUDE_VALUE][0:3]
+            min = members[GLL_LONGITUDE_VALUE][3:]
+            lng: float = utils.sex_to_dec(deg, min)
+            if members[GLL_LONGITUDE_SIGN] == 'W':
+                lng = -lng
+            gll_dict["pos"] = {
+                "latitude": lat,
+                "longitude": lng
+            }
+    else:
+        gll_dict["status"] = "void"
+
+    return {"gll": gll_dict}
 
 
 def gga_parser(sentence: str) -> Dict[str, str]:
@@ -117,18 +180,71 @@ def gsv_parser(sentence: str) -> Dict[str, str]:
     return {"gsv": sentence}
 
 
+def zda_parser(sentence: str) -> Dict[str, Dict]:
+    """
+    UTC DCate and Time
+
+    Structure is
+    $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
+           1         2  3  4
+    $GPZDA,201530.00,04,07,2002,00,00*60
+           |         |  |  |    |  |
+           |         |  |  |    |  local zone minutes 0..59
+           |         |  |  |    local zone hours -13..13
+           |         |  |  year
+           |         |  month
+           |         day
+           HrMinSec(UTC)
+
+    :param sentence: Original sentence, source
+    :return: A Dict containing parsed elements
+    """
+    ZDA_UTC: int = 1
+    ZDA_DAY: int = 2
+    ZDA_MONTH: int = 3
+    ZDA_YEAR: int = 4
+    ZDA_LOCAL_ZONE_HOURS: int = 5
+    ZDA_LOCAL_ZONE_MINUTES: int = 6
+
+    zda_dict: Dict = { "source": sentence }
+    sentence = sentence.strip()  # drops the \r\n
+    members: list = sentence.split(',')
+
+    if len(members[ZDA_UTC]) > 0:
+        hour: int = int(members[ZDA_UTC][0:2])
+        minute: int = int(members[ZDA_UTC][2:4])
+        second: float = float(members[ZDA_UTC][4:])
+        zda_dict["utc"] = {
+            "hour": hour,
+            "minute": minute,
+            "second": second
+        }
+    if len(members[ZDA_DAY]) > 0:
+        day: int = int(members[ZDA_DAY])
+        zda_dict["utc"]["day"] = day
+    if len(members[ZDA_MONTH]) > 0:
+        month: int = int(members[ZDA_MONTH])
+        zda_dict["utc"]["month"] = month
+    if len(members[ZDA_YEAR]) > 0:
+        year: int = int(members[ZDA_YEAR])
+        zda_dict["utc"]["year"] = year
+
+    return {"zda": zda_dict}
+
+
 NMEA_PARSER_DICT: Dict = {
     "GLL": gll_parser,
     "GSA": gsa_parser,
     "RMC": rmc_parser,
     "GGA": gga_parser,
     "VTG": vtg_parser,
-    "GSV": gsv_parser
+    "GSV": gsv_parser,
+    "ZDA": zda_parser
 }
 
 
 def parse_nmea_sentence(sentence: str) -> Dict:
-    nmea_dict = {}
+    nmea_dict: Dict = {}
     if sentence.startswith('$'):
         if sentence.endswith(NMEA_EOS):
             sentence = sentence.strip()  # drops the \r\n
@@ -173,4 +289,18 @@ if __name__ == '__main__':
     # nmea: str = "$GPRMC,170000.00,A,3744.79693,N,12223.30420,W,0.052,,200621,,,D*62"
     parsed: Dict = parse_nmea_sentence(nmea + NMEA_EOS)
     print(f"Parsed RMC: {parsed}")
+    print(f"Beautified:\n{json.dumps(parsed, sort_keys=False, indent=2)}")
+
+    print("---------------")
+
+    nmea = "$IIGLL,3739.854,N,12222.812,W,014003,A,A*49"
+    parsed = parse_nmea_sentence(nmea + NMEA_EOS)
+    print(f"Parsed GLL: {parsed}")
+    print(f"Beautified:\n{json.dumps(parsed, sort_keys=False, indent=2)}")
+
+    print("---------------")
+
+    nmea = "$GPZDA,201530.00,04,07,2002,00,00*60"
+    parsed = parse_nmea_sentence(nmea + NMEA_EOS)
+    print(f"Parsed ZDA: {parsed}")
     print(f"Beautified:\n{json.dumps(parsed, sort_keys=False, indent=2)}")
