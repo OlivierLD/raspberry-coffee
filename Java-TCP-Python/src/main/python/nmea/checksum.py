@@ -1,7 +1,7 @@
 
 from typing import Dict  # , List, Set, Tuple, Optional
 
-DEBUG: bool = True
+DEBUG: bool = False
 
 
 def calculate_check_sum(sentence: str) -> int:

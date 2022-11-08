@@ -2,10 +2,11 @@
 
 import checksum  # local script
 import utils     # local script
+import json
 from typing import Dict  # , List, Set, Tuple, Optional
 
 NMEA_EOS: str = '\r\n'
-DEBUG: bool = True
+DEBUG: bool = False
 
 
 def rmc_parser(sentence: str) -> Dict[str, Dict]:
@@ -147,16 +148,16 @@ def parse_nmea_sentence(sentence: str) -> Dict:
                     for key in NMEA_PARSER_DICT:
                         if key == sentence_id:
                             parser = NMEA_PARSER_DICT[key]  # TODO type 'function'
-                            print(f"parser is a {type(parser)}")
+                            # print(f"parser is a {type(parser)}")
                             break
                     if parser is None:
                         raise Exception("No parser exists for {}".format(sentence_id))
                     else:
                         if DEBUG:
                             print("Proceeding... {}".format(sentence_id))
-                        obj: Dict = parser(sentence)
+                        nmea_dict = parser(sentence)
                         if DEBUG:
-                            print("Parsed: {}".format(obj))
+                            print("Parsed: {}".format(nmea_dict))
             else:
                 raise Exception('Incorrect sentence prefix "{}". Should be 6 character long.'.format(sentence_prefix))
         else:
@@ -170,4 +171,6 @@ def parse_nmea_sentence(sentence: str) -> Dict:
 if __name__ == '__main__':
     nmea: str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A"
     # nmea: str = "$GPRMC,170000.00,A,3744.79693,N,12223.30420,W,0.052,,200621,,,D*62"
-    print(f"Parsed RMC: {parse_nmea_sentence(nmea + NMEA_EOS)}")
+    parsed: Dict = parse_nmea_sentence(nmea + NMEA_EOS)
+    print(f"Parsed RMC: {parsed}")
+    print(f"Beautified:\n{json.dumps(parsed, sort_keys=False, indent=2)}")
