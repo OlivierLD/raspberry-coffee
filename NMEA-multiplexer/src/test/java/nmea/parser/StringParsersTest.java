@@ -427,7 +427,7 @@ public class StringParsersTest {
 
         str = "$GPRMC,143040.000,V,3744.9330,N,12230.4192,W,000.0,000.0,060218,,,N*6A";
         valid = StringParsers.validCheckSum(str);
-        System.out.println("RMC Chain is " + (valid ? "" : "not ") + "valid");
+        System.out.println("RMC Chain is " + (valid ? "" : "not ") + "valid [" + str + "]");
         rmc = StringParsers.parseRMC(str);
         System.out.println("Parsed");
 
@@ -451,7 +451,7 @@ public class StringParsersTest {
 
         str = "$GPRMC,12,58,325,06,24,46,227,27,25,22,310,,17,13,064,*78";
         valid = StringParsers.validCheckSum(str);
-        System.out.println("RMC Chain is " + (valid ? "" : "not ") + "valid");
+        System.out.println("RMC Chain is " + (valid ? "" : "not ") + "valid [" + str + "]");
         rmc = StringParsers.parseRMC(str);
         System.out.println("Parsed");
 

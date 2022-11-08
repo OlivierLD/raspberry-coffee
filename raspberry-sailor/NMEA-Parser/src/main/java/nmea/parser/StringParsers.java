@@ -1889,11 +1889,20 @@ public class StringParsers {
 	}
 
 	public static int calculateCheckSum(String str) {
+		if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+			System.out.printf("Calculating checksum for %s\n", str);
+		}
 		int cs = 0;
 		char[] ca = str.toCharArray();
 		cs = ca[0];
 		for (int i = 1; i < ca.length; i++) {
 			cs = cs ^ ca[i]; // XOR
+			if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+				System.out.printf("Checksum is now 0x%02X \n", cs);
+			}
+		}
+		if ("true".equals(System.getProperty("nmea.parser.verbose"))) {
+			System.out.printf("Final Checksum %02X \n", cs);
 		}
 		return cs;
 	}

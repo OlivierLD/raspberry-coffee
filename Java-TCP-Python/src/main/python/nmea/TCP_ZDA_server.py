@@ -96,6 +96,7 @@ def main(args: List[str]) -> None:
             print(f"{nb_clients} {'clients are' if nb_clients > 1 else 'client is'} now connected.")
             # Generate ZDA sentences for this client in its own thread.
             client_thread = threading.Thread(target=produce_zda, args=(conn, addr,))
+            client_thread.daemon = True  # Dies on exit
             client_thread.start()
 
     print("Exiting server")

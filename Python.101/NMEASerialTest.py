@@ -149,15 +149,15 @@ def parse_nmea_sentence(sentence: str) -> Dict:
 
 # On mac, USB GPS on port /dev/tty.usbmodem14101,
 # Raspberry Pi, use /dev/ttyUSB0 or so.
-port_name = "/dev/tty.usbmodem141101"
-baud_rate = 4800
+port_name: str = "/dev/tty.usbmodem141101"
+baud_rate: int = 4800
 # port_name = "/dev/ttyACM0"
 # baud_rate = 115200
-port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
+port: int = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
 print("Let's go. Hit Ctrl+C to stop")
-keep_looping = True
+keep_looping: bool = True
 while keep_looping:
-    rcv = read_nmea_sentence(port)
+    rcv: str = read_nmea_sentence(port)
     print("\tReceived:" + repr(rcv))  # repr: displays also non-printable characters between quotes.
     try:
         nmea_obj = parse_nmea_sentence(rcv)
