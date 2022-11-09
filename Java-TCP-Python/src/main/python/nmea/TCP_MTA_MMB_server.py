@@ -54,7 +54,7 @@ def produce_nmea(connection: socket.socket, address: tuple) -> None:
         sea_level_pressure: float = sensor.read_sealevel_pressure()
 
         nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
-        nmea_mmb: str = NMEABuilder.build_MMB(pressure / 1000) + NMEA_EOS
+        nmea_mmb: str = NMEABuilder.build_MMB(pressure) + NMEA_EOS
         try:
             connection.sendall(nmea_mta.encode())  # Send to the client
             connection.sendall(nmea_mmb.encode())  # Send to the client
