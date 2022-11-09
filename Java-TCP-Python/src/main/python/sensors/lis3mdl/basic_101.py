@@ -10,6 +10,7 @@ import adafruit_lis3mdl
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = adafruit_lis3mdl.LIS3MDL(i2c)
+print(f"sensor is a {type(sensor)}")
 
 while True:
     mag_x, mag_y, mag_z = sensor.magnetic

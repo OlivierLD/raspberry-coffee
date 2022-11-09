@@ -118,6 +118,20 @@ def build_XDR(*args) -> str:
     return "$" + sentence
 
 
+def build_HDM(hdm: float) -> str:
+    sentence: str = "PYHDM,"
+
+    sentence += f"{int(round(hdm, 0))},M"
+
+    cs: int = checksum.calculate_check_sum(sentence)
+    str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
+    while len(str_cs) < 2:
+        str_cs = '0' + str_cs
+    sentence += ("*" + str_cs.upper())
+
+    return "$" + sentence
+
+
 # This is for tests
 if __name__ == '__main__':
     print(f"Generated ZDA: {build_ZDA()}")
@@ -135,3 +149,5 @@ if __name__ == '__main__':
                              { "value": 101325, "type": "PRESSURE_P" })
     print(f"Generated XDA: {xdr_sentence}")
 
+    print(f"Generated HDM: {build_HDM(195.4)}")
+    print(f"Generated HDM: {build_HDM(195.6)}")
