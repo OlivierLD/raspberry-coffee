@@ -9,10 +9,10 @@ $ sudo pip3 install adafruit-circuitpython-lis3mdl
 ## Wiring, Raspberry Pi
 | LIS3MDL | Raspberry Pi |
 |:-------:|:------------:|
-| VIN     |   #1 (3V3)   |
-| GND     |  #14 (GND)   |
-| SCL     |  #5 (GPIO3)  |
-| SDA     |  #3 (GPIO2)  |
+|   VIN   |   #1 (3V3)   |
+|   GND   |  #14 (GND)   |
+| SCL     | #5 (GPIO3 - SCL) |
+|   SDA   | #3 (GPIO2 - SDA) |
 
 ## Basics: Read raw data
 For Python math's methods, see <https://www.w3schools.com/python/module_math.asp>.
