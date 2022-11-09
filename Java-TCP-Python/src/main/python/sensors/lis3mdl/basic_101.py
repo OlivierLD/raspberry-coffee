@@ -16,6 +16,6 @@ while True:
     heading: float = math.degrees(math.atan2(mag_y, mag_x))
     while heading < 0:
         heading += 360
-    print("X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} \u03BCT, HDG: {3:3.1f}".format(mag_x, mag_y, mag_z, heading))
-    print("")
+    print("X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} \u03BCT, HDG: {3:3.1f}\u00B0".format(mag_x, mag_y, mag_z, heading))
+    # print("")
     time.sleep(1.0)
