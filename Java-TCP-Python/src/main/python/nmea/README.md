@@ -15,6 +15,15 @@ Can be used from the NMEA-multiplexer, using its `TCP` channel (but not only).
 ---
 
 ## At work
+### A first example: ZDA
+We start with a TCP Server producing a ZDA Sentence, because this is simple.  
+This sentence represents the current UTC Time and Date, it does not require any sensor, the current date is read from the
+Operating System, a ZDA string is generated, and pushed to the connected client(s).
+
+The method producing and sending the ZDA chains is `produce_zda`, in the script `TCP_ZDA_server.py`.
+This is the method to modify and adapt when the data you want to produce come - for example - from a sensor.
+
+### ZDA Server
 To start the server (port - and other parameters - can be overridden):
 ```
 $ python src/main/python/nmea/TCP_ZDA_server.py --port:7002 --verbose:true
