@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import checksum  # local script
+import prefixes  # local script
 from datetime import datetime, timezone
 from typing import Dict  # , List, Set, Tuple, Optional
 
@@ -25,7 +26,7 @@ def build_ZDA(utc_ms: int = None) -> str:
            |         day
            HrMinSec(UTC)
     """
-    sentence: str = "PYZDA,"
+    sentence: str = f"{prefixes.DEVICE_PREFIX}ZDA,"
 
     if utc_ms is None:
         # Take system time instead
@@ -53,7 +54,7 @@ def build_MTA(temperature: float) -> str:
     """
     Build the MTA String, for the given temperature.
     """
-    sentence: str = "PYMTA,"
+    sentence: str = f"{prefixes.DEVICE_PREFIX}MTA,"
     sentence += f"{temperature:0.1f}"
     cs: int = checksum.calculate_check_sum(sentence)
     str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
@@ -69,7 +70,7 @@ def build_MMB(mb_pressure: float) -> str:
     Build MMB sentence. 
     mbPressure: pressure, in mb
     """
-    sentence: str = "PYMMB,"
+    sentence: str = f"{prefixes.DEVICE_PREFIX}MMB,"
     sentence += f"{mb_pressure / 33.8600:0.4f},I,"   # Inches of Hg
     sentence += f"{mb_pressure / 1_000:0.4f},B"      # Bars. 1 mb = 1 hPa
     cs: int = checksum.calculate_check_sum(sentence)
@@ -102,7 +103,7 @@ XDR_Types: Dict[str, Dict] = {
 
 
 def build_XDR(*args) -> str:
-    sentence: str = "PYXDR"
+    sentence: str = f"{prefixes.DEVICE_PREFIX}XDR"
     for i in range(len(args)):
         # print(f"{i}: arg:{args[i]}")
         xdr_type: dict = XDR_Types[args[i]["type"]]
@@ -119,7 +120,7 @@ def build_XDR(*args) -> str:
 
 
 def build_HDM(hdm: float) -> str:
-    sentence: str = "PYHDM,"
+    sentence: str = f"{prefixes.DEVICE_PREFIX}HDM,"
 
     sentence += f"{int(round(hdm, 0))},M"
 
@@ -133,7 +134,7 @@ def build_HDM(hdm: float) -> str:
 
 
 def build_HDG(hdm: float) -> str:
-    sentence: str = "PYHDG,"
+    sentence: str = f"{prefixes.DEVICE_PREFIX}HDG,"
 
     sentence += f"{int(round(hdm, 0))},,,,"
 
