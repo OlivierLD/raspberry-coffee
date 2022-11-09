@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+Produces MTA and MMB Strings, from the data read from a BMP180,
+every second.
+"""
+
 import sys
 import signal
 import time
@@ -12,6 +17,7 @@ import Adafruit_BMP.BMP085 as BMP085
 
 
 keep_listening: bool = True
+sensor: BMP085.BMP085
 
 HOST: str = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT: int = 7001         # Port to listen on (non-privileged ports are > 1023)
@@ -36,15 +42,23 @@ def interrupt(signal, frame):
 nb_clients: int = 0
 
 
-def produce_zda(connection: socket.socket, address: tuple) -> None:
+def produce_nmea(connection: socket.socket, address: tuple) -> None:
     global nb_clients
+    global sensor
     print(f"Connected by client {connection}")
     while True:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
-        nmea_zda: str = NMEABuilder.build_ZDA() + NMEA_EOS
+        temperature: float = sensor.read_temperature()
+        pressure: float = sensor.read_pressure()
+        altitude: float = sensor.read_altitude()
+        sea_level_pressure: float = sensor.read_sealevel_pressure()
+
+        nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
+        nmea_mmb: str = NMEABuilder.build_MMB(pressure / 1000) + NMEA_EOS
         try:
-            connection.sendall(nmea_zda.encode())  # Send to the client
-            time.sleep(1)  # 1 sec.
+            connection.sendall(nmea_mta.encode())  # Send to the client
+            connection.sendall(nmea_mmb.encode())  # Send to the client
+            time.sleep(1.0)  # 1 sec.
         except BrokenPipeError as bpe:
             print("Client disconnected")
             nb_clients -= 1
@@ -63,6 +77,8 @@ def main(args: List[str]) -> None:
     global PORT
     global verbose
     global nb_clients
+    global sensor
+
     print("Usage is:")
     print(
         f"python3 {__file__} [{MACHINE_NAME_PRM_PREFIX}{HOST}] [{PORT_PRM_PREFIX}{PORT}] [{VERBOSE_PREFIX}true|false]")
@@ -84,6 +100,7 @@ def main(args: List[str]) -> None:
         print("-------------------------------------")
 
     signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
+    sensor = BMP085.BMP085(busnum=1)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if verbose:
@@ -97,7 +114,7 @@ def main(args: List[str]) -> None:
             nb_clients += 1
             print(f"{nb_clients} {'clients are' if nb_clients > 1 else 'client is'} now connected.")
             # Generate ZDA sentences for this client in its own thread.
-            client_thread = threading.Thread(target=produce_zda, args=(conn, addr,))
+            client_thread = threading.Thread(target=produce_nmea, args=(conn, addr,))
             client_thread.daemon = True  # Dies on exit
             client_thread.start()
 
