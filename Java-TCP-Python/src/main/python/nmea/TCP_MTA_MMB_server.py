@@ -48,13 +48,13 @@ def produce_nmea(connection: socket.socket, address: tuple) -> None:
     print(f"Connected by client {connection}")
     while True:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
-        temperature: float = sensor.read_temperature()
-        pressure: float = sensor.read_pressure()
-        altitude: float = sensor.read_altitude()
+        temperature: float = sensor.read_temperature()  # Celsius
+        pressure: float = sensor.read_pressure()        # Pa
+        altitude: float = sensor.read_altitude()        # meters
         sea_level_pressure: float = sensor.read_sealevel_pressure()
 
         nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
-        nmea_mmb: str = NMEABuilder.build_MMB(pressure) + NMEA_EOS
+        nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
         try:
             connection.sendall(nmea_mta.encode())  # Send to the client
             connection.sendall(nmea_mmb.encode())  # Send to the client
