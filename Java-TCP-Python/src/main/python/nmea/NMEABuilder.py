@@ -2,6 +2,8 @@
 
 import checksum  # local script
 from datetime import datetime, timezone
+from typing import Dict  # , List, Set, Tuple, Optional
+
 
 DEBUG: bool = False
 
@@ -93,6 +95,42 @@ def build_MMB(mb_pressure: float) -> str:
     return "$" + sentence
 
 
+XDR_Types: Dict[str, Dict] = {
+    "TEMPERATURE": { "type": "C", "unit": "C" }, # in Celsius
+    "ANGULAR_DISPLACEMENT": { "type": "A", "unit": "D" }, # In degrees
+    "LINEAR_DISPLACEMENT": { "type": "D", "unit": "M" }, # In meters
+    "FREQUENCY": { "type": "F", "unit": "H" }, # In Hertz
+    "FORCE": { "type": "N", "unit": "N" }, # In Newtons
+    "PRESSURE_B": { "type": "P", "unit": "B" }, # In Bars
+    "PRESSURE_P": { "type": "P", "unit": "P" }, # In Pascals
+    "FLOW_RATE": { "type": "R", "unit": "l" }, # In liters
+    "TACHOMETER": { "type": "T", "unit": "R" }, # In RPM
+    "HUMIDITY": { "type": "H", "unit": "P" }, # In %
+    "VOLUME": { "type": "V", "unit": "M" }, # In Cubic meters
+    "GENERIC": { "type": "G", "unit": "" },  # No unit
+    "CURRENT": { "type": "I", "unit": "A" }, # In Amperes
+    "VOLTAGE": { "type": "U", "unit": "V" }, # In Volts
+    "SWITCH_OR_VALVE": { "type": "S", "unit": "" }, # No Unit
+    "SALINITY": { "type": "L", "unit": "S" } # In Parts per Thousand
+}
+
+def build_XDR(*args) -> str:
+    sentence: str = "PYXDR"
+    for i in range(len(args)):
+        # print(f"{i}: arg:{args[i]}")
+        xdr_type: dict = XDR_Types[args[i]["type"]]
+        # print(f"xdr_type: ${type(xdr_type)}")
+        sentence += f",{xdr_type['type']},{args[i]['value']},{xdr_type['unit']},{i}"
+
+    cs: int = checksum.calculate_check_sum(sentence)
+    str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
+    while len(str_cs) < 2:
+        str_cs = '0' + str_cs
+    sentence += ("*" + str_cs.upper())
+
+    return "$" + sentence
+
+
 # This is for tests
 if __name__ == '__main__':
     print(f"Generated ZDA: {build_ZDA()}")
@@ -102,4 +140,9 @@ if __name__ == '__main__':
     print(f"Generated MTA: {build_MTA(12.34567)}")
 
     print(f"Generated MMB: {build_MMB(1013.25)}")
+
+    xdr_sentence: str = build_XDR({ "value": 123, "type": "TEMPERATURE" }, { "value": 1.01325, "type": "PRESSURE_B" })
+    print(f"Generated XDA: {xdr_sentence}")
+    xdr_sentence = build_XDR({ "value": 56.78, "type": "HUMIDITY" }, { "value": 12.34, "type": "TEMPERATURE" }, { "value": 101325, "type": "PRESSURE_P" })
+    print(f"Generated XDA: {xdr_sentence}")
 

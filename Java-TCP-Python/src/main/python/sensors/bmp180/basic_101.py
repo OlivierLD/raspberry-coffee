@@ -21,7 +21,7 @@ signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
 while keep_listening:
     print('Temp = {0:0.2f} \u00B0C'.format(sensor.read_temperature()))
     pressure: float = sensor.read_pressure()
-    print('Pressure = {0:0.2f} Pa ({0:0.2f} hPa)'.format(pressure, pressure / 100))
+    print('Pressure = {0:0.2f} Pa ({1:0.2f} hPa)'.format(pressure, pressure / 100))
     print('Altitude = {0:0.2f} m'.format(sensor.read_altitude()))
     print('SeaLevel Pressure = {0:0.2f} Pa'.format(sensor.read_sealevel_pressure()))
     print("")

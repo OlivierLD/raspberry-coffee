@@ -55,9 +55,13 @@ def produce_nmea(connection: socket.socket, address: tuple) -> None:
 
         nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
         nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
+        nmea_xdr: str = NMEABuilder.build_XDR({ "value": temperature, "type": "TEMPERATURE" },
+                                              { "value": (pressure / 100), "type": "PRESSURE_P" }) + NMEA_EOS
         try:
-            connection.sendall(nmea_mta.encode())  # Send to the client
-            connection.sendall(nmea_mmb.encode())  # Send to the client
+            # Send to the client
+            connection.sendall(nmea_mta.encode())
+            connection.sendall(nmea_mmb.encode())
+            connection.sendall(nmea_xdr.encode())
             time.sleep(1.0)  # 1 sec.
         except BrokenPipeError as bpe:
             print("Client disconnected")
