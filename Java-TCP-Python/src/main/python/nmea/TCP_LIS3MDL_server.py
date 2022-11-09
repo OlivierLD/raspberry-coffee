@@ -11,13 +11,15 @@ import time
 import socket
 import threading
 import traceback
+import math
 import NMEABuilder   # local script
 from typing import List
+import board
 import adafruit_lis3mdl
 
 
 keep_listening: bool = True
-sensor: BMP085.BMP085
+sensor: adafruit_lis3mdl.LIS3MDL
 
 HOST: str = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT: int = 7001         # Port to listen on (non-privileged ports are > 1023)
@@ -48,20 +50,15 @@ def produce_nmea(connection: socket.socket, address: tuple) -> None:
     print(f"Connected by client {connection}")
     while True:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
-        temperature: float = sensor.read_temperature()  # Celsius
-        pressure: float = sensor.read_pressure()        # Pa
-        altitude: float = sensor.read_altitude()        # meters
-        sea_level_pressure: float = sensor.read_sealevel_pressure()
+        mag_x, mag_y, mag_z = sensor.magnetic
+        heading: float = math.degrees(math.atan2(mag_y, mag_x))
+        while heading < 0:
+            heading += 360
 
-        nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
-        nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
-        nmea_xdr: str = NMEABuilder.build_XDR({ "value": temperature, "type": "TEMPERATURE" },
-                                              { "value": pressure, "type": "PRESSURE_P" }) + NMEA_EOS
+        nmea_hdm: str = NMEABuilder.build_HDM(heading) + NMEA_EOS
         try:
             # Send to the client
-            connection.sendall(nmea_mta.encode())
-            connection.sendall(nmea_mmb.encode())
-            connection.sendall(nmea_xdr.encode())
+            connection.sendall(nmea_hdm.encode())
             time.sleep(1.0)  # 1 sec.
         except BrokenPipeError as bpe:
             print("Client disconnected")
@@ -104,7 +101,8 @@ def main(args: List[str]) -> None:
         print("-------------------------------------")
 
     signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
-    sensor = BMP085.BMP085(busnum=1)
+    i2c = board.I2C()  # uses board.SCL and board.SDA
+    sensor = adafruit_lis3mdl.LIS3MDL(i2c)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if verbose:
