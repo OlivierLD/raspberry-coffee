@@ -1208,8 +1208,9 @@ public class StringParsers {
 					ex.printStackTrace();
 				}
 			}
-			if (nmeaElements.length > 5 && nmeaElements[5] != null && "W".equals(nmeaElements[5]))
+			if (nmeaElements.length > 5 && nmeaElements[5] != null && "W".equals(nmeaElements[5])) {
 				var = -var;
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

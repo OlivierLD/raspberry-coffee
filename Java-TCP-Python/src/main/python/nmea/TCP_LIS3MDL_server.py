@@ -56,9 +56,11 @@ def produce_nmea(connection: socket.socket, address: tuple) -> None:
             heading += 360
 
         nmea_hdm: str = NMEABuilder.build_HDM(heading) + NMEA_EOS
+        nmea_hdg: str = NMEABuilder.build_HDG(heading) + NMEA_EOS
         try:
             # Send to the client
             connection.sendall(nmea_hdm.encode())
+            connection.sendall(nmea_hdg.encode())
             time.sleep(1.0)  # 1 sec.
         except BrokenPipeError as bpe:
             print("Client disconnected")
