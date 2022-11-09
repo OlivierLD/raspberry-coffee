@@ -32,27 +32,13 @@ def build_ZDA(utc_ms: int = None) -> str:
         utc_ms = datetime.now(timezone.utc).timestamp() * 1000  # System "UTC epoch" in ms
 
     dt_object = datetime.fromtimestamp(utc_ms / 1000, tz=timezone.utc)  # <- Aha !!
-    # fmt_date_time: str = dt_object.strftime("%Y-%m-%d %H:%M:%S")
     fmt_date_time: str = dt_object.strftime("%H%M%S.00,%d,%m,%Y")
 
     if DEBUG:
         print("dt_object =", dt_object, " - ", fmt_date_time)
         print("type(dt_object) =", type(dt_object))
 
-    sentence += (fmt_date_time + ",00,00")
-
-    # zda += strUTC.substring(8, 17); // Time
-    # zda += ",";
-    # zda += strUTC.substring(6, 8); // day
-    # zda += ",";
-    # zda += strUTC.substring(4, 6); // month
-    # zda += ",";
-    # zda += strUTC.substring(0, 4); // year
-    # zda += ",00,00";
-    # // Checksum
-    # cs = StringParsers.calculateCheckSum(zda);
-    # zda += ("*" + StringUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
-    # return "$" + zda;
+    sentence += (fmt_date_time + ",00,00")  # Et hop !
 
     cs: int = checksum.calculate_check_sum(sentence);
     str_cs: str = hex(cs).split('x')[-1]  # Just the hex part (no '0x' prefix)
@@ -108,11 +94,12 @@ XDR_Types: Dict[str, Dict] = {
     "HUMIDITY": { "type": "H", "unit": "P" }, # In %
     "VOLUME": { "type": "V", "unit": "M" }, # In Cubic meters
     "GENERIC": { "type": "G", "unit": "" },  # No unit
-    "CURRENT": { "type": "I", "unit": "A" }, # In Amperes
+    "CURRENT": { "type": "I", "unit": "A" }, # Electric current, in Amperes
     "VOLTAGE": { "type": "U", "unit": "V" }, # In Volts
     "SWITCH_OR_VALVE": { "type": "S", "unit": "" }, # No Unit
     "SALINITY": { "type": "L", "unit": "S" } # In Parts per Thousand
 }
+
 
 def build_XDR(*args) -> str:
     sentence: str = "PYXDR"
@@ -143,6 +130,8 @@ if __name__ == '__main__':
 
     xdr_sentence: str = build_XDR({ "value": 123, "type": "TEMPERATURE" }, { "value": 1.01325, "type": "PRESSURE_B" })
     print(f"Generated XDA: {xdr_sentence}")
-    xdr_sentence = build_XDR({ "value": 56.78, "type": "HUMIDITY" }, { "value": 12.34, "type": "TEMPERATURE" }, { "value": 101325, "type": "PRESSURE_P" })
+    xdr_sentence = build_XDR({ "value": 56.78, "type": "HUMIDITY" },
+                             { "value": 12.34, "type": "TEMPERATURE" },
+                             { "value": 101325, "type": "PRESSURE_P" })
     print(f"Generated XDA: {xdr_sentence}")
 

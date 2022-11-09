@@ -61,7 +61,7 @@ Wrapping this Python code into a similar TCP structure should be a no-brainer.
 
 More about that below.
 
-### Producing `MTA` and `MMB` from a `BMP180`
+### Producing `XDR`, `MTA` and `MMB` from a `BMP180`
 Look into `src/main/python/nmea/TCP_BMP180_server.py`.  
 The code showing how to read a `BMP180` is in `src/main/python/sensors/bmp180/basic_101.py`.
 
