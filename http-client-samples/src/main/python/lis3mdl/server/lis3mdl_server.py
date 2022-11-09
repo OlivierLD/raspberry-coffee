@@ -6,11 +6,13 @@
 #
 # Provides REST access to the cache, try GET http://localhost:8080/lis3mdl/cache
 #
+# For Raspberry Pi wiring, see https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer/python-circuitpython
+#
 import json
 import sys
 import threading
 import traceback
-import time
+# import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from time import sleep
 
@@ -26,6 +28,7 @@ sample_data = {  # Used for VIEW, and non-implemented operations. Fallback.
 }
 server_port = 8080
 REST_DEBUG = False
+
 
 class CoreFeatures:
     """
