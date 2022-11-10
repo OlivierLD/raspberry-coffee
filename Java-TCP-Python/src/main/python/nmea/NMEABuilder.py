@@ -180,11 +180,12 @@ if __name__ == '__main__':
 
     xdr_sentence: str = build_XDR({ "value": 123, "type": "TEMPERATURE" },
                                   { "value": 1.01325, "type": "PRESSURE_B" })
-    print(f"Generated XDA: {xdr_sentence}")
+    print(f"Generated XDR: {xdr_sentence}")
     xdr_sentence = build_XDR({ "value": 56.78, "type": "HUMIDITY" },
                              { "value": 12.34, "type": "TEMPERATURE" },
-                             { "value": 101325, "type": "PRESSURE_P" })
-    print(f"Generated XDA: {xdr_sentence}")
+                             { "value": 101325, "type": "PRESSURE_P" },
+                             { "value": 1.01325, "type": "PRESSURE_B" })
+    print(f"Generated XDR: {xdr_sentence}")
 
     print(f"Generated HDM: {build_HDM(195.4)}")
     print(f"Generated HDM: {build_HDM(195.6)}")

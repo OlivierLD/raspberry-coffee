@@ -56,7 +56,8 @@ def produce_nmea(connection: socket.socket, address: tuple, xdr_only: bool = Fal
         nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
         nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
         nmea_xdr: str = NMEABuilder.build_XDR({ "value": temperature, "type": "TEMPERATURE" },
-                                              { "value": pressure, "type": "PRESSURE_P" }) + NMEA_EOS
+                                              { "value": pressure, "type": "PRESSURE_P" },
+                                              { "value": pressure / 100000, "type": "PRESSURE_B" }) + NMEA_EOS
 
         if verbose:
             if not xdr_only:
