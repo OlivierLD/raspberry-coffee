@@ -55,7 +55,7 @@ def build_MTA(temperature: float) -> str:
     Build the MTA String, for the given temperature.
     """
     sentence: str = f"{prefixes.DEVICE_PREFIX}MTA,"
-    sentence += f"{temperature:0.1f}"
+    sentence += f"{temperature:0.1f},C"
     cs: int = checksum.calculate_check_sum(sentence)
     str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
     while len(str_cs) < 2:
@@ -83,23 +83,43 @@ def build_MMB(mb_pressure: float) -> str:
     return "$" + sentence
 
 
+def xdr_value_to_str_5_dec(value: float) -> str:
+    return f"{value:0.5f}"
+
+
+def xdr_value_to_str_4_dec(value: float) -> str:
+    return f"{value:0.4f}"
+
+
+def xdr_value_to_str_1_dec(value: float) -> str:
+    return f"{value:0.1f}"
+
+
+def xdr_value_to_str_no_dec(value: float) -> str:
+    return f"{value:0.0f}"
+
+
+def xdr_default_fmt(value: float) -> str:
+    return f"{value}"
+
+
 XDR_Types: Dict[str, Dict] = {
-    "TEMPERATURE": { "type": "C", "unit": "C" }, # in Celsius
-    "ANGULAR_DISPLACEMENT": { "type": "A", "unit": "D" }, # In degrees
-    "LINEAR_DISPLACEMENT": { "type": "D", "unit": "M" }, # In meters
-    "FREQUENCY": { "type": "F", "unit": "H" }, # In Hertz
-    "FORCE": { "type": "N", "unit": "N" }, # In Newtons
-    "PRESSURE_B": { "type": "P", "unit": "B" }, # In Bars
-    "PRESSURE_P": { "type": "P", "unit": "P" }, # In Pascals
-    "FLOW_RATE": { "type": "R", "unit": "l" }, # In liters
-    "TACHOMETER": { "type": "T", "unit": "R" }, # In RPM
-    "HUMIDITY": { "type": "H", "unit": "P" }, # In %
-    "VOLUME": { "type": "V", "unit": "M" }, # In Cubic meters
-    "GENERIC": { "type": "G", "unit": "" },  # No unit
-    "CURRENT": { "type": "I", "unit": "A" }, # Electric current, in Amperes
+    "TEMPERATURE": { "type": "C", "unit": "C", "to_string": xdr_value_to_str_1_dec }, # in Celsius
+    "ANGULAR_DISPLACEMENT": { "type": "A", "unit": "D", "to_string": xdr_value_to_str_no_dec }, # In degrees
+    "LINEAR_DISPLACEMENT": { "type": "D", "unit": "M", "to_string": xdr_default_fmt }, # In meters
+    "FREQUENCY": { "type": "F", "unit": "H", "to_string": xdr_default_fmt }, # In Hertz
+    "FORCE": { "type": "N", "unit": "N", "to_string": xdr_default_fmt }, # In Newtons
+    "PRESSURE_B": { "type": "P", "unit": "B", "to_string": xdr_value_to_str_4_dec }, # In Bars
+    "PRESSURE_P": { "type": "P", "unit": "P", "to_string": xdr_value_to_str_no_dec }, # In Pascals
+    "FLOW_RATE": { "type": "R", "unit": "l", "to_string": xdr_default_fmt }, # In liters
+    "TACHOMETER": { "type": "T", "unit": "R", "to_string": xdr_default_fmt }, # In RPM
+    "HUMIDITY": { "type": "H", "unit": "P", "to_string": xdr_value_to_str_1_dec }, # In %
+    "VOLUME": { "type": "V", "unit": "M", "to_string": xdr_default_fmt }, # In Cubic meters
+    "GENERIC": { "type": "G", "unit": "", "to_string": xdr_value_to_str_5_dec },  # No unit
+    "CURRENT": { "type": "I", "unit": "A", "to_string": xdr_default_fmt }, # Electric current, in Amperes
     "VOLTAGE": { "type": "U", "unit": "V" }, # In Volts
-    "SWITCH_OR_VALVE": { "type": "S", "unit": "" }, # No Unit
-    "SALINITY": { "type": "L", "unit": "S" } # In Parts per Thousand
+    "SWITCH_OR_VALVE": { "type": "S", "unit": "", "to_string": xdr_default_fmt }, # No Unit
+    "SALINITY": { "type": "L", "unit": "S", "to_string": xdr_default_fmt } # In Parts per Thousand
 }
 
 
@@ -109,7 +129,7 @@ def build_XDR(*args) -> str:
         # print(f"{i}: arg:{args[i]}")
         xdr_type: dict = XDR_Types[args[i]["type"]]
         # print(f"xdr_type: ${type(xdr_type)}")
-        sentence += f",{xdr_type['type']},{args[i]['value']},{xdr_type['unit']},{i}"
+        sentence += f",{xdr_type['type']},{ xdr_type['to_string'](args[i]['value']) },{xdr_type['unit']},{i}"
 
     cs: int = checksum.calculate_check_sum(sentence)
     str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
@@ -158,7 +178,8 @@ if __name__ == '__main__':
 
     print(f"Generated MMB: {build_MMB(1013.25)}")
 
-    xdr_sentence: str = build_XDR({ "value": 123, "type": "TEMPERATURE" }, { "value": 1.01325, "type": "PRESSURE_B" })
+    xdr_sentence: str = build_XDR({ "value": 123, "type": "TEMPERATURE" },
+                                  { "value": 1.01325, "type": "PRESSURE_B" })
     print(f"Generated XDA: {xdr_sentence}")
     xdr_sentence = build_XDR({ "value": 56.78, "type": "HUMIDITY" },
                              { "value": 12.34, "type": "TEMPERATURE" },

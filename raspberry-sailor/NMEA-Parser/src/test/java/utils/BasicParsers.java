@@ -13,12 +13,12 @@ public class BasicParsers {
 
     @Before
     public void init() {
-        // System.setProperty("nmea.parser.verbose", "true");
+//        System.setProperty("nmea.parser.verbose", "true");
     }
 
     @Test
     public void parseMTA_01() {
-        String mta = "$BMMTA,21.4*62\r\n";
+        String mta = "$BMMTA,21.4,C*0D\r\n";
         final boolean valid = StringParsers.validCheckSum(mta);
         if (valid) {
             final double value = StringParsers.parseMTA(mta);
