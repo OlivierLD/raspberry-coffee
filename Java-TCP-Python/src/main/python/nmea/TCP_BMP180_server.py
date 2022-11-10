@@ -11,6 +11,7 @@ import time
 import socket
 import threading
 import traceback
+from datetime import datetime, timezone
 import NMEABuilder   # local script
 from typing import List
 import Adafruit_BMP.BMP085 as BMP085
@@ -56,14 +57,16 @@ def produce_nmea(connection: socket.socket, address: tuple,
         altitude: float = sensor.read_altitude()        # meters
         sea_level_pressure: float = sensor.read_sealevel_pressure()
 
+        # OpenCPN expects the pressure in BARS from XDR, and air temperature from MTA !
         nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
         nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
-        # OpenCPN expects the pressure un Bars !
         nmea_xdr: str = NMEABuilder.build_XDR({ "value": temperature, "type": "TEMPERATURE" },
                                               { "value": pressure, "type": "PRESSURE_P" },
                                               { "value": pressure / 100000, "type": "PRESSURE_B" }) + NMEA_EOS
 
         if verbose:
+            # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+            print(f"-- At {datetime.now(timezone.utc).strftime('%d-%b-%Y %H:%M:%S') } --")
             if mta_sentences:
                 print(f"Sending {nmea_mta.strip()}")
             if mmb_sentences:
