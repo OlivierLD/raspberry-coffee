@@ -14,7 +14,7 @@ channels:
     filename: ./sample.data/logged.data.archive.zip
     zip: true
     path.in.zip: 2012-06-10.china.camp-oyster.point.nmea
-    verbose: false
+    verbose: true
 #forwarders:
 #  - class: nmea.forwarders.CharacterConsoleWriter
 #    properties: char.console.properties

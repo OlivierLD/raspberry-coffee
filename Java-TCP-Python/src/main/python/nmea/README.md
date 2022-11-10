@@ -73,6 +73,9 @@ $ python src/main/python/nmea/TCP_BMP180_server.py --port:7002 --verbose:true
 Like above,  
 Look into `src/main/python/nmea/TCP_LIS3MDL_server.py`.  
 
+#### TODO
+Calibration for magnetometers.
+
 
 ### Etc
 

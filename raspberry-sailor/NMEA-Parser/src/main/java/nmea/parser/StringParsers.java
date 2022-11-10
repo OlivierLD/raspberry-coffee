@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * $<talker ID><sentence ID,>[parameter 1],[parameter 2],...[<*checksum>]<CR><LF> (\r\n)
  *
  * Available parsers:
- * - BAT (battery status, not standard)
+ * - BAT (battery status, NOT standard)
  * - DBT (Depth Below Transducer)
  * - DPT (Depth)
  * - GGA (GPS Data)
