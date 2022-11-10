@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Produces MTA and MMB Strings, from the data read from a BMP180,
-every second.
+A TCP server.
+
+Produces XDR, MTA and MMB Strings, from the data read from a BMP180,
+on a regular basis, see the between_loops variable.
 """
 
 import sys
@@ -20,7 +22,7 @@ import Adafruit_BMP.BMP085 as BMP085
 keep_listening: bool = True
 sensor: BMP085.BMP085
 
-HOST: str = "127.0.0.1"  # Standard loopback interface address (localhost)
+HOST: str = "127.0.0.1"  # Standard loopback interface address (localhost). Set to actual IP or name (from CLI) to make it reacheable from outside.
 PORT: int = 7001         # Port to listen on (non-privileged ports are > 1023)
 verbose: bool = True
 

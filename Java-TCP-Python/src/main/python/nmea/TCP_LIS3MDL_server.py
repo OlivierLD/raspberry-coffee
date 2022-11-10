@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Produces MTA and MMB Strings, from the data read from a BMP180,
+A TCP Server
+Produces HDM and HDG Strings, from the data read from a LIS3MDL,
 every second.
 """
 
