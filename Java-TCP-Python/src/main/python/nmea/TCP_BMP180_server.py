@@ -42,7 +42,7 @@ def interrupt(signal, frame):
 nb_clients: int = 0
 
 
-def produce_nmea(connection: socket.socket, address: tuple) -> None:
+def produce_nmea(connection: socket.socket, address: tuple, xdr_only: bool = False) -> None:
     global nb_clients
     global sensor
     print(f"Connected by client {connection}")
@@ -59,14 +59,17 @@ def produce_nmea(connection: socket.socket, address: tuple) -> None:
                                               { "value": pressure, "type": "PRESSURE_P" }) + NMEA_EOS
 
         if verbose:
-            print(f"Sending {nmea_mta.strip()}")
-            print(f"Sending {nmea_mmb.strip()}")
+            if not xdr_only:
+                print(f"Sending {nmea_mta.strip()}")
+                print(f"Sending {nmea_mmb.strip()}")
             print(f"Sending {nmea_xdr.strip()}")
+            print("---------------------------")
 
         try:
             # Send to the client
-            connection.sendall(nmea_mta.encode())
-            connection.sendall(nmea_mmb.encode())
+            if not xdr_only:
+                connection.sendall(nmea_mta.encode())
+                connection.sendall(nmea_mmb.encode())
             connection.sendall(nmea_xdr.encode())
             time.sleep(1.0)  # 1 sec.
         except BrokenPipeError as bpe:
@@ -124,7 +127,7 @@ def main(args: List[str]) -> None:
             nb_clients += 1
             print(f"{nb_clients} {'clients are' if nb_clients > 1 else 'client is'} now connected.")
             # Generate ZDA sentences for this client in its own thread.
-            client_thread = threading.Thread(target=produce_nmea, args=(conn, addr,))
+            client_thread = threading.Thread(target=produce_nmea, args=(conn, addr, True,))
             client_thread.daemon = True  # Dies on exit
             client_thread.start()
 
