@@ -1,6 +1,7 @@
 # LIS3MDL
 
-To get started, for Raspberry Pi wiring, see <https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer/python-circuitpython>.
+To get started, for Raspberry Pi wiring, see <https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer/python-circuitpython>.  
+Unicode characters at <https://pythonforundergradengineers.com/unicode-characters-in-python.html>
 
 ## Install the required LIS3MDL Library
 ```commandline
