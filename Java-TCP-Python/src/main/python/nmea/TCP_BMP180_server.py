@@ -42,7 +42,10 @@ def interrupt(signal, frame):
 nb_clients: int = 0
 
 
-def produce_nmea(connection: socket.socket, address: tuple, xdr_only: bool = False) -> None:
+def produce_nmea(connection: socket.socket, address: tuple,
+                 mta_sentences: bool = True,
+                 mmb_sentences: bool = True,
+                 xdr_sentences: bool = True) -> None:
     global nb_clients
     global sensor
     print(f"Connected by client {connection}")
@@ -55,23 +58,28 @@ def produce_nmea(connection: socket.socket, address: tuple, xdr_only: bool = Fal
 
         nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
         nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
+        # OpenCPN expects the pressure un Bars !
         nmea_xdr: str = NMEABuilder.build_XDR({ "value": temperature, "type": "TEMPERATURE" },
                                               { "value": pressure, "type": "PRESSURE_P" },
                                               { "value": pressure / 100000, "type": "PRESSURE_B" }) + NMEA_EOS
 
         if verbose:
-            if not xdr_only:
+            if mta_sentences:
                 print(f"Sending {nmea_mta.strip()}")
+            if mmb_sentences:
                 print(f"Sending {nmea_mmb.strip()}")
-            print(f"Sending {nmea_xdr.strip()}")
+            if xdr_sentences:
+                print(f"Sending {nmea_xdr.strip()}")
             print("---------------------------")
 
         try:
             # Send to the client
-            if not xdr_only:
+            if mta_sentences:
                 connection.sendall(nmea_mta.encode())
+            if mmb_sentences:
                 connection.sendall(nmea_mmb.encode())
-            connection.sendall(nmea_xdr.encode())
+            if xdr_sentences:
+                connection.sendall(nmea_xdr.encode())
             time.sleep(1.0)  # 1 sec.
         except BrokenPipeError as bpe:
             print("Client disconnected")
@@ -128,7 +136,7 @@ def main(args: List[str]) -> None:
             nb_clients += 1
             print(f"{nb_clients} {'clients are' if nb_clients > 1 else 'client is'} now connected.")
             # Generate ZDA sentences for this client in its own thread.
-            client_thread = threading.Thread(target=produce_nmea, args=(conn, addr, True,))
+            client_thread = threading.Thread(target=produce_nmea, args=(conn, addr, True, False, True,))
             client_thread.daemon = True  # Dies on exit
             client_thread.start()
 
