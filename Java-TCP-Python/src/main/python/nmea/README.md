@@ -69,6 +69,11 @@ The code showing how to read a `BMP180` is in `src/main/python/sensors/bmp180/ba
 $ python src/main/python/nmea/TCP_BMP180_server.py --port:7002 --verbose:true
 ```
 
+### Reading a `LIS3MDL`, producing `HDM` and `HDG` strings
+Like above,  
+Look into `src/main/python/nmea/TCP_LIS3MDL_server.py`.  
 
+
+### Etc
 
 --- 

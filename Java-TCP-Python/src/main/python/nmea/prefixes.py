@@ -1,4 +1,3 @@
 #!/usr/bin/env python3
 
-
-DEVICE_PREFIX: str = "GP"
+DEVICE_PREFIX: str = "GP"  # Softs like OpenCPN does not like improvisation in this area...
