@@ -41,6 +41,7 @@ def interrupt(signal, frame):
 
 
 nb_clients: int = 0
+between_loops: float = 2.0  # in seconds
 
 
 def produce_nmea(connection: socket.socket, address: tuple,
@@ -83,7 +84,7 @@ def produce_nmea(connection: socket.socket, address: tuple,
                 connection.sendall(nmea_mmb.encode())
             if xdr_sentences:
                 connection.sendall(nmea_xdr.encode())
-            time.sleep(1.0)  # 1 sec.
+            time.sleep(between_loops)
         except BrokenPipeError as bpe:
             print("Client disconnected")
             nb_clients -= 1
