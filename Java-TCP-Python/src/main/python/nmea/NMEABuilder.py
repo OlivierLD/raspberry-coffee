@@ -72,7 +72,8 @@ def build_MMB(mb_pressure: float) -> str:
     """
     sentence: str = f"{prefixes.DEVICE_PREFIX}MMB,"
     sentence += f"{mb_pressure / 33.8600:0.4f},I,"   # Inches of Hg
-    sentence += f"{mb_pressure / 1_000:0.4f},B"      # Bars. 1 mb = 1 hPa
+    sentence += f"{mb_pressure / 1000:0.4f},B"       # Bars. 1 mb = 1 hPa
+
     cs: int = checksum.calculate_check_sum(sentence)
     str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
     while len(str_cs) < 2:

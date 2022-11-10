@@ -1884,7 +1884,9 @@ public class StringParsers {
 			b = (calcCheckSum == csk);
 //    System.out.println("Calculated: 0x" + lpad(Integer.toString(calcCheckSum, 16).toUpperCase(), 2, "0"));
 		} catch (Exception ex) {
-			if (verb) System.err.println("Oops:" + ex.getMessage());
+			if (verb) {
+				System.err.println("Oops:" + ex.getMessage());
+			}
 		}
 		return b;
 	}

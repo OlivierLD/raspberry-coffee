@@ -57,6 +57,12 @@ def produce_nmea(connection: socket.socket, address: tuple) -> None:
         nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
         nmea_xdr: str = NMEABuilder.build_XDR({ "value": temperature, "type": "TEMPERATURE" },
                                               { "value": pressure, "type": "PRESSURE_P" }) + NMEA_EOS
+
+        if verbose:
+            print(f"Sending {nmea_mta.strip()}")
+            print(f"Sending {nmea_mmb.strip()}")
+            print(f"Sending {nmea_xdr.strip()}")
+
         try:
             # Send to the client
             connection.sendall(nmea_mta.encode())
