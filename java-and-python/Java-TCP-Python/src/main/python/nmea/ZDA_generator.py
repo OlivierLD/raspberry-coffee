@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-
+"""
+Generate a ZDA string from system time
+every second
+"""
 import signal
 import time
 import NMEABuilder  # local script

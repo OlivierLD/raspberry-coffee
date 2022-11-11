@@ -30,9 +30,9 @@ def build_ZDA(utc_ms: int = None) -> str:
 
     if utc_ms is None:
         # Take system time instead
-        utc_ms = datetime.now(timezone.utc).timestamp() * 1000  # System "UTC epoch" in ms
+        utc_ms = datetime.now(timezone.utc).timestamp() * 1_000  # System "UTC epoch" in ms
 
-    dt_object = datetime.fromtimestamp(utc_ms / 1000, tz=timezone.utc)  # <- Aha !!
+    dt_object = datetime.fromtimestamp(utc_ms / 1_000, tz=timezone.utc)  # <- Aha !!
     fmt_date_time: str = dt_object.strftime("%H%M%S.00,%d,%m,%Y")
 
     if DEBUG:
@@ -41,7 +41,7 @@ def build_ZDA(utc_ms: int = None) -> str:
 
     sentence += (fmt_date_time + ",00,00")  # Et hop !
 
-    cs: int = checksum.calculate_check_sum(sentence);
+    cs: int = checksum.calculate_check_sum(sentence)
     str_cs: str = hex(cs).split('x')[-1]  # Just the hex part (no '0x' prefix)
     while len(str_cs) < 2:
         str_cs = '0' + str_cs
@@ -72,7 +72,7 @@ def build_MMB(mb_pressure: float) -> str:
     """
     sentence: str = f"{prefixes.DEVICE_PREFIX}MMB,"
     sentence += f"{mb_pressure / 33.8600:0.4f},I,"   # Inches of Hg
-    sentence += f"{mb_pressure / 1000:0.4f},B"       # Bars. 1 mb = 1 hPa
+    sentence += f"{mb_pressure / 1_000:0.4f},B"      # Bars. 1 mb = 1 hPa
 
     cs: int = checksum.calculate_check_sum(sentence)
     str_cs: str = f"{cs:02X}"  # Should be 2 character long, in upper case.
@@ -104,22 +104,22 @@ def xdr_default_fmt(value: float) -> str:
 
 
 XDR_Types: Dict[str, Dict] = {
-    "TEMPERATURE": { "type": "C", "unit": "C", "to_string": xdr_value_to_str_1_dec }, # in Celsius
+    "TEMPERATURE": { "type": "C", "unit": "C", "to_string": xdr_value_to_str_1_dec },           # in Celsius
     "ANGULAR_DISPLACEMENT": { "type": "A", "unit": "D", "to_string": xdr_value_to_str_no_dec }, # In degrees
-    "LINEAR_DISPLACEMENT": { "type": "D", "unit": "M", "to_string": xdr_default_fmt }, # In meters
-    "FREQUENCY": { "type": "F", "unit": "H", "to_string": xdr_default_fmt }, # In Hertz
-    "FORCE": { "type": "N", "unit": "N", "to_string": xdr_default_fmt }, # In Newtons
-    "PRESSURE_B": { "type": "P", "unit": "B", "to_string": xdr_value_to_str_4_dec }, # In Bars
-    "PRESSURE_P": { "type": "P", "unit": "P", "to_string": xdr_value_to_str_no_dec }, # In Pascals
-    "FLOW_RATE": { "type": "R", "unit": "l", "to_string": xdr_default_fmt }, # In liters
-    "TACHOMETER": { "type": "T", "unit": "R", "to_string": xdr_default_fmt }, # In RPM
-    "HUMIDITY": { "type": "H", "unit": "P", "to_string": xdr_value_to_str_1_dec }, # In %
-    "VOLUME": { "type": "V", "unit": "M", "to_string": xdr_default_fmt }, # In Cubic meters
-    "GENERIC": { "type": "G", "unit": "", "to_string": xdr_value_to_str_5_dec },  # No unit
-    "CURRENT": { "type": "I", "unit": "A", "to_string": xdr_default_fmt }, # Electric current, in Amperes
-    "VOLTAGE": { "type": "U", "unit": "V" }, # In Volts
-    "SWITCH_OR_VALVE": { "type": "S", "unit": "", "to_string": xdr_default_fmt }, # No Unit
-    "SALINITY": { "type": "L", "unit": "S", "to_string": xdr_default_fmt } # In Parts per Thousand
+    "LINEAR_DISPLACEMENT": { "type": "D", "unit": "M", "to_string": xdr_default_fmt },          # In meters
+    "FREQUENCY": { "type": "F", "unit": "H", "to_string": xdr_default_fmt },                    # In Hertz
+    "FORCE": { "type": "N", "unit": "N", "to_string": xdr_default_fmt },                        # In Newtons
+    "PRESSURE_B": { "type": "P", "unit": "B", "to_string": xdr_value_to_str_4_dec },            # In Bars
+    "PRESSURE_P": { "type": "P", "unit": "P", "to_string": xdr_value_to_str_no_dec },           # In Pascals
+    "FLOW_RATE": { "type": "R", "unit": "l", "to_string": xdr_default_fmt },                    # In liters
+    "TACHOMETER": { "type": "T", "unit": "R", "to_string": xdr_default_fmt },                   # In RPM
+    "HUMIDITY": { "type": "H", "unit": "P", "to_string": xdr_value_to_str_1_dec },              # In %
+    "VOLUME": { "type": "V", "unit": "M", "to_string": xdr_default_fmt },                       # In Cubic meters
+    "GENERIC": { "type": "G", "unit": "", "to_string": xdr_value_to_str_5_dec },                # No unit
+    "CURRENT": { "type": "I", "unit": "A", "to_string": xdr_default_fmt },                      # Electric current, in Amperes
+    "VOLTAGE": { "type": "U", "unit": "V", "to_string": xdr_default_fmt },                      # In Volts
+    "SWITCH_OR_VALVE": { "type": "S", "unit": "", "to_string": xdr_default_fmt },               # No Unit
+    "SALINITY": { "type": "L", "unit": "S", "to_string": xdr_default_fmt }                      # In Parts per Thousand
 }
 
 
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     print(f"Generated XDR: {xdr_sentence}")
     xdr_sentence = build_XDR({ "value": 56.78, "type": "HUMIDITY" },
                              { "value": 12.34, "type": "TEMPERATURE" },
-                             { "value": 101325, "type": "PRESSURE_P" },
+                             { "value": 101_325, "type": "PRESSURE_P" },
                              { "value": 1.01325, "type": "PRESSURE_B" })
     print(f"Generated XDR: {xdr_sentence}")
 

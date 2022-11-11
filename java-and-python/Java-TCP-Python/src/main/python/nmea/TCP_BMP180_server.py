@@ -61,11 +61,12 @@ def produce_nmea(connection: socket.socket, address: tuple,
         sea_level_pressure: float = sensor.read_sealevel_pressure()
 
         # OpenCPN expects the pressure in BARS from XDR, and air temperature from MTA !
+        # XDR Temperature is not necessarily Air Temperature...
         nmea_mta: str = NMEABuilder.build_MTA(temperature) + NMEA_EOS
         nmea_mmb: str = NMEABuilder.build_MMB(pressure / 100) + NMEA_EOS
         nmea_xdr: str = NMEABuilder.build_XDR({ "value": temperature, "type": "TEMPERATURE" },
                                               { "value": pressure, "type": "PRESSURE_P" },
-                                              { "value": pressure / 100000, "type": "PRESSURE_B" }) + NMEA_EOS
+                                              { "value": pressure / 100_000, "type": "PRESSURE_B" }) + NMEA_EOS
 
         if verbose:
             # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior

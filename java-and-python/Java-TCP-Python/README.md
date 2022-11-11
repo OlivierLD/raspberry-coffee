@@ -7,14 +7,18 @@ to put it to work. It is sometimes C (for Arduino), but never Java. This code is
 provider of your breakout board.
 
 This mens that if you want to use it from Java - like in this repo - you need to write the driver yourself, using
-frameworks like PI4J, diozero, etc.  
-This also means that you _do depend_ on the stability of those frameworks.  
+frameworks like `PI4J`, `diozero`, etc.  
+This also means that you _do depend_ on the stability and availability of those frameworks.  
 
 Typically, PI4J itself depends on WiringPi, that has itself been recently deprecated... Ooch.    
 Now you have to re-write your drivers 😩.
 
 To avoid this mis-fortune, we could try to establish a (two-way) communication
 between Python and Java...
+
+> Java used to implement JSR-223, to natively invoke Python (and other scripting languages),
+> but it is now scheduled to be removed.  
+> See [this](https://www.baeldung.com/java-working-with-python).
 
 _**TCP**_ could be an option, it is socket-based, and natively supports read and write.
 

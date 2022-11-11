@@ -111,6 +111,7 @@ def interrupt(signal, frame):
     global keep_looping
     keep_looping = False
 
+
 signal.signal(signal.SIGINT, interrupt)  # callback defined above.
 
 # Here we start the listener thread
@@ -143,8 +144,7 @@ while keep_looping:
                 else:  # Send to server, with a LF at the end.
                     mess: str
                     if json_output and user_input != '.':
-                        data = {}
-                        data['client-data'] = user_input
+                        data = {'client-data': user_input}
                         mess = json.dumps(data) + LF
                     else:
                         mess = user_input + LF

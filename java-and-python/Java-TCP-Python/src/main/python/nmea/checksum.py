@@ -1,5 +1,6 @@
-
-from typing import Dict  # , List, Set, Tuple, Optional
+"""
+Checksum operations
+"""
 
 DEBUG: bool = False
 

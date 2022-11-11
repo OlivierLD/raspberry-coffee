@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Accepts multiple clients.
+ * Spawns a thread per client.
  * Sends back to the client what the client told the server.
  */
 public class TCPMultiServer {

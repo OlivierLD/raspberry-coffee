@@ -304,3 +304,21 @@ if __name__ == '__main__':
     parsed = parse_nmea_sentence(nmea + NMEA_EOS)
     print(f"Parsed ZDA: {parsed}")
     print(f"Beautified:\n{json.dumps(parsed, sort_keys=False, indent=2)}")
+
+    print("---------------")
+
+    try:
+        nmea = "GPXXX,AKEU,COUCOU*12"
+        parsed = parse_nmea_sentence(nmea + NMEA_EOS)
+        print(f"Parsed Data: {parsed}")
+    except Exception as ex:
+        print(f"Exception: {ex}")
+
+    print("---------------")
+
+    try:
+        nmea = "$GPXXX,AKEU,COUCOU*12"
+        parsed = parse_nmea_sentence(nmea + NMEA_EOS)
+        print(f"Parsed Data: {parsed}")
+    except Exception as ex:
+        print(f"Exception: {ex}")
