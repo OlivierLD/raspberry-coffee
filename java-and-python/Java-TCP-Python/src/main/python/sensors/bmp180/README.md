@@ -1,5 +1,5 @@
 # BMP180
-> Warning: This sensor has been discontinued.
+> Warning: This sensor has been discontinued. Replaced by a `BMP085`, that works the same way (with the same code).
 
 To get started, for Raspberry Pi wiring, see <https://learn.adafruit.com/using-the-bmp085-with-raspberry-pi>.  
 Unicode characters at <https://pythonforundergradengineers.com/unicode-characters-in-python.html>

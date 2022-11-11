@@ -1,26 +1,6 @@
 # Java to Python, Python to Java, using TCP
 
-## Background
-Here is a thing:  
-When you get a new sensor or actuator, it very often comes with the Python code you need
-to put it to work. It is sometimes C (for Arduino), but never Java. This code is usually written by the 
-provider of your breakout board.
-
-This mens that if you want to use it from Java - like in this repo - you need to write the driver yourself, using
-frameworks like `PI4J`, `diozero`, etc.  
-This also means that you _do depend_ on the stability and availability of those frameworks.  
-
-Typically, PI4J itself depends on WiringPi, that has itself been recently deprecated... Ooch.    
-Now you have to re-write your drivers 😩.
-
-To avoid this mis-fortune, we could try to establish a (two-way) communication
-between Python and Java...
-
-> Java used to implement JSR-223, to natively invoke Python (and other scripting languages),
-> but it is now scheduled to be removed.  
-> See [this](https://www.baeldung.com/java-working-with-python).
-
-_**TCP**_ could be an option, it is socket-based, and natively supports read and write.
+For a Java-to-Python communication, _**TCP**_ could be an option, it is socket-based, and natively supports read and write.
 
 We would have the Java code acting as a TCP server, and we would wrap the Python code into
 a TCP client.
@@ -52,8 +32,8 @@ This is a simple client-server duo. They both exchange _lines_ (finished with a 
 - First, build the project
   - `../gradlew shadowJar`
   - This generates a `build/libs/Java-TCP-Python-1.0-all.jar`, which is quite small.
-- Then, from a terminal, do a `./start.tcp.server.sh`
-- And from one or more terminals, do a `./start.tcp.client.sh`, it is an interactive program, you will be prompted.
+- Then, from a terminal, do a `./start.tcp.server.sh` to start the Java server
+- And from one or more terminals, to start the client(s), do a `./start.tcp.client.sh`, it is an interactive program, you will be prompted.
 
 
 ### Java Server, Python Client(s)

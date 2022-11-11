@@ -48,7 +48,7 @@ channels:
     port: 7002
     verbose: true
 forwarders:
-  - type: "tcp"
+  - type: tcp
     port: 7001
 ```
 Notice that this TCP server can run anywhere (see the `server` property above), as long as it is on a network accessible from the NMEA-multiplexer. Which brings us back to the concept of "flake computing".
@@ -77,6 +77,6 @@ Look into `src/main/python/nmea/TCP_LIS3MDL_server.py`.
 Calibration for magnetometers.
 
 
-### Etc
+### Etc...
 
 --- 
