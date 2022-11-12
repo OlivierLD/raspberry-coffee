@@ -22,6 +22,16 @@ between Python and Java... If it works, it also allows you not to re-write the d
 
 > Good article about the same topics, on Baeldung website, at <https://www.baeldung.com/java-working-with-python>
 
+## Sensors, actuators
+Two things to keep in mind - specially when using servers (TCP and REST). Sensors are to be read - you **_get_** data from the sensors,
+and actuators are to be written to, you _**push**_ data to the actuator.  
+For example:
+- You _read_ data from a magnetometer
+- You _push_ data to an oled screen, or a servo driver.
+
+Typically, if you build a REST server to read data from a sensor, you'd be using the `GET` verb.
+Similarly, if you want to send data to a screen, you'd be using a `POST` verb.
+
 ## Options
 Several options could be considered...
 - GraalVM
@@ -49,6 +59,10 @@ the goal here is _**not**_ to re-write the sensor drivers, we can probably live 
 No support - yet - for Python 3.
 
 ### GraalVM
+#### Question
+Runs on 32-bit architecture ?
+
+
 . . .
 
 ---

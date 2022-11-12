@@ -41,4 +41,16 @@ Heading: 172.124199 Pitch: 161.982753, Roll: -113.040215
 ```
 
 ## Actuators
-TODO. Motor drivers, oled screens, etc.
+### 2.13" eink bonnet
+Start the server:
+```
+$ python src/main/python/eink-2.13/server/eink_2.13_server.py
+```
+Then, from any REST client like `curl`:
+```
+$ curl -X POST http://localhost:8080/eink2_13/display -d "Hello EInk !"
+```
+The text is displayed on the screen!  
+![eink 2.13](./eink.213.jpg)
+
+### TODO. Motor drivers, oled screens, etc.
