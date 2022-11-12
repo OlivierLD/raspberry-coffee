@@ -20,7 +20,7 @@ $ $ curl -X GET http://192.168.1.106:8080/lis3mdl/cache | jq
 }
 ```
 
-As an example, we also have a Java client, `http.MagnetometerREader.java`.  
+As an example, we also have a Java client, `http.MagnetometerReader.java`.  
 Build it with a 
 ```
 $ ../../gradlew shadowJar

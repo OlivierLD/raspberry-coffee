@@ -41,9 +41,14 @@ Several options could be considered...
 
 Those options will be illustrated by the content of the sub-folders, siblings of this document.
 
+### A note about TCP and HTTP/REST
+Interstingly, TCP and HTTP/REST are language agnostic. From a client, you do not need to know what language the server is implemented in.
+And same for the server. You cannot know what language was used to implement the client (except if the "User-Agent" header is clear enough, but this is just an information).
+_It is all about protocol_.
+
 ## Pros and Cons
 
-### HTTP and REST
+### TCP, HTTP and REST
 #### Pros
 TCP and HTTP are language agnostic. Java and Python are well-equipped to write both clients and servers, 
 for HTTP as well as for TCP.  

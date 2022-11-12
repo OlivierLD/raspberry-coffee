@@ -46,5 +46,16 @@ This is - as above - an interactive client.
 ### Python Server, Java Client(s)
 Look into the `python/nmea` folder.  
 
+### Python Server, Python Client(s)
+Shows how a two-way communication can work, asynchronously.  
+Start the `TCP_ZDA_server`:
+```
+$ python src/main/python/nmea/TCP_ZDA_server.py 
+```
+Start the `simple_tcp_client.py`:
+```
+$ python src/main/python/simple_tcp_client.py --port:7001
+```
+This is an interactive client. Enter (in the terminal) "`faster`" or "`slower`", to change the string production rate.
 
 ---

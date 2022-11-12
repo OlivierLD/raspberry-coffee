@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-
+"""
+That one produces ZDA Strings for each connected client.
+It also understands input from the client: "SLOWER" ar "FASTER" (not case sensitive)
+"""
 import sys
 import signal
 import time
@@ -32,17 +35,45 @@ def interrupt(signal, frame):
 
 
 nb_clients: int = 0
+between_loops: float = 1.0  # For ALL the threads.
+
+
+def client_listener(connection: socket.socket, address: tuple) -> None:
+    """
+    Expects two possible inputs: "SLOWER", or "FASTER" (not case-sensitive).
+    """
+    global between_loops
+    print("New client listener")
+    while True:
+        try:
+            data: bytes = connection.recv(1024)   # If receive from client is needed...
+            client_mess = f"{data.decode('utf-8')}".strip().upper()
+            if  client_mess == "FASTER":
+                between_loops /= 2.0
+            elif client_mess == "SLOWER":
+                between_loops *= 2.0
+            else:
+                print(f"Unknown or un-managed message [{client_mess}]")
+        except BrokenPipeError as bpe:
+            print("Client disconnected")
+            break
+        except Exception as ex:
+            print("Oops!...")
+            traceback.print_exc(file=sys.stdout)
+            break  # Client disconnected
+    # print("Exiting client listener")
 
 
 def produce_zda(connection: socket.socket, address: tuple) -> None:
     global nb_clients
+    global between_loops
     print(f"Connected by client {connection}")
     while True:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
         nmea_zda: str = NMEABuilder.build_ZDA() + NMEA_EOS
         try:
             connection.sendall(nmea_zda.encode())  # Send to the client
-            time.sleep(1)  # 1 sec.
+            time.sleep(between_loops)
         except BrokenPipeError as bpe:
             print("Client disconnected")
             nb_clients -= 1
@@ -98,6 +129,9 @@ def main(args: List[str]) -> None:
             client_thread = threading.Thread(target=produce_zda, args=(conn, addr,))
             client_thread.daemon = True  # Dies on exit
             client_thread.start()
+            client_listener_thread = threading.Thread(target=client_listener, args=(conn, addr,))
+            client_listener_thread.daemon = True  # Dies on exit
+            client_listener_thread.start()
 
     print("Exiting server")
     print("Bon. OK.")
