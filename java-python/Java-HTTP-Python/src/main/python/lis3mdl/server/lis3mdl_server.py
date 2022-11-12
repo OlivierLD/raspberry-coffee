@@ -82,6 +82,8 @@ def read_lis3mdl() -> None:
                 while heading < 0:
                     heading += 360
                 core.update_cache('hdg', heading)
+                if REST_DEBUG:
+                    print(f"Read sensor: mag_x {mag_x:.2f}, mag_y {mag_y:.2f}, mag_z {mag_z:.2f}, hdg {heading:.2f}, ")
             except AttributeError as ae:
                 print("AttributeError : {}".format(ae))
         except KeyboardInterrupt:
