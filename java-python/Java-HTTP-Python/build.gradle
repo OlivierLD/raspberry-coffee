@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+    id "application"
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://mvnrepository.com/artifact" }
+}
+
+// sourceCompatibility = 1.8
+
+dependencies {
+    implementation project(':http-tiny-server')
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
+
+    testImplementation "junit:junit:$junit_version"
+}
+
+mainClassName = "http.MagnetometerReader"
+
+shadowJar {
+    zip64 true
+    // to create an executable jar-file. Requires mainClassName.
+    mergeServiceFiles()
+}

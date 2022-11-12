@@ -33,6 +33,22 @@ Those options will be illustrated by the content of the sub-folders, siblings of
 
 ## Pros and Cons
 
+### HTTP and REST
+#### Pros
+TCP and HTTP are language agnostic. Java and Python are well-equipped to write both clients and servers, 
+for HTTP as well as for TCP.  
+Pretty much any content type can be used, here we use `NMEA` Strings, as well as `JSON` Payloads. Both are defined by strong standards.
+
+#### Cons
+Writing the Python wrapper around the code provided with the breakout board is not a trivial job,
+but the code provided here could be seen a some scaffolding for it. And if - as we said -
+the goal here is _**not**_ to re-write the sensor drivers, we can probably live with that.
+
+### Jython
+#### Cons
+No support - yet - for Python 3.
+
+### GraalVM
 . . .
 
 ---

@@ -6,7 +6,7 @@ See:
 - <https://jython.readthedocs.io/en/latest/>
 
 ## Limitations
-- Seems not to support Python3.
+- Seems not to support Python 3, only Python 2 for now.
 
 ---
 
