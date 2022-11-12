@@ -4,7 +4,7 @@ To get started, for Raspberry Pi wiring, see <https://learn.adafruit.com/lis3mdl
 Unicode characters at <https://pythonforundergradengineers.com/unicode-characters-in-python.html>
 
 ## Install the required LIS3MDL Library
-```commandline
+```
 $ sudo pip3 install adafruit-circuitpython-lis3mdl
 ```
 ## Wiring, Raspberry Pi

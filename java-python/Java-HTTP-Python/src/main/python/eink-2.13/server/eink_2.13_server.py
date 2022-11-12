@@ -3,25 +3,31 @@
 # Requires:
 # ---------
 # pip3 install http (already in python3.7, no need to install it)
-# sudo pip3 install adafruit-circuitpython-lis3mdl
+# 2.13" eink bonnet: https://www.adafruit.com/product/4687
 #
-# Provides REST access to the cache, try GET http://localhost:8080/lis3mdl/cache
+# pip3 install adafruit-circuitpython-epd
+# sudo pip3 install adafruit-circuitpython-epd
 #
-# For Raspberry Pi wiring, see https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer/python-circuitpython
+# Provides REST access to the e-ink screen, try POST http://localhost:8080/eink2_13/display
+#
+# ... Looks like headers and payload are sent back together...
 #
 import json
 import sys
-import threading
 import traceback
-# import time
-import math
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from time import sleep
 from typing import Dict
 
-import board
+
+import digitalio
 import busio
-import adafruit_lis3mdl
+import board
+from PIL import Image, ImageDraw, ImageFont
+from adafruit_epd.il0373 import Adafruit_IL0373
+from adafruit_epd.il91874 import Adafruit_IL91874  # pylint: disable=unused-import
+from adafruit_epd.il0398 import Adafruit_IL0398  # pylint: disable=unused-import
+from adafruit_epd.ssd1608 import Adafruit_SSD1608  # pylint: disable=unused-import
+from adafruit_epd.ssd1675 import Adafruit_SSD1675  # pylint: disable=unused-import
 
 sample_data: Dict[str, str] = {  # Used for VIEW, and non-implemented operations. Fallback.
     "1": "First",
@@ -32,86 +38,90 @@ sample_data: Dict[str, str] = {  # Used for VIEW, and non-implemented operations
 server_port: int = 8080
 REST_DEBUG: bool = False
 
+# First define some color constants
+WHITE: tuple = (0xFF, 0xFF, 0xFF)
+BLACK: tuple = (0x00, 0x00, 0x00)
+RED: tuple = (0xFF, 0x00, 0x00)
 
-class CoreFeatures:
-    """
-    Implements the methods used in the REST operations below
-    """
+# Next define some constants to allow easy resizing of shapes and colors
+BORDER: int = 20
+FONTSIZE: int = 24
+BACKGROUND_COLOR: tuple = BLACK
+FOREGROUND_COLOR: tuple = WHITE
+TEXT_COLOR: tuple = RED
 
-    cache: Dict = {}
+# create the spi device and pins we will need
+spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
+ecs = digitalio.DigitalInOut(board.CE0)
+dc = digitalio.DigitalInOut(board.D22)
+srcs = None
+rst = digitalio.DigitalInOut(board.D27)
+busy = digitalio.DigitalInOut(board.D17)
 
-    def update_cache(self, key: str, value: float):
-        try:
-            if REST_DEBUG:
-                print("Putting {} as {} in {}".format(value, key, self.cache))
-            self.cache[key] = value
-            if REST_DEBUG:
-                print("Cache is now {}".format(self.cache))
-        except KeyError as ke:
-            if REST_DEBUG:
-                print("KeyError {}".format(ke))
-        except Exception as ex:
-            print("in update_cache: {}: {}, key {}, data {}".format(type(ex), ex, key, value))
+# give them all to our driver
+# display = Adafruit_SSD1608(200, 200,        # 1.54" HD mono display
+display = Adafruit_SSD1675(122, 250,        # 2.13" HD mono display
+                           # display = Adafruit_IL91874(176, 264,        # 2.7" Tri-color display
+                           # display = Adafruit_IL0373(152, 152,         # 1.54" Tri-color display
+                           # display = Adafruit_IL0373(128, 296,         # 2.9" Tri-color display
+                           # display = Adafruit_IL0398(400, 300,         # 4.2" Tri-color display
+                           # display = Adafruit_IL0373(104, 212,         # 2.13" Tri-color display
+                           spi,
+                           cs_pin=ecs,
+                           dc_pin=dc,
+                           sramcs_pin=srcs,
+                           rst_pin=rst,
+                           busy_pin=busy)
 
-    def get_cache(self) -> Dict:
-        return self.cache
+# IF YOU HAVE A FLEXIBLE DISPLAY (2.13" or 2.9") uncomment these lines!
+# display.set_black_buffer(1, False)
+# display.set_color_buffer(1, False)
 
-
-core = CoreFeatures()
-
-i2c = busio.I2C(board.SCL, board.SDA)
-sensor = adafruit_lis3mdl.LIS3MDL(i2c)
+display.rotation = 1
 
 keep_looping: bool = True
 
 
-def read_lis3mdl() -> None:
-    """
-    Reads the sensor, and feeds the cache.
-    """
-    print("Let's go. Hit Ctrl+C to stop")
-    global keep_looping
-    global x
-    while keep_looping:
-        try:
-            try:
-                mag_x, mag_y, mag_z = sensor.magnetic
-                core.update_cache('x', mag_x)
-                core.update_cache('y', mag_y)
-                core.update_cache('z', mag_z)
-                heading: float = math.degrees(math.atan2(mag_y, mag_x))
-                while heading < 0:
-                    heading += 360
-                core.update_cache('hdg', heading)
-                if REST_DEBUG:
-                    print(f"Read sensor: mag_x {mag_x:.2f}, mag_y {mag_y:.2f}, mag_z {mag_z:.2f}, hdg {heading:.2f}, ")
-            except AttributeError as ae:
-                print("AttributeError : {}".format(ae))
-        except KeyboardInterrupt:
-            print("\n\t\tUser interrupted, exiting.")
-            keep_looping = False
-            x.join()
-            break
-        except Exception:
-            # print("\t\tOoops! {}: {}".format(type(ex), ex))
-            traceback.print_exc(file=sys.stdout)
-        sleep(1.0)  # one sec between loops
-    print("Bye (thread).")
+# TODO x and y location for the text
+def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR, font_size=FONTSIZE):
+
+    # print("Displaying text, bg:{}, fg:{}".format(bg, fg))
+    image = Image.new("RGB", (display.width, display.height))
+
+    # Get drawing object to draw on image.
+    draw = ImageDraw.Draw(image)
+
+    # Draw a filled box as the background
+    draw.rectangle((0, 0, display.width, display.height), fill=bg)
+
+    # Draw a smaller inner foreground rectangle
+    draw.rectangle(
+        (BORDER, BORDER, display.width - BORDER - 1, display.height - BORDER - 1),
+        fill=fg,
+    )
+
+    # Load a TTF Font
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
+
+    # Draw Some Text
+    # text = "Hello E-World!"
+    (font_width, font_height) = font.getsize(text)
+    draw.text(
+        (display.width // 2 - font_width // 2, display.height // 2 - font_height // 2),
+        text,
+        font=font,
+        fill=TEXT_COLOR,
+    )
+
+    # Display image.
+    display.image(image)
+    display.display()
 
 
-# Start doing the core job (read GPS, sensor, etc)
-try:
-    print("Starting sensor-reader thread.")
-    x = threading.Thread(target=read_lis3mdl)
-    x.start()
-except OSError as ose:
-    print(ose)
-    sys.exit(1)  # Bam!
-
-PATH_PREFIX = "/lis3mdl"
+PATH_PREFIX: str = "/eink2_13"
 
 
-# Defining an HTTP request Handler class
+# Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
     # sets basic headers for the server
     def _set_headers(self):
@@ -134,7 +144,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
     # GET Method Definition
     def do_GET(self):
         if REST_DEBUG:
-            print("GET methods")
+            print("GET method")
         # defining all the headers
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
@@ -157,26 +167,20 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 else:
                     print("oops, no equal sign in {}".format(qs_prm))
 
-        if path == PATH_PREFIX + "/cache":
-            if REST_DEBUG:
-                print("Cache request")
-            try:
-                gps_cache = core.get_cache()
-                self.wfile.write(json.dumps(gps_cache).encode())
-            except Exception as exception:
-                error = {"message": "{}".format(exception)}
-                self.wfile.write(json.dumps(error).encode())
-                self.send_response(500)
-        elif path == PATH_PREFIX + "/oplist":
+        if path == PATH_PREFIX + "/oplist":
             response = {
                 "oplist": [{
                         "path": PATH_PREFIX + "/oplist",
                         "verb": "GET",
                         "description": "Get the available operation list."
                     }, {
-                        "path": PATH_PREFIX + "/cache",
-                        "verb": "GET",
-                        "description": "Get the LIS3MDL cache."
+                        "path": PATH_PREFIX + "/display",
+                        "verb": "POST",
+                        "description": "Display some text on screen."
+                    }, {
+                        "path": PATH_PREFIX + "/clean",
+                        "verb": "POST",
+                        "description": "Clear the screen."
                     }]
             }
             response_content = json.dumps(response).encode()
@@ -221,14 +225,48 @@ class ServiceHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
-        if self.path.startswith("/whatever/"):  # Dummy POST
+        if self.path == PATH_PREFIX + "/display":
+            # Get text to display from body (text/plain)
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
             print("Content: {}".format(post_body))
-
-            self.send_response(201)
-            response = {"status": "OK"}
-            self.wfile.write(json.dumps(response).encode())
+            try:
+                write_on_eink_2_13(post_body)
+                # Response
+                self.send_response(201)
+                self.send_header('Content-Type', 'application/json')
+                response = {"status": "OK"}
+                response_content = json.dumps(response).encode()
+                content_len = len(response_content)
+                self.send_header('Content-Length', str(content_len))
+                self.end_headers()
+                self.wfile.write(response_content)
+            except:
+                stack = traceback.format_exc()
+                self.send_response(500)
+                response = {"status": "Barf", "error": stack }
+                self.wfile.write(json.dumps(response).encode())
+        elif self.path == PATH_PREFIX + "/clean":
+            # Get text to display from body (text/plain)
+            # content_len = int(self.headers.get('Content-Length'))
+            # post_body = self.rfile.read(content_len).decode('utf-8')
+            # print("Content: {}".format(post_body))
+            try:
+                write_on_eink_2_13("", bg=WHITE, fg=WHITE)
+                # Response
+                self.send_response(201)
+                self.send_header('Content-Type', 'application/json')
+                response = {"status": "OK"}
+                response_content = json.dumps(response).encode()
+                content_len = len(response_content)
+                self.send_header('Content-Length', str(content_len))
+                self.end_headers()
+                self.wfile.write(response_content)
+            except:
+                stack = traceback.format_exc()
+                self.send_response(500)
+                response = {"status": "Barf", "error": stack }
+                self.wfile.write(json.dumps(response).encode())
         else:
             if REST_DEBUG:
                 print("POST on {} not managed".format(self.path))
@@ -301,5 +339,5 @@ try:
     server.serve_forever()
 except KeyboardInterrupt:
     print("\n\t\tUser interrupted (server.serve), exiting.")
-    keep_looping = False
-    x.join()
+    # keep_looping = False
+    # x.join()

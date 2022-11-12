@@ -15,6 +15,11 @@ Can be used from the NMEA-multiplexer, using its `TCP` channel (but not only).
 ---
 
 ## At work
+> _**Note**_: We've chosen here to produce NMEA Sentences, this will be what the client(s) will receive.
+> This is done because of the target we have in mind here (NMEA-multiplexer).   
+> We could very well use other formats, like JSON. It's all about agreeing on the content type 
+> between the client and the server.
+
 ### A first example: ZDA
 We start with a TCP Server producing a ZDA Sentence, because this is simple.  
 This sentence represents the current UTC Time and Date, it does not require any sensor, the current date is read from the
@@ -23,17 +28,44 @@ Operating System, a ZDA string is generated, and pushed to the connected client(
 The method producing and sending the ZDA chains is `produce_zda`, in the script `TCP_ZDA_server.py`.
 This is the method to modify and adapt when the data you want to produce come - for example - from a sensor.
 
-### ZDA Server
+### ZDA Server, and client
 To start the server (port - and other parameters - can be overridden):
 ```
-$ python src/main/python/nmea/TCP_ZDA_server.py --port:7002 --verbose:true
+$ python src/main/python/nmea/TCP_ZDA_server.py [--port:7002] [--verbose:true]
 ```
 
 To start a client (just an example):
 ```
-$ python src/main/python/simple_tcp_client.py --machine-name:localhost --port:7002
+$ python src/main/python/simple_tcp_client.py [--machine-name:localhost] [--port:7002]
+Usage is:
+python3 /Users/olivierlediouris/repos/raspberry-coffee/java-python/Java-TCP-Python/src/main/python/simple_tcp_client.py [--machine-name:127.0.0.1] [--port:7002] [--verbose:true|false]
+	where --machine-name: and --port: must match the server's settings.
+
+connecting to localhost port 7002
+...Connected
+---------------------- H E L P --------------------------------------
+To exit, type Q, QUIT, or EXIT (lower or upper case). Or try '.'
+To see this message again, type H (lower or upper case)
+To set/unset the output message to JSON, type J (lower or upper case)
+To pause the continuous display, type P (lower or upper case)
+To resume a paused display, type R (lower or upper case)
+---------------------------------------------------------------------
+Data from Server: $PYZDA,102849.00,12,11,2022,00,00*7F
+Data from Server: $PYZDA,102850.00,12,11,2022,00,00*77
+Data from Server: $PYZDA,102851.00,12,11,2022,00,00*76
+Data from Server: $PYZDA,102852.00,12,11,2022,00,00*75
+Data from Server: $PYZDA,102853.00,12,11,2022,00,00*74
+Data from Server: $PYZDA,102854.00,12,11,2022,00,00*73
+. . .
+^C
+Ctrl+C intercepted!
+Data from Server: $PYZDA,102855.00,12,11,2022,00,00*72
+
+Empty message. Doing nothing.
+closing socket
+$
 ```
-The client should display the `ZDA` sentences produced by the server.
+The client above displays the `ZDA` sentences produced by the server.
 
 It works from the NMEA-multiplexer, with a `yaml` file like that one (see the `channels` section):
 ```yaml

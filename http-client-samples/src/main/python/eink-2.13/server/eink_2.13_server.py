@@ -11,11 +11,8 @@
 #
 import json
 import sys
-import threading
 import traceback
-import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from time import sleep
 
 import digitalio
 import busio
@@ -186,7 +183,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # defining the response headers
             self.send_header('Content-Type', 'application/json')
             content_len = len(response_content)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(response_content)
         else:
@@ -196,7 +193,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(400)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
@@ -215,7 +212,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
@@ -236,7 +233,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 response = {"status": "OK"}
                 response_content = json.dumps(response).encode()
                 content_len = len(response_content)
-                self.send_header('Content-Length', content_len)
+                self.send_header('Content-Length', str(content_len))
                 self.end_headers()
                 self.wfile.write(response_content)
             except:
@@ -257,7 +254,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 response = {"status": "OK"}
                 response_content = json.dumps(response).encode()
                 content_len = len(response_content)
-                self.send_header('Content-Length', content_len)
+                self.send_header('Content-Length', str(content_len))
                 self.end_headers()
                 self.wfile.write(response_content)
             except:
@@ -272,7 +269,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
@@ -293,7 +290,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
@@ -305,7 +302,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         self.send_response(400)
         self.send_header('Content-Type', 'plain/text')
         content_len = len(error)
-        self.send_header('Content-Length', content_len)
+        self.send_header('Content-Length', str(content_len))
         self.end_headers()
         self.wfile.write(bytes(error, 'utf-8'))
 
