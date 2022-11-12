@@ -46,11 +46,15 @@ Start the server:
 ```
 $ python src/main/python/eink-2.13/server/eink_2.13_server.py
 ```
-Then, from any REST client like `curl`:
+Then, from any REST client, like `curl`:
 ```
 $ curl -X POST http://localhost:8080/eink2_13/display -d "Hello EInk !"
 ```
 The text is displayed on the screen!  
 ![eink 2.13](./eink.213.jpg)
+Notice that the REST request above can be performed from _**any**_ language able to deal with HTTP. 
 
-### TODO. Motor drivers, oled screens, etc.
+### TODO 
+Motor drivers, oled screens, etc.
+
+---
