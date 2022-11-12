@@ -24,7 +24,8 @@ An HTTP request works like this:
 - disconnect from the server
 
 A TCP client would connect to the server; once connected, it can make requests, and/or get responses.
-And this until the client explicitly disconnects.
+And this until the client explicitly disconnects.  
+See [here](https://realpython.com/python-sockets/#tcp-sockets), good Real-Python document.
 
 ### All Java (Java Server, Java Client(s))
 This is a simple client-server duo. They both exchange _lines_ (finished with a NL).
