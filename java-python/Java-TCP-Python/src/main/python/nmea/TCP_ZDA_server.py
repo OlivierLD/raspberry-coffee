@@ -86,6 +86,8 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
                 pass  # ignore
             else:
                 print(f"Unknown or un-managed message [{client_mess}]")
+            if len(client_mess) > 0:
+                print(f"Received {client_mess} request. Between Loop now {between_loops} s.")
         except BrokenPipeError as bpe:
             print("Client disconnected")
             break

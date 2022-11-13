@@ -44,7 +44,19 @@ Same server as above, start a TCP client in python:
 This is - as above - an interactive client. 
 
 ### Python Server, Java Client(s)
-Look into the `python/nmea` folder.  
+Look into the `python/nmea` folder for the servers.
+
+#### 2-way communication, Java client for ZDA_TCP_server
+Start the TCP_ZDA_server:
+```
+$ python src/main/python/nmea/TCP_ZDA_server.py 
+```
+Then start a Java Swing client:
+```
+$ ./start.tcp.swing.client.sh
+```
+This is a Java Swing UI, it continuously reads the data from the server, and
+it can also send messages to the TCP server, to produce the NMEA String faster, or slower.
 
 ### Python Server, Python Client(s)
 Shows how a two-way communication can work, asynchronously.  
