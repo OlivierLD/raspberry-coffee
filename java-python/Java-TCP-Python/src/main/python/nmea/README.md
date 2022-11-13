@@ -88,6 +88,7 @@ Notice that this TCP server can run anywhere (see the `server` property above), 
 ## And then
 The structure of `TCP_ZDA_server.py` can be used as the scaffolding for 
 other TCP servers, using sensors to get the data to forward to the TCP channels.  
+The method to look at to implement your own code is `produce_zda`.  
 Many - if not all - the drivers coming with the breakout board are written in Python.
 Wrapping this Python code into a similar TCP structure should be a no-brainer.
 

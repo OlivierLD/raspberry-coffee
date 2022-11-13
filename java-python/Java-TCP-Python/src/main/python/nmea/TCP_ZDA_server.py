@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 That one produces ZDA Strings for each connected client.
-It also understands input from the client: "SLOWER" ar "FASTER" (not case sensitive)
+It also understands input from the client: "STATUS", "SLOWER" ar "FASTER" (not case sensitive)
 """
 import sys
 import signal
@@ -9,8 +9,12 @@ import time
 import socket
 import threading
 import traceback
+import platform
+from datetime import datetime, timezone
+import logging
+from logging import info
 import NMEABuilder   # local script
-from typing import List
+from typing import List, Dict
 
 keep_listening: bool = True
 
@@ -25,12 +29,18 @@ VERBOSE_PREFIX: str = "--verbose:"
 NMEA_EOS: str = "\r\n"  # aka CR-LF
 
 
-def interrupt(signal, frame):
+logging.basicConfig(level=logging.INFO, format='\n%(message)s')
+
+
+def interrupt(sig: int, frame):
+    # print(f"Signal: {type(sig)}, frame: {type(frame)}")
     global keep_listening
     print("\nCtrl+C intercepted!")
     keep_listening = False
     time.sleep(1.5)
     print("Server Exiting.")
+    info(f'sigint_handler: Received signal {sig} on frame {frame}')
+    # traceback.print_stack(frame)
     sys.exit()   # DTC
 
 
@@ -38,9 +48,27 @@ nb_clients: int = 0
 between_loops: float = 1.0  # For ALL the threads.
 
 
+def produce_status(connection: socket.socket, address: tuple) -> None:
+    global nb_clients
+    global between_loops
+    message: Dict = {
+        "source": __file__,
+        "between-loops": between_loops,
+        "connected-clients": nb_clients,
+        "python-version": platform.python_version(),
+        "system-utc-time": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    }
+    try:
+        payload: str = str(message)
+        connection.sendall(payload.encode())
+    except Exception:
+        print("Oops!...")
+        traceback.print_exc(file=sys.stdout)
+
+
 def client_listener(connection: socket.socket, address: tuple) -> None:
     """
-    Expects two possible inputs: "SLOWER", or "FASTER" (not case-sensitive).
+    Expects three possible inputs: "STATUS", "SLOWER", or "FASTER" (not case-sensitive).
     """
     global between_loops
     print("New client listener")
@@ -52,6 +80,10 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
                 between_loops /= 2.0
             elif client_mess == "SLOWER":
                 between_loops *= 2.0
+            elif client_mess == "STATUS":
+                produce_status(connection, address)
+            elif client_mess == "":
+                pass  # ignore
             else:
                 print(f"Unknown or un-managed message [{client_mess}]")
         except BrokenPipeError as bpe:
@@ -122,14 +154,15 @@ def main(args: List[str]) -> None:
         print("Server is listening. [Ctrl-C] will stop the process.")
         while keep_listening:
             conn, addr = s.accept()
-            print(f">> New accept: Conn is a {type(conn)}, addr is a {type(addr)}")
+            # print(f">> New accept: Conn is a {type(conn)}, addr is a {type(addr)}")
             nb_clients += 1
             print(f"{nb_clients} {'clients are' if nb_clients > 1 else 'client is'} now connected.")
             # Generate ZDA sentences for this client in its own thread.
-            client_thread = threading.Thread(target=produce_zda, args=(conn, addr,))
+            client_thread = threading.Thread(target=produce_zda, args=(conn, addr,))  # Producer
             client_thread.daemon = True  # Dies on exit
             client_thread.start()
-            client_listener_thread = threading.Thread(target=client_listener, args=(conn, addr,))
+
+            client_listener_thread = threading.Thread(target=client_listener, args=(conn, addr,))  # Listener
             client_listener_thread.daemon = True  # Dies on exit
             client_listener_thread.start()
 
