@@ -45,7 +45,7 @@ RED: tuple = (0xFF, 0x00, 0x00)
 
 # Next define some constants to allow easy resizing of shapes and colors
 BORDER: int = 20
-FONTSIZE: int = 24
+FONT_SIZE: int = 24
 BACKGROUND_COLOR: tuple = BLACK
 FOREGROUND_COLOR: tuple = WHITE
 TEXT_COLOR: tuple = RED
@@ -83,7 +83,7 @@ keep_looping: bool = True
 
 
 # TODO x and y location for the text
-def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR, font_size=FONTSIZE):
+def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR, font_size=FONT_SIZE):
 
     # print("Displaying text, bg:{}, fg:{}".format(bg, fg))
     image = Image.new("RGB", (display.width, display.height))
@@ -120,12 +120,19 @@ def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR, font_size
 
 PATH_PREFIX: str = "/eink2_13"
 
+# The full list at https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+HTTP_OK: int = 200
+HTTP_CREATED: int = 201
+HTTP_BAD_REQUEST: int = 400
+HTTP_NOT_FOUND: int = 404
+HTTP_INTERNAL_ERROR: int = 500
+
 
 # Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
     # sets basic headers for the server
     def _set_headers(self):
-        self.send_response(200)
+        self.send_response(HTTP_OK)
         self.send_header('Content-Type', 'application/json')
         # reads the length of the Headers
         length = int(self.headers['Content-Length'])
@@ -146,7 +153,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if REST_DEBUG:
             print("GET method")
         # defining all the headers
-        self.send_response(200)
+        self.send_response(HTTP_OK)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
         #
@@ -183,21 +190,21 @@ class ServiceHandler(BaseHTTPRequestHandler):
                         "description": "Clear the screen."
                     }]
             }
-            response_content = json.dumps(response).encode()
-            self.send_response(200)
+            response_payload: bytes = json.dumps(response).encode()
+            self.send_response(HTTP_OK)
             # defining the response headers
             self.send_header('Content-Type', 'application/json')
-            content_len = len(response_content)
+            content_len: int = len(response_payload)
             self.send_header('Content-Length', str(content_len))
             self.end_headers()
-            self.wfile.write(response_content)
+            self.wfile.write(response_payload)
         else:
             if REST_DEBUG:
                 print("GET on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.send_response(400)
+            self.send_response(HTTP_BAD_REQUEST)
             self.send_header('Content-Type', 'plain/text')
-            content_len = len(error)
+            content_len: int = len(error)
             self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
@@ -214,9 +221,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(display).encode())
         else:
             error = "{} Not found in sample_data\n".format(temp)
-            self.send_response(404)
+            self.send_response(HTTP_NOT_FOUND)
             self.send_header('Content-Type', 'plain/text')
-            content_len = len(error)
+            content_len: int = len(error)
             self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
@@ -227,53 +234,53 @@ class ServiceHandler(BaseHTTPRequestHandler):
             print("POST request, {}".format(self.path))
         if self.path == PATH_PREFIX + "/display":
             # Get text to display from body (text/plain)
-            content_len = int(self.headers.get('Content-Length'))
+            content_len: int = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
             print("Content: {}".format(post_body))
             try:
                 write_on_eink_2_13(post_body)
                 # Response
-                self.send_response(201)
+                self.send_response(HTTP_CREATED)
                 self.send_header('Content-Type', 'application/json')
                 response = {"status": "OK"}
-                response_content = json.dumps(response).encode()
-                content_len = len(response_content)
+                response_payload: bytes = json.dumps(response).encode()
+                content_len: int = len(response_payload)
                 self.send_header('Content-Length', str(content_len))
                 self.end_headers()
-                self.wfile.write(response_content)
+                self.wfile.write(response_payload)
             except:
                 stack = traceback.format_exc()
-                self.send_response(500)
+                self.send_response(HTTP_INTERNAL_ERROR)
                 response = {"status": "Barf", "error": stack }
                 self.wfile.write(json.dumps(response).encode())
         elif self.path == PATH_PREFIX + "/clean":
             # Get text to display from body (text/plain)
-            # content_len = int(self.headers.get('Content-Length'))
+            # content_len: int = int(self.headers.get('Content-Length'))
             # post_body = self.rfile.read(content_len).decode('utf-8')
             # print("Content: {}".format(post_body))
             try:
                 write_on_eink_2_13("", bg=WHITE, fg=WHITE)
                 # Response
-                self.send_response(201)
+                self.send_response(HTTP_CREATED)
                 self.send_header('Content-Type', 'application/json')
                 response = {"status": "OK"}
-                response_content = json.dumps(response).encode()
-                content_len = len(response_content)
+                response_payload: bytes = json.dumps(response).encode()
+                content_len: int = len(response_payload)
                 self.send_header('Content-Length', str(content_len))
                 self.end_headers()
-                self.wfile.write(response_content)
+                self.wfile.write(response_payload)
             except:
                 stack = traceback.format_exc()
-                self.send_response(500)
+                self.send_response(HTTP_INTERNAL_ERROR)
                 response = {"status": "Barf", "error": stack }
                 self.wfile.write(json.dumps(response).encode())
         else:
             if REST_DEBUG:
                 print("POST on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.send_response(404)
+            self.send_response(HTTP_NOT_FOUND)
             self.send_header('Content-Type', 'plain/text')
-            content_len = len(error)
+            content_len: int = len(error)
             self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
@@ -285,16 +292,16 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if REST_DEBUG:
             print("PUT request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
-            self.send_response(201)
+            self.send_response(HTTP_CREATED)
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())
         else:
             if REST_DEBUG:
                 print("PUT on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.send_response(404)
+            self.send_response(HTTP_NOT_FOUND)
             self.send_header('Content-Type', 'plain/text')
-            content_len = len(error)
+            content_len: int = len(error)
             self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
@@ -304,9 +311,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if REST_DEBUG:
             print("DELETE on {} not managed".format(self.path))
         error = "NOT FOUND!"
-        self.send_response(400)
+        self.send_response(HTTP_BAD_REQUEST)
         self.send_header('Content-Type', 'plain/text')
-        content_len = len(error)
+        content_len: int = len(error)
         self.send_header('Content-Length', str(content_len))
         self.end_headers()
         self.wfile.write(bytes(error, 'utf-8'))
