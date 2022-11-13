@@ -93,15 +93,20 @@ public class ZDATCPSwing101 {
             reader = new Thread(() -> {
                 keepReading.set(true);
                 while (keepReading.get()) {
-                    try {
-                        String fromServer = in.readLine();
-                        if (dataConsumer != null) {
-                            dataConsumer.accept(fromServer);
-                        } else {
-                            System.out.println(fromServer);
+                    if (in != null) {
+                        try {
+                            String fromServer = in.readLine();
+                            if (dataConsumer != null) {
+                                dataConsumer.accept(fromServer);
+                            } else {
+                                System.out.println(fromServer);
+                            }
+                        } catch (IOException ioe) {
+                            ioe.printStackTrace();
+                            keepReading.set(false);
                         }
-                    } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                    } else {
+                        System.out.println("InputStream not initialized...");
                         keepReading.set(false);
                     }
                 }
