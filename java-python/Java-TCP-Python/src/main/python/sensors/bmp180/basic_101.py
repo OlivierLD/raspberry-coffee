@@ -10,7 +10,7 @@ sensor = BMP085.BMP085(busnum=1)
 keep_listening: bool = True
 
 
-def interrupt(signal, frame):
+def interrupt(sig: int, frame):
     global keep_listening
     print("\nCtrl+C intercepted!")
     keep_listening = False

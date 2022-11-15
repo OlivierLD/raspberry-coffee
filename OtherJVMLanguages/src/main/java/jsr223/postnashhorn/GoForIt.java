@@ -2,13 +2,11 @@ package jsr223.postnashhorn;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * ES 6.
@@ -20,6 +18,12 @@ public class GoForIt {
 
     // Executing JS Code on a JSON Object
     public static void main(String... arg) throws ScriptException, NoSuchMethodException, IOException {
+
+        final List<ScriptEngineFactory> engineFactories = new ScriptEngineManager().getEngineFactories();
+        System.out.printf("Found %d engine factory(ies)\n", engineFactories.size());
+        engineFactories.forEach(ef -> {
+            System.out.printf("Engine %s, Language %s, LngVersion %s, EngVersion %s, aka [%s]\n", ef.getEngineName(), ef.getLanguageName(), ef.getLanguageVersion(), ef.getEngineVersion(), ef.getNames().stream().collect(Collectors.joining(", ")));
+        });
 
 //        System.setProperty("polyglot.js.nashorn-compat", "true");
 

@@ -23,7 +23,7 @@ public class GoForItAgain {
         
         String jsScript =
                 "let originalData = " + SOME_JSON + ";\n" +
-                "print('From JS - Orig Data:' + originalData);\n" +
+                "print('From JS - Orig Data: ' + JSON.stringify(originalData, null, 2));\n" +
                 "let extracted = originalData.problems; // JSON.parse(data).problems;\n" +
                 "print('From JS - Extracted:' + JSON.stringify(extracted));\n" +
                 "// Compose message array\n" +

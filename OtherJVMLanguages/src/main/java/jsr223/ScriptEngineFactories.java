@@ -14,8 +14,17 @@ public class ScriptEngineFactories {
 		String location = new File(".").getAbsolutePath();
 		System.out.println(String.format("Running from %s", location));
 
+		// Quick test for Python
+		ScriptEngineManager manager = new ScriptEngineManager();
+		ScriptEngine pythonEngine = manager.getEngineByName("python");
+		if (pythonEngine == null) {
+			System.out.println(">> NO python engine.");
+		} else {
+			System.out.println(">> There IS a python engine!");
+		}
+
 		List<ScriptEngineFactory> factories = new ScriptEngineManager().getEngineFactories();
-		System.out.println("=======================");
+		System.out.println("=== Engine Factories ===");
 		for (ScriptEngineFactory factory : factories) {
 			System.out.println("Lang name  :" + factory.getLanguageName());
 			System.out.println("Engine name:" + factory.getEngineName());
@@ -28,8 +37,8 @@ public class ScriptEngineFactories {
 //  engine.getContext().setWriter(writer);
 		try {
 			engine.eval("println 'Hello Groovy!'");
-			System.out.println(">>> Executing src/groovy/mainBasic.groovy");
-			engine.eval(new FileReader("./" + "src/groovy/mainBasic.groovy"));
+			System.out.println(">>> Executing src/main/groovy/mainBasic.groovy");
+			engine.eval(new FileReader("./" + "src/main/groovy/mainBasic.groovy"));
 			//   String output = writer.toString();
 			//   System.out.println("Output:[" + output + "]");
 		} catch (ScriptException se) {
@@ -42,7 +51,7 @@ public class ScriptEngineFactories {
 		// Execute Groovy function on a groovy object
 		try {
 			// Act as mainBasic.groovy
-			engine.eval(new FileReader("./" + "src/groovy/GroovyBasic.groovy"));
+			engine.eval(new FileReader("./" + "src/main/groovy/GroovyBasic.groovy"));
 			engine.eval("app = new GroovyBasic()");
 			Object app = engine.get("app");
 			Invocable invocable = (Invocable) engine;
@@ -94,7 +103,7 @@ public class ScriptEngineFactories {
 		try {
 			ScriptEngineManager factory = new ScriptEngineManager();
 			engine = factory.getEngineByName("nashorn");
-			engine.eval("load(\"" + "src" + "/" + "js" + "/" + "test1.js" + "\");");
+			engine.eval("load(\"" + "src" + "/" + "main" + "/" + "js" + "/" + "test1.js" + "\");");
 		} catch (Exception se) {
 			se.printStackTrace();
 		}

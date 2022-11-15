@@ -14,6 +14,7 @@ for (a in this.args) {
 }
 Client cl = ClientBuilder.newClient()
 WebTarget target = cl.target("https://io.adafruit.com/api/feeds/onoff")
+// REST GET request
 def resp = target.request()
                  .header("X-AIO-Key", key)
                  .header("Accept",    "application/json")
