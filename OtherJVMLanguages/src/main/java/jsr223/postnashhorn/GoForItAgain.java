@@ -51,9 +51,7 @@ public class GoForItAgain {
         System.out.println("Returned a " + obj.getClass().getName());
         if (obj instanceof List<?>) {
             List<?> list = (List<?>) obj;
-            list.forEach(elem -> {
-                System.out.printf("-- (%s) %s\n", elem.getClass().getName(), elem);
-            });
+            list.forEach(elem -> System.out.printf("-- (%s) %s\n", elem.getClass().getName(), elem));
         }
 
         System.out.println("Done!");

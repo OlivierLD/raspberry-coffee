@@ -5,7 +5,7 @@
  */
 
 fun main(args: Array<String>) {
-    val language = if (args.size == 0) "EN" else args[0]
+    val language = if (args.isEmpty()) "EN" else args[0]
     val name     = if (args.size < 2) "" else (" " + args[1])
     println(when (language) {
         "EN" -> "Hello${name}!"

@@ -12,7 +12,7 @@ public class ScriptEngineFactories {
 	public static void main(String... args) {
 		System.out.println("Your Java version:" + System.getProperty("java.version"));
 		String location = new File(".").getAbsolutePath();
-		System.out.println(String.format("Running from %s", location));
+		System.out.printf("Running from %s\n", location);
 
 		// Quick test for Python
 		ScriptEngineManager manager = new ScriptEngineManager();
@@ -42,7 +42,7 @@ public class ScriptEngineFactories {
 			//   String output = writer.toString();
 			//   System.out.println("Output:[" + output + "]");
 		} catch (ScriptException se) {
-			System.err.println(String.format("From %s:", location));
+			System.err.printf("From %s:\n", location);
 			se.printStackTrace();
 		} catch (FileNotFoundException fnfe) {
 			System.err.println("From " + new File(".").getAbsolutePath() + ":");
@@ -58,13 +58,11 @@ public class ScriptEngineFactories {
 			System.out.println(">> Invoking hello() method on GroovyBasic object...");
 			invocable.invokeMethod(app, "hello"); // No prm. prms would be the 3rd arg and after.
 			System.out.println("=== Done ===");
-		} catch (ScriptException se) {
-			se.printStackTrace();
+		} catch (ScriptException | NoSuchMethodException se_nsme) {
+			se_nsme.printStackTrace();
 		} catch (FileNotFoundException fnfe) {
 			System.err.println("From " + new File(".").getAbsolutePath() + ":");
 			fnfe.printStackTrace();
-		} catch (NoSuchMethodException nsme) {
-			nsme.printStackTrace();
 		}
 
 		System.out.println("Act 2: JavaScript.");
@@ -93,7 +91,7 @@ public class ScriptEngineFactories {
 							"  print('>> b = ' + b + '.');" + "\n" +
 							"};" + "\n" +
 							"hi();";
-			System.out.println(String.format("Executing:\n%s", jsCode));
+			System.out.printf("Executing:\n%s\n", jsCode);
 			engine.eval(jsCode);
 		} catch (ScriptException se) {
 			se.printStackTrace();

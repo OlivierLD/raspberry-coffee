@@ -6,7 +6,6 @@ import javax.script.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * ES 6.
@@ -21,9 +20,7 @@ public class GoForIt {
 
         final List<ScriptEngineFactory> engineFactories = new ScriptEngineManager().getEngineFactories();
         System.out.printf("Found %d engine factory(ies)\n", engineFactories.size());
-        engineFactories.forEach(ef -> {
-            System.out.printf("Engine %s, Language %s, LngVersion %s, EngVersion %s, aka [%s]\n", ef.getEngineName(), ef.getLanguageName(), ef.getLanguageVersion(), ef.getEngineVersion(), ef.getNames().stream().collect(Collectors.joining(", ")));
-        });
+        engineFactories.forEach(ef -> System.out.printf("Engine %s, Language %s, LngVersion %s, EngVersion %s, aka [%s]\n", ef.getEngineName(), ef.getLanguageName(), ef.getLanguageVersion(), ef.getEngineVersion(), String.join(", ", ef.getNames())));
 
 //        System.setProperty("polyglot.js.nashorn-compat", "true");
 
@@ -67,9 +64,7 @@ public class GoForIt {
             System.out.println("Returned a " + obj.getClass().getName());
             if (obj instanceof List<?>) {
                 List<?> list = (List<?>)obj;
-                list.forEach(elem -> {
-                    System.out.printf("-- (%s) %s\n", elem.getClass().getName(), elem);
-                });
+                list.forEach(elem -> System.out.printf("-- (%s) %s\n", elem.getClass().getName(), elem));
             }
         }
 
