@@ -3,7 +3,7 @@
 CP=./build/libs/Deviation.Tool-1.0-all.jar
 #
 echo -e "Convert NMEA to JSON"
-echo -e "Usage is $0 [log.life [json.file [declination.to.use]]]"
+echo -e "Usage is ${0} [log.life [json.file [declination.to.use]]]"
 #
 # Default values
 FILE_NAME="2010-11-03.Taiohae.nmea"

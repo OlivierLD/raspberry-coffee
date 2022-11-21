@@ -21,7 +21,7 @@ case "$a" in
 		JAVA_OPTS="${JAVA_OPTS} -Dcalibration=true"
 		CP=./build/libs/ADC-benchmark-1.0-all.jar
 		#
-		echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
+		echo -e "Usage is ${0} --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
 		echo -e " ! IMPORTANT: For miso, mosi, clk & cs, use BCM pin numbers"
 		#
 		sudo java -cp ${CP} ${JAVA_OPTS} adcbenchmark.mcp3008.MainMCP3008Sample33Feedback $*
@@ -37,7 +37,7 @@ case "$a" in
 		JAVA_OPTS="${JAVA_OPTS} -Dcalibration=false"
 		CP=./build/libs/ADC-benchmark-1.0-all.jar
 		#
-		echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
+		echo -e "Usage is ${0} --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
 		echo -e " ! IMPORTANT: For miso, mosi, clk & cs, use BCM pin numbers"
 		#
 		sudo java -cp ${CP} ${JAVA_OPTS} adcbenchmark.mcp3008.MainMCP3008Sample33Feedback --minus90:${adcMinus90} --plus90:${adcPlus90} $*

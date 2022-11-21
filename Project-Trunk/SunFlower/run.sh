@@ -5,7 +5,7 @@
 #
 CP=./build/libs/SunFlower-1.0-all.jar
 #
-echo Try $0 -help or $0 --help
+echo Try ${0} -help or ${0} --help
 #
 # Set ASK_ABOUT_DATE=false to skip the date check below
 if [[ ${ASK_ABOUT_DATE} != false ]]; then
@@ -60,8 +60,8 @@ fi
 displayHelp() {
   echo -e "=============================================================================="
   echo -e "Available CLI options are -help, basic, plus, verbose, demo, smooth, resthttp."
-  echo -e " Use $0 -help [option] to know more about options, like:"
-  echo -e " $ $0 -help resthttp "
+  echo -e " Use ${0} -help [option] to know more about options, like:"
+  echo -e " $ ${0} -help resthttp "
   echo -e "=============================================================================="
 }
 #

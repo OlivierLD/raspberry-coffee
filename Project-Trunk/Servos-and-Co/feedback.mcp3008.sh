@@ -23,7 +23,7 @@ case "$a" in
     JAVA_OPTS="${JAVA_OPTS} -Ddebug=false"
     JAVA_OPTS="${JAVA_OPTS} -Dcalibration=true"
     #
-    echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
+    echo -e "Usage is ${0} --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
     echo -e "All arguments are optional. Values above are default values"
     echo -e " >> ! IMPORTANT: For miso, mosi, clk & cs, use BCM pin numbers"
     #
@@ -40,7 +40,7 @@ case "$a" in
     JAVA_OPTS="${JAVA_OPTS} -Ddebug=false"
     JAVA_OPTS="${JAVA_OPTS} -Dcalibration=false"
     #
-    echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
+    echo -e "Usage is ${0} --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
     echo -e " ! IMPORTANT: For miso, mosi, clk & cs, use BCM pin numbers"
     #
     # Comment/uncomment at will

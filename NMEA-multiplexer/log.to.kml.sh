@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 if [[ $# != 3 ]]; then
-  echo -e "Usage is $0 [log.file.name] [title] [sub-title]"
-  echo -e "example: $0 sample.data/estero.drake.2018-09-29.nmea \"Kayak Drake Estero\" \"28-Sep-2018\""
+  echo -e "Usage is ${0} [log.file.name] [title] [sub-title]"
+  echo -e "example: ${0} sample.data/estero.drake.2018-09-29.nmea \"Kayak Drake Estero\" \"28-Sep-2018\""
   exit 1
 fi
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar

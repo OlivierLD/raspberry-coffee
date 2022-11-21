@@ -2,7 +2,7 @@
 # Math REST server
 #
 echo -e "----------------------------"
-echo -e "Usage is $0 [-px|--proxy] [-p:|--port:1234] "
+echo -e "Usage is ${0} [-px|--proxy] [-p:|--port:1234] "
 echo -e "     -px or --proxy means with a proxy"
 echo -e "----------------------------"
 #

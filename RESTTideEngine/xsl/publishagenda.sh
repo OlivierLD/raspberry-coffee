@@ -7,7 +7,7 @@ echo ----------------------------
 echo Agenda publisher
 echo ----------------------------
 #
-export SCRIPT_DIR=`dirname $0`
+export SCRIPT_DIR=`dirname ${0}`
 echo moving to ${SCRIPT_DIR}
 cd ${SCRIPT_DIR}
 #

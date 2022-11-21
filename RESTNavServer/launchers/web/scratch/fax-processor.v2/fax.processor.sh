@@ -23,7 +23,7 @@
 #
 ##################################################################
 #
-echo -e "For help, type $0 --help"
+echo -e "For help, type ${0} --help"
 echo -e "----------------------------------"
 #
 VERBOSE=false
@@ -48,7 +48,7 @@ for ARG in "$@"; do
     KILL_SERVER=${ARG#*:}
   elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]; then
     echo -e "Usage is:"
-    echo -e " ./fax.processor.sh [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--browser:true] [--help] [--spot:atl|pac]"
+    echo -e " ${0} [--flavor:none|python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--browser:true] [--help] [--spot:atl|pac]"
     echo -e "    --flavor:none|python|node|java - The flavor of the HTTP server to start. Default python. 'none' does not start a server. It may reuse an already started one."
     echo -e "    --port:XXXX - HTTP port to use. Default 8080."
     echo -e "    --kill-server:true|false - Kill the server once the page is displayed. Default false."
@@ -62,7 +62,7 @@ for ARG in "$@"; do
     VERBOSE=true
   else
     echo -e "Parameter ${ARG} not managed."
-    echo -e "See the script $0 for details."
+    echo -e "See the script ${0} for details."
   fi
 done
 #

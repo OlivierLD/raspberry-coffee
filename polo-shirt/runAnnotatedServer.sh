@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 echo -e "----------------------------"
-echo -e "Usage is $0 [-px|--proxy] [-p:|--port:2345] "
+echo -e "Usage is ${0} [-px|--proxy] [-p:|--port:2345] "
 echo -e "     -px or --proxy means with a proxy"
 echo -e "----------------------------"
 #

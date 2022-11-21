@@ -2,11 +2,13 @@
 <!--
  | Should be suitable for a small screen device (tablet, smart-phone, smart-watch...)
  | Warning: this is not a responsive UI
+ | Displays BSP, AWS, AWA, TWS, TWD, TWA, HDG, COG, SOG.
  +-->
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Multi-Screen</title>
+    <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
 	<style>
 		html {
 			display: table;
@@ -72,7 +74,7 @@
 			grid-area: left;
 		}
 
-		/* Position the "next button" to the right */
+		/* Position the "next" button to the right */
 		.next {
 			grid-area: right;
 		}
@@ -208,36 +210,34 @@
 		/**
 		 *  SUBSCRIBERS HERE.
 		 *
-		 * The following subscriptions make the distinction between Ajax & WebSockets
-		 * (See the initAjax & initWS methods)
-		 *
+		 * See js/ajax.manager.js
 		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
-		events.subscribe('sog', function(val) {
+		events.subscribe('sog', val => {
 			document.getElementById('sog').innerText = val.toFixed(2);
 		});
-		events.subscribe('cog', function(val) {
+		events.subscribe('cog', val => {
 			document.getElementById('cog').innerText = val.toFixed(0);
 		});
-		events.subscribe('bsp', function(val) {
+		events.subscribe('bsp', val => {
 			document.getElementById('bsp').innerText = val.toFixed(2);
 		});
-		events.subscribe('awa', function(val) {
+		events.subscribe('awa', val => {
 			document.getElementById('awa').innerText = val.toFixed(0);
 		});
-		events.subscribe('aws', function(val) {
+		events.subscribe('aws', val => {
 			document.getElementById('aws').innerText = val.toFixed(2);
 		});
-		events.subscribe('twa', function(val) {
+		events.subscribe('twa', val => {
 			document.getElementById('twa').innerText = val.toFixed(0);
 		});
-		events.subscribe('tws', function(val) {
+		events.subscribe('tws', val => {
 			document.getElementById('tws').innerText = val.toFixed(2);
 		});
-		events.subscribe('twd', function(val) {
+		events.subscribe('twd', val => {
 			document.getElementById('twd').innerText = val.toFixed(0);
 		});
-		events.subscribe('hdg', function(val) {
+		events.subscribe('hdg', val => {
 			document.getElementById('hdg').innerText = val.toFixed(0);
 		});
 

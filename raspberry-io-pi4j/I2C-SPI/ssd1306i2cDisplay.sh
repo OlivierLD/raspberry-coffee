@@ -1,8 +1,8 @@
 #!/bin/bash
 CP=./build/libs/I2C-SPI-1.0-all.jar
 #
-echo -e "Try $0 IP"
-echo -e " or $0 \"Whatever you want to display\""
+echo -e "Try ${0} IP"
+echo -e " or ${0} \"Whatever you want to display\""
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false"

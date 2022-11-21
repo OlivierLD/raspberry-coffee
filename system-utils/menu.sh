@@ -11,7 +11,7 @@ exit=FALSE
 while [[ "${exit}" == "FALSE" ]]; do
   clear
   echo -e "-------------------------------"
-  echo -e "This is the script named '$0'"
+  echo -e "This is the script named '${0}'"
   echo -e "-------------------------------"
   echo -e 'S: Show Network config '
   echo -e 'I: IP Address '

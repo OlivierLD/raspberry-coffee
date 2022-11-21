@@ -4,7 +4,7 @@ echo Moon Calendar publisher
 echo To run on a one-year tide xml file
 echo ----------------------------
 #
-export SCRIPT_DIR=`dirname $0`
+export SCRIPT_DIR=`dirname ${0}`
 echo moving to ${SCRIPT_DIR}
 cd ${SCRIPT_DIR}
 #

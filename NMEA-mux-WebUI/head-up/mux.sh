@@ -15,7 +15,7 @@ echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS="${JAVA_OPTIONS}" # From parent script, possibly
 #
-echo -e "In $0, inherited JAVA_OPTIONS: ${JAVA_OPTIONS}"
+echo -e "In ${0}, inherited JAVA_OPTIONS: ${JAVA_OPTIONS}"
 #
 if [[ "$OS" == "Darwin" ]]
 then

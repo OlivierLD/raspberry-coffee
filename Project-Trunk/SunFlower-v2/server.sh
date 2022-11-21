@@ -94,5 +94,5 @@ echo -e "Try curl -X GET http://${MY_IP}:${PORT}/sf/status"
 echo -e "Or browse http://${MY_IP}:${PORT}/web/index.html"
 echo -e "       or http://${MY_IP}:${PORT}/zip/index.html"
 #
-echo -e "Also try 'nohup $0 > sf.log &'"
+echo -e "Also try 'nohup ${0} > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.main.SunFlowerServer

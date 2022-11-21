@@ -3,7 +3,7 @@ echo ----------------------------
 echo Design publisher
 echo ----------------------------
 #
-export SCRIPT_DIR=$(dirname $0)
+export SCRIPT_DIR=$(dirname ${0})
 echo -e "Moving to ${SCRIPT_DIR}"
 cd ${SCRIPT_DIR}
 echo -e "Working from $(pwd -P)"

@@ -6,7 +6,7 @@ JAVA_OPTS="${JAVA_OPTS} -Ddisplay.digit=false"
 JAVA_OPTS="${JAVA_OPTS} -Ddebug=false"
 CP=./build/libs/REST.assembler-1.0-all.jar
 #
-echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
+echo -e "Usage is ${0} --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
 echo -e " For miso, mosi, clk & cs, use BCM pin numbers"
 #
 # --clk:18

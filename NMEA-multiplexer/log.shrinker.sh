@@ -4,7 +4,7 @@
 # Tells you what to remove if you want to remove those records.
 #
 if [[ "$1" == "" ]]; then
-  echo -e "Provide the name (full name) of the file to shrink as first parameter, like in $0 <file-to-shrink>"
+  echo -e "Provide the name (full name) of the file to shrink as first parameter, like in ${0} <file-to-shrink>"
   echo -e "Note: this script will tell you what to remove to have a clean log from <file-to-shrink>. IT WILL NOT DO IT FOR YOU."
   exit 1
 fi

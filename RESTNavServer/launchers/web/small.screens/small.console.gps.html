@@ -261,52 +261,50 @@
 		/**
 		 *  SUBSCRIBERS HERE.
 		 *
-		 * The following subscriptions make the distinction between Ajax & WebSockets
-		 * (See the initAjax & initWS methods)
-		 *
+		 * See js/ajax.manager.js
 		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
-		events.subscribe('pos', function(val) {
+		events.subscribe('pos', val => {
 			let strLat = decToSex(val.lat, 'NS');
 			let strLng = decToSex(val.lng, 'EW');
 			document.getElementById('lat').innerHTML = strLat;
 			document.getElementById('lng').innerHTML = strLng;
 			displayMap.addPoint(val);
 		});
-		events.subscribe('gps-time', function(val) {
+		events.subscribe('gps-time', val => {
             // val.format("Y-M-d H:i:s")
 			// let date = gpsTime.format("d-m-Y-l");
 			// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
 			document.getElementById('gps-date').innerText = val.format("Y-M-d");
 			document.getElementById('gps-time').innerText = val.format("H:i:s");
 		});
-		events.subscribe('gps-sat', function(val) {
+		events.subscribe('gps-sat', val => {
 			// document.getElementById('bsp').innerText = val.toFixed(2);
 			// console.log(`GPS-SAT: ${JSON.stringify(val)}`);
 			let plotter = document.getElementById('sp-01');
             plotter.setSatellites(val);
             plotter.repaint();
 		});
-		events.subscribe('sog', function(val) {
+		events.subscribe('sog', val => {
 			document.getElementById('sog').innerText = val.toFixed(2);
 			// console.log(`SOG: ${val}`);
 			displayMap.setLastSog(val);
 		});
-		events.subscribe('cog', function(val) {
+		events.subscribe('cog', val => {
 			document.getElementById('cog').innerText = val.toFixed(0);
 			// console.log(`COG: ${val}`);
 			displayMap.setLastCog(val);
 		});
 
-        function lpad(str, len, pad) {
+        let lpad = (str, len, pad) => {
             let s = str;
             while (s.length < len) {
                 s = (pad === undefined ? ' ' : pad) + s;
             }
             return s;
-        }
+        };
 
-		function decToSex(val, ns_ew) {
+		let decToSex = (val, ns_ew) => {
 			let absVal = Math.abs(val);
 			let intValue = Math.floor(absVal);
 			let dec = absVal - intValue;
@@ -330,13 +328,13 @@
 			s += i + "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
 
 			return s;
-		}
+		};
 
 		// Swipe detection
 		let touchstartX = 0
 		let touchendX = 0
 
-		function handleGesture() {
+		let handleGesture = () => {
 			if (touchendX < touchstartX) {
 				// alert('swiped left!');
 				plusSlides(+1);

@@ -1,14 +1,14 @@
 #!/bin/bash
 echo ----------------------------
 echo Lunar Distances publisher
-echo Usage is: ./publidshlunar lang xmlData pdf
+echo Usage is: ${0} lang xmlData pdf
 echo lang: EN\|FR
 echo xmlData: computed XML data file
 echo pdf: name of the final document
-echo example: ./publishlunar EN ../../data.2017.xml lunar.2017.pdf
+echo example: ${0} EN ../../data.2017.xml lunar.2017.pdf
 echo ----------------------------
 #
-export SCRIPT_DIR=`dirname $0`
+export SCRIPT_DIR=`dirname ${0}`
 echo moving to ${SCRIPT_DIR}
 cd ${SCRIPT_DIR}
 #

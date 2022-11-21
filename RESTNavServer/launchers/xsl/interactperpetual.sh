@@ -4,7 +4,7 @@ echo Perpetual Nautical Almanac Calculation
 echo and pdf generation
 echo ----------------------------
 #
-export SCRIPT_DIR=`dirname $0`
+export SCRIPT_DIR=`dirname ${0}`
 echo moving to ${SCRIPT_DIR}
 cd ${SCRIPT_DIR}
 #

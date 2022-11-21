@@ -4,7 +4,7 @@
 #
 CP=build/libs/PlantWateringSystem-1.0-all.jar
 #
-echo "Usage is $0 debug remote-debug [verbose|ansi] wait"
+echo "Usage is ${0} debug remote-debug [verbose|ansi] wait"
 echo "   Use 'remote-debug' to remote-debug from another machine."
 echo "   Use 'verbose' for a regular look on what's going on, oe 'ansi' for an ansi console."
 echo "   Use 'debug' for a close look on what's going on."

@@ -67,7 +67,7 @@ NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --http-port:${HTTP_PORT}"
 while [[ "${GO}" == "true" ]]; do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
-	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y --http-port:9999 --cmd-verbose:[N]|Y"
+	echo -e "    starting the server, like ${0} --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y --http-port:9999 --cmd-verbose:[N]|Y"
 	echo -e "    --option:X will not prompt the user for his choice, it will go directly for it."
 	echo -e "    --nohup:Y will launch some commands with nohup (see the script for details)"
 	echo -e "+-----------------------------------------------------------------------------------------+"

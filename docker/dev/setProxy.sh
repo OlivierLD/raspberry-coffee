@@ -6,7 +6,7 @@ else
   _home=$(readlink -f ${BASH_SOURCE[0]})
 fi
 
-if [[ -z "$(echo $0 | grep bash)" ]]; then
+if [[ -z "$(echo ${0} | grep bash)" ]]; then
   echo "You MUST run . ${_home}"
   exit 1;
 fi

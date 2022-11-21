@@ -3,8 +3,8 @@
 # Suitable for LeafLet
 #
 if [[ $# != 1 ]]; then
-  echo -e "Usage is $0 [log.file.name]"
-  echo -e "example: $0 sample.data/2010-11.03.Taiohae.nmea"
+  echo -e "Usage is ${0} [log.file.name]"
+  echo -e "example: ${0} sample.data/2010-11.03.Taiohae.nmea"
   exit 1
 fi
 #

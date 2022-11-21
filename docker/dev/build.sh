@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Usage is"
-echo -e "  . $0 [false]|true"
+echo -e "  . ${0} [false]|true"
 echo "- true means 'skip the first part' (ic-components cloning and yarning)"
 echo "Make sure you've set the proxies if running inside a firewall"
 #
@@ -10,7 +10,7 @@ else
   _home=$(readlink -f ${BASH_SOURCE[0]})
 fi
 
-if [[ -z "$(echo $0 | grep bash)" ]]; then
+if [[ -z "$(echo ${0} | grep bash)" ]]; then
   echo "You MUST run . ${_home}"
   exit 1;
 fi

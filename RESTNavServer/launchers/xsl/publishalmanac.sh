@@ -1,15 +1,15 @@
 #!/bin/bash
 echo ----------------------------
 echo Almanac publisher
-echo Usage is: ./publishalmanac lang withStars xmlData pdf
+echo Usage is: ${0} lang withStars xmlData pdf
 echo lang: EN\|FR
 echo withStars: true\|false
 echo xmlData: computed XML data file
 echo pdf: name of the final document
-echo example: ./publishalmanac EN true ../../data.2017.xml almanac.2017.pdf
+echo example: ${0} EN true ../../data.2017.xml almanac.2017.pdf
 echo ----------------------------
 #
-export SCRIPT_DIR=`dirname $0`
+export SCRIPT_DIR=`dirname ${0}`
 echo moving to ${SCRIPT_DIR}
 cd ${SCRIPT_DIR}
 #

@@ -23,7 +23,7 @@
 #
 ##################################################################
 #
-echo -e "For help, type $0 --help"
+echo -e "For help, type ${0} --help"
 echo -e "----------------------------------"
 #
 VERBOSE=false
@@ -62,7 +62,7 @@ for ARG in "$@"; do
     VERBOSE=true
   else
     echo -e "Parameter ${ARG} not managed."
-    echo -e "See the script $0 for details."
+    echo -e "See the script ${0} for details."
   fi
 done
 #

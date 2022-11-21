@@ -3,7 +3,7 @@
 # Merge all the *.nmea file of a given directory into a single one.
 #
 echo -e "Usage is:"
-echo -e "$0 nmea-path final-file-name"
+echo -e "${0} nmea-path final-file-name"
 echo -e "It will merge all the *.nmea in {nmea-path} into {final-file-name}"
 if [[ $# != 2 ]]; then
   echo -e "Wrong number of parameters: $#, expecting 2."
