@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>NMEA Consoles</title>
+	<link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
+	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+	<style>
+		body {
+			font-family: "Lato", Verdana, sans-serif;
+			color: cyan;
+		}
+
+		.sidenav {
+			height: 0;
+			/* width: 100%; */
+			width: 450px;
+			position: fixed;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			background-image: linear-gradient(rgba(0, 255, 255, 0.6), rgba(0, 0, 0, 0.6));
+			overflow-y: hidden;
+			transition: 0.5s;
+			/* padding-top: 60px;  */
+		}
+
+		.sidenav a {
+			padding: 4px 4px 4px 16px;
+			text-decoration: none;
+			font-size: 14px;
+			color: white; /* #818181; */
+			text-shadow: 0px 1px 10px #000;
+			display: block;
+			transition: 0.3s;
+		}
+
+		.sidenav a:hover, .offcanvas a:focus{
+			color: cyan; /* #f1f1f1; */
+		}
+
+		.sidenav .closebtn {
+			position: absolute;
+			top: 0;
+			right: 25px;
+			font-size: 24px;
+			margin-left: 50px;
+		}
+
+		.submenu {
+			font-size: 14px;
+			text-align: right;
+			margin-right: 25px;
+		}
+
+		/* @media screen and (max-width: 450px) {
+			.sidenav {padding-top: 15px;}
+			.sidenav a {font-size: 18px;}
+		} */
+
+		.link-description {
+			margin-left: 30px;
+			font-size: 14px;
+			color: orange;
+			font-style: italic;
+			text-shadow: 2px 2px 4px black, 0 0 25px white, 0 0 7px cyan;
+		}
+
+		#wrap { position:fixed; left:0; width:100%; top:40px; height:100%; }
+
+	</style>
+</head>
+<body class="gradient-bg">
+	<div id="side-nav" class="sidenav" onmouseleave="closeNav()">
+		<div style="min-height: 50px;"></div>
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="javascript:void(0)" onclick="document.getElementById('the-frame').src='';" title="Remove all data, clean screen.">Clear</a>
+		<a href="qr.code.html" target="iframe_a" title="QR Codes">QR Codes</a>
+		<hr style="width: 90%;"/>
+
+		<a href="admin.html" target="iframe_a" title="Admin Console" class="submenu">Admin</a>
+		<div class="submenu link-description">Manage channels, in, out.</div>
+
+		<a href="console.html" target="iframe_a" title="Data Console" class="submenu">Console #1, with Current (Obsolete)</a>
+		<div class="submenu link-description">Canvases, Boat Data (no WebComponents)</div>
+
+		<a href="googlemaps.driving.html" target="iframe_a" title="Leaflet Maps Console" class="submenu">Console with Leaflet Maps (1)</a>
+		<a href="leaflet.driving.html" target="iframe_a" title="Leaflet Maps Console" class="submenu">Console with Leaflet Maps (2)</a>
+		<a href="webcomponents/console.html" target="new_window" title="Data Console (Web Components, WiP)" class="submenu">Console #2 (Wind, WebComponents)</a>
+		<div class="submenu link-description">Boat Data (with WebComponents)</div>
+
+		<a href="webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n" target="new_window" title="Data Console, Current, Web Components" class="submenu">Console #3 (GPS, Astro, Current, ...)</a>
+		<div class="submenu link-description">Astro Data (with WebComponents), optional Boat Data</div>
+
+		<a href="small.screens/small.console.01.html" target="new_window" title="Digital Data Console, For small screens" class="submenu">Console #4 (Small Screens)</a>
+		<div class="submenu link-description">Boat Data, with COG, SOG</div>
+
+		<a href="small.screens/small.console.gps.html" target="new_window" title="GPS Data Console, For small screens" class="submenu">GPS Console (Small Screens)</a>
+		<div class="submenu link-description">GPS Data</div>
+
+		<a href="small.screens/several.displays.html" target="new_window" title="Analog Data Console, For small screens" class="submenu">Console #5 (Analog Small Screens, WiP)</a>
+		<div class="submenu link-description">Scratch pad. Canvases. Simulations.</div>
+
+		<a href="headup.html" target="new_window" title="Data Console, Head-up display" class="submenu">Head-Up Display</a>
+		<div class="submenu link-description">GPS Data, for reflection on wind screen</div>
+
+		<hr style="width: 90%;"/>
+	</div>
+
+	<div style="width: 100%;">
+	  <span style="font-size:20px; cursor:pointer;" title="Click for menu" onclick="openNav()">&#9776; NMEA Consoles</span> <!-- the hamburger -->
+	</div>
+
+	<p style="text-align: center;">
+		<table width="100%" style="border: none;">
+			<tr>
+				<td align="center">
+					<div id="wrap">
+						<iframe id="the-frame" frameborder="0" src="" name="iframe_a" style="width: 100%; height: 95%;"></iframe>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p>
+
+	<script type="text/javascript">
+		var openNav = function() {
+			document.getElementById("side-nav").style.height = "100%";
+		};
+
+		var closeNav = function() {
+			document.getElementById("side-nav").style.height = "0";
+		};
+	</script>
+</body>
+</html>

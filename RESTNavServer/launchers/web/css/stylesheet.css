@@ -167,3 +167,8 @@ a:visited {
     background: radial-gradient(at top, rgba(255, 255, 0, 0.5) 20%, rgba(1, 67, 114, 0.60) 55%), url("../images/sunset.sea.png") no-repeat center;
     background-size: cover;
 }
+
+.gradient-bg {
+    background: radial-gradient(at top, rgba(60, 60, 60, 0.5), rgba(0, 0, 0, 0.6));
+    /*background-image: none;*/
+}

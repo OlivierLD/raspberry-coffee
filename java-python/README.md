@@ -17,7 +17,7 @@ To avoid this mis-fortune, we could try to establish a (two-way) communication
 between Python and Java... If it works, it also allows you not to re-write the drivers from Python to Java.
 
 > Java used to implement [JSR-223](https://www.jcp.org/en/jsr/detail?id=223), to natively invoke Python (and other scripting languages, like JS, Groovy, ...),
-> but it is now scheduled to be removed.  
+> but it is now scheduled to be removed - if not removed already.  
 
 > Good article about the same topics, on Baeldung website, at <https://www.baeldung.com/java-working-with-python>
 
@@ -36,16 +36,17 @@ Several options could be considered...
 - GraalVM
 - Jython
 - TCP and HTTP/REST
-- JEP (Java-Embedded-Python) ? See <https://medium.com/geekculture/how-to-execute-python-modules-from-java-2384041a3d6d>
+- JEP (Java-Embedded-Python) ? 
+  - See <https://medium.com/geekculture/how-to-execute-python-modules-from-java-2384041a3d6d>
   - <https://github.com/ninia/jep>
 
 
 Those options will be illustrated by the content of the sub-folders, siblings of this document.
 
 ### A note about TCP and HTTP/REST
-Interstingly, TCP and HTTP/REST are language agnostic. From a client, you do not need to know what language the server is implemented in.
+Interstingly, TCP and HTTP/REST are language agnostic protocols. From a client, you do not need to know what language the server is implemented in.
 And same for the server. You cannot know what language was used to implement the client (except if the "User-Agent" header is clear enough, but this is just an information).
-_It is all about protocol_.
+_It is all about **protocol**_.
 
 ## Pros and Cons
 
