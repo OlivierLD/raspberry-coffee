@@ -3,6 +3,20 @@
  | Should be suitable for a small screen device (tablet, smart-phone, smart-watch...)
  | Warning: this is not a responsive UI.
  | Can use swipe gestures on cell-phones and tablets.
+ | Available data:
+ | - GPS Position (event 'pos')
+ | - GSP Date-Time (event 'gps-time')
+ | - GPS Satellites (event 'gps-sat')
+ | - COG (event 'cog')
+ | - SOG (event 'sog')
+ | - MAP 
+ | - STW
+ | - AWS
+ | - AWA
+ | - TWS
+ | - TWD
+ | - TWA
+ | - HDG
  +-->
 <html>
 <head>
@@ -125,9 +139,10 @@
 		.dots {
 			position: relative;
 			text-align: center;
-			bottom: -135px;
+			bottom: -170px;
 			margin: auto;
 			grid-area: center;
+			white-space: nowrap;
 		}
 
 		/* Fading animation */
@@ -243,10 +258,57 @@
 			margin : auto;
 		}
 
+		compass-display .green {
+			--bg-color: transparent;
+			--digit-color: lime;
+			--with-gradient: false;
+			--display-background-gradient-to: transparent;
+			--tick-color: lime;
+			--cross-hair-color: red;
+			--display-line-color: lime;
+			--label-fill-color: green;
+			--with-display-shadow: false;
+			--outline-color: lime;
+			--major-tick-color: lime;
+			--minor-tick-color: lime;
+			--value-color: green;
+			--value-outline-color: lime;
+			--value-nb-decimal: 0;
+			--knob-color: red;
+			--knob-outline-color: cyan;
+		}
+
+		.analogdisplay-day {
+			--bg-color: rgba(0, 0, 0, 0);
+			--digit-color: black;
+			--with-gradient: true;
+			--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: white; /* used if --withGradient: false */
+			--display-line-color: rgba(255, 255, 255, 0.5);
+			--label-fill-color: rgba(255, 255, 255, 0.5);
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--outline-color: DarkGrey;
+			--major-tick-color: black;
+			--minor-tick-color: black;
+			--value-color: grey;
+			--value-outline-color: black;
+			--value-nb-decimal: 1;
+			--hand-color: red;
+			--hand-outline-color: black;
+			--with-hand-shadow: true;
+			--knob-color: DarkGrey;
+			--knob-outline-color: black;
+			--font: Arial;
+			--value-font-size-factor: 1
+		}
+
 	</style>
 
 	<!-- This refers to a sibling directory... Could be copied in the js directory, if needed. -->
 	<script type="module" src="../webcomponents/SatellitePlotter.js"></script>
+	<script type="module" src="../webcomponents/AnalogDisplay.js"></script>
+	<script type="module" src="../webcomponents/CompassDisplay.js"></script>
 
 	<script type="text/javascript" src="js/TrackMap.js"></script>
 
@@ -286,15 +348,40 @@
             plotter.repaint();
 		});
 		events.subscribe('sog', val => {
-			document.getElementById('sog').innerText = val.toFixed(2);
+			// document.getElementById('sog').innerText = val.toFixed(2);
+			document.getElementById('sog').value = val;
 			// console.log(`SOG: ${val}`);
 			displayMap.setLastSog(val);
 		});
 		events.subscribe('cog', val => {
-			document.getElementById('cog').innerText = val.toFixed(0);
+			// document.getElementById('cog').innerText = val.toFixed(0);
+			document.getElementById('cog').value = val;
+
 			// console.log(`COG: ${val}`);
 			displayMap.setLastCog(val);
 		});
+		events.subscribe('bsp', val => {
+			document.getElementById('bsp').innerText = val.toFixed(2);
+		});
+		events.subscribe('awa', val => {
+			document.getElementById('awa').innerText = val.toFixed(0);
+		});
+		events.subscribe('aws', val => {
+			document.getElementById('aws').innerText = val.toFixed(2);
+		});
+		events.subscribe('twa', val => {
+			document.getElementById('twa').innerText = val.toFixed(0);
+		});
+		events.subscribe('tws', val => {
+			document.getElementById('tws').innerText = val.toFixed(2);
+		});
+		events.subscribe('twd', val => {
+			document.getElementById('twd').innerText = val.toFixed(0);
+		});
+		events.subscribe('hdg', val => {
+			document.getElementById('hdg').innerText = val.toFixed(0);
+		});
+
 
         let lpad = (str, len, pad) => {
             let s = str;
@@ -360,24 +447,31 @@
 				touchendX = e.changedTouches[0].screenX;
 				handleGesture();
 			});
+
+			// Measure slides length (WiP)
+			let slides = document.querySelectorAll(".the-slides");
+			console.log(`We have ${slides.length} slide(s).`);
+
 		}
 	</script>
 </head>
 <body>
 
 <!--input type="checkbox" onchange="manageClick(this);" /> Auto-scroll -->
-<span style="font-weight: bold;">Auto Scroll</span>
-<br/>
-<label class="rocker rocker-tiny">
-	<input type="checkbox" onchange="manageClick(this);" id="scroll-switch">
-	<span class="switch-left">On</span>
-	<span class="switch-right">Off</span>
-</label>
+<div style="margin: 2px;">
+	<span style="font-weight: bold; font-style: italic;">Auto Scroll</span>
+	<!--br/-->
+	<label class="rocker" style="font-size: 0.50em; vertical-align: middle;">
+		<input type="checkbox" onchange="manageClick(this);" id="scroll-switch">
+		<span class="switch-left">On</span>
+		<span class="switch-right">Off</span>
+	</label>
+</div>
 
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 6</div>
+		<div class="number-text">1 / 13</div>
 		<div class="display-2">
 			<span class="display-title">Position</span>
 			<span class="display-small-data-1" id="lat">00 00.00</span>
@@ -388,7 +482,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 6</div>
+		<div class="number-text">2 / 13</div>
 		<div class="display-2">
 			<span class="display-title">GPS Time</span>
 			<span class="display-small-data-1" id="gps-date">DD-MMM-YYYY</span>
@@ -399,7 +493,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 6</div>
+		<div class="number-text">3 / 13</div>
 		<div class="display">
 			<!--span class="display-title">GPS Sats</span>
 			<span class="display-data" id="awa">000</span>
@@ -417,27 +511,54 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 6</div>
+		<div class="number-text">4 / 13</div>
 		<div class="display">
-			<span class="display-title">Course Over Ground</span>
+			<!--span class="display-title">Course Over Ground</span>
 			<span class="display-data" id="cog">000</span>
-			<span class="display-unit">degrees</span>
+			<span class="display-unit">degrees</span-->
+
+			<compass-display id="cog"
+							 class="green display-data"
+							 title="Course Over Ground"
+							 value="0"
+							 width="180"
+							 height="180"
+							 major-ticks="45"
+							 minor-ticks="5"
+							 label="COG"></compass-display>
+
 		</div>
 		<div class="text">COG</div>
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 6</div>
+		<div class="number-text">5 / 13</div>
 		<div class="display">
-			<span class="display-title">Speed Over Ground</span>
+			<!--span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
-			<span class="display-unit">knots</span>
+			<span class="display-unit">knots</span-->
+			<analog-display class="analogdisplay-day display-data"
+							title="Speed Over Ground&#13;in knots"
+							id="sog"
+							min-value="0"
+							max-value="15"
+							major-ticks="1"
+							minor-ticks="0.1"
+							with-border="true"
+							with-min-max="true"
+							overlap="40"
+							label="SOG"
+							unit="kn"
+							rotate-digits="false"
+							width="180"
+							height="180"></analog-display>
 		</div>
+
 		<div class="text">SOG</div>
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">6 / 6</div>
+		<div class="number-text">6 / 13</div>
 		<div class="display">
 			
 			<canvas id="mapCanvas" class="displayContent" width="180" height="250" title="Track Map"></canvas>
@@ -447,16 +568,94 @@
 	</div>
 
 
+	<div class="the-slides fade">
+		<div class="number-text">7 / 13</div>
+		<div class="display">
+			<span class="display-title">Boat Speed</span>
+			<span class="display-data" id="bsp">00.00</span>
+			<span class="display-unit">knots</span>
+		</div>
+		<div class="text">BSP</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">8 / 13</div>
+		<div class="display">
+			<span class="display-title">Apparent Wind Speed</span>
+			<span class="display-data" id="aws">00.00</span>
+			<span class="display-unit">knots</span>
+		</div>
+		<div class="text">AWS</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">9 / 13</div>
+		<div class="display">
+			<span class="display-title">Apparent Wind Angle</span>
+			<span class="display-data" id="awa">000</span>
+			<span class="display-unit">degrees</span>
+		</div>
+		<div class="text">AWA</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">10 / 13</div>
+		<div class="display">
+			<span class="display-title">True Wind Speed</span>
+			<span class="display-data" id="tws">00.00</span>
+			<span class="display-unit">knots</span>
+		</div>
+		<div class="text">TWS</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">11 / 13</div>
+		<div class="display">
+			<span class="display-title">True Wind Dir</span>
+			<span class="display-data" id="twd">000</span>
+			<span class="display-unit">degrees</span>
+		</div>
+		<div class="text">TWD</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">12 / 13</div>
+		<div class="display">
+			<span class="display-title">True Wind Angle</span>
+			<span class="display-data" id="twa">000</span>
+			<span class="display-unit">degrees</span>
+		</div>
+		<div class="text">TWA</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">13 / 13</div>
+		<div class="display">
+			<span class="display-title">True Heading</span>
+			<span class="display-data" id="hdg">000</span>
+			<span class="display-unit">degrees</span>
+		</div>
+		<div class="text">HDG</div>
+	</div>
+
+
 	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>
 	<div class="next" onclick="plusSlides(+1);">&#10095;</div>
 
 	<div class="dots">
-		<span class="dot" onclick="currentSlide(1);" title="POS"></span>
-		<span class="dot" onclick="currentSlide(2);" title="GPS"></span>
-		<span class="dot" onclick="currentSlide(3);" title="SAT"></span>
-		<span class="dot" onclick="currentSlide(4);" title="COG"></span>
-		<span class="dot" onclick="currentSlide(5);" title="SOG"></span>
-		<span class="dot" onclick="currentSlide(6);" title="MAP"></span>
+		<span class="dot" onclick="currentSlide(01);" title="POS"></span>
+		<span class="dot" onclick="currentSlide(02);" title="GPS"></span>
+		<span class="dot" onclick="currentSlide(03);" title="SAT"></span>
+		<span class="dot" onclick="currentSlide(04);" title="COG"></span>
+		<span class="dot" onclick="currentSlide(05);" title="SOG"></span>
+		<span class="dot" onclick="currentSlide(06);" title="MAP"></span>
+		<span class="dot" onclick="currentSlide(07);" title="STW"></span>
+		<span class="dot" onclick="currentSlide(08);" title="AWS"></span>
+		<span class="dot" onclick="currentSlide(09);" title="AWA"></span>
+		<span class="dot" onclick="currentSlide(10);" title="TWS"></span>
+		<span class="dot" onclick="currentSlide(11);" title="TWD"></span>
+		<span class="dot" onclick="currentSlide(12);" title="TWA"></span>
+		<span class="dot" onclick="currentSlide(13);" title="HDG"></span>
 	</div>
 	
 </div>
