@@ -14,7 +14,8 @@
 		.sidenav {
 			height: 0;
 			/* width: 100%; */
-			width: 450px;
+			width: 0;
+			/* width: 450px; */
 			position: fixed;
 			z-index: 1;
 			top: 0;
@@ -90,13 +91,16 @@
 		<div class="submenu link-description">Boat Data (with WebComponents)</div>
 
 		<a href="webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n" target="new_window" title="Data Console, Current, Web Components" class="submenu">Console #3 (GPS, Astro, Current, ...)</a>
-		<div class="submenu link-description">Astro Data (with WebComponents), optional Boat Data</div>
+		<div class="submenu link-description">Astro Data (with WebComponents), optional Boat Data. Uses REST, requires server.</div>
 
 		<a href="small.screens/small.console.01.html" target="new_window" title="Digital Data Console, For small screens" class="submenu">Console #4 (Small Screens)</a>
 		<div class="submenu link-description">Boat Data, with COG, SOG</div>
 
 		<a href="small.screens/small.console.gps.html" target="new_window" title="GPS Data Console, For small screens" class="submenu">GPS Console (Small Screens)</a>
 		<div class="submenu link-description">GPS Data</div>
+
+		<a href="small.screens/small.console.all.data.html" target="new_window" title="All Data Console with options, For small screens" class="submenu">All Data Console (Small Screens)</a>
+		<div class="submenu link-description">All Data, user driven</div>
 
 		<a href="small.screens/several.displays.html" target="new_window" title="Analog Data Console, For small screens" class="submenu">Console #5 (Analog Small Screens, WiP)</a>
 		<div class="submenu link-description">Scratch pad. Canvases. Simulations.</div>
@@ -126,10 +130,13 @@
 	<script type="text/javascript">
 		var openNav = function() {
 			document.getElementById("side-nav").style.height = "100%";
+			document.getElementById("side-nav").style.width = "450px";
+
 		};
 
 		var closeNav = function() {
 			document.getElementById("side-nav").style.height = "0";
+			document.getElementById("side-nav").style.width = "0";
 		};
 	</script>
 </body>
