@@ -25,6 +25,12 @@
 	<link rel="stylesheet" href="../webcomponents/css/rocker.css">
     <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
 	<style>
+
+		:root {
+			--expanded-nav-width: 400px;
+			--slider-scale: 0.5;
+		}
+
 		html {
 			display: table;
 			width: 100%;
@@ -278,7 +284,31 @@
 			--knob-outline-color: cyan;
 		}
 
-		.analogdisplay-day {
+		.analogdisplay-day-dir {
+			--bg-color: rgba(0, 0, 0, 0);
+			--digit-color: black;
+			--with-gradient: true;
+			--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: white; /* used if --withGradient: false */
+			--display-line-color: rgba(255, 255, 255, 0.5);
+			--label-fill-color: rgba(255, 255, 255, 0.5);
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--outline-color: DarkGrey;
+			--major-tick-color: black;
+			--minor-tick-color: black;
+			--value-color: grey;
+			--value-outline-color: black;
+			--value-nb-decimal: 0;
+			--hand-color: red;
+			--hand-outline-color: black;
+			--with-hand-shadow: true;
+			--knob-color: DarkGrey;
+			--knob-outline-color: black;
+			--font: Arial;
+			--value-font-size-factor: 1
+		}
+		.analogdisplay-day-speed {
 			--bg-color: rgba(0, 0, 0, 0);
 			--digit-color: black;
 			--with-gradient: true;
@@ -303,12 +333,132 @@
 			--value-font-size-factor: 1
 		}
 
+		.sidenav {
+			height: 100%;
+			width: 0;
+			position: fixed;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			/*  background-color: rgba(0, 0, 0, 0.6); */
+			background-image: linear-gradient(rgba(0, 0, 255, 0.6), rgba(0, 0, 0, 0.6));
+			overflow-x: hidden;
+			transition: 1.0s;
+			padding-top: 60px;
+		}
+
+		.sidenav a {
+			padding: 8px 8px 8px 32px;
+			text-decoration: none;
+			font-size: 18px;
+			color: silver; /* #818181; */
+			display: block;
+			transition: 0.3s;
+		}
+
+		.sidenav a:hover, .offcanvas a:focus {
+			color: white; /* #f1f1f1; */
+			/*cursor: not-allowed;*/
+		}
+
+		#close-nav-button:hover {
+			color: cyan;
+			cursor: pointer;
+		}
+
+		a.active-link:hover {
+			color: cyan;
+			cursor: pointer;
+		}
+
+		.sidenav .closebtn {
+			position: absolute;
+			top: 0;
+			right: 25px;
+			font-size: 24px;
+			margin-left: 50px;
+			margin-bottom: 20px;
+		}
+
+		/* For the switch (slider) */
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: calc(var(--slider-scale) * 60px);
+			height: calc(var(--slider-scale) * 34px);
+		}
+
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: calc(var(--slider-scale) * 26px);
+			width: calc(var(--slider-scale) * 26px);
+			left: calc(var(--slider-scale) * 4px);
+			bottom: calc(var(--slider-scale) * 4px);
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		input:checked + .slider {
+			background-color: #2196f3;
+		}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #2196f3;
+		}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(calc(var(--slider-scale) * 26px));
+			-ms-transform: translateX(calc(var(--slider-scale) * 26px));
+			transform: translateX(calc(var(--slider-scale) * 26px));
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+			border-radius: calc(var(--slider-scale) * 34px);
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
+		}
+
+		/* Switch grid */
+		.switch-container {
+			display: grid;
+			grid-template-columns: calc(var(--slider-scale) * 80px) 200px;
+			width: 500px;
+		}
+		.switch-element {
+			place-self: flex-start;
+		}
+
 	</style>
 
 	<!-- This refers to a sibling directory... Could be copied in the js directory, if needed. -->
 	<script type="module" src="../webcomponents/SatellitePlotter.js"></script>
 	<script type="module" src="../webcomponents/AnalogDisplay.js"></script>
 	<script type="module" src="../webcomponents/CompassDisplay.js"></script>
+	<script type="module" src="../webcomponents/WindAngleDisplay.js"></script>
+	<script type="module" src="../webcomponents/DirectionDisplay.js"></script>
 
 	<script type="text/javascript" src="js/TrackMap.js"></script>
 
@@ -318,7 +468,7 @@
 
 	<script type="text/javascript">
 
-		let displayMap; // The map. TrackMap (just the path, no chart).
+		let trackMap; // The map. TrackMap (just the path, no chart).
 
 		/**
 		 *  SUBSCRIBERS HERE.
@@ -326,12 +476,14 @@
 		 * See js/ajax.manager.js
 		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
+		let tws = 0.0;
+		let aws = 0.0;
 		events.subscribe('pos', val => {
 			let strLat = decToSex(val.lat, 'NS');
 			let strLng = decToSex(val.lng, 'EW');
 			document.getElementById('lat').innerHTML = strLat;
 			document.getElementById('lng').innerHTML = strLng;
-			displayMap.addPoint(val);
+			trackMap.addPoint(val);
 		});
 		events.subscribe('gps-time', val => {
             // val.format("Y-M-d H:i:s")
@@ -351,37 +503,43 @@
 			// document.getElementById('sog').innerText = val.toFixed(2);
 			document.getElementById('sog').value = val;
 			// console.log(`SOG: ${val}`);
-			displayMap.setLastSog(val);
+			trackMap.setLastSog(val);
 		});
 		events.subscribe('cog', val => {
 			// document.getElementById('cog').innerText = val.toFixed(0);
 			document.getElementById('cog').value = val;
 
 			// console.log(`COG: ${val}`);
-			displayMap.setLastCog(val);
+			trackMap.setLastCog(val);
 		});
 		events.subscribe('bsp', val => {
 			document.getElementById('bsp').innerText = val.toFixed(2);
 		});
 		events.subscribe('awa', val => {
-			document.getElementById('awa').innerText = val.toFixed(0);
+			// document.getElementById('awa').innerText = val.toFixed(0);
+			let json = { ws: aws, wa: val }
+			document.getElementById('awa').value = JSON.stringify(json);
 		});
 		events.subscribe('aws', val => {
+			aws = val;
 			document.getElementById('aws').innerText = val.toFixed(2);
 		});
 		events.subscribe('twa', val => {
-			document.getElementById('twa').innerText = val.toFixed(0);
+			// document.getElementById('twa').innerText = val.toFixed(0);
+			let json = { ws: tws, wa: val }
+			document.getElementById('twa').value = JSON.stringify(json);
 		});
 		events.subscribe('tws', val => {
+			tws = val;
 			document.getElementById('tws').innerText = val.toFixed(2);
 		});
 		events.subscribe('twd', val => {
-			document.getElementById('twd').innerText = val.toFixed(0);
+			// document.getElementById('twd').innerText = val.toFixed(0);
+			document.getElementById('twd').value = val;
 		});
 		events.subscribe('hdg', val => {
 			document.getElementById('hdg').innerText = val.toFixed(0);
 		});
-
 
         let lpad = (str, len, pad) => {
             let s = str;
@@ -435,8 +593,8 @@
 		window.onload = () => {
 			initAjax();
 
-			displayMap = new TrackMap('mapCanvas', 180, 250, 'black', 'red', 'green', 400);
-			displayMap.repaint();
+			trackMap = new TrackMap('mapCanvas', 180, 250, 'black', 'red', 'green', 400);
+			trackMap.repaint();
 
 			const slider = document.querySelector('.slideshow-container');
 			slider.addEventListener('touchstart', e => {
@@ -456,6 +614,12 @@
 	</script>
 </head>
 <body>
+
+<h1 title="Use the hamburger on the left to reach the menu."
+    style="text-align: left; width: 100%; font-style: normal; text-shadow: 1px 1px 2px black, 0 0 25px white, 0 0 5px silver;">
+	<span id="hamburger" style="cursor: pointer;" onclick="openNav()" onmouseover="openNav()" title="Hamburger">&nbsp; &#8801;</span>
+</h1>
+
 
 <!--input type="checkbox" onchange="manageClick(this);" /> Auto-scroll -->
 <div style="margin: 2px;">
@@ -496,7 +660,7 @@
 		<div class="number-text">3 / 13</div>
 		<div class="display">
 			<!--span class="display-title">GPS Sats</span>
-			<span class="display-data" id="awa">000</span>
+			<span class="display-data" id="sat">000</span>
 			<span class="display-unit">degrees</span-->
 
 			<satellite-plotter class="sat-plot-01 display-data"
@@ -537,7 +701,7 @@
 			<!--span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
 			<span class="display-unit">knots</span-->
-			<analog-display class="analogdisplay-day display-data"
+			<analog-display class="analogdisplay-day-speed display-data"
 							title="Speed Over Ground&#13;in knots"
 							id="sog"
 							min-value="0"
@@ -591,9 +755,21 @@
 	<div class="the-slides fade">
 		<div class="number-text">9 / 13</div>
 		<div class="display">
-			<span class="display-title">Apparent Wind Angle</span>
+			<!--span class="display-title">Apparent Wind Angle</span>
 			<span class="display-data" id="awa">000</span>
-			<span class="display-unit">degrees</span>
+			<span class="display-unit">degrees</span-->
+			<wind-angle-display class="analogdisplay-day-dir display-data"
+								title="Apparent Wind Angle"
+								id="awa"
+								value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+								major-ticks="30"
+								minor-ticks="5"
+								with-border="true"
+								with-digits="true"
+								label="Apparent"
+								hand="wind"
+								width="180"
+								height="180"></wind-angle-display>
 		</div>
 		<div class="text">AWA</div>
 	</div>
@@ -611,9 +787,21 @@
 	<div class="the-slides fade">
 		<div class="number-text">11 / 13</div>
 		<div class="display">
-			<span class="display-title">True Wind Dir</span>
+			<!--span class="display-title">True Wind Dir</span>
 			<span class="display-data" id="twd">000</span>
-			<span class="display-unit">degrees</span>
+			<span class="display-unit">degrees</span-->
+			<direction-display class="analogdisplay-day-dir display-data"
+							   title="True Wind Direction"
+							   id="twd"
+							   value="0"
+							   major-ticks="45"
+							   minor-ticks="5"
+							   with-rose="true"
+							   with-border="true"
+							   label="TWD"
+							   hand="wind"
+							   width="180"
+							   height="180"></direction-display>
 		</div>
 		<div class="text">TWD</div>
 	</div>
@@ -621,9 +809,21 @@
 	<div class="the-slides fade">
 		<div class="number-text">12 / 13</div>
 		<div class="display">
-			<span class="display-title">True Wind Angle</span>
+			<!--span class="display-title">True Wind Angle</span>
 			<span class="display-data" id="twa">000</span>
-			<span class="display-unit">degrees</span>
+			<span class="display-unit">degrees</span--->
+			<wind-angle-display class="analogdisplay-day-dir display-data"
+								title="True Wind Angle"
+								id="twa"
+								value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+								major-ticks="30"
+								minor-ticks="5"
+								with-border="true"
+								with-digits="true"
+								label="True"
+								hand="wind"
+								width="180"
+								height="180"></wind-angle-display>
 		</div>
 		<div class="text">TWA</div>
 	</div>
@@ -660,8 +860,164 @@
 	
 </div>
 
+<!-- Sliding Menu -->
+<div id="side-nav" class="sidenav" style="text-align: left;" onmouseleave="closeNav()">
+    <a href="javascript:void(0)" id="close-nav-button" class="closebtn" onclick="closeNav()">&times;</a>
+
+	<div style="margin-left: 30px; padding-bottom: 20px;">Manage Slides Visibility</div>
+
+	<div class="switch-container" style="margin-left: 30px;" title="Display GPS Position">
+		<label class="switch switch-element">
+		  <input id="pos-slider" type="checkbox" onchange="managePOSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">POS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display GPS Time">
+		<label class="switch switch-element">
+		  <input id="gps-slider" type="checkbox" onchange="manageGPSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">GPS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display GPS Satellites">
+		<label class="switch switch-element">
+		  <input id="sat-slider" type="checkbox" onchange="manageSATClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">SAT</span>
+	</div>
+
+	<div class="switch-container" style="margin-left: 30px;" title="Display COG">
+		<label class="switch switch-element">
+		  <input id="cog-slider" type="checkbox" onchange="manageCOGClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">COG</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display SOG">
+		<label class="switch switch-element">
+		  <input id="sog-slider" type="checkbox" onchange="manageSOGClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">SOG</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Map">
+		<label class="switch switch-element">
+		  <input id="map-slider" type="checkbox" onchange="manageMAPClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">MAP</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display STW">
+		<label class="switch switch-element">
+		  <input id="stw-slider" type="checkbox" onchange="manageSTWClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">STW</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display AWS">
+		<label class="switch switch-element">
+		  <input id="aws-slider" type="checkbox" onchange="manageAWSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">AWS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display AWA">
+		<label class="switch switch-element">
+		  <input id="awa-slider" type="checkbox" onchange="manageAWAClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">AWA</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display TWS">
+		<label class="switch switch-element">
+		  <input id="tws-slider" type="checkbox" onchange="manageTWSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">TWS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display TWD">
+		<label class="switch switch-element">
+		  <input id="twd-slider" type="checkbox" onchange="manageTWDClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">TWD</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display TWA">
+		<label class="switch switch-element">
+		  <input id="twa-slider" type="checkbox" onchange="manageTWAClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">TWA</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display HDG">
+		<label class="switch switch-element">
+		  <input id="hdg-slider" type="checkbox" onchange="manageHDGClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">HDG</span>
+	</div>
+
+</div>	
+
 <script type="text/javascript">
 	let auto = false;
+
+	let displayPos = true;
+	let displayGps = true;
+	let displaySat = true;
+	let displayCog = true;
+	let displaySog = true;
+	let displayMap = true;
+	let displayStw = true;
+	let displayAws = true;
+	let displayAwa = true;
+	let displayTws = true;
+	let displayTwd = true;
+	let displayTwa = true;
+	let displayHdg = true;
+
+	function managePOSClick(cb) {
+		displayPos = cb.checked;
+		console.log(`Display position: ${displayPos}`);
+	}
+	function manageGPSClick(cb) {
+		displayGps = cb.checked;
+	}
+	function manageSATClick(cb) {
+		displaySat = cb.checked;
+	}
+	function manageSOGClick(cb) {
+		displaySog = cb.checked;
+	}
+	function manageCOGClick(cb) {
+		displayCog = cb.checked;
+	}
+	function manageMAPClick(cb) {
+		displayMap = cb.checked;
+	}
+	function manageSTWClick(cb) {
+		displayStw = cb.checked;
+	}
+	function manageAWSClick(cb) {
+		displayAws = cb.checked;
+	}
+	function manageAWAClick(cb) {
+		displayAwa = cb.checked;
+	}
+	function manageTWSClick(cb) {
+		displayTws = cb.checked;
+	}
+	function manageTWDClick(cb) {
+		displayTwd = cb.checked;
+	}
+	function manageTWAClick(cb) {
+		displayTwa = cb.checked;
+	}
+	function manageHDGClick(cb) {
+		displayHdg = cb.checked;
+	}
 
 	function manageClick(cb) {
 		auto = cb.checked;
@@ -674,7 +1030,34 @@
 	showSlides(slideIndex);
 
 	function plusSlides(n) {
-		showSlides(slideIndex += n);
+
+		let dots = document.querySelector('.dots');
+		let dotArray = dots.querySelectorAll('.dot');
+
+		let slideDisplayArray = [
+			displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
+			displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
+			displayHdg
+		];
+		// showSlides(slideIndex += n);
+		slideIndex += n;
+
+		let found = false;
+		while (!found) {
+			if (slideIndex < 1) {
+				slideIndex = dotArray.length;
+			}
+			if (slideIndex > dotArray.length) {
+				slideIndex = 1;
+			}
+			if (!slideDisplayArray[slideIndex - 1]) {
+				slideIndex += n;
+			} else {
+				found = true;
+			}
+		}
+
+		showSlides(slideIndex);
 	}
 
 	function currentSlide(n) {
@@ -699,16 +1082,30 @@
 			for (let i = 0; i < dots.length; i++) {
 				dots[i].className = dots[i].className.replace(" active", "");
 			}
-//		slides[slideIndex - 1].style.display = "block";
 			slides[slideIndex - 1].classList.add("visible-slide"); // Show active one
 
 			dots[slideIndex - 1].className += " active";
-		} else { // Auto
+		} else { // Auto. 
 
-			slideIndex++;
-			if (slideIndex > slides.length) {
-				slideIndex = 1
+			let slideDisplayArray = [
+				displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
+				displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
+				displayHdg
+			];
+
+			slideIndex++; // Auto: always +1
+			let found = false;
+			while (!found) {
+				if (slideIndex > slides.length) {
+					slideIndex = 1;
+				}
+				if (!slideDisplayArray[slideIndex - 1]) {
+					slideIndex += 1;
+				} else {
+					found = true;
+				}
 			}
+
 			for (let i = 0; i < dots.length; i++) {
 				dots[i].className = dots[i].className.replace(" active", "");
 			}
@@ -719,6 +1116,44 @@
 			setTimeout(showSlides, 5000); // Change screen every 5 seconds
 		}
 	}
+
+	function openNav() {
+    	document.getElementById("side-nav").style.width =  getComputedStyle(document.documentElement).getPropertyValue('--expanded-nav-width'); // "450px";
+    }
+
+    function closeNav() {
+    	document.getElementById("side-nav").style.width = "0";
+
+		// Manage the slides visibility.
+		// console.log("Manage the slides visibility here.");
+		let dots = document.querySelector('.dots');
+		let dotArray = dots.querySelectorAll('.dot');
+		let slideDisplayArray = [
+			displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
+			displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
+			displayHdg
+		];
+		// Display/Hide the dots
+		for (let i=0; i<dotArray.length; i++) {
+			dotArray[i].style.display = slideDisplayArray[i] ? '' : 'none';
+		}
+		// Find the first non-hidden slide
+		let found = false;
+		while (!found) {
+			if (slideIndex > dotArray.length) {
+				slideIndex = 1;
+			}
+			if (!slideDisplayArray[slideIndex - 1]) {
+				slideIndex += 1;
+			} else {
+				found = true;
+			}
+		}
+
+		console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
+		showSlides(slideIndex);
+    }
+
 </script>
 
 </body>

@@ -165,7 +165,7 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 		context.strokeStyle = this.fg;
 		context.stroke();
 		context.closePath();
-		// Dot on last pos
+		// Dot on last pos - TODO: an arrow.
 		if (canvasX !== undefined && canvasY !== undefined) {
 			context.beginPath();
 			context.arc(canvasX, canvasY, 6, 0, 2 * Math.PI, false);
