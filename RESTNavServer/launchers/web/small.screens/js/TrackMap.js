@@ -168,10 +168,18 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 		// Dot on last pos - TODO: an arrow.
 		if (canvasX !== undefined && canvasY !== undefined) {
 			context.beginPath();
-			context.arc(canvasX, canvasY, 6, 0, 2 * Math.PI, false);
+			let radius = 6;
+			if (true || this.lastCog === undefined) { // Draw a dot
+				context.arc(canvasX, canvasY, radius, 0, 2 * Math.PI, false);
+			} else { // Draw an arrow
+				// console.log(`Last COG: ${this.lastCog}, on x: ${Math.sin(Math.toRadians(this.lastCog))}, on y: ${Math.cos(Math.toRadians(this.lastCog))}`);
+				context.moveTo(canvasX, canvasY);
+				context.lineTo(canvasX - ((2 * radius) * Math.sin(Math.toRadians(this.lastCog))), canvasY - (radius * Math.cos(Math.toRadians(this.lastCog))));
+				context.lineTo(canvasX - ((2 * radius) * Math.sin(Math.toRadians(this.lastCog))), canvasY + (radius * Math.cos(Math.toRadians(this.lastCog))));
+			}
+			context.closePath();
 			context.fillStyle = this.fg;
 			context.fill();
-			context.closePath();
 		}
 	};
 };
