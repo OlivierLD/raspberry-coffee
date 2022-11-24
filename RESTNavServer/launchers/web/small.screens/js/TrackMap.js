@@ -165,7 +165,7 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 		context.strokeStyle = this.fg;
 		context.stroke();
 		context.closePath();
-		// Dot on last pos - TODO: an arrow.
+		// Dot on last pos
 		if (canvasX !== undefined && canvasY !== undefined) {
 			context.beginPath();
 			let radius = 6;
@@ -180,6 +180,23 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 			context.closePath();
 			context.fillStyle = this.fg;
 			context.fill();
+			// Crosshair ?
+			if (true) {
+				context.lineWidth = 1;
+				context.strokeStyle = 'cyan';
+				context.beginPath();
+				context.moveTo(canvasX - 10, canvasY);
+				context.lineTo(canvasX + 10, canvasY);
+				context.closePath();
+				context.stroke();
+
+				context.beginPath();
+				context.moveTo(canvasX, canvasY - 10);
+				context.lineTo(canvasX, canvasY + 10);
+				context.closePath();
+				context.stroke();
+			}
+
 		}
 	};
 };
