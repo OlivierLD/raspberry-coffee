@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
     <title>One display</title>
 
+    <!-- Pure JavaScript, NOT a WebComponent -->
     <script type="text/javascript" src="./js/AnalogDisplay.js"></script>
     <script type="text/javascript">
 
@@ -23,9 +24,9 @@
       if ((inc > 0 && bsp >= MAX_BSP) || (inc < 0 && (bsp <= MIN_BSP))) {
         inc *= -1;
       }
-		  bsp += inc;
-		  displayBSP.setValue(bsp);
-		}, 20);
+      bsp += inc;
+      displayBSP.setValue(bsp);
+    }, 20);
   };
 
 		</script>
