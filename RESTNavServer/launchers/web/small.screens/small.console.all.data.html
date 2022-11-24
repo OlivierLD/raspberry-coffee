@@ -52,7 +52,7 @@
 
 		.the-slides {
 			/*display: none;*/
-			height: 300px;
+			height: 340px;  /*300px;*/
 			grid-area: center;
 			margin: auto;
 			transition: max-height 1s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
@@ -64,13 +64,13 @@
 
 		.visible-slide {
 			opacity: 1;
-			max-width: 200px;
+			max-width: 220px;  /*200px;*/
 			transform: scaleX(1);
 		}
 
 		/* Slideshow container */
 		.slideshow-container {
-			max-width: 300px;
+			max-width: 300px; /* 300px. depends on the screen size */
 			margin: auto;
 			text-align: center;
 			display: grid;
@@ -185,7 +185,7 @@
 		}
 
 		.display {
-			width: 200px;
+			width: 220px; /*200px;*/
 			height: 300px;
 			border: 4px solid; /* Comment 2 lines to remove the frame */
 			border-radius: 10px;
@@ -197,7 +197,7 @@
 		}
 
 		.display-2 {
-			width: 200px;
+			width: 220px; /*200px;*/
 			height: 300px;
 			border: 4px solid; /* Comment 2 lines to remove the frame */
 			border-radius: 10px;
@@ -593,7 +593,7 @@
 		window.onload = () => {
 			initAjax();
 
-			trackMap = new TrackMap('mapCanvas', 180, 250, 'black', 'red', 'green', 400);
+			trackMap = new TrackMap('mapCanvas', 200, 250, 'black', 'red', 'green', 400);
 			trackMap.repaint();
 
 			const slider = document.querySelector('.slideshow-container');
@@ -666,8 +666,8 @@
 			<satellite-plotter class="sat-plot-01 display-data"
 							   title="Satellites in view"
 							   id="sp-01"
-							   width="180"
-							   height="180"
+							   width="200"
+							   height="200"
 							   with-border="true"
 							   sat-in-view='{}'></satellite-plotter>
 		</div>
@@ -685,8 +685,8 @@
 							 class="green display-data"
 							 title="Course Over Ground"
 							 value="0"
-							 width="180"
-							 height="180"
+							 width="200"
+							 height="200"
 							 major-ticks="45"
 							 minor-ticks="5"
 							 label="COG"></compass-display>
@@ -714,8 +714,8 @@
 							label="SOG"
 							unit="kn"
 							rotate-digits="false"
-							width="180"
-							height="180"></analog-display>
+							width="200"
+							height="200"></analog-display>
 		</div>
 
 		<div class="text">SOG</div>
@@ -725,7 +725,7 @@
 		<div class="number-text">6 / 13</div>
 		<div class="display">
 			
-			<canvas id="mapCanvas" class="displayContent" width="180" height="250" title="Track Map"></canvas>
+			<canvas id="mapCanvas" class="displayContent" width="200" height="250" title="Track Map"></canvas>
 
 		</div>
 		<div class="text">MAP</div>
@@ -768,8 +768,8 @@
 								with-digits="true"
 								label="Apparent"
 								hand="wind"
-								width="180"
-								height="180"></wind-angle-display>
+								width="200"
+								height="200"></wind-angle-display>
 		</div>
 		<div class="text">AWA</div>
 	</div>
@@ -800,8 +800,8 @@
 							   with-border="true"
 							   label="TWD"
 							   hand="wind"
-							   width="180"
-							   height="180"></direction-display>
+							   width="200"
+							   height="200"></direction-display>
 		</div>
 		<div class="text">TWD</div>
 	</div>
@@ -822,8 +822,8 @@
 								with-digits="true"
 								label="True"
 								hand="wind"
-								width="180"
-								height="180"></wind-angle-display>
+								width="200"
+								height="200"></wind-angle-display>
 		</div>
 		<div class="text">TWA</div>
 	</div>
@@ -980,7 +980,7 @@
 
 	function managePOSClick(cb) {
 		displayPos = cb.checked;
-		console.log(`Display position: ${displayPos}`);
+		// console.log(`Display position: ${displayPos}`);
 	}
 	function manageGPSClick(cb) {
 		displayGps = cb.checked;
@@ -1074,7 +1074,7 @@
 			slideIndex = slides.length;
 		}
 		for (let i = 0; i < slides.length; i++) { // Hide them all
-		                                          //	slides[i].style.display = "none";
+		    //	slides[i].style.display = "none";
 			slides[i].classList.remove("visible-slide");
 		}
 
