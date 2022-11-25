@@ -90,7 +90,7 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 		len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = this.gc;
+		context.fillStyle = 'white'; // this.gc;
 		context.fillText(text, (this.w / 2) - (len / 2), (this.h / 2) - (fontSize) - 2);
 
 		if (this.lastCog !== undefined) {
