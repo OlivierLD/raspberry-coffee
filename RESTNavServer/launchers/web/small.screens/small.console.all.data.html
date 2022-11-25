@@ -593,7 +593,7 @@
 		window.onload = () => {
 			initAjax();
 
-			trackMap = new TrackMap('mapCanvas', 200, 250, 'black', 'red', 'green', 400);
+			trackMap = new TrackMap('mapCanvas', 200, 250, 'black', 'red', 'green', 'orange', 400);
 			trackMap.repaint();
 
 			const slider = document.querySelector('.slideshow-container');
@@ -887,70 +887,70 @@
 		<span class="switch-element">SAT</span>
 	</div>
 
-	<div class="switch-container" style="margin-left: 30px;" title="Display COG">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Course Over GBround">
 		<label class="switch switch-element">
 		  <input id="cog-slider" type="checkbox" onchange="manageCOGClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">COG</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display SOG">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Speed Over Ground">
 		<label class="switch switch-element">
 		  <input id="sog-slider" type="checkbox" onchange="manageSOGClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">SOG</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display Map">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Map (the track)">
 		<label class="switch switch-element">
 		  <input id="map-slider" type="checkbox" onchange="manageMAPClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">MAP</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display STW">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Speed Through Water (aka BSP)">
 		<label class="switch switch-element">
 		  <input id="stw-slider" type="checkbox" onchange="manageSTWClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">STW</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display AWS">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Apparent Wind Speed">
 		<label class="switch switch-element">
 		  <input id="aws-slider" type="checkbox" onchange="manageAWSClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">AWS</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display AWA">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Apparent Wind Angle">
 		<label class="switch switch-element">
 		  <input id="awa-slider" type="checkbox" onchange="manageAWAClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">AWA</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display TWS">
+	<div class="switch-container" style="margin-left: 30px;" title="Display True Wind Speed">
 		<label class="switch switch-element">
 		  <input id="tws-slider" type="checkbox" onchange="manageTWSClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">TWS</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display TWD">
+	<div class="switch-container" style="margin-left: 30px;" title="Display True Wind Direction">
 		<label class="switch switch-element">
 		  <input id="twd-slider" type="checkbox" onchange="manageTWDClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">TWD</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display TWA">
+	<div class="switch-container" style="margin-left: 30px;" title="Display True Wind Angle">
 		<label class="switch switch-element">
 		  <input id="twa-slider" type="checkbox" onchange="manageTWAClick(this);" checked>
 		  <span class="slider round"></span>
 		</label>
 		<span class="switch-element">TWA</span>
 	</div>
-	<div class="switch-container" style="margin-left: 30px;" title="Display HDG">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Heading (from Compass)">
 		<label class="switch switch-element">
 		  <input id="hdg-slider" type="checkbox" onchange="manageHDGClick(this);" checked>
 		  <span class="slider round"></span>

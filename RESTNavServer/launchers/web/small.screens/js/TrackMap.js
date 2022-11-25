@@ -13,13 +13,15 @@
  * @param {color} bgColor Background color, default black
  * @param {color} fgColor Foreground (track) color, default red
  * @param {color} gridColor Grid color, default green
+ * @param {color} textColor Text color, default white
  * @param {number} buffSize Max number of points in the track, default 400
  */
-function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
+function TrackMap(cName, width, height, bgColor, fgColor, gridColor, textColor, buffSize) {
 
 	this.bg = (bgColor || 'black');
-	this.fg = (fgColor || 'red');
+	this.fg = (fgColor || 'red');   // Track
 	this.gc = (gridColor || 'green');
+	this.tc = (textColor || 'white');
 
 	this.w = (width || 400);
 	this.h = (height || 400);
@@ -90,7 +92,7 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 		len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = 'white'; // this.gc;
+		context.fillStyle = this.tc; 
 		context.fillText(text, (this.w / 2) - (len / 2), (this.h / 2) - (fontSize) - 2);
 
 		if (this.lastCog !== undefined) {
