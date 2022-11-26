@@ -9,14 +9,14 @@
  | - GPS Satellites (event 'gps-sat')
  | - COG (event 'cog')
  | - SOG (event 'sog')
- | - MAP 
- | - STW
- | - AWS
- | - AWA
- | - TWS
- | - TWD
- | - TWA
- | - HDG
+ | - MAP (events 'pos', 'cog', 'sog')
+ | - STW (event 'bsp')
+ | - AWS (event 'aws')
+ | - AWA (event 'awa')
+ | - TWS (event 'tws')
+ | - TWD (event 'twd')
+ | - TWA (event 'twa')
+ | - HDG (event 'hdg')
  +-->
 <html>
 <head>
@@ -471,7 +471,7 @@
 		let trackMap; // The map. TrackMap (just the path, no chart).
 
 		/**
-		 *  SUBSCRIBERS HERE.
+		 *  EVENT SUBSCRIBERS HERE.
 		 *
 		 * See js/ajax.manager.js
 		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
@@ -500,15 +500,20 @@
             plotter.repaint();
 		});
 		events.subscribe('sog', val => {
-			// document.getElementById('sog').innerText = val.toFixed(2);
-			document.getElementById('sog').value = val;
+			if (digital_analog === DIGITAL_DISPLAY) {
+				document.getElementById('sog-dig').innerText = val.toFixed(2);
+			} else {
+				document.getElementById('sog').value = val;
+			}
 			// console.log(`SOG: ${val}`);
 			trackMap.setLastSog(val);
 		});
 		events.subscribe('cog', val => {
-			// document.getElementById('cog').innerText = val.toFixed(0);
-			document.getElementById('cog').value = val;
-
+			if (digital_analog === DIGITAL_DISPLAY) {
+				document.getElementById('cog-dig').innerText = val.toFixed(0);
+			} else {
+				document.getElementById('cog').value = val;
+			}
 			// console.log(`COG: ${val}`);
 			trackMap.setLastCog(val);
 		});
@@ -516,26 +521,35 @@
 			document.getElementById('bsp').innerText = val.toFixed(2);
 		});
 		events.subscribe('awa', val => {
-			// document.getElementById('awa').innerText = val.toFixed(0);
-			let json = { ws: aws, wa: val }
-			document.getElementById('awa').value = JSON.stringify(json);
+			if (digital_analog === DIGITAL_DISPLAY) {
+				document.getElementById('awa-dig').innerText = val.toFixed(0);
+			} else {
+				let json = { ws: aws, wa: val }
+				document.getElementById('awa').value = JSON.stringify(json);
+			}
 		});
 		events.subscribe('aws', val => {
 			aws = val;
 			document.getElementById('aws').innerText = val.toFixed(2);
 		});
 		events.subscribe('twa', val => {
-			// document.getElementById('twa').innerText = val.toFixed(0);
-			let json = { ws: tws, wa: val }
-			document.getElementById('twa').value = JSON.stringify(json);
+			if (digital_analog === DIGITAL_DISPLAY) {
+				document.getElementById('twa-dig').innerText = val.toFixed(0);
+			} else {
+				let json = { ws: tws, wa: val }
+				document.getElementById('twa').value = JSON.stringify(json);
+			}
 		});
 		events.subscribe('tws', val => {
 			tws = val;
 			document.getElementById('tws').innerText = val.toFixed(2);
 		});
 		events.subscribe('twd', val => {
-			// document.getElementById('twd').innerText = val.toFixed(0);
-			document.getElementById('twd').value = val;
+			if (digital_analog === DIGITAL_DISPLAY) {
+				document.getElementById('twd-dig').innerText = val.toFixed(0);
+			} else {
+				document.getElementById('twd').value = val;
+			}
 		});
 		events.subscribe('hdg', val => {
 			document.getElementById('hdg').innerText = val.toFixed(0);
@@ -631,6 +645,7 @@
 	</label>
 </div>
 
+<!-- Here are the slides (the screens) -->
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
@@ -676,10 +691,11 @@
 	<div class="the-slides fade">
 		<div class="number-text">4 / 13</div>
 		<div class="display">
-			<!--span class="display-title">Course Over Ground</span>
-			<span class="display-data" id="cog">000</span>
-			<span class="display-unit">degrees</span-->
-
+			<div id="cog-div" class="display" style="display: none; border: none;">
+				<span class="display-title">Course Over Ground</span>
+				<span class="display-data" id="cog-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>
 			<compass-display id="cog"
 							 class="green display-data"
 							 title="Course Over Ground"
@@ -697,9 +713,11 @@
 	<div class="the-slides fade">
 		<div class="number-text">5 / 13</div>
 		<div class="display">
-			<!--span class="display-title">Speed Over Ground</span>
-			<span class="display-data" id="sog">00.00</span>
-			<span class="display-unit">knots</span-->
+			<div id="sog-div" class="display" style="display: none; border: none;">
+				<span class="display-title">Speed Over Ground</span>
+				<span class="display-data" id="sog-dig">00.00</span>
+				<span class="display-unit">knots</span>
+			</div>
 			<analog-display class="analogdisplay-day-speed display-data"
 							title="Speed Over Ground&#13;in knots"
 							id="sog"
@@ -723,9 +741,7 @@
 	<div class="the-slides fade">
 		<div class="number-text">6 / 13</div>
 		<div class="display">
-			
 			<canvas id="mapCanvas" class="displayContent" width="200" height="250" title="Track Map"></canvas>
-
 		</div>
 		<div class="text">MAP</div>
 	</div>
@@ -754,9 +770,11 @@
 	<div class="the-slides fade">
 		<div class="number-text">9 / 13</div>
 		<div class="display">
-			<!--span class="display-title">Apparent Wind Angle</span>
-			<span class="display-data" id="awa">000</span>
-			<span class="display-unit">degrees</span-->
+			<div id="awa-div" class="display" style="display: none; border: none;">
+				<span class="display-title">Apparent Wind Angle</span>
+				<span class="display-data" id="awa-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>
 			<wind-angle-display class="analogdisplay-day-dir display-data"
 								title="Apparent Wind Angle"
 								id="awa"
@@ -786,9 +804,11 @@
 	<div class="the-slides fade">
 		<div class="number-text">11 / 13</div>
 		<div class="display">
-			<!--span class="display-title">True Wind Dir</span>
-			<span class="display-data" id="twd">000</span>
-			<span class="display-unit">degrees</span-->
+			<div id="twd-div" class="display" style="display: none; border: none;">
+				<span class="display-title">True Wind Dir</span>
+				<span class="display-data" id="twd-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>
 			<direction-display class="analogdisplay-day-dir display-data"
 							   title="True Wind Direction"
 							   id="twd"
@@ -808,9 +828,11 @@
 	<div class="the-slides fade">
 		<div class="number-text">12 / 13</div>
 		<div class="display">
-			<!--span class="display-title">True Wind Angle</span>
-			<span class="display-data" id="twa">000</span>
-			<span class="display-unit">degrees</span--->
+			<div id="twa-div" class="display" style="display: none; border: none;">
+				<span class="display-title">True Wind Angle</span>
+				<span class="display-data" id="twa-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>	
 			<wind-angle-display class="analogdisplay-day-dir display-data"
 								title="True Wind Angle"
 								id="twa"
@@ -863,7 +885,15 @@
 <div id="side-nav" class="sidenav" style="text-align: left;" onmouseleave="closeNav()">
     <a href="javascript:void(0)" id="close-nav-button" class="closebtn" onclick="closeNav()">&times;</a>
 
-	<div style="margin-left: 30px; padding-bottom: 20px;">Manage Slides Visibility</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Analog Displays, when possible">
+		<label class="switch switch-element">
+		  <input id="digit-analog-slider" type="checkbox" onchange="manageDigitalClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">Analog Displays</span>
+	</div>
+
+	<div style="margin-left: 30px; padding-bottom: 20px; padding-top: 20px;">Manage Slides Visibility</div>
 
 	<div class="switch-container" style="margin-left: 30px;" title="Display GPS Position">
 		<label class="switch switch-element">
@@ -887,7 +917,7 @@
 		<span class="switch-element">SAT</span>
 	</div>
 
-	<div class="switch-container" style="margin-left: 30px;" title="Display Course Over GBround">
+	<div class="switch-container" style="margin-left: 30px;" title="Display Course Over Ground">
 		<label class="switch switch-element">
 		  <input id="cog-slider" type="checkbox" onchange="manageCOGClick(this);" checked>
 		  <span class="slider round"></span>
@@ -963,6 +993,10 @@
 <script type="text/javascript">
 	let auto = false;
 
+	const DIGITAL_DISPLAY = 1; // All digital displays (except GPS Satellites and Track)
+	const ANALOG_DISPLAY = 2;  // Some data displayed on an analog WebCOmponent
+	let digital_analog = ANALOG_DISPLAY;
+
 	let displayPos = true;
 	let displayGps = true;
 	let displaySat = true;
@@ -976,6 +1010,25 @@
 	let displayTwd = true;
 	let displayTwa = true;
 	let displayHdg = true;
+
+	function manageDigitalClick(cb) {
+		digital_analog = cb.checked ? ANALOG_DISPLAY : DIGITAL_DISPLAY;
+		// Set concerned displays accordingly.
+		document.getElementById('cog-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('cog').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('sog-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('sog').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('awa-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('awa').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('twd-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('twd').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('twa-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('twa').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+	}
 
 	function managePOSClick(cb) {
 		displayPos = cb.checked;
@@ -1149,7 +1202,7 @@
 			}
 		}
 
-		console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
+		// console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
 		showSlides(slideIndex);
     }
 
