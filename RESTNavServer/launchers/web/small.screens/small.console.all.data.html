@@ -20,6 +20,13 @@
  | - TWD (event 'twd')
  | - TWA (event 'twa')
  | - HDG (event 'hdg')
+ |
+ | Query parameters available:
+ | DIGITAL, POS, GPS, SAT, COG, SOG, MAP, STW, AWS, AWA, TWS, TWD, TWA, HDG
+ | DIGITAL is 'false' by default, all others are 'true'
+ | They all take 'true' or 'false' values, like in
+ | http://server-ip:9999/web/small.screens/small.console.all.data.html?DIGITAL=false&COG=true&HDG=false&TWD=false&TWS=false&TWA=false&AWS=false&AWA=false&STW=false
+ | This is where the QR Code generator can proof useful.
  +-->
 <html>
 <head>
@@ -468,166 +475,6 @@
 	<script type="text/javascript" src="../js/date.proto.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
 	<script type="text/javascript" src="js/ajax.manager.js"></script>
-
-	<script type="text/javascript">
-
-		let trackMap; // The map. TrackMap (just the path, no chart).
-
-		/**
-		 *  EVENT SUBSCRIBERS HERE.
-		 *
-		 * See js/ajax.manager.js
-		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
-		 */
-		let tws = 0.0;
-		let aws = 0.0;
-		events.subscribe('pos', val => {
-			let strLat = decToSex(val.lat, 'NS');
-			let strLng = decToSex(val.lng, 'EW');
-			document.getElementById('lat').innerHTML = strLat;
-			document.getElementById('lng').innerHTML = strLng;
-			trackMap.addPoint(val);
-		});
-		events.subscribe('gps-time', val => {
-            // val.format("Y-M-d H:i:s")
-			// let date = gpsTime.format("d-m-Y-l");
-			// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
-			document.getElementById('gps-date').innerText = val.format("Y-M-d");
-			document.getElementById('gps-time').innerText = val.format("H:i:s");
-		});
-		events.subscribe('gps-sat', val => {
-			// document.getElementById('bsp').innerText = val.toFixed(2);
-			// console.log(`GPS-SAT: ${JSON.stringify(val)}`);
-			let plotter = document.getElementById('sp-01');
-            plotter.setSatellites(val);
-            plotter.repaint();
-		});
-		events.subscribe('sog', val => {
-			if (digital_analog === DIGITAL_DISPLAY) {
-				document.getElementById('sog-dig').innerText = val.toFixed(2);
-			} else {
-				document.getElementById('sog').value = val;
-			}
-			// console.log(`SOG: ${val}`);
-			trackMap.setLastSog(val);
-		});
-		events.subscribe('cog', val => {
-			if (digital_analog === DIGITAL_DISPLAY) {
-				document.getElementById('cog-dig').innerText = val.toFixed(0);
-			} else {
-				document.getElementById('cog').value = val;
-			}
-			// console.log(`COG: ${val}`);
-			trackMap.setLastCog(val);
-		});
-		events.subscribe('bsp', val => {
-			document.getElementById('bsp').innerText = val.toFixed(2);
-		});
-		events.subscribe('awa', val => {
-			if (digital_analog === DIGITAL_DISPLAY) {
-				document.getElementById('awa-dig').innerText = val.toFixed(0);
-			} else {
-				let json = { ws: aws, wa: val }
-				document.getElementById('awa').value = JSON.stringify(json);
-			}
-		});
-		events.subscribe('aws', val => {
-			aws = val;
-			document.getElementById('aws').innerText = val.toFixed(2);
-		});
-		events.subscribe('twa', val => {
-			if (digital_analog === DIGITAL_DISPLAY) {
-				document.getElementById('twa-dig').innerText = val.toFixed(0);
-			} else {
-				let json = { ws: tws, wa: val }
-				document.getElementById('twa').value = JSON.stringify(json);
-			}
-		});
-		events.subscribe('tws', val => {
-			tws = val;
-			document.getElementById('tws').innerText = val.toFixed(2);
-		});
-		events.subscribe('twd', val => {
-			if (digital_analog === DIGITAL_DISPLAY) {
-				document.getElementById('twd-dig').innerText = val.toFixed(0);
-			} else {
-				document.getElementById('twd').value = val;
-			}
-		});
-		events.subscribe('hdg', val => {
-			document.getElementById('hdg').innerText = val.toFixed(0);
-		});
-
-        let lpad = (str, len, pad) => {
-            let s = str;
-            while (s.length < len) {
-                s = (pad === undefined ? ' ' : pad) + s;
-            }
-            return s;
-        };
-
-		let decToSex = (val, ns_ew) => {
-			let absVal = Math.abs(val);
-			let intValue = Math.floor(absVal);
-			let dec = absVal - intValue;
-			let i = intValue;
-			dec *= 60;
-	//    var s = i + "°" + dec.toFixed(2) + "'";
-	//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
-			let s = "";
-			if (ns_ew !== undefined) {
-				if (val < 0) {
-					s += (ns_ew === 'NS' ? 'S' : 'W');
-				} else {
-					s += (ns_ew === 'NS' ? 'N' : 'E');
-				}
-				s += " ";
-			} else {
-				if (val < 0) {
-					s += '-'
-				}
-			}
-			s += i + "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
-
-			return s;
-		};
-
-		// Swipe detection
-		let touchstartX = 0
-		let touchendX = 0
-
-		let handleGesture = () => {
-			if (touchendX < touchstartX) {
-				// alert('swiped left!');
-				plusSlides(+1);
-			}
-			if (touchendX > touchstartX) {
-				// alert('swiped right!');
-				plusSlides(-1);
-			}
-		};
-
-		window.onload = () => {
-			initAjax();
-
-			trackMap = new TrackMap('mapCanvas', 200, 250, 'black', 'red', 'green', 'orange', 400);
-			trackMap.repaint();
-
-			const slider = document.querySelector('.slideshow-container');
-			slider.addEventListener('touchstart', e => {
-				touchstartX = e.changedTouches[0].screenX;
-			});
-
-			slider.addEventListener('touchend', e => {
-				touchendX = e.changedTouches[0].screenX;
-				handleGesture();
-			});
-
-			// Measure slides length (WiP)
-			// let slides = document.querySelectorAll(".the-slides");
-			// console.log(`We have ${slides.length} slide(s).`);
-		}
-	</script>
 </head>
 <body>
 
@@ -1173,14 +1020,27 @@
 	}
 
 	function openNav() {
+		// Set checkboxes values in the nav bar
+		document.getElementById("digit-analog-slider").checked = (digital_analog === ANALOG_DISPLAY);
+		document.getElementById("pos-slider").checked = displayPos;
+		document.getElementById("gps-slider").checked = displayGps;
+		document.getElementById("sat-slider").checked = displaySat;
+		document.getElementById("cog-slider").checked = displayCog;
+		document.getElementById("sog-slider").checked = displaySog;
+		document.getElementById("map-slider").checked = displayMap;
+
+		document.getElementById("awa-slider").checked = displayAwa;
+		document.getElementById("aws-slider").checked = displayAws;
+		document.getElementById("twa-slider").checked = displayTwa;
+		document.getElementById("tws-slider").checked = displayTws;
+		document.getElementById("twd-slider").checked = displayTwd;
+		document.getElementById("stw-slider").checked = displayStw;
+		document.getElementById("hdg-slider").checked = displayHdg;
+		// Open side nav
     	document.getElementById("side-nav").style.width =  getComputedStyle(document.documentElement).getPropertyValue('--expanded-nav-width'); // "450px";
     }
 
-    function closeNav() {
-    	document.getElementById("side-nav").style.width = "0";
-
-		// Manage the slides visibility.
-		// console.log("Manage the slides visibility here.");
+	function setSlideVisibility() {
 		let dots = document.querySelector('.dots');
 		let dotArray = dots.querySelectorAll('.dot');
 		let slideDisplayArray = [
@@ -1204,11 +1064,229 @@
 				found = true;
 			}
 		}
+	}
+
+    function closeNav() {
+    	document.getElementById("side-nav").style.width = "0";
+
+		// Manage the slides visibility.
+		// console.log("Manage the slides visibility here.");
+		setSlideVisibility();
 
 		// console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
 		showSlides(slideIndex);
     }
 
+	let trackMap; // The map. TrackMap (just the path, no chart).
+
+	/**
+	 *  EVENT SUBSCRIBERS HERE.
+	 *
+	 * See js/ajax.manager.js
+	 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
+	 */
+	let tws = 0.0;
+	let aws = 0.0;
+	events.subscribe('pos', val => {
+		let strLat = decToSex(val.lat, 'NS');
+		let strLng = decToSex(val.lng, 'EW');
+		document.getElementById('lat').innerHTML = strLat;
+		document.getElementById('lng').innerHTML = strLng;
+		trackMap.addPoint(val);
+	});
+	events.subscribe('gps-time', val => {
+		// val.format("Y-M-d H:i:s")
+		// let date = gpsTime.format("d-m-Y-l");
+		// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
+		document.getElementById('gps-date').innerText = val.format("Y-M-d");
+		document.getElementById('gps-time').innerText = val.format("H:i:s");
+	});
+	events.subscribe('gps-sat', val => {
+		// document.getElementById('bsp').innerText = val.toFixed(2);
+		// console.log(`GPS-SAT: ${JSON.stringify(val)}`);
+		let plotter = document.getElementById('sp-01');
+		plotter.setSatellites(val);
+		plotter.repaint();
+	});
+	events.subscribe('sog', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('sog-dig').innerText = val.toFixed(2);
+		} else {
+			document.getElementById('sog').value = val;
+		}
+		// console.log(`SOG: ${val}`);
+		trackMap.setLastSog(val);
+	});
+	events.subscribe('cog', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('cog-dig').innerText = val.toFixed(0);
+		} else {
+			document.getElementById('cog').value = val;
+		}
+		// console.log(`COG: ${val}`);
+		trackMap.setLastCog(val);
+	});
+	events.subscribe('bsp', val => {
+		document.getElementById('bsp').innerText = val.toFixed(2);
+	});
+	events.subscribe('awa', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('awa-dig').innerText = val.toFixed(0);
+		} else {
+			let json = { ws: aws, wa: val }
+			document.getElementById('awa').value = JSON.stringify(json);
+		}
+	});
+	events.subscribe('aws', val => {
+		aws = val;
+		document.getElementById('aws').innerText = val.toFixed(2);
+	});
+	events.subscribe('twa', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('twa-dig').innerText = val.toFixed(0);
+		} else {
+			let json = { ws: tws, wa: val }
+			document.getElementById('twa').value = JSON.stringify(json);
+		}
+	});
+	events.subscribe('tws', val => {
+		tws = val;
+		document.getElementById('tws').innerText = val.toFixed(2);
+	});
+	events.subscribe('twd', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('twd-dig').innerText = val.toFixed(0);
+		} else {
+			document.getElementById('twd').value = val;
+		}
+	});
+	events.subscribe('hdg', val => {
+		document.getElementById('hdg').innerText = val.toFixed(0);
+	});
+
+	let lpad = (str, len, pad) => {
+		let s = str;
+		while (s.length < len) {
+			s = (pad === undefined ? ' ' : pad) + s;
+		}
+		return s;
+	};
+
+	let decToSex = (val, ns_ew) => {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		let i = intValue;
+		dec *= 60;
+//    var s = i + "°" + dec.toFixed(2) + "'";
+//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+		let s = "";
+		if (ns_ew !== undefined) {
+			if (val < 0) {
+				s += (ns_ew === 'NS' ? 'S' : 'W');
+			} else {
+				s += (ns_ew === 'NS' ? 'N' : 'E');
+			}
+			s += " ";
+		} else {
+			if (val < 0) {
+				s += '-'
+			}
+		}
+		s += i + "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
+
+		return s;
+	};
+
+	// Swipe detection
+	let touchstartX = 0
+	let touchendX = 0
+
+	let handleGesture = () => {
+		if (touchendX < touchstartX) {
+			// alert('swiped left!');
+			plusSlides(+1);
+		}
+		if (touchendX > touchstartX) {
+			// alert('swiped right!');
+			plusSlides(-1);
+		}
+	};
+
+	let getQSPrm = (prm) => {
+		let loc = document.location.toString();
+		if (loc.indexOf("?") > -1) {
+			let qs = loc.substring(loc.indexOf("?") + 1);
+			let prms = qs.split('&');
+			for (let i=0; i<prms.length; i++) {
+				let nv = prms[i].split('=');
+				if (nv.length === 2) {
+					if (nv[0] === prm) {
+						return nv[1];
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	window.onload = () => {
+		initAjax();
+
+		trackMap = new TrackMap('mapCanvas', 200, 250, 'black', 'red', 'green', 'orange', 400);
+		trackMap.repaint();
+
+		const slider = document.querySelector('.slideshow-container');
+		slider.addEventListener('touchstart', e => {
+			touchstartX = e.changedTouches[0].screenX;
+		});
+
+		slider.addEventListener('touchend', e => {
+			touchendX = e.changedTouches[0].screenX;
+			handleGesture();
+		});
+
+		// Measure slides length (WiP)
+		// let slides = document.querySelectorAll(".the-slides");
+		// console.log(`We have ${slides.length} slide(s).`);
+
+		// Query String parameters
+		// debugger;
+		let qs = getQSPrm('DIGITAL');
+		digital_analog = (qs === null || qs === "true") ? DIGITAL_DISPLAY : ANALOG_DISPLAY;
+		qs = getQSPrm('POS');
+		displayPos = (qs === null || qs === "true");
+		qs = getQSPrm('GPS');
+		displayGps = (qs === null || qs === "true");
+		qs = getQSPrm('SAT');
+		displaySat = (qs === null || qs === "true");
+		qs = getQSPrm('COG');
+		displayCog = (qs === null || qs === "true");
+		qs = getQSPrm('SOG');
+		displaySog = (qs === null || qs === "true");
+		qs = getQSPrm('MAP');
+		displayMap = (qs === null || qs === "true");
+		qs = getQSPrm('STW');
+		displayStw = (qs === null || qs === "true");
+		qs = getQSPrm('AWS');
+		displayAws = (qs === null || qs === "true");
+		qs = getQSPrm('AWA');
+		displayAwa = (qs === null || qs === "true");
+		qs = getQSPrm('TWS');
+		displayTws = (qs === null || qs === "true");
+		qs = getQSPrm('TWD');
+		displayTwd = (qs === null || qs === "true");
+		qs = getQSPrm('TWA');
+		displayTwa = (qs === null || qs === "true");
+		qs = getQSPrm('HDG');
+		displayHdg = (qs === null || qs === "true");
+
+		setSlideVisibility();
+
+		// console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
+		showSlides(slideIndex);
+
+	}
 </script>
 
 </body>
