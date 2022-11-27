@@ -376,9 +376,24 @@
 			cursor: pointer;
 		}
 
+		#help-nav-button:hover {
+			color: cyan;
+			cursor: pointer;
+		}
+
 		a.active-link:hover {
 			color: cyan;
 			cursor: pointer;
+		}
+
+		.sidenav .helpbtn {
+			position: absolute;
+			top: 0;
+			left: 55px;
+			font-size: 24px;
+			padding: 8px;
+			/* margin-left: 20px; */
+			margin-bottom: 20px;
 		}
 
 		.sidenav .closebtn {
@@ -459,6 +474,29 @@
 		}
 		.switch-element {
 			place-self: flex-start;
+		}
+
+		dialog {
+			background: rgba(25, 25, 25, 0.75);
+			color: silver;
+			width: 400px;
+			top: 50px;
+			border: 2px solid orange;
+			border-radius: 10px;
+			margin: auto;
+		}
+
+		.dialog-header {
+			font-size: 24px;
+			font-weight: 700;
+		}
+
+		.dialog-header-close {
+			float: right;
+		}
+		.dialog-header-close:hover {
+			color: cyan;
+			cursor: pointer;
 		}
 
 	</style>
@@ -731,8 +769,29 @@
 	
 </div>
 
+
+<dialog id="help-dialog" style="width: 400px; z-index: 10;">
+    <div class="dialog-header">
+      <span>Help !...</span>
+      <span class="dialog-header-close" onclick="closeHelpDialog();">&times</span>
+    </div>
+    <div style="text-align: left; padding: 5px;">
+      <!-- About content -->
+      <div style="margin-top: 15px;">
+        Use the sliders in the nav bar to show or hide the different screens.<br/>
+      </div>
+      <div style="margin-top: 15px;">
+        Query String parameters are also available to configure those screens at startup
+      </div>
+      <div style="margin-top: 15px;">
+        <i>QS Example</i>: <code>?AWA=false&AWS=false&HDG=false</code>
+      </div>
+    </div>
+  </dialog>
+
 <!-- Sliding Menu -->
 <div id="side-nav" class="sidenav" style="text-align: left;" onmouseleave="closeNav()">
+    <a href="javascript:void(0)" id="help-nav-button" class="helpbtn" onclick="displayHelp()" title="Help">?</a>
     <a href="javascript:void(0)" id="close-nav-button" class="closebtn" onclick="closeNav()">&times;</a>
 
 	<div class="switch-container" style="margin-left: 30px;" title="Analog Displays, when possible">
@@ -1076,6 +1135,28 @@
 		// console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
 		showSlides(slideIndex);
     }
+
+	const NO_DIALOG_MESSAGE = "Your browser seems not to support dialogs...\nMaybe Chrome or Chromium would?";
+
+	function closeHelpDialog() {
+		let aboutDialog = document.getElementById("help-dialog");
+		if (aboutDialog.close !== undefined) {
+			aboutDialog.close();
+		} else {
+		// alert(NO_DIALOG_MESSAGE);
+			aboutDialog.style.display = 'none';
+		}
+	}
+
+	function displayHelp() {
+		let aboutDialog = document.getElementById("help-dialog");
+		if (aboutDialog.show !== undefined) {
+			aboutDialog.show();
+		} else {
+			alert(NO_DIALOG_MESSAGE);
+			aboutDialog.style.display = 'inline';
+		}
+	}
 
 	let trackMap; // The map. TrackMap (just the path, no chart).
 
