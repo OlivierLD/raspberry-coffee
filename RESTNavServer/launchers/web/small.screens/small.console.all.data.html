@@ -1334,7 +1334,7 @@
 		// Query String parameters
 		// debugger;
 		let qs = getQSPrm('DIGITAL');
-		digital_analog = (qs === null || qs === "true") ? DIGITAL_DISPLAY : ANALOG_DISPLAY;
+		digital_analog = (qs !== null && qs === "true") ? DIGITAL_DISPLAY : ANALOG_DISPLAY;
 		qs = getQSPrm('POS');
 		displayPos = (qs === null || qs === "true");
 		qs = getQSPrm('GPS');
