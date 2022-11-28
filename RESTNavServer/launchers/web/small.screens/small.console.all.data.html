@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <!--
+ | WiP.
  | Should be suitable for a small screen device (tablet, smart-phone, smart-watch...)
  | Warning: this is not a responsive UI.
  | Can use swipe gestures on cell-phones and tablets.
@@ -769,25 +770,25 @@
 	
 </div>
 
-
 <dialog id="help-dialog" style="width: 300px; z-index: 10;">
     <div class="dialog-header">
       <span>Help !...</span>
       <span class="dialog-header-close" onclick="closeHelpDialog();">&times</span>
     </div>
     <div style="text-align: left; padding: 5px;">
-      <!-- About content -->
+      <!-- Help content -->
       <div style="margin-top: 15px;">
         Use the sliders in the nav bar to show or hide the different screens.<br/>
       </div>
       <div style="margin-top: 15px;">
-        Query String parameters are also available to configure those screens at startup
+        Query String parameters are also available to configure those screens at startup.<br/>Use the slider's names
+		as parameter names.
       </div>
       <div style="margin-top: 15px;">
-        <i>QS Example</i>: <code>?AWA=false&AWS=false&HDG=false</code>
+        <i>QS Example</i>: <code style="white-space: nowrap;">?AWA=false&AWS=false&HDG=false</code>
       </div>
     </div>
-  </dialog>
+</dialog>
 
 <!-- Sliding Menu -->
 <div id="side-nav" class="sidenav" style="text-align: left;" onmouseleave="closeNav()">
