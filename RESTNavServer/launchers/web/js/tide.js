@@ -228,7 +228,7 @@ let tideStations = (offset, limit, filter, callback) => {
                 message = errMess;
             }
         }
-        errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager("Failed to get the station list..." + (error !== undefined ? JSON.stringify(error, null, 2) : ' - ') + ', ' + (message !== undefined ? JSON.stringify(message, null, 2) : ' - '));
     });
 };
 
