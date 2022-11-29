@@ -258,7 +258,9 @@ let tideStationsFiltered = (filter) => {
                 message = errMess;
             }
         }
-        errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        // errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager("Failed to get the station list..." + (error !== undefined ? JSON.stringify(error, null, 2) : ' - ') + ', ' + (message !== undefined ? JSON.stringify(message, null, 2) : ' - '));
+
     });
 };
 
@@ -282,7 +284,7 @@ let getDayLightData = (from, to, tz, pos, callback) => {
                 message = errMess;
             }
         }
-        errManager("Failed to get Sun data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager("Failed to get Sun Data..." + (error !== undefined ? JSON.stringify(error, null, 2) : ' - ') + ', ' + (message !== undefined ? JSON.stringify(message, null, 2) : ' - '));
     });
 };
 
@@ -306,7 +308,7 @@ let getSunMoonCurves = (from, to, tz, pos, callback) => {
                 message = errMess;
             }
         }
-        errManager("Failed to get Sun & Moon data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager("Failed to get Sun & Moon data..." + (error !== undefined ? JSON.stringify(error, null, 2) : ' - ') + ', ' + (message !== undefined ? JSON.stringify(message, null, 2) : ' - '));
     });
 };
 
@@ -325,7 +327,7 @@ let showTime = () => {
                 message = errMess;
             }
         }
-        errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager("Failed to get the station list.." + (error !== undefined ? JSON.stringify(error, null, 2) : ' - ') + ', ' + (message !== undefined ? JSON.stringify(message, null, 2) : ' - '));
     });
 };
 
@@ -358,7 +360,7 @@ let tideTable = (station, at, tz, step, unit, withDetails, nbDays, callback) => 
                 message = errMess;
             }
         }
-        errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager("Failed to get the station data..." + (error !== undefined ? JSON.stringify(error, null, 2) : ' - ') + ', ' + (message !== undefined ? JSON.stringify(message, null, 2) : ' - '));
     });
 };
 
@@ -514,6 +516,6 @@ let sunData = (from, to, tz, position, callback) => {
                 message = errMess;
             }
         }
-        errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager("Failed to get the station data..." + (error !== undefined ? JSON.stringify(error, null, 2) : ' - ') + ', ' + (message !== undefined ? JSON.stringify(message, null, 2) : ' - '));
     });
 };
