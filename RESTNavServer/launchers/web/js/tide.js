@@ -209,7 +209,8 @@ let tideStations = (offset, limit, filter, callback) => {
         if (callback === undefined) {
             json.forEach((ts, idx) => {
                 try {
-                    json[idx] = decodeURI(decodeURIComponent(ts));
+                    // json[idx] = decodeURI(decodeURIComponent(ts));
+                    json[idx].fullName = decodeURIComponent(ts.fullName);
                 } catch (err) {
                     console.log("Oops:" + ts);
                 }
