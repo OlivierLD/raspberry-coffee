@@ -211,9 +211,9 @@ let tideStations = (offset, limit, filter, callback) => {
                 try {
                     // json[idx] = decodeURI(decodeURIComponent(ts));
                     if ('string' === typeof(ts)) {
-                        json[idx] = decodeURIComponent(ts);
+                        json[idx] = decodeURI(decodeURIComponent(ts));
                     } else {
-                        json[idx].fullName = decodeURIComponent(ts.fullName);
+                        json[idx].fullName = decodeURI(decodeURIComponent(ts.fullName));
                     }
                 } catch (err) {
                     console.log("Oops:" + ts);
