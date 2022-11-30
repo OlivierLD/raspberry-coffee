@@ -167,7 +167,7 @@ public class AstroComputerV2 {
     private String moonPhase = "";
 
     private final ContextV2 context = new ContextV2();
-    private boolean calculateHasBeenInvoked = false;
+    private boolean calculateHasBeenInvoked;
 
     public AstroComputerV2() {
         this.calculateHasBeenInvoked = false;
@@ -536,8 +536,8 @@ public class AstroComputerV2 {
 //    double eps0_2000 = 23.439291111;
 
             //Transformation to ecliptic coordinates in radians (mean equinox and equator 2000.0)
-            double lambdastar1 = Math.atan2((Utils.sind(RAstar1) * Utils.cosd(this.context.EPS0_2000) + Utils.tand(DECstar1) * Utils.sind(this.context.EPS0_2000)), Utils.cosd(RAstar1));
-            double betastar1 = Math.asin(Utils.sind(DECstar1) * Utils.cosd(this.context.EPS0_2000) - Utils.cosd(DECstar1) * Utils.sind(this.context.EPS0_2000) * Utils.sind(RAstar1));
+            double lambdastar1 = Math.atan2((Utils.sind(RAstar1) * Utils.cosd(ContextV2.EPS0_2000) + Utils.tand(DECstar1) * Utils.sind(ContextV2.EPS0_2000)), Utils.cosd(RAstar1));
+            double betastar1 = Math.asin(Utils.sind(DECstar1) * Utils.cosd(ContextV2.EPS0_2000) - Utils.cosd(DECstar1) * Utils.sind(ContextV2.EPS0_2000) * Utils.sind(RAstar1));
 
             //Precession
             double eta = Math.toRadians(47.0029 * this.context.TE - 0.03302 * this.context.TE2 + 0.00006 * this.context.TE3) / 3_600d;
@@ -1075,7 +1075,7 @@ public class AstroComputerV2 {
     }
 
     public static synchronized double getTimeZoneOffsetInHours(TimeZone tz, Date when) {
-        double d = 0;
+        double d;
         if (false) {
             SimpleDateFormat sdf = new SimpleDateFormat("Z");
             sdf.setTimeZone(tz);
@@ -1154,7 +1154,7 @@ public class AstroComputerV2 {
     }
 
     public synchronized double getSunAlt(int y, int m, int d, int h, int mi, int s, double lat, double lng) {
-        double value = 0d;
+        double value;
         this.year = y;
         this.month = m;
         this.day = d;
@@ -1177,7 +1177,7 @@ public class AstroComputerV2 {
     }
 
     public synchronized double getMoonAlt(int y, int m, int d, int h, int mi, int s, double lat, double lng) {
-        double value = 0d;
+        double value;
         this.year = y;
         this.month = m;
         this.day = d;

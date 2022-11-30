@@ -1,6 +1,7 @@
 package scratch;
 
 import calc.calculation.AstroComputer;
+import calc.calculation.AstroComputerV2;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -19,12 +20,12 @@ public class Pad {
 
 		SDF.setTimeZone(TimeZone.getTimeZone(tzName));
 
-		System.out.println(String.format("%s, %s", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis())));
+		System.out.printf("%s, %s\n", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis()));
 
 		cal.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-		System.out.println(String.format("%s, %s", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis())));
+		System.out.printf("%s, %s\n", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis()));
 
-		System.out.println(String.format("%04d-%02d-%02d %02d:%02d:%02d, epoch %s, tz %s",
+		System.out.printf("%04d-%02d-%02d %02d:%02d:%02d, epoch %s, tz %s\n",
 				cal.get(Calendar.YEAR),
 				cal.get(Calendar.MONTH) + 1,
 				cal.get(Calendar.DATE),
@@ -32,16 +33,16 @@ public class Pad {
 				cal.get(Calendar.MINUTE),
 				cal.get(Calendar.SECOND),
 				NumberFormat.getInstance().format(cal.getTimeInMillis()),
-				cal.getTimeZone().getID()));
+				cal.getTimeZone().getID());
 
 		cal.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
 		epoch = 1_505_312_100_000L;
 		cal.setTimeInMillis(epoch);
 		SDF.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-		System.out.println(String.format("SunSet: %s, %s", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis())));
-		System.out.println(String.format("%s, %s", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis())));
+		System.out.printf("SunSet: %s, %s\n", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis()));
+		System.out.printf("%s, %s\n", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis()));
 
-		System.out.println(String.format("%04d-%02d-%02d %02d:%02d:%02d, epoch %s, tz %s",
+		System.out.printf("%04d-%02d-%02d %02d:%02d:%02d, epoch %s, tz %s\n",
 				cal.get(Calendar.YEAR),
 				cal.get(Calendar.MONTH) + 1,
 				cal.get(Calendar.DATE),
@@ -49,13 +50,13 @@ public class Pad {
 				cal.get(Calendar.MINUTE),
 				cal.get(Calendar.SECOND),
 				NumberFormat.getInstance().format(cal.getTimeInMillis()),
-				cal.getTimeZone().getID()));
+				cal.getTimeZone().getID());
 
 		System.out.println(">> Adding 1 hour");
 		cal.add(Calendar.HOUR, 1);
-		System.out.println(String.format("%s, %s", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis())));
+		System.out.printf("%s, %s\n", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis()));
 
-		System.out.println(String.format("%04d-%02d-%02d %02d:%02d:%02d, epoch %s, tz %s",
+		System.out.printf("%04d-%02d-%02d %02d:%02d:%02d, epoch %s, tz %s\n",
 				cal.get(Calendar.YEAR),
 				cal.get(Calendar.MONTH) + 1,
 				cal.get(Calendar.DATE),
@@ -63,17 +64,17 @@ public class Pad {
 				cal.get(Calendar.MINUTE),
 				cal.get(Calendar.SECOND),
 				NumberFormat.getInstance().format(cal.getTimeInMillis()),
-				cal.getTimeZone().getID()));
+				cal.getTimeZone().getID());
 
 		double[] astroData = AstroComputer.getSunMoonAltDecl(
-				2017,
-				9,
-				13,
-				18,
-				58,
-				25,
-				38,
-				-122);
-		System.out.println(String.format("hSun: %.02f", astroData[AstroComputer.HE_SUN_IDX]));
+				2017, 9, 13, 18, 58, 25,
+				38,	-122);
+		System.out.printf("hSun (V1): %.02f\n", astroData[AstroComputer.HE_SUN_IDX]);
+
+		AstroComputerV2 acV2 = new AstroComputerV2();
+		double[] astroDataV2 = acV2.getSunMoonAltDecl(
+				2017, 9, 13, 18, 58, 25,
+				38,	-122);
+		System.out.printf("hSun (V2): %.02f\n", astroDataV2[AstroComputerV2.HE_SUN_IDX]);
 	}
 }
