@@ -24,7 +24,7 @@ public class HarmonicsToXML {
 	public final static String STATION_FILE = /* "xml.data" + File.separator + */ "stations.xml";
 
 	public static void main(String... args) {
-		String[] data = new String[]{
+		String[] data = new String[] {
 				"./harmonics/harmonics_06_14_2004.txt",
 				"./harmonics/harmonics_06_14_2004_fr.txt"
 		};

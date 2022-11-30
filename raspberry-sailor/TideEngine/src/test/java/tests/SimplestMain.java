@@ -25,7 +25,7 @@ public class SimplestMain {
 
     public static void main(String... args) throws Exception {
         System.out.println(args.length + " Argument(s)...");
-        boolean xmlTest = true;
+        boolean xmlTest = true; // true: XML, false: JSON
 
         System.setProperty("tide.verbose", "true");
 
@@ -33,7 +33,7 @@ public class SimplestMain {
             System.out.println("XML Tests");
         } else {
             System.out.println("JSON Tests");
-            System.setProperty("tide.flavor", "JSON");
+            System.setProperty("tide.flavor", "JSON"); // See BackEndTideComputer.Option
         }
         final BackEndTideComputer backEndTideComputer = new BackEndTideComputer();
         backEndTideComputer.setVerbose(true);
@@ -53,8 +53,8 @@ public class SimplestMain {
 //        final String STATION_PATTERN = "Port-Navalo";
 //        final String STATION_PATTERN = "ICELAND";
 //        final String STATION_PATTERN = "Patreksfj";
-        final String STATION_PATTERN = "Harrington";
-//        final String STATION_PATTERN = "Hornaf";
+//        final String STATION_PATTERN = "Harrington";
+        final String STATION_PATTERN = "Hornaf";
 
         System.setProperty("tide.verbose", "false");
         location = URLEncoder.encode(STATION_PATTERN, StandardCharsets.UTF_8).replace("+", "%20");

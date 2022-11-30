@@ -24,7 +24,7 @@ public class BackEndTideComputer {
 		JSON
 	}
 
-	private static Option flavor = Option.XML;
+	private static Option flavor = Option.XML; // Default
 	static {
 		String strFlavor = System.getProperty("tide.flavor");
 		if (strFlavor != null) {

@@ -44,6 +44,12 @@ the SAX parser scans it until the expected data are found.
 > Note about the encoding: The XML Data are `ISO-8859-1` encoded.  
 > For an easier access, those elements (mainly the String elements, like station names) are returned as `UTF-8` encoded data by REST APIs.
 
+>> TODO: JSON names are OK, XML ones seem to have problems with special characters (Icelandic & Co).  
+>> ```
+>> Sites coefficients of [Hornafj%C3%B6r%C3%B0ur%2C%20Iceland] fixed for 2022
+>> Water Height in [Hornafjörður, Iceland] at Wed Nov 30 09:47:31 CET 2022 : +1.08 meters
+>> ```  
+
 #### Unit Tests
 Some basic tests are available in the `test (src/main/test/java)` folder.
 
