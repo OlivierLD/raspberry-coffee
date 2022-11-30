@@ -36,8 +36,8 @@ public class SimplestMain {
             System.setProperty("tide.flavor", "JSON");
         }
         final BackEndTideComputer backEndTideComputer = new BackEndTideComputer();
-        backEndTideComputer.connect();
         backEndTideComputer.setVerbose(true);
+        backEndTideComputer.connect();
 
         // Some tests
         TideStation ts = null;
@@ -52,7 +52,9 @@ public class SimplestMain {
 //        final String STATION_PATTERN = "Port Townsend";
 //        final String STATION_PATTERN = "Port-Navalo";
 //        final String STATION_PATTERN = "ICELAND";
-        final String STATION_PATTERN = "Patreksfj";
+//        final String STATION_PATTERN = "Patreksfj";
+        final String STATION_PATTERN = "Harrington";
+//        final String STATION_PATTERN = "Hornaf";
 
         System.setProperty("tide.verbose", "false");
         location = URLEncoder.encode(STATION_PATTERN, StandardCharsets.UTF_8).replace("+", "%20");
