@@ -21,9 +21,10 @@
  | - TWD (event 'twd')
  | - TWA (event 'twa')
  | - HDG (event 'hdg')
+ | - RAW (event 'raw')
  |
  | Query parameters available:
- | DIGITAL, POS, GPS, SAT, COG, SOG, MAP, STW, AWS, AWA, TWS, TWD, TWA, HDG
+ | DIGITAL, POS, GPS, SAT, COG, SOG, MAP, STW, AWS, AWA, TWS, TWD, TWA, HDG, RAW
  | DIGITAL is 'false' by default, all others are 'true'
  | They all take 'true' or 'false' values, like in
  | http://server-ip:9999/web/small.screens/small.console.all.data.html?DIGITAL=false&COG=true&HDG=false&TWD=false&TWS=false&TWA=false&AWS=false&AWA=false&STW=false
@@ -499,6 +500,13 @@
 			color: cyan;
 			cursor: pointer;
 		}
+		.raw-data {
+			font-size: 8px;
+			text-align: left;
+			max-height: 400px;
+			overflow-x: auto;
+			overflow-y: auto;
+		}
 
 	</style>
 
@@ -538,7 +546,7 @@
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 13</div>
+		<div class="number-text">1 / 14</div>
 		<div class="display-2">
 			<span class="display-title">Position</span>
 			<span class="display-small-data-1" id="lat">00 00.00</span>
@@ -549,7 +557,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 13</div>
+		<div class="number-text">2 / 14</div>
 		<div class="display-2">
 			<span class="display-title">GPS Time</span>
 			<span class="display-small-data-1" id="gps-date">DD-MMM-YYYY</span>
@@ -560,7 +568,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 13</div>
+		<div class="number-text">3 / 14</div>
 		<div class="display">
 			<!--span class="display-title">GPS Sats</span>
 			<span class="display-data" id="sat">000</span>
@@ -578,7 +586,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 13</div>
+		<div class="number-text">4 / 14</div>
 		<div class="display">
 			<div id="cog-div" class="display" style="display: none; border: none;">
 				<span class="display-title">Course Over Ground</span>
@@ -600,7 +608,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 13</div>
+		<div class="number-text">5 / 14</div>
 		<div class="display">
 			<div id="sog-div" class="display" style="display: none; border: none;">
 				<span class="display-title">Speed Over Ground</span>
@@ -628,7 +636,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">6 / 13</div>
+		<div class="number-text">6 / 14</div>
 		<div class="display">
 			<canvas id="mapCanvas" class="displayContent" width="200" height="250" title="Track Map"></canvas>
 		</div>
@@ -637,7 +645,7 @@
 
 
 	<div class="the-slides fade">
-		<div class="number-text">7 / 13</div>
+		<div class="number-text">7 / 14</div>
 		<div class="display">
 			<span class="display-title">Boat Speed</span>
 			<span class="display-data" id="bsp">00.00</span>
@@ -647,7 +655,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">8 / 13</div>
+		<div class="number-text">8 / 14</div>
 		<div class="display">
 			<span class="display-title">Apparent Wind Speed</span>
 			<span class="display-data" id="aws">00.00</span>
@@ -657,7 +665,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">9 / 13</div>
+		<div class="number-text">9 / 14</div>
 		<div class="display">
 			<div id="awa-div" class="display" style="display: none; border: none;">
 				<span class="display-title">Apparent Wind Angle</span>
@@ -681,7 +689,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">10 / 13</div>
+		<div class="number-text">10 / 14</div>
 		<div class="display">
 			<span class="display-title">True Wind Speed</span>
 			<span class="display-data" id="tws">00.00</span>
@@ -691,7 +699,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">11 / 13</div>
+		<div class="number-text">11 / 14</div>
 		<div class="display">
 			<div id="twd-div" class="display" style="display: none; border: none;">
 				<span class="display-title">True Wind Dir</span>
@@ -715,7 +723,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">12 / 13</div>
+		<div class="number-text">12 / 14</div>
 		<div class="display">
 			<div id="twa-div" class="display" style="display: none; border: none;">
 				<span class="display-title">True Wind Angle</span>
@@ -739,7 +747,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">13 / 13</div>
+		<div class="number-text">13 / 14</div>
 		<div class="display">
 			<span class="display-title">True Heading</span>
 			<span class="display-data" id="hdg">000</span>
@@ -748,6 +756,14 @@
 		<div class="text">HDG</div>
 	</div>
 
+	<div class="the-slides fade">
+		<div class="number-text">14 / 14</div>
+		<div class="display">
+			<span class="display-title">Raw Data</span>
+			<div id="raw-data" class="raw-data"></div>
+		</div>
+		<div class="text">RAW</div>
+	</div>
 
 	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>
 	<div class="next" onclick="plusSlides(+1);">&#10095;</div>
@@ -766,6 +782,7 @@
 		<span class="dot" onclick="currentSlide(11);" title="TWD"></span>
 		<span class="dot" onclick="currentSlide(12);" title="TWA"></span>
 		<span class="dot" onclick="currentSlide(13);" title="HDG"></span>
+		<span class="dot" onclick="currentSlide(14);" title="RAW"></span>
 	</div>
 	
 </div>
@@ -897,6 +914,13 @@
 		</label>
 		<span class="switch-element">HDG</span>
 	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Heading (from Compass)">
+		<label class="switch switch-element">
+		  <input id="raw-slider" type="checkbox" onchange="manageRAWClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">RAW</span>
+	</div>
 
 </div>	
 
@@ -920,6 +944,7 @@
 	let displayTwd = true;
 	let displayTwa = true;
 	let displayHdg = true;
+	let displayRaw = true;
 
 	function manageDigitalClick(cb) {
 		digital_analog = cb.checked ? ANALOG_DISPLAY : DIGITAL_DISPLAY;
@@ -980,6 +1005,9 @@
 	function manageHDGClick(cb) {
 		displayHdg = cb.checked;
 	}
+	function manageRAWClick(cb) {
+		displayRaw = cb.checked;
+	}
 
 	function manageClick(cb) {
 		auto = cb.checked;
@@ -999,7 +1027,7 @@
 		let slideDisplayArray = [
 			displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
 			displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
-			displayHdg
+			displayHdg, displayRaw
 		];
 		// showSlides(slideIndex += n);
 		slideIndex += n;
@@ -1052,7 +1080,7 @@
 			let slideDisplayArray = [
 				displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
 				displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
-				displayHdg
+				displayHdg, displayRaw
 			];
 
 			slideIndex++; // Auto: always +1
@@ -1096,6 +1124,7 @@
 		document.getElementById("twd-slider").checked = displayTwd;
 		document.getElementById("stw-slider").checked = displayStw;
 		document.getElementById("hdg-slider").checked = displayHdg;
+		document.getElementById("raw-slider").checked = displayRaw;
 		// Open side nav
     	document.getElementById("side-nav").style.width =  getComputedStyle(document.documentElement).getPropertyValue('--expanded-nav-width'); // "450px";
     }
@@ -1106,7 +1135,7 @@
 		let slideDisplayArray = [
 			displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
 			displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
-			displayHdg
+			displayHdg, displayRaw
 		];
 		// Display/Hide the dots
 		for (let i=0; i<dotArray.length; i++) {
@@ -1165,10 +1194,17 @@
 	 *  EVENT SUBSCRIBERS HERE.
 	 *
 	 * See js/ajax.manager.js
-	 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
+	 * Note: All event definitions (topic's name) and events payload are defined in ajax.manager.js, method onMessage.
+	 * This is also new topics should be added, if needed.
+	 * Below, topics are subscribed to.
+	 * In ajax.manager.js, this is where data are published to the topics.
+	 * events (aka topics), listeners, publish and subscribe functions are defines in pub.sub.js
 	 */
 	let tws = 0.0;
 	let aws = 0.0;
+	events.subscribe('raw', val => {
+		document.getElementById('raw-data').innerHTML = `<pre>${JSON.stringify(val, null, 2)}</pre>`;
+	});
 	events.subscribe('pos', val => {
 		let strLat = decToSex(val.lat, 'NS');
 		let strLng = decToSex(val.lng, 'EW');
@@ -1186,9 +1222,9 @@
 	events.subscribe('gps-sat', val => {
 		// document.getElementById('bsp').innerText = val.toFixed(2);
 		// console.log(`GPS-SAT: ${JSON.stringify(val)}`);
-		let plotter = document.getElementById('sp-01');
-		plotter.setSatellites(val);
-		plotter.repaint();
+		let satPlotter = document.getElementById('sp-01');
+		satPlotter.setSatellites(val);
+		satPlotter.repaint();
 	});
 	events.subscribe('sog', val => {
 		if (digital_analog === DIGITAL_DISPLAY) {
@@ -1362,6 +1398,8 @@
 		displayTwa = (qs === null || qs === "true");
 		qs = getQSPrm('HDG');
 		displayHdg = (qs === null || qs === "true");
+		qs = getQSPrm('RAW');
+		displayRaw = (qs === null || qs === "true");
 
 		setSlideVisibility();
 

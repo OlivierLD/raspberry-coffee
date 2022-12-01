@@ -1,7 +1,7 @@
 #
 # For simulation. No logging
 #
-name: "Minimal logger, extended. For simulation."
+name: "Minimal logger, extended. Data replay."
 context:
   with.http.server: true
   http.port: 8888

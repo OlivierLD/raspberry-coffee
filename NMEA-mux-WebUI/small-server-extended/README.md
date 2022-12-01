@@ -595,6 +595,21 @@ from any device seeing the server on its network, at `http://<rpi-ip-address>:88
 It can also use a TCP forwarder (see the `yaml` files for details), making the data it reads available to other
 softs, like OpenCPN or SeaWi for example.
 
+#### Another quick example (for small screens in this case)
+Start the NMEA-Multiplexer:
+```
+$ ./mux.sh nmea.mux.gps.log.simulation.yaml
+```
+This one will replay some logged data...  
+And then, reach `http://<your-ip-address>:8888/web/index.html` from a browser on your box.  
+The hamburger on the top left will get you to the menu...
+
+| Main Menu | Nav Bar | Console |
+|:----:|:----:|:----:|
+|![One](./img/NavMenu.01.png)|![Two](./img/NavMenu.02.png)|![Three](./img/NavMenu.03.png)|
+
+> Again, this is just an example. Lookm into the code for inspiration, for your own consoles.
+
 ### June 2021, from scratch, on a RPi Zero, or 3B, or so.
 From a brand-new buster or bullseye image:
 - `sudo atp install rxtxlib-java`

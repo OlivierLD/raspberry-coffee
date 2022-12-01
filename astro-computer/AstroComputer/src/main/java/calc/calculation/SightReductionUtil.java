@@ -108,7 +108,7 @@ public class SightReductionUtil {
 
 		double sinHe = (sinL * sinD) + (cosL * cosD * cosAHL);
 		dHe = Math.toDegrees(Math.asin(sinHe));
-//  System.out.println("Hauteur Estimee : " + GeomUtil.decToSex(He));
+//  System.out.println("Hauteur Estimée : " + GeomUtil.decToSex(He));
 
 		// Formula to solve : tg Z = sin P / cos L tan D - sin L cos P
 		double P = (AHL < 180.0) ? AHL : (360.0 - AHL);
@@ -139,7 +139,7 @@ public class SightReductionUtil {
 	 * Returns estimated elevation (Hauteur estim&eacute;e) after calculation.
 	 * This value is decimal. Use GeomUtil.decToSex(getHe()) to read it in DegMinSec.
 	 *
-	 * @see GeomUtil
+	 * @see calc.GeomUtil
 	 */
 	public Double getHe() {
 		return dHe;

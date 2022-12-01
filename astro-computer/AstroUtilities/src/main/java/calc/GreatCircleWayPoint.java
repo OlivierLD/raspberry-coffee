@@ -1,8 +1,5 @@
 package calc;
 
-// Referenced classes of package astro.calc:
-//      Point
-
 public class GreatCircleWayPoint {
 	private final GreatCirclePoint p;
 	private final Double z;

@@ -208,6 +208,9 @@ function getQueryParameterByName(name, url) {
 
 // Takes care of re-broadcasting the data to whoever subscribed to it.
 function onMessage(json) {
+
+	events.publish('raw', json);
+
 	try {
 		let errMess = "";
 
