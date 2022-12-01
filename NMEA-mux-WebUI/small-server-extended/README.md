@@ -1,14 +1,15 @@
 # Case Study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
-> - Raspberry Zero W and Higher
-> - Can emit its own network
-> - Two push-buttons for User Interface
-> - One OLED Screen
-> - Web UI served from the same device - accessible from any browser, running on another device on the same network (cell-phone, tablet, laptop,...)
-> - Optional BME280 (Temperature, pressure, humidity)
-> - File Logger (with WebUI, logged data can be downloaded from it)
-> - Optional TCP forwarder
+- Raspberry Zero W and Higher
+- Can emit its own network
+- Two push-buttons for User Interface
+- One OLED Screen
+- Web UI - served from the same device - accessible from any browser, running on another device on the same network (cell-phone, tablet, laptop,...)
+- Optional BME280 (Temperature, pressure, humidity) and other sensors
+- File Logger (with WebUI, logged data can be downloaded from it)
+- Optional TCP forwarder
+- ... and more (WiP).
 
-This is a case study, using different hardware configurations to run the same software configuration (the NMEA Multiplexer).
+This is a case study, using different hardware configurations to run the same software configurations (the NMEA Multiplexer).
 
 For the hardware details, see [here](../full-server-extended-v2/README.md), as it is the exact same one as in this project.
 
@@ -608,12 +609,12 @@ The hamburger (&#9776;) on the top left will get you to the menu... FYI, three v
 |:----:|:----:|:----:|
 |![One](./img/NavMenu.01.png)|![Two](./img/NavMenu.02.png)|![Three](./img/NavMenu.03.png)|
 
-The `Console-3` has interesting features, it allows the user to choose what screen to display, through its own menu.
+The `Console-3` has interesting features, it allows the user to choose what screens to display, through its own menu.
 
 | All 14 screens available... | Choose the screens to use | 7 screens selected |
 |:----|:----|:----|
 |![One](./img/Console-3.01.png)|![Two](./img/Console-3.02.png)|![Three](./img/Console-3.03.png)|
-| All screens available by default. See the dots at the bottom... | Use the menu(&#9776;)'s sliders to un-select un-wanted screens | Only selected one are available, as you can tell by the dots at the bottom |
+| All screens available by default. See the dots at the bottom... | Use the menu(&#9776;)'s sliders to un-select un-wanted screens | Then only selected ones are available, as you can tell by the dots at the bottom |
 
 The screens can also be selected at startup, using query-string parameters, like in
 ```
@@ -624,7 +625,7 @@ http://<your-ip-address>:8888/web/small.screens/small.console.all.data.html?STW=
 ---
 
 ### June 2021, from scratch, on a RPi Zero, or 3B, or so.
-From a brand-new buster or bullseye image:
+From a brand-new _**buster**_ or _**bullseye**_ image:
 - `sudo atp install rxtxlib-java`
 - `sudo apt install openjdk-8-jdk-headless`
   - `sudo update-alternatives --config java`
