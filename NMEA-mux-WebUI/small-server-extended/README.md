@@ -602,13 +602,26 @@ $ ./mux.sh nmea.mux.gps.log.simulation.yaml
 ```
 This one will replay some logged data...  
 And then, reach `http://<your-ip-address>:8888/web/index.html` from a browser on your box.  
-The hamburger on the top left will get you to the menu...
+The hamburger (&#9776;) on the top left will get you to the menu... FYI, three vertical dots (&#8942;) are called a kebab. 😉
 
 | Main Menu | Nav Bar | Console |
 |:----:|:----:|:----:|
 |![One](./img/NavMenu.01.png)|![Two](./img/NavMenu.02.png)|![Three](./img/NavMenu.03.png)|
 
-> Again, this is just an example. Lookm into the code for inspiration, for your own consoles.
+The `Console-3` has interesting features, it allows the user to choose what screen to display, through its own menu.
+
+| All 14 screens available... | Choose the screens to use | 7 screens selected |
+|:----|:----|:----|
+|![One](./img/Console-3.01.png)|![Two](./img/Console-3.02.png)|![Three](./img/Console-3.03.png)|
+| All screens available by default. See the dots at the bottom... | Use the menu(&#9776;)'s sliders to un-select un-wanted screens | Only selected one are available, as you can tell by the dots at the bottom |
+
+The screens can also be selected at startup, using query-string parameters, like in
+```
+http://<your-ip-address>:8888/web/small.screens/small.console.all.data.html?STW=false&AWS=false&AWA=false&TWS=false&TWD=false&TWA=false&HDG=false
+```
+---
+> Again, all this is just an example. Look into the code for inspiration, for your own consoles.
+---
 
 ### June 2021, from scratch, on a RPi Zero, or 3B, or so.
 From a brand-new buster or bullseye image:
