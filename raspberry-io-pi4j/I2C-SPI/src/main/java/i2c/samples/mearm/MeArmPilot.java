@@ -214,7 +214,7 @@ public class MeArmPilot {
 				System.err.println(String.format("Unexpected number of args [%d] in servoPrint.", cmd.args.length));
 			} else {
 				try {
-					System.out.println(">> PRINT >>> " + URLDecoder.decode(cmd.args[0], StandardCharsets.UTF_8));
+					System.out.println(">> PRINT >>> " + URLDecoder.decode(cmd.args[0], StandardCharsets.UTF_8.toString()));
 				} catch (/*UnsupportedEncoding*/ Exception e) {
 					e.printStackTrace();
 				}
@@ -259,7 +259,7 @@ public class MeArmPilot {
 				System.err.println(String.format("Unexpected number of args [%d] in servoUserInput.", cmd.args.length));
 			} else {
 				try {
-					String absorbed = userInput(URLDecoder.decode(cmd.args[0], StandardCharsets.UTF_8));
+					String absorbed = userInput(URLDecoder.decode(cmd.args[0], StandardCharsets.UTF_8.toString()));
 				} catch (/*UnsupportedEncoding*/ Exception e) {
 					e.printStackTrace();
 				}

@@ -2,11 +2,7 @@ package utils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -69,7 +65,7 @@ public class Base64Util {
 			ImageIO.write(image, type, bos);
 			byte[] imageBytes = bos.toByteArray();
 
-			imageString = new String(Base64.getMimeEncoder().encode(imageBytes), StandardCharsets.UTF_8);
+			imageString = new String(Base64.getMimeEncoder().encode(imageBytes), StandardCharsets.UTF_8.toString());
 
 			bos.close();
 		} catch (IOException e) {
@@ -86,8 +82,12 @@ public class Base64Util {
 	 */
 	public static String encodeToString(String string) {
 		String encodedString = null;
-		byte[] imageBytes = string.getBytes();
-		encodedString = new String(Base64.getMimeEncoder().encode(imageBytes), StandardCharsets.UTF_8);
+		try {
+			byte[] imageBytes = string.getBytes();
+			encodedString = new String(Base64.getMimeEncoder().encode(imageBytes), StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException uee) {
+			throw new RuntimeException(uee);
+		}
 		return encodedString;
 	}
 

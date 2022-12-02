@@ -152,7 +152,7 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 					foundStation = true;
 					ts = new TideStation();
 					try {
-						ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).replace("+", "%20"));
+						ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, StandardCharsets.ISO_8859_1.toString()), StandardCharsets.UTF_8.toString()).replace("+", "%20"));
 					} catch (/*UnsupportedEncoding*/ Exception uee) {
 						uee.printStackTrace();
 					}
@@ -162,7 +162,7 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 					foundNameCollection = true;
 				} else if ("name-part".equals(qName) && foundNameCollection) {
 					try {
-						ts.getNameParts().add(URLEncoder.encode(URLDecoder.decode(attributes.getValue("name"), StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8).replace("+", "%20"));
+						ts.getNameParts().add(URLEncoder.encode(URLDecoder.decode(attributes.getValue("name"), StandardCharsets.ISO_8859_1.toString()), StandardCharsets.UTF_8.toString()).replace("+", "%20"));
 					} catch (/*UnsupportedEncoding*/ Exception uee) {
 						uee.printStackTrace();
 					}

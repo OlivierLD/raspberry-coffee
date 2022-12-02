@@ -71,7 +71,7 @@ public class TidePublisher {
 		}
 
 		try {
-			out.println("<tide station='" + URLDecoder.decode(ts.getFullName(), StandardCharsets.UTF_8).replace("'", "&apos;") +
+			out.println("<tide station='" + URLDecoder.decode(ts.getFullName(), StandardCharsets.UTF_8.toString()).replace("'", "&apos;") +
 					"' station-time-zone='" + ts.getTimeZone() +
 					"' print-time-zone='" + timeZoneId +
 					"' station-lat='" + GeomUtil.decToSex(ts.getLatitude(), GeomUtil.SWING, GeomUtil.NS, GeomUtil.TRAILING_SIGN).replace("'", "&apos;") +
@@ -249,13 +249,13 @@ public class TidePublisher {
 			backEndTideComputer.connect();
 			backEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
 //			String f = publish(
-//					URLEncoder.encode("Ocean Beach, California", StandardCharsets.UTF_8).replace("+", "%20"),
+//					URLEncoder.encode("Ocean Beach, California", StandardCharsets.UTF_8.toString()).replace("+", "%20"),
 //					Calendar.SEPTEMBER,
 //					2017,
 //					1,
 //					Calendar.MONTH);
 			String f = publish(
-					URLEncoder.encode("Ocean Beach, California", StandardCharsets.UTF_8).replace("+", "%20"),
+					URLEncoder.encode("Ocean Beach, California", StandardCharsets.UTF_8.toString()).replace("+", "%20"),
 					Calendar.JANUARY,
 					2019,
 					1,

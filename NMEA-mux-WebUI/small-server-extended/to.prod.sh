@@ -18,16 +18,31 @@ while read line; do
 done < jvers.txt
 rm jvers.txt
 echo -e "+----------------------------------------------------------------------------------------------------+"
+echo -e "| Make sure the current Java version is compatible with the target one.                              |"
+echo -e "+----------------------------------------------------------------------------------------------------+"
 #
 # 1 - Build
 #
 PROXY_SETTINGS=
 # PROXY_SETTINGS="-Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttps.proxyPort=80"
-echo -en "Do we re-build the Java part ? > "
-read REPLY
-if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
-  echo -e "Ok, moving on."
-else
+#
+REBUILD_REQUEST=Y
+if [[ -f ./build/libs/small-server-extended-1.0-all.jar ]]; then
+  echo -e "There is an existing jar-file:"
+  ls -lisah ./build/libs/small-server-extended-1.0-all.jar
+  echo -e "With the following MANIFEST:"
+  ./type.manifest.sh ./build/libs/small-server-extended-1.0-all.jar
+  echo -e "----------------------------"
+  echo -en "Do we re-build the Java part ? > "
+  read REPLY
+  if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
+    echo -e "Ok, moving on."
+    REBUILD_REQUEST=N
+  fi
+fi
+#
+if [[ "${REBUILD_REQUEST}" == "Y" ]]; then
+  echo -e "Rebuilding from source..."
   ../../gradlew clean shadowJar ${PROXY_SETTINGS}
 fi
 #
@@ -101,7 +116,7 @@ echo -e "+----------------------------------------------------------------------
 echo -en "Deploy ${distdir}.tar.gz to ${HOME} on $(hostname) ? > "
 read REPLY
 if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]; then
-  echo -e "Ok, you'll do it yourself."
+  echo -e "Ok, you'll do it yourself, then."
   echo -e "Bye."
 else
   cp ${distdir}.tar.gz ${HOME}

@@ -1216,7 +1216,8 @@
 		// val.format("Y-M-d H:i:s")
 		// let date = gpsTime.format("d-m-Y-l");
 		// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
-		let gpsDate = new Date(val.epoch);
+		let valDate = new Date(val.epoch); // Warning! We need UTC Date !
+		let gpsDate = new Date(valDate.getTime() + (valDate.getTimezoneOffset() * 60000))
 		document.getElementById('gps-date').innerText = gpsDate.format("Y-M-d");
 		document.getElementById('gps-time').innerText = gpsDate.format("H:i:s");
 	});

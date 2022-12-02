@@ -2071,7 +2071,7 @@ public class RESTImplementation {
 		}
 		String logFileName = prmValues.get(0); // Slashes are escaped, as %2F
 		try {
-			logFileName = URLDecoder.decode(logFileName, StandardCharsets.UTF_8);
+			logFileName = URLDecoder.decode(logFileName, StandardCharsets.UTF_8.toString());
 		} catch (/*UnsupportedEncoding*/ Exception uee) {
 			uee.printStackTrace();
 		}
@@ -2122,7 +2122,7 @@ public class RESTImplementation {
 		}
 		String logFileName = prmValues.get(0); // Slashes are escaped, as %2F
 		try {
-			logFileName = URLDecoder.decode(logFileName, StandardCharsets.UTF_8);
+			logFileName = URLDecoder.decode(logFileName, StandardCharsets.UTF_8.toString());
 		} catch (/*UnsupportedEncoding*/ Exception uee) {
 			uee.printStackTrace();
 		}

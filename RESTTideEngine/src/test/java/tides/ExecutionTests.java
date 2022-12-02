@@ -88,7 +88,7 @@ public class ExecutionTests {
         List<Coefficient> constSpeed = BackEndTideComputer.buildSiteConstSpeed();
 
         String location = "Oyster Point Marina, San Francisco Bay, California";
-        String encoded = URLEncoder.encode(location, StandardCharsets.UTF_8).replace("+", "%20");
+        String encoded = URLEncoder.encode(location, StandardCharsets.UTF_8.toString()).replace("+", "%20");
     //  String location = "Adelaide";
         System.out.println("-- " + location + " --");
         System.out.println("Date and time zone:" + "Etc/UTC");

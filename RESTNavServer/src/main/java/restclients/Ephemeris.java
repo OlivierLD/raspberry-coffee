@@ -90,8 +90,8 @@ public class Ephemeris {
 		messageContent.append("<!DOCTYPE html><html><body>");
 		messageContent.append(String.format("<h2>%s</h2>", stationName));
 
-		// 1 - Get station position
-		String tideResourcePath = String.format("tide/tide-stations/%s", URLEncoder.encode(stationName, StandardCharsets.UTF_8).replace("+", "%20"));
+		// 1 - Get station position (charset.toString() for Java 8 compatibility)
+		String tideResourcePath = String.format("tide/tide-stations/%s", URLEncoder.encode(stationName, StandardCharsets.UTF_8.toString()).replace("+", "%20"));
 		url = String.format("http://%s:%s/%s", serverName, serverPort, tideResourcePath);
 		try {
 			String response = HTTPClient.doGet(url, new HashMap<>());

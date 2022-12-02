@@ -210,7 +210,7 @@ public class BackEndTideComputer {
 		if (station != null && station.yearHarmonicsFixed() != -1 && station.yearHarmonicsFixed() != year) { // Then reload station data from source
 			System.out.println("Reloading Station Data for corrections in year " + year);
 			try {
-				TideStation newTs = reloadTideStation(URLDecoder.decode(station.getFullName(), StandardCharsets.UTF_8));
+				TideStation newTs = reloadTideStation(URLDecoder.decode(station.getFullName(), StandardCharsets.UTF_8.toString()));
 				stations.getStations().put(station.getFullName(), newTs);
 				station = newTs;
 			} catch (Exception ex) {

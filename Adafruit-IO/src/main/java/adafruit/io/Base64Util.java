@@ -49,7 +49,7 @@ public class Base64Util {
 			ImageIO.write(image, type, bos);
 			byte[] imageBytes = bos.toByteArray();
 
-			imageString = new String(java.util.Base64.getMimeEncoder().encode(imageBytes), StandardCharsets.UTF_8);
+			imageString = new String(java.util.Base64.getMimeEncoder().encode(imageBytes), StandardCharsets.UTF_8.toString());
 
 			bos.close();
 		} catch (IOException e) {

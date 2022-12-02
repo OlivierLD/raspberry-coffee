@@ -57,12 +57,12 @@ public class SimplestMain {
         final String STATION_PATTERN = "Hornaf";
 
         System.setProperty("tide.verbose", "false");
-        location = URLEncoder.encode(STATION_PATTERN, StandardCharsets.UTF_8).replace("+", "%20");
+        location = URLEncoder.encode(STATION_PATTERN, StandardCharsets.UTF_8.toString()).replace("+", "%20");
         ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
         if (ts != null) {
             now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
             if (ts != null) {
-                String stationFullName = URLDecoder.decode(ts.getFullName(), StandardCharsets.UTF_8);
+                String stationFullName = URLDecoder.decode(ts.getFullName(), StandardCharsets.UTF_8.toString());
                 if (false) {
                     double[] mm = TideUtilities.getMinMaxWH(ts, constSpeed, now);
                     System.out.println("At " + stationFullName +

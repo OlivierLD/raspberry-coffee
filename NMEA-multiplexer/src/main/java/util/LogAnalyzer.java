@@ -180,7 +180,7 @@ public class LogAnalyzer {
 				fis = new FileInputStream(dataFileName);
 			}
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
+			BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8.toString()));
 			// TODO Option to check chronology and continuity
 			BufferedWriter bw = new BufferedWriter(new FileWriter("stat.csv"));
 

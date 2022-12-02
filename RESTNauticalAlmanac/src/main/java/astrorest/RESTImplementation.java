@@ -199,7 +199,7 @@ public class RESTImplementation {
 					.stream()
 					.map(tz -> {
 						try {
-							return URLDecoder.decode(tz, StandardCharsets.UTF_8);
+							return URLDecoder.decode(tz, StandardCharsets.UTF_8.toString());
 						} catch (/*UnsupportedEncoding*/ Exception uee) {
 							return tz;
 						}
@@ -472,7 +472,7 @@ public class RESTImplementation {
 			toPrm = prms.get("to");
 			tzName = prms.get("tz");
 			try {
-				tzName = URLDecoder.decode(tzName, StandardCharsets.UTF_8);
+				tzName = URLDecoder.decode(tzName, StandardCharsets.UTF_8.toString());
 			} catch (Exception ex) {
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
@@ -1002,7 +1002,7 @@ public class RESTImplementation {
 			toPrm = prms.get("to");
 			tzName = prms.get("tz");
 			try {
-				tzName = URLDecoder.decode(tzName, StandardCharsets.UTF_8);
+				tzName = URLDecoder.decode(tzName, StandardCharsets.UTF_8.toString());
 			} catch (Exception ex) {
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
