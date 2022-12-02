@@ -3,11 +3,16 @@
 - Can emit its own network
 - Two push-buttons for User Interface
 - One OLED Screen
-- Web UI - served from the same device - accessible from any browser, running on another device on the same network (cell-phone, tablet, laptop,...)
+- Web UI - served from the same device - accessible from any _browser_, running on another device on the same network (cell-phone, tablet, laptop,...)
+  - Depending on the device you want to reach the GUI from, we show here several Console options, for small screens, or bigger ones.  
+    The server seems not to have any problem to serve such interfaces.  
+  - We present here _**web**_ interfaces (HTML5, CSS3), in order _**not**_ to have to mess with any OS specific features (Android, iOS, etc). All
+    you need is a recent browser, supporting HTML5 and CSS3.
+  - Android and iOS could certainly be supported, writing a client (REST client) should not be a problem. But why bother?
 - Optional BME280 (Temperature, pressure, humidity) and other sensors
 - File Logger (with WebUI, logged data can be downloaded from it)
 - Optional TCP forwarder
-- ... and more (WiP).
+- ... and more (WiP 🚧).
 
 This is a case study, using different hardware configurations to run the same software configurations (the NMEA Multiplexer).
 
@@ -589,6 +594,12 @@ Sample of NMEA Cache, as a JSON object (`GET /mux/cache`):
     "Altitude": 9.1
 }
 ```
+
+> _**A note:**_  
+> Having a JSON object (as above) makes client's REST requests so much easier !  
+> But, the document above obviously follows a specific schema, which is "ambigous", because there is - as far as I know - no recognized standard for this kind of things.  
+> This is where we could talk again about `SignalK`, or `GPSd`. They have their own schema, for the same reason...
+
 ### Web UI
 This small server is also an HTTP server. As long as the server is running, it can serve HTML and REST requests.  
 This project also includes a couple of web pages (in turn invoking REST requests), accessible
