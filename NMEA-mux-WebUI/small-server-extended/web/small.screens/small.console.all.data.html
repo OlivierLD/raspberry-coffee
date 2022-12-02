@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<!--
+ | WiP.
+ | Should be suitable for a small screen device (tablet, smart-phone, smart-watch...)
+ | Warning: this is not a responsive UI.
+ | Can use swipe gestures on cell-phones and tablets.
+ | Shows how to display - or not - the screens (aka slides) for various data.
+ | Also has an option for analog/digital displays (when it makes sense)
+ |
+ | Available data:
+ | - GPS Position (event 'pos')
+ | - GSP Date-Time (event 'gps-time')
+ | - GPS Satellites (event 'gps-sat')
+ | - COG (event 'cog')
+ | - SOG (event 'sog')
+ | - MAP (events 'pos', 'cog', 'sog')
+ | - STW (event 'bsp')
+ | - AWS (event 'aws')
+ | - AWA (event 'awa')
+ | - TWS (event 'tws')
+ | - TWD (event 'twd')
+ | - TWA (event 'twa')
+ | - HDG (event 'hdg')
+ | - RAW (event 'raw')
+ |
+ | Query parameters available:
+ | DIGITAL, POS, GPS, SAT, COG, SOG, MAP, STW, AWS, AWA, TWS, TWD, TWA, HDG, RAW
+ | DIGITAL is 'false' by default, all others are 'true'
+ | They all take 'true' or 'false' values, like in
+ | http://server-ip:9999/web/small.screens/small.console.all.data.html?DIGITAL=false&COG=true&HDG=false&TWD=false&TWS=false&TWA=false&AWS=false&AWA=false&STW=false
+ | This is where the QR Code generator can proof useful.
+ +-->
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>NMEA Multi-Screen</title>
+	<link rel="stylesheet" href="../css/rocker.css">
+    <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
+	<style>
+
+		:root {
+			--expanded-nav-width: 300px;
+			--slider-scale: 0.5;
+		}
+
+		html {
+			display: table;
+			width: 100%;
+			height: 100%;
+		}
+
+		* {
+			box-sizing: border-box
+		}
+
+		body {
+			display: table-cell;
+			text-align: center;
+			vertical-align: top;
+			font-family: Verdana, sans-serif;
+			color: white;
+			background: black;
+		}
+
+		.the-slides {
+			/*display: none;*/
+			height: 340px;  /*300px;*/
+			grid-area: center;
+			margin: auto;
+			transition: max-height 1s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+			opacity: 0;
+			max-width: 0;
+			transform: scaleX(0);
+			overflow: hidden;
+		}
+
+		.visible-slide {
+			opacity: 1;
+			max-width: 220px;  /*200px;*/
+			transform: scaleX(1);
+		}
+
+		/* Slideshow container */
+		.slideshow-container {
+			max-width: 300px; /* 300px. depends on the screen size */
+			margin: auto;
+			text-align: center;
+			display: grid;
+			grid-template-areas:
+					'left center right';
+			grid-gap: 0;
+			padding: 0;
+		}
+
+		/* Next & previous buttons */
+		.prev, .next {
+			cursor: pointer;
+			margin: auto;
+			padding: 8px;
+			height: 40px;
+			width: 40px;
+			color: inherit; /* white; */
+			font-weight: bold;
+			font-size: 18px;
+			transition: 0.6s ease;
+			border-radius: 20px;
+			grid-area: left;
+		}
+
+		/* Position the "next button" to the right */
+		.next {
+			grid-area: right;
+		}
+
+		.prev:hover, .next:hover {
+			/*background-color: rgba(0, 0, 0, 0.3);*/
+			background-color: #717171;
+		}
+
+		/* Caption text */
+		.text {
+			color: inherit; /*#f2f2f2; */
+			font-size: 15px;
+			padding: 8px 12px;
+			position: relative;
+			bottom: 50px;
+			width: 100%;
+			text-align: left;
+			grid-area: center;
+		}
+
+		/* Number text (1/3 etc) */
+		.number-text {
+			color: inherit; /*  #f2f2f2; */
+			font-size: 12px;
+			padding: 8px 12px;
+			position: absolute;
+			grid-area: center;
+		}
+
+		/* The dots/bullets/indicators */
+		.dot {
+			cursor: pointer;
+			height: 13px;
+			width: 13px;
+			margin: 0 0;
+			background-color: #bbb;
+			border-radius: 50%;
+			display: inline-block;
+			transition: background-color 0.6s ease;
+		}
+
+		.active, .dot:hover {
+			background-color: cyan; /*#717171;*/
+		}
+
+		.dots {
+			position: relative;
+			text-align: center;
+			bottom: -115px;
+			margin: auto;
+			grid-area: center;
+			white-space: nowrap;
+		}
+
+		/* Fading animation */
+		.fade {
+			-webkit-animation-name: fade;
+			-webkit-animation-duration: 1.5s;
+			animation-name: fade;
+			animation-duration: 1.5s;
+		}
+
+		@-webkit-keyframes fade {
+			from {
+				opacity: .4
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+		@keyframes fade {
+			from {
+				opacity: .4
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+		/* On smaller screens, decrease text size */
+		@media only screen and (max-width: 300px) {
+			.prev, .next, .text {
+				font-size: 11px
+			}
+		}
+
+		.display {
+			width: 220px; /*200px;*/
+			height: 300px;
+			border: 4px solid; /* Comment 2 lines to remove the frame */
+			border-radius: 10px;
+			display: grid;
+			grid-template-areas:
+					'top' 'middle' 'bottom';
+			grid-gap: 0;
+			padding: 0;
+		}
+
+		.display-2 {
+			width: 220px; /*200px;*/
+			height: 300px;
+			border: 4px solid; /* Comment 2 lines to remove the frame */
+			border-radius: 10px;
+			display: grid;
+			grid-template-areas:
+					'top' 'middle-1' 'middle-2' 'bottom';
+			grid-gap: 0;
+			padding: 0;
+		}
+
+		.display-data {
+			grid-area: middle;
+			text-align: center;
+			vertical-align: baseline;
+			margin: auto;
+			color: inherit;
+			font-size: 48px;
+			font-weight: bold;
+		}
+
+		.display-small-data-1 {
+			grid-area: middle-1;
+			text-align: center;
+			/* vertical-align: baseline; */
+			margin: auto;
+			color: inherit;
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		.display-small-data-2 {
+			grid-area: middle-2;
+			text-align: center;
+			/* vertical-align: baseline; */
+			margin: auto;
+			color: inherit;
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		.display-unit {
+			grid-area: bottom;
+			text-align: center;
+			vertical-align: baseline;
+			color: inherit;
+			font-size: 20px;
+		}
+
+		.display-title {
+			grid-area: top;
+			text-align: center;
+			vertical-align: bottom;
+			padding-left: 0px;
+			align-self: end;
+			color: inherit;
+			font-size: 14px;
+		}
+
+		.sat-plot-01 {
+			--border-color: rgba(128, 128, 128, 0.5);
+		}
+
+		.displayContent {
+			margin : auto;
+		}
+
+		compass-display .green {
+			--bg-color: transparent;
+			--digit-color: lime;
+			--with-gradient: false;
+			--display-background-gradient-to: transparent;
+			--tick-color: lime;
+			--cross-hair-color: red;
+			--display-line-color: lime;
+			--label-fill-color: green;
+			--with-display-shadow: false;
+			--outline-color: lime;
+			--major-tick-color: lime;
+			--minor-tick-color: lime;
+			--value-color: green;
+			--value-outline-color: lime;
+			--value-nb-decimal: 0;
+			--knob-color: red;
+			--knob-outline-color: cyan;
+		}
+
+		.analogdisplay-day-dir {
+			--bg-color: rgba(0, 0, 0, 0);
+			--digit-color: black;
+			--with-gradient: true;
+			--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: white; /* used if --withGradient: false */
+			--display-line-color: rgba(255, 255, 255, 0.5);
+			--label-fill-color: rgba(255, 255, 255, 0.5);
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--outline-color: DarkGrey;
+			--major-tick-color: black;
+			--minor-tick-color: black;
+			--value-color: grey;
+			--value-outline-color: black;
+			--value-nb-decimal: 0;
+			--hand-color: red;
+			--hand-outline-color: black;
+			--with-hand-shadow: true;
+			--knob-color: DarkGrey;
+			--knob-outline-color: black;
+			--font: Arial;
+			--value-font-size-factor: 1
+		}
+		.analogdisplay-day-speed {
+			--bg-color: rgba(0, 0, 0, 0);
+			--digit-color: black;
+			--with-gradient: true;
+			--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: white; /* used if --withGradient: false */
+			--display-line-color: rgba(255, 255, 255, 0.5);
+			--label-fill-color: rgba(255, 255, 255, 0.5);
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--outline-color: DarkGrey;
+			--major-tick-color: black;
+			--minor-tick-color: black;
+			--value-color: grey;
+			--value-outline-color: black;
+			--value-nb-decimal: 1;
+			--hand-color: red;
+			--hand-outline-color: black;
+			--with-hand-shadow: true;
+			--knob-color: DarkGrey;
+			--knob-outline-color: black;
+			--font: Arial;
+			--value-font-size-factor: 1
+		}
+
+		.sidenav {
+			height: 100%;
+			width: 0;
+			position: fixed;
+			z-index: 1;
+			top: 0;
+			left: 0;
+			/*  background-color: rgba(0, 0, 0, 0.6); */
+			background-image: linear-gradient(rgba(0, 0, 255, 0.6), rgba(0, 0, 0, 0.6));
+			overflow-x: hidden;
+			transition: 1.0s;
+			padding-top: 60px;
+		}
+
+		.sidenav a {
+			padding: 8px 8px 8px 32px;
+			text-decoration: none;
+			font-size: 18px;
+			color: silver; /* #818181; */
+			display: block;
+			transition: 0.3s;
+		}
+
+		.sidenav a:hover, .offcanvas a:focus {
+			color: white; /* #f1f1f1; */
+			/*cursor: not-allowed;*/
+		}
+
+		#close-nav-button:hover {
+			color: cyan;
+			cursor: pointer;
+		}
+
+		#help-nav-button:hover {
+			color: cyan;
+			cursor: pointer;
+		}
+
+		a.active-link:hover {
+			color: cyan;
+			cursor: pointer;
+		}
+
+		.sidenav .helpbtn {
+			position: absolute;
+			top: 0;
+			left: 55px;
+			font-size: 24px;
+			padding: 8px;
+			/* margin-left: 20px; */
+			margin-bottom: 20px;
+		}
+
+		.sidenav .closebtn {
+			position: absolute;
+			top: 0;
+			right: 25px;
+			font-size: 24px;
+			margin-left: 50px;
+			margin-bottom: 20px;
+		}
+
+		/* For the switch (slider) */
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: calc(var(--slider-scale) * 60px);
+			height: calc(var(--slider-scale) * 34px);
+		}
+
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: calc(var(--slider-scale) * 26px);
+			width: calc(var(--slider-scale) * 26px);
+			left: calc(var(--slider-scale) * 4px);
+			bottom: calc(var(--slider-scale) * 4px);
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		input:checked + .slider {
+			background-color: #2196f3;
+		}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #2196f3;
+		}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(calc(var(--slider-scale) * 26px));
+			-ms-transform: translateX(calc(var(--slider-scale) * 26px));
+			transform: translateX(calc(var(--slider-scale) * 26px));
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+			border-radius: calc(var(--slider-scale) * 34px);
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
+		}
+
+		/* Switch grid */
+		.switch-container {
+			display: grid;
+			grid-template-columns: calc(var(--slider-scale) * 80px) 200px;
+			width: 500px;
+		}
+		.switch-element {
+			place-self: flex-start;
+		}
+
+		dialog {
+			background: rgba(25, 25, 25, 0.75);
+			color: silver;
+			width: 300px;
+			top: 50px;
+			border: 2px solid orange;
+			border-radius: 10px;
+			margin: auto;
+		}
+
+		.dialog-header {
+			font-size: 24px;
+			font-weight: 700;
+		}
+
+		.dialog-header-close {
+			float: right;
+		}
+		.dialog-header-close:hover {
+			color: cyan;
+			cursor: pointer;
+		}
+		.raw-data {
+			font-size: 8px;
+			text-align: left;
+			max-height: 400px;
+			overflow-x: auto;
+			overflow-y: auto;
+		}
+
+	</style>
+
+	<!-- This refers to a sibling directory... Could be copied in the js directory, if needed. -->
+	<script type="module" src="./webcomponents/SatellitePlotter.js"></script>
+	<script type="module" src="./webcomponents/AnalogDisplay.js"></script>
+	<script type="module" src="./webcomponents/CompassDisplay.js"></script>
+	<script type="module" src="./webcomponents/WindAngleDisplay.js"></script>
+	<script type="module" src="./webcomponents/DirectionDisplay.js"></script>
+
+	<script type="text/javascript" src="../js/TrackMap.js"></script>
+
+	<script type="text/javascript" src="../js/date.proto.js"></script>
+	<script type="text/javascript" src="../js/pub.sub.js"></script>
+	<script type="text/javascript" src="../js/ajax.manager.js"></script>
+</head>
+<body>
+
+<h1 title="Use the hamburger on the left to reach the menu."
+    style="text-align: left; width: 100%; font-style: normal; text-shadow: 1px 1px 2px black, 0 0 25px white, 0 0 5px silver;">
+	<span id="hamburger" style="cursor: pointer;" onclick="openNav()" onmouseover="openNav()" title="Hamburger">&nbsp; &#8801;</span>
+</h1>
+
+
+<!--input type="checkbox" onchange="manageClick(this);" /> Auto-scroll -->
+<div style="margin: 2px;" title="Scroll every 5 seconds.">
+	<span style="font-weight: bold; font-style: italic;">Auto Scroll</span>
+	<!--br/-->
+	<label class="rocker" style="font-size: 0.50em; vertical-align: middle;">
+		<input type="checkbox" onchange="manageClick(this);" id="scroll-switch">
+		<span class="switch-left">On</span>
+		<span class="switch-right">Off</span>
+	</label>
+</div>
+
+<!-- Here are the slides (the screens) -->
+<div class="slideshow-container">
+
+	<div class="the-slides fade">
+		<div class="number-text">1 / 14</div>
+		<div class="display-2">
+			<span class="display-title">Position</span>
+			<span class="display-small-data-1" id="lat">00 00.00</span>
+			<span class="display-small-data-2" id="lng">00 00.00</span>
+			<!--span class="display-unit">knots</span-->
+		</div>
+		<div class="text">POS</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">2 / 14</div>
+		<div class="display-2">
+			<span class="display-title">GPS Time</span>
+			<span class="display-small-data-1" id="gps-date">DD-MMM-YYYY</span>
+			<span class="display-small-data-2" id="gps-time">00:00:00</span>
+			<span class="display-unit">UTC</span>
+		</div>
+		<div class="text">GPS</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">3 / 14</div>
+		<div class="display">
+			<!--span class="display-title">GPS Sats</span>
+			<span class="display-data" id="sat">000</span>
+			<span class="display-unit">degrees</span-->
+
+			<satellite-plotter class="sat-plot-01 display-data"
+							   title="Satellites in view"
+							   id="sp-01"
+							   width="200"
+							   height="200"
+							   with-border="true"
+							   sat-in-view='{}'></satellite-plotter>
+		</div>
+		<div class="text">SAT</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">4 / 14</div>
+		<div class="display">
+			<div id="cog-div" class="display" style="display: none; border: none;">
+				<span class="display-title">Course Over Ground</span>
+				<span class="display-data" id="cog-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>
+			<compass-display id="cog"
+							 class="green display-data"
+							 title="Course Over Ground"
+							 value="0"
+							 width="200"
+							 height="200"
+							 major-ticks="45"
+							 minor-ticks="5"
+							 label="COG"></compass-display>
+
+		</div>
+		<div class="text">COG</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">5 / 14</div>
+		<div class="display">
+			<div id="sog-div" class="display" style="display: none; border: none;">
+				<span class="display-title">Speed Over Ground</span>
+				<span class="display-data" id="sog-dig">00.00</span>
+				<span class="display-unit">knots</span>
+			</div>
+			<analog-display class="analogdisplay-day-speed display-data"
+							title="Speed Over Ground&#13;in knots"
+							id="sog"
+							min-value="0"
+							max-value="15"
+							major-ticks="1"
+							minor-ticks="0.1"
+							with-border="true"
+							with-min-max="true"
+							overlap="40"
+							label="SOG"
+							unit="kn"
+							rotate-digits="false"
+							width="200"
+							height="200"></analog-display>
+		</div>
+
+		<div class="text">SOG</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">6 / 14</div>
+		<div class="display">
+			<canvas id="mapCanvas" class="displayContent" width="200" height="250" title="Track Map"></canvas>
+		</div>
+		<div class="text">MAP</div>
+	</div>
+
+
+	<div class="the-slides fade">
+		<div class="number-text">7 / 14</div>
+		<div class="display">
+			<span class="display-title">Boat Speed</span>
+			<span class="display-data" id="bsp">00.00</span>
+			<span class="display-unit">knots</span>
+		</div>
+		<div class="text">BSP</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">8 / 14</div>
+		<div class="display">
+			<span class="display-title">Apparent Wind Speed</span>
+			<span class="display-data" id="aws">00.00</span>
+			<span class="display-unit">knots</span>
+		</div>
+		<div class="text">AWS</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">9 / 14</div>
+		<div class="display">
+			<div id="awa-div" class="display" style="display: none; border: none;">
+				<span class="display-title">Apparent Wind Angle</span>
+				<span class="display-data" id="awa-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>
+			<wind-angle-display class="analogdisplay-day-dir display-data"
+								title="Apparent Wind Angle"
+								id="awa"
+								value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+								major-ticks="30"
+								minor-ticks="5"
+								with-border="true"
+								with-digits="true"
+								label="Apparent"
+								hand="wind"
+								width="200"
+								height="200"></wind-angle-display>
+		</div>
+		<div class="text">AWA</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">10 / 14</div>
+		<div class="display">
+			<span class="display-title">True Wind Speed</span>
+			<span class="display-data" id="tws">00.00</span>
+			<span class="display-unit">knots</span>
+		</div>
+		<div class="text">TWS</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">11 / 14</div>
+		<div class="display">
+			<div id="twd-div" class="display" style="display: none; border: none;">
+				<span class="display-title">True Wind Dir</span>
+				<span class="display-data" id="twd-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>
+			<direction-display class="analogdisplay-day-dir display-data"
+							   title="True Wind Direction"
+							   id="twd"
+							   value="0"
+							   major-ticks="45"
+							   minor-ticks="5"
+							   with-rose="true"
+							   with-border="true"
+							   label="TWD"
+							   hand="wind"
+							   width="200"
+							   height="200"></direction-display>
+		</div>
+		<div class="text">TWD</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">12 / 14</div>
+		<div class="display">
+			<div id="twa-div" class="display" style="display: none; border: none;">
+				<span class="display-title">True Wind Angle</span>
+				<span class="display-data" id="twa-dig">000</span>
+				<span class="display-unit">degrees</span>
+			</div>	
+			<wind-angle-display class="analogdisplay-day-dir display-data"
+								title="True Wind Angle"
+								id="twa"
+								value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+								major-ticks="30"
+								minor-ticks="5"
+								with-border="true"
+								with-digits="true"
+								label="True"
+								hand="wind"
+								width="200"
+								height="200"></wind-angle-display>
+		</div>
+		<div class="text">TWA</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">13 / 14</div>
+		<div class="display">
+			<span class="display-title">True Heading</span>
+			<span class="display-data" id="hdg">000</span>
+			<span class="display-unit">degrees</span>
+		</div>
+		<div class="text">HDG</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">14 / 14</div>
+		<div class="display">
+			<span class="display-title">Raw Data</span>
+			<div id="raw-data" class="raw-data"></div>
+		</div>
+		<div class="text">RAW</div>
+	</div>
+
+	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>
+	<div class="next" onclick="plusSlides(+1);">&#10095;</div>
+
+	<div class="dots">
+		<span class="dot" onclick="currentSlide(01);" title="POS"></span>
+		<span class="dot" onclick="currentSlide(02);" title="GPS"></span>
+		<span class="dot" onclick="currentSlide(03);" title="SAT"></span>
+		<span class="dot" onclick="currentSlide(04);" title="COG"></span>
+		<span class="dot" onclick="currentSlide(05);" title="SOG"></span>
+		<span class="dot" onclick="currentSlide(06);" title="MAP"></span>
+		<span class="dot" onclick="currentSlide(07);" title="STW"></span>
+		<span class="dot" onclick="currentSlide(08);" title="AWS"></span>
+		<span class="dot" onclick="currentSlide(09);" title="AWA"></span>
+		<span class="dot" onclick="currentSlide(10);" title="TWS"></span>
+		<span class="dot" onclick="currentSlide(11);" title="TWD"></span>
+		<span class="dot" onclick="currentSlide(12);" title="TWA"></span>
+		<span class="dot" onclick="currentSlide(13);" title="HDG"></span>
+		<span class="dot" onclick="currentSlide(14);" title="RAW"></span>
+	</div>
+	
+</div>
+
+<dialog id="help-dialog" style="width: 300px; z-index: 10;">
+    <div class="dialog-header">
+      <span>Help !...</span>
+      <span class="dialog-header-close" onclick="closeHelpDialog();">&times</span>
+    </div>
+    <div style="text-align: left; padding: 5px;">
+      <!-- Help content -->
+      <div style="margin-top: 15px;">
+        Use the sliders in the nav bar to show or hide the different screens.<br/>
+      </div>
+      <div style="margin-top: 15px;">
+        Query String parameters are also available to configure those screens at startup.<br/>Use the slider's names
+		as parameter names.
+      </div>
+      <div style="margin-top: 15px;">
+        <i>QS Example</i>: <code style="white-space: nowrap; /* nowrap: for the question mark */">?AWA=false&AWS=false&HDG=false</code>
+      </div>
+    </div>
+</dialog>
+
+<!-- Sliding Menu -->
+<div id="side-nav" class="sidenav" style="text-align: left;" onmouseleave="closeNav()">
+    <a href="javascript:void(0)" id="help-nav-button" class="helpbtn" onclick="displayHelp()" title="Help">?</a>
+    <a href="javascript:void(0)" id="close-nav-button" class="closebtn" onclick="closeNav()">&times;</a>
+
+	<div class="switch-container" style="margin-left: 30px;" title="Analog Displays, when possible">
+		<label class="switch switch-element">
+		  <input id="digit-analog-slider" type="checkbox" onchange="manageDigitalClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">Analog Displays</span>
+	</div>
+
+	<div style="margin-left: 30px; padding-bottom: 20px; padding-top: 20px;">Manage Slides Visibility</div>
+
+	<div class="switch-container" style="margin-left: 30px;" title="Display GPS Position">
+		<label class="switch switch-element">
+		  <input id="pos-slider" type="checkbox" onchange="managePOSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">POS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display GPS Time">
+		<label class="switch switch-element">
+		  <input id="gps-slider" type="checkbox" onchange="manageGPSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">GPS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display GPS Satellites">
+		<label class="switch switch-element">
+		  <input id="sat-slider" type="checkbox" onchange="manageSATClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">SAT</span>
+	</div>
+
+	<div class="switch-container" style="margin-left: 30px;" title="Display Course Over Ground">
+		<label class="switch switch-element">
+		  <input id="cog-slider" type="checkbox" onchange="manageCOGClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">COG</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Speed Over Ground">
+		<label class="switch switch-element">
+		  <input id="sog-slider" type="checkbox" onchange="manageSOGClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">SOG</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Map (the track)">
+		<label class="switch switch-element">
+		  <input id="map-slider" type="checkbox" onchange="manageMAPClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">MAP</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Speed Through Water (aka BSP)">
+		<label class="switch switch-element">
+		  <input id="stw-slider" type="checkbox" onchange="manageSTWClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">STW</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Apparent Wind Speed">
+		<label class="switch switch-element">
+		  <input id="aws-slider" type="checkbox" onchange="manageAWSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">AWS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Apparent Wind Angle">
+		<label class="switch switch-element">
+		  <input id="awa-slider" type="checkbox" onchange="manageAWAClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">AWA</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display True Wind Speed">
+		<label class="switch switch-element">
+		  <input id="tws-slider" type="checkbox" onchange="manageTWSClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">TWS</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display True Wind Direction">
+		<label class="switch switch-element">
+		  <input id="twd-slider" type="checkbox" onchange="manageTWDClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">TWD</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display True Wind Angle">
+		<label class="switch switch-element">
+		  <input id="twa-slider" type="checkbox" onchange="manageTWAClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">TWA</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Heading (from Compass)">
+		<label class="switch switch-element">
+		  <input id="hdg-slider" type="checkbox" onchange="manageHDGClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">HDG</span>
+	</div>
+	<div class="switch-container" style="margin-left: 30px;" title="Display Heading (from Compass)">
+		<label class="switch switch-element">
+		  <input id="raw-slider" type="checkbox" onchange="manageRAWClick(this);" checked>
+		  <span class="slider round"></span>
+		</label>
+		<span class="switch-element">RAW</span>
+	</div>
+
+</div>	
+
+<script type="text/javascript">
+	let auto = false;
+
+	const DIGITAL_DISPLAY = 1; // All digital displays (except GPS Satellites and Track)
+	const ANALOG_DISPLAY = 2;  // Some data displayed on an analog WebCOmponent
+	let digital_analog = ANALOG_DISPLAY;
+
+	let displayPos = true;
+	let displayGps = true;
+	let displaySat = true;
+	let displayCog = true;
+	let displaySog = true;
+	let displayMap = true;
+	let displayStw = true;
+	let displayAws = true;
+	let displayAwa = true;
+	let displayTws = true;
+	let displayTwd = true;
+	let displayTwa = true;
+	let displayHdg = true;
+	let displayRaw = true;
+
+	function manageDigitalClick(cb) {
+		digital_analog = cb.checked ? ANALOG_DISPLAY : DIGITAL_DISPLAY;
+		// Set concerned displays accordingly.
+		document.getElementById('cog-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('cog').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('sog-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('sog').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('awa-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('awa').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('twd-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('twd').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('twa-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('twa').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+	}
+
+	function managePOSClick(cb) {
+		displayPos = cb.checked;
+		// console.log(`Display position: ${displayPos}`);
+	}
+	function manageGPSClick(cb) {
+		displayGps = cb.checked;
+	}
+	function manageSATClick(cb) {
+		displaySat = cb.checked;
+	}
+	function manageSOGClick(cb) {
+		displaySog = cb.checked;
+	}
+	function manageCOGClick(cb) {
+		displayCog = cb.checked;
+	}
+	function manageMAPClick(cb) {
+		displayMap = cb.checked;
+	}
+	function manageSTWClick(cb) {
+		displayStw = cb.checked;
+	}
+	function manageAWSClick(cb) {
+		displayAws = cb.checked;
+	}
+	function manageAWAClick(cb) {
+		displayAwa = cb.checked;
+	}
+	function manageTWSClick(cb) {
+		displayTws = cb.checked;
+	}
+	function manageTWDClick(cb) {
+		displayTwd = cb.checked;
+	}
+	function manageTWAClick(cb) {
+		displayTwa = cb.checked;
+	}
+	function manageHDGClick(cb) {
+		displayHdg = cb.checked;
+	}
+	function manageRAWClick(cb) {
+		displayRaw = cb.checked;
+	}
+
+	function manageClick(cb) {
+		auto = cb.checked;
+		if (auto) {
+			showSlides(slideIndex);
+		}
+	}
+
+	let slideIndex = 1;
+	showSlides(slideIndex);
+
+	function plusSlides(n) {
+
+		let dots = document.querySelector('.dots');
+		let dotArray = dots.querySelectorAll('.dot');
+
+		let slideDisplayArray = [
+			displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
+			displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
+			displayHdg, displayRaw
+		];
+		// showSlides(slideIndex += n);
+		slideIndex += n;
+
+		let found = false;
+		while (!found) {
+			if (slideIndex < 1) {
+				slideIndex = dotArray.length;
+			}
+			if (slideIndex > dotArray.length) {
+				slideIndex = 1;
+			}
+			if (!slideDisplayArray[slideIndex - 1]) {
+				slideIndex += n;
+			} else {
+				found = true;
+			}
+		}
+
+		showSlides(slideIndex);
+	}
+
+	function currentSlide(n) {
+		showSlides(slideIndex = n);
+	}
+
+	function showSlides(n) {
+		let slides = document.getElementsByClassName("the-slides");
+		let dots = document.getElementsByClassName("dot");
+		if (n > slides.length) {
+			slideIndex = 1;
+		}
+		if (n < 1) {
+			slideIndex = slides.length;
+		}
+		for (let i = 0; i < slides.length; i++) { // Hide them all
+		    //	slides[i].style.display = "none";
+			slides[i].classList.remove("visible-slide");
+		}
+
+		if (!auto) {
+			for (let i = 0; i < dots.length; i++) {
+				dots[i].className = dots[i].className.replace(" active", "");
+			}
+			slides[slideIndex - 1].classList.add("visible-slide"); // Show active one
+
+			dots[slideIndex - 1].className += " active";
+		} else { // Auto. 
+
+			let slideDisplayArray = [
+				displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
+				displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
+				displayHdg, displayRaw
+			];
+
+			slideIndex++; // Auto: always +1
+			let found = false;
+			while (!found) {
+				if (slideIndex > slides.length) {
+					slideIndex = 1;
+				}
+				if (!slideDisplayArray[slideIndex - 1]) {
+					slideIndex += 1;
+				} else {
+					found = true;
+				}
+			}
+
+			for (let i = 0; i < dots.length; i++) {
+				dots[i].className = dots[i].className.replace(" active", "");
+			}
+//		slides[slideIndex - 1].style.display = "block";
+			slides[slideIndex - 1].classList.add("visible-slide");
+
+			dots[slideIndex - 1].className += " active";
+			setTimeout(showSlides, 5000); // Change screen every 5 seconds
+		}
+	}
+
+	function openNav() {
+		// Set checkboxes values in the nav bar
+		document.getElementById("digit-analog-slider").checked = (digital_analog === ANALOG_DISPLAY);
+		document.getElementById("pos-slider").checked = displayPos;
+		document.getElementById("gps-slider").checked = displayGps;
+		document.getElementById("sat-slider").checked = displaySat;
+		document.getElementById("cog-slider").checked = displayCog;
+		document.getElementById("sog-slider").checked = displaySog;
+		document.getElementById("map-slider").checked = displayMap;
+
+		document.getElementById("awa-slider").checked = displayAwa;
+		document.getElementById("aws-slider").checked = displayAws;
+		document.getElementById("twa-slider").checked = displayTwa;
+		document.getElementById("tws-slider").checked = displayTws;
+		document.getElementById("twd-slider").checked = displayTwd;
+		document.getElementById("stw-slider").checked = displayStw;
+		document.getElementById("hdg-slider").checked = displayHdg;
+		document.getElementById("raw-slider").checked = displayRaw;
+		// Open side nav
+    	document.getElementById("side-nav").style.width =  getComputedStyle(document.documentElement).getPropertyValue('--expanded-nav-width'); // "450px";
+    }
+
+	function setSlideVisibility() {
+		let dots = document.querySelector('.dots');
+		let dotArray = dots.querySelectorAll('.dot');
+		let slideDisplayArray = [
+			displayPos, displayGps, displaySat, displayCog, displaySog, displayMap, 
+			displayStw, displayAws, displayAwa, displayTws, displayTws, displayTwa,
+			displayHdg, displayRaw
+		];
+		// Display/Hide the dots
+		for (let i=0; i<dotArray.length; i++) {
+			dotArray[i].style.display = slideDisplayArray[i] ? '' : 'none';
+		}
+		// Find the first non-hidden slide
+		let found = false;
+		while (!found) {
+			if (slideIndex > dotArray.length) {
+				slideIndex = 1;
+			}
+			if (!slideDisplayArray[slideIndex - 1]) {
+				slideIndex += 1;
+			} else {
+				found = true;
+			}
+		}
+	}
+
+    function closeNav() {
+    	document.getElementById("side-nav").style.width = "0";
+
+		// Manage the slides visibility.
+		// console.log("Manage the slides visibility here.");
+		setSlideVisibility();
+
+		// console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
+		showSlides(slideIndex);
+    }
+
+	const NO_DIALOG_MESSAGE = "Your browser seems not to support dialogs...\nMaybe Chrome or Chromium would?";
+
+	function closeHelpDialog() {
+		let aboutDialog = document.getElementById("help-dialog");
+		if (aboutDialog.close !== undefined) {
+			aboutDialog.close();
+		} else {
+		// alert(NO_DIALOG_MESSAGE);
+			aboutDialog.style.display = 'none';
+		}
+	}
+
+	function displayHelp() {
+		let aboutDialog = document.getElementById("help-dialog");
+		if (aboutDialog.show !== undefined) {
+			aboutDialog.show();
+		} else {
+			alert(NO_DIALOG_MESSAGE);
+			aboutDialog.style.display = 'inline';
+		}
+	}
+
+	let trackMap; // The map. TrackMap (just the path, no chart).
+
+	/**
+	 *  EVENT SUBSCRIBERS HERE.
+	 *
+	 * See js/ajax.manager.js
+	 * Note: All event definitions (topic's name) and events payload are defined in ajax.manager.js, method onMessage.
+	 * This is also new topics should be added, if needed.
+	 * Below, topics are subscribed to.
+	 * In ajax.manager.js, this is where data are published to the topics.
+	 * events (aka topics), listeners, publish and subscribe functions are defines in pub.sub.js
+	 */
+	let tws = 0.0;
+	let aws = 0.0;
+	events.subscribe('raw', val => {
+		document.getElementById('raw-data').innerHTML = `<pre>${JSON.stringify(val, null, 2)}</pre>`;
+	});
+	events.subscribe('pos', val => {
+		let strLat = decToSex(val.lat, 'NS');
+		let strLng = decToSex(val.lng, 'EW');
+		document.getElementById('lat').innerHTML = strLat;
+		document.getElementById('lng').innerHTML = strLng;
+		trackMap.addPoint(val);
+	});
+	events.subscribe('gps-time', val => {
+		// val.format("Y-M-d H:i:s")
+		// let date = gpsTime.format("d-m-Y-l");
+		// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
+		let gpsDate = new Date(val.epoch);
+		document.getElementById('gps-date').innerText = gpsDate.format("Y-M-d");
+		document.getElementById('gps-time').innerText = gpsDate.format("H:i:s");
+	});
+	events.subscribe('gps-sat', val => {
+		// document.getElementById('bsp').innerText = val.toFixed(2);
+		// console.log(`GPS-SAT: ${JSON.stringify(val)}`);
+		let satPlotter = document.getElementById('sp-01');
+		satPlotter.setSatellites(val);
+		satPlotter.repaint();
+	});
+	events.subscribe('sog', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('sog-dig').innerText = val.toFixed(2);
+		} else {
+			document.getElementById('sog').value = val;
+		}
+		// console.log(`SOG: ${val}`);
+		trackMap.setLastSog(val);
+	});
+	events.subscribe('cog', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('cog-dig').innerText = val.toFixed(0);
+		} else {
+			document.getElementById('cog').value = val;
+		}
+		// console.log(`COG: ${val}`);
+		trackMap.setLastCog(val);
+	});
+	events.subscribe('bsp', val => {
+		document.getElementById('bsp').innerText = val.toFixed(2);
+	});
+	events.subscribe('awa', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('awa-dig').innerText = val.toFixed(0);
+		} else {
+			let json = { ws: aws, wa: val }
+			document.getElementById('awa').value = JSON.stringify(json);
+		}
+	});
+	events.subscribe('aws', val => {
+		aws = val;
+		document.getElementById('aws').innerText = val.toFixed(2);
+	});
+	events.subscribe('twa', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('twa-dig').innerText = val.toFixed(0);
+		} else {
+			let json = { ws: tws, wa: val }
+			document.getElementById('twa').value = JSON.stringify(json);
+		}
+	});
+	events.subscribe('tws', val => {
+		tws = val;
+		document.getElementById('tws').innerText = val.toFixed(2);
+	});
+	events.subscribe('twd', val => {
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('twd-dig').innerText = val.toFixed(0);
+		} else {
+			document.getElementById('twd').value = val;
+		}
+	});
+	events.subscribe('hdg', val => {
+		document.getElementById('hdg').innerText = val.toFixed(0);
+	});
+
+	let lpad = (str, len, pad) => {
+		let s = str;
+		while (s.length < len) {
+			s = (pad === undefined ? ' ' : pad) + s;
+		}
+		return s;
+	};
+
+	let decToSex = (val, ns_ew) => {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		let i = intValue;
+		dec *= 60;
+//    var s = i + "°" + dec.toFixed(2) + "'";
+//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+		let s = "";
+		if (ns_ew !== undefined) {
+			if (val < 0) {
+				s += (ns_ew === 'NS' ? 'S' : 'W');
+			} else {
+				s += (ns_ew === 'NS' ? 'N' : 'E');
+			}
+			s += " ";
+		} else {
+			if (val < 0) {
+				s += '-'
+			}
+		}
+		s += i + "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
+
+		return s;
+	};
+
+	// Swipe detection
+	let touchstartX = 0
+	let touchendX = 0
+
+	let handleGesture = () => {
+		if (touchendX < touchstartX) {
+			// alert('swiped left!');
+			plusSlides(+1);
+		}
+		if (touchendX > touchstartX) {
+			// alert('swiped right!');
+			plusSlides(-1);
+		}
+	};
+
+	let getQSPrm = (prm) => {
+		let loc = document.location.toString();
+		if (loc.indexOf("?") > -1) {
+			let qs = loc.substring(loc.indexOf("?") + 1);
+			let prms = qs.split('&');
+			for (let i=0; i<prms.length; i++) {
+				let nv = prms[i].split('=');
+				if (nv.length === 2) {
+					if (nv[0] === prm) {
+						return nv[1];
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	window.onload = () => {
+		initAjax();
+
+		trackMap = new TrackMap('mapCanvas', 200, 250, 'black', 'red', 'green', 'orange', 400);
+		trackMap.repaint();
+
+		const slider = document.querySelector('.slideshow-container');
+		slider.addEventListener('touchstart', e => {
+			touchstartX = e.changedTouches[0].screenX;
+		});
+
+		slider.addEventListener('touchend', e => {
+			touchendX = e.changedTouches[0].screenX;
+			handleGesture();
+		});
+
+		// Measure slides length (WiP)
+		// let slides = document.querySelectorAll(".the-slides");
+		// console.log(`We have ${slides.length} slide(s).`);
+
+		// Query String parameters
+		// debugger;
+		let qs = getQSPrm('DIGITAL');
+		digital_analog = (qs !== null && qs === "true") ? DIGITAL_DISPLAY : ANALOG_DISPLAY;
+		qs = getQSPrm('POS');
+		displayPos = (qs === null || qs === "true");
+		qs = getQSPrm('GPS');
+		displayGps = (qs === null || qs === "true");
+		qs = getQSPrm('SAT');
+		displaySat = (qs === null || qs === "true");
+		qs = getQSPrm('COG');
+		displayCog = (qs === null || qs === "true");
+		qs = getQSPrm('SOG');
+		displaySog = (qs === null || qs === "true");
+		qs = getQSPrm('MAP');
+		displayMap = (qs === null || qs === "true");
+		qs = getQSPrm('STW');
+		displayStw = (qs === null || qs === "true");
+		qs = getQSPrm('AWS');
+		displayAws = (qs === null || qs === "true");
+		qs = getQSPrm('AWA');
+		displayAwa = (qs === null || qs === "true");
+		qs = getQSPrm('TWS');
+		displayTws = (qs === null || qs === "true");
+		qs = getQSPrm('TWD');
+		displayTwd = (qs === null || qs === "true");
+		qs = getQSPrm('TWA');
+		displayTwa = (qs === null || qs === "true");
+		qs = getQSPrm('HDG');
+		displayHdg = (qs === null || qs === "true");
+		qs = getQSPrm('RAW');
+		displayRaw = (qs === null || qs === "true");
+
+		setSlideVisibility();
+
+		// console.log(`Manage the slides visibility here. SlideIndex: ${slideIndex}`);
+		showSlides(slideIndex);
+
+	}
+</script>
+
+</body>
+</html>

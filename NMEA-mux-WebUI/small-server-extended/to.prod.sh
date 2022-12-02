@@ -70,7 +70,7 @@ cp rc.local ${distdir}
 cp start-mux.sh ${distdir}
 cp zero-deviation.csv ${distdir}
 #
-# 4 - Archiving
+# 4 - Archiving for distribution
 #
 # zip -q -r ${distdir}.zip ${distdir}
 tar -cvzf ${distdir}.tar.gz ${distdir}

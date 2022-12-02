@@ -2,20 +2,20 @@
 # Generated on Sun Jun 13 2021 08:24:49 GMT-0700 (Pacific Daylight Time)
 # And reworked later...
 #
-name: "Minimal logger, extended"
+name: "Minimal logger, extended. Serial GPS, BME280."
 context:
   with.http.server: true
   http.port: 8888
   init.cache: true
   # default.declination: 14.0
-  default.declination: 0.0
+  default.declination: 1.0
   max.leeway: 10.0
   bsp.factor: 1.0
   aws.factor: 1.0
   hdg.offset: 0.0
   awa.offset: 0.0
   damping: 30
-# 3 Channels
+# 2 or 3 Channels
 channels:
   - type: serial
     port: /dev/ttyS80
