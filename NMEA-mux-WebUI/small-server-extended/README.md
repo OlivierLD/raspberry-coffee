@@ -605,7 +605,7 @@ This small server is also an HTTP server. As long as the server is running, it c
 This project also includes a couple of web pages (in turn invoking REST requests), accessible
 from any device seeing the server on its network, at `http://<rpi-ip-address>:8888/zip/index.html`.  
 It can also use a TCP forwarder (see the `yaml` files for details), making the data it reads available to other
-softs, like OpenCPN or SeaWi for example.
+softs, like OpenCPN or SeaWi for example (those 2 guys understand vanilla NMEA).
 
 #### Another quick example (for small screens in this case)
 Start the NMEA-Multiplexer:
@@ -644,3 +644,5 @@ From a brand-new _**buster**_ or _**bullseye**_ image:
 - `git clone https://github.com/OlivierLD/raspberry-coffee.git`
 
 Or you can build it on some machine, and use it on another, as explained one step above, [here](../README.md).
+
+---

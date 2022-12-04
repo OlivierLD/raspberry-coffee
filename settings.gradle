@@ -47,8 +47,11 @@ include "Processing"
 include "Bluetooth"
 include "Joystick"
 //include "jsonQL"
+
+// Other Java frameworks...
 include "diozero-101"
 include "pi4j_v2-101"
+include "raspberry-pi4j-v2"
 
 // Astro Computer
 include('astro-computer:AstroComputer')

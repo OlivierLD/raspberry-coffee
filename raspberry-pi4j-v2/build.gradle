@@ -1,0 +1,38 @@
+buildscript {
+    ext.pi4j_version = '2.2.0' // '1.2'
+    ext.slf4j_version = '1.7.32'
+}
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow'
+}
+
+group = 'oliv.raspi.coffee'
+version = '2.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+dependencies {
+    implementation "org.slf4j:slf4j-api:$slf4j_version"
+    implementation "org.slf4j:slf4j-simple:$slf4j_version"
+
+    implementation "com.pi4j:pi4j-plugin-raspberrypi:$pi4j_version"
+    implementation "com.pi4j:pi4j-plugin-pigpio:$pi4j_version"
+    implementation "com.pi4j:pi4j-core:$pi4j_version"
+
+    implementation 'one.microproject.rpi:rpi-drivers:2.1.1'
+
+    // See https://tinylog.org/v2/
+    implementation 'org.tinylog:tinylog-api:2.5.0'
+    implementation 'org.tinylog:tinylog-impl:2.5.0'
+}
+
+shadowJar {
+    zip64 true
+}

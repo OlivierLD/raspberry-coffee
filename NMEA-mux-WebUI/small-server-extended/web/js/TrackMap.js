@@ -13,13 +13,15 @@
  * @param {color} bgColor Background color, default black
  * @param {color} fgColor Foreground (track) color, default red
  * @param {color} gridColor Grid color, default green
+ * @param {color} textColor Text color, default white
  * @param {number} buffSize Max number of points in the track, default 400
  */
-function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
+function TrackMap(cName, width, height, bgColor, fgColor, gridColor, textColor, buffSize) {
 
 	this.bg = (bgColor || 'black');
-	this.fg = (fgColor || 'red');
+	this.fg = (fgColor || 'red');   // Track
 	this.gc = (gridColor || 'green');
+	this.tc = (textColor || 'white');
 
 	this.w = (width || 400);
 	this.h = (height || 400);
@@ -90,7 +92,7 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 		len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = this.gc;
+		context.fillStyle = this.tc;
 		context.fillText(text, (this.w / 2) - (len / 2), (this.h / 2) - (fontSize) - 2);
 
 		if (this.lastCog !== undefined) {
@@ -168,10 +170,35 @@ function TrackMap(cName, width, height, bgColor, fgColor, gridColor, buffSize) {
 		// Dot on last pos
 		if (canvasX !== undefined && canvasY !== undefined) {
 			context.beginPath();
-			context.arc(canvasX, canvasY, 6, 0, 2 * Math.PI, false);
+			let radius = 6;
+			if (true || this.lastCog === undefined) { // Draw a dot
+				context.arc(canvasX, canvasY, radius, 0, 2 * Math.PI, false);
+			} else { // Draw an arrow
+				// console.log(`Last COG: ${this.lastCog}, on x: ${Math.sin(Math.toRadians(this.lastCog))}, on y: ${Math.cos(Math.toRadians(this.lastCog))}`);
+				context.moveTo(canvasX, canvasY);
+				context.lineTo(canvasX - ((2 * radius) * Math.sin(Math.toRadians(this.lastCog))), canvasY - (radius * Math.cos(Math.toRadians(this.lastCog))));
+				context.lineTo(canvasX - ((2 * radius) * Math.sin(Math.toRadians(this.lastCog))), canvasY + (radius * Math.cos(Math.toRadians(this.lastCog))));
+			}
+			context.closePath();
 			context.fillStyle = this.fg;
 			context.fill();
-			context.closePath();
+			// Crosshair ?
+			if (true) {
+				context.lineWidth = 1;
+				context.strokeStyle = 'cyan';
+				context.beginPath();
+				context.moveTo(canvasX - 10, canvasY);
+				context.lineTo(canvasX + 10, canvasY);
+				context.closePath();
+				context.stroke();
+
+				context.beginPath();
+				context.moveTo(canvasX, canvasY - 10);
+				context.lineTo(canvasX, canvasY + 10);
+				context.closePath();
+				context.stroke();
+			}
+
 		}
 	};
 };
