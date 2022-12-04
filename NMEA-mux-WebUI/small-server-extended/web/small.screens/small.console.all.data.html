@@ -1214,7 +1214,7 @@
 	});
 	events.subscribe('gps-time', val => {
 		// val.format("Y-M-d H:i:s")
-		// let date = gpsTime.format("d-m-Y-l"); // Requires data.proto.js
+		// let date = gpsTime.format("d-m-Y-l"); // Requires date.proto.js
 		// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
 		let valDate = new Date(val.epoch); // Warning! We need UTC Date !
 		let gpsDate = new Date(valDate.getTime() + (valDate.getTimezoneOffset() * 60000))
