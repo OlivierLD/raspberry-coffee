@@ -6,7 +6,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven'
-    id 'application'  // also include installDist and distZip tasks
+    // id 'application'  // also include installDist and distZip tasks
     id 'com.github.johnrengelman.shadow'
 }
 
