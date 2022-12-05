@@ -1,5 +1,5 @@
 buildscript {
-    ext.pi4j_version = '2.2.0' // '1.2'
+    ext.pi4j_version = '2.1.1' // '2.2.0' // '1.2'
     ext.slf4j_version = '1.7.32'
 }
 plugins {
@@ -26,7 +26,7 @@ dependencies {
     implementation "com.pi4j:pi4j-plugin-raspberrypi:$pi4j_version"
     implementation "com.pi4j:pi4j-plugin-linuxfs:$pi4j_version"
     implementation "com.pi4j:pi4j-plugin-pigpio:$pi4j_version"
-    implementation "com.pi4j:pi4j-library-pigpio:$pi4j_version"
+//    implementation "com.pi4j:pi4j-library-pigpio:$pi4j_version"
 
     implementation "one.microproject.rpi:rpi-drivers:2.1.1"
 
