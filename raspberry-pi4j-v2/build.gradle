@@ -31,8 +31,8 @@ dependencies {
     implementation "com.pi4j:pi4j-plugin-raspberrypi:$pi4j_version"
     implementation "com.pi4j:pi4j-plugin-linuxfs:$pi4j_version"
     implementation "com.pi4j:pi4j-plugin-pigpio:$pi4j_version"
-    implementation "com.pi4j:pi4j-library-pigpio:$pi4j_version"
     implementation "com.pi4j:pi4j-library-linuxfs:$pi4j_version"
+    implementation "com.pi4j:pi4j-library-pigpio:$pi4j_version"
 
     implementation "one.microproject.rpi:rpi-drivers:2.1.1"
 
@@ -41,6 +41,10 @@ dependencies {
     implementation 'org.tinylog:tinylog-impl:2.5.0'
 }
 
+mainClassName = "oliv.tests.HTU21DTest"
+
 shadowJar {
     zip64 true
+    // to create an executable jar-file. Requires mainClassName.
+    mergeServiceFiles()
 }
