@@ -26,7 +26,7 @@ public class BMP180Test {
             for (int i = 0; i < 10; i++) {
                 BMP180Impl.Data data = bmp180.getSensorValues();
                 float pressure = data.getPressure() / 1000;
-                Logger.info("[{}] Temperature: {} C, Pressure: {} kPa", i, String.format("%.3f", data.getTemperature()), String.format("%.3f", pressure));
+                Logger.info("[{}] Temperature: {} C, Pressure: {} kPa", i + 1, String.format("%.3f", data.getTemperature()), String.format("%.3f", pressure));
                 Thread.sleep(500);
             }
             Logger.info("BMP180Test done.");
@@ -35,8 +35,6 @@ public class BMP180Test {
 
     public static void main(String... args) {
         Logger.info("Off we go ...");
-        // Context context = null;
-        // context = lazyConfigInit(context);
         Context context = Pi4J.newAutoContext();
         try {
             BMP180Test.test(context);

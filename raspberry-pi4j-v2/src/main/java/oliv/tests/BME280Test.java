@@ -32,7 +32,7 @@ public class BME280Test {
             for (int i = 0; i < 10; i++) {
                 BME280Impl.Data data = bme280.getSensorValues();
                 float pres = data.getPressure() / 1000;
-                Logger.info("[{}] Temperature: {} C, Pressure: {} kPa, Relative humidity: {} %", i,
+                Logger.info("[{}] Temperature: {} C, Pressure: {} kPa, Relative humidity: {} %", i + 1,
                         String.format("%.3f", data.getTemperature()), String.format("%.3f", pres), String.format("%.3f", data.getRelativeHumidity()));
                 Thread.sleep(500);
             }
@@ -42,8 +42,6 @@ public class BME280Test {
 
     public static void main(String... args) {
         Logger.info("Off we go ...");
-        // Context context = null;
-        // context = lazyConfigInit(context);
         Context context = Pi4J.newAutoContext();
         try {
             BME280Test.test(context);

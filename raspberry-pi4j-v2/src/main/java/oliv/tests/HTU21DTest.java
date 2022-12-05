@@ -27,7 +27,7 @@ public class HTU21DTest {
             for (int i = 0; i < 10; i++) {
                 float temp = htu21df.getTemperature();
                 float hum = htu21df.getHumidity();
-                Logger.info("[{}] Temperature: {} C, Rel. Humidity: {} %", i, String.format("%.3f", temp), String.format("%.3f", hum));
+                Logger.info("[{}] Temperature: {} C, Rel. Humidity: {} %", i + 1, String.format("%.3f", temp), String.format("%.3f", hum));
                 Thread.sleep(500);
             }
             Logger.info("HTU21DTest done.");
@@ -36,8 +36,6 @@ public class HTU21DTest {
 
     public static void main(String... args) {
         Logger.info("Off we go ...");
-        // Context context = null;
-        // context = lazyConfigInit(context);
         Context context = Pi4J.newAutoContext();
         System.out.printf("%d provider(s):\n", context.providers().getAll().size());
         context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s (%s)\n", k, v.getType(), v.description()));

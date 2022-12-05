@@ -616,7 +616,7 @@ This one will replay some logged data...
 And then, reach `http://<your-ip-address>:8888/web/index.html` from a browser on your box.  
 The hamburger (&#9776;) on the top left will get you to the menu... FYI, three vertical dots (&#8942;) are called a kebab. 😉
 
-| Main Menu | Nav Bar | Console |
+| Main Menu | Nav Bar | Console-0 |
 |:----:|:----:|:----:|
 |![One](./img/NavMenu.01.png)|![Two](./img/NavMenu.02.png)|![Three](./img/NavMenu.03.png)|
 
@@ -633,6 +633,8 @@ http://<your-ip-address>:8888/web/small.screens/small.console.all.data.html?STW=
 ```
 ---
 > Again, all this is just an example. Look into the code for inspiration, for your own consoles.
+
+> For (much) bigger screens examples, look into the [RESTNavServer](../../RESTNavServer) module.  
 ---
 
 ### June 2021, from scratch, on a RPi Zero, or 3B, or so.
