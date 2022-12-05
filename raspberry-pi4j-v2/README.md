@@ -20,4 +20,9 @@ Possibilities - among many others - could be (the list is not closed!):
 - <https://github.com/jveverka/rpi-projects>
 
 ## Now we're talking...
-. . .
+`PI4J-v2` requires `pigpio` to be installed, explicitly.
+```
+sudo apt-get update
+sudo apt-get install pigpio python-pigpio python3-pigpio
+```
+
