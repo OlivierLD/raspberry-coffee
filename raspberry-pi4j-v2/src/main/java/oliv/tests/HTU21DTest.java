@@ -39,7 +39,7 @@ public class HTU21DTest {
         // Context context = null;
         // context = lazyConfigInit(context);
         Context context = Pi4J.newAutoContext();
-        System.out.printf("%d provider(s)\n:", context.providers().getAll().size());
+        System.out.printf("%d provider(s):\n", context.providers().getAll().size());
         context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s (%s)\n", k, v.getType(), v.description()));
         System.out.printf("Description: %s\n", context.describe().description());
         try {

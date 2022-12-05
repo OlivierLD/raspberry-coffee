@@ -6,12 +6,16 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven'
-    // id 'application'  // also include installDist and distZip tasks
+    id 'application'  // also include installDist and distZip tasks
     id 'com.github.johnrengelman.shadow'
 }
 
 group = 'oliv.raspi.coffee'
 version = '2.0'
+
+application {
+    mainClass = 'oliv.tests.HTU21DTest'
+}
 
 repositories {
     mavenCentral()
