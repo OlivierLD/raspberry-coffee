@@ -22,9 +22,10 @@ dependencies {
     implementation "org.slf4j:slf4j-api:$slf4j_version"
     implementation "org.slf4j:slf4j-simple:$slf4j_version"
 
-    implementation "com.pi4j:pi4j-plugin-raspberrypi:$pi4j_version"
-    implementation "com.pi4j:pi4j-plugin-pigpio:$pi4j_version"
     implementation "com.pi4j:pi4j-core:$pi4j_version"
+    implementation "com.pi4j:pi4j-plugin-raspberrypi:$pi4j_version"
+    implementation "com.pi4j:pi4j-plugin-linuxfs:$pi4j_version"
+    implementation "com.pi4j:pi4j-plugin-pigpio:$pi4j_version"
 
     implementation 'one.microproject.rpi:rpi-drivers:2.1.1'
 
