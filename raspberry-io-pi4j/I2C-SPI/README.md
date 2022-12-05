@@ -3,7 +3,7 @@
 ## Sensors
 
 #### BME280, BMP180
-I<sup>2</sup>C Pressure, Temperature, Humidity
+I<sup>2</sup>C Pressure, Temperature, Humidity (for BME280)
 
 #### BMP183
 SPI Pressure, Temperature

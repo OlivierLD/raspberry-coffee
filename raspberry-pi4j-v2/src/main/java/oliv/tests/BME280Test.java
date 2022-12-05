@@ -9,7 +9,6 @@ import one.microproject.rpi.hardware.gpio.sensors.BME280Builder;
 import one.microproject.rpi.hardware.gpio.sensors.impl.BME280Impl;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
-
 import org.tinylog.Logger;
 
 /*
