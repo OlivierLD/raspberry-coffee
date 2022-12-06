@@ -164,7 +164,7 @@
       <artifactId>jackson-jaxrs-json-provider</artifactId>
       <version>${jackson-version}</version>
     </dependency>
-    <dependency>
+    <!--dependency Remove because of a vulnerability>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>6.8.8</version>
@@ -183,7 +183,7 @@
           <groupId>org.beanshell</groupId>
         </exclusion>
       </exclusions>
-    </dependency>
+    </dependency-->
     <!-- Bean Validation API support -->
     <dependency>
         <groupId>javax.validation</groupId>
