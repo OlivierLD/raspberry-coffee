@@ -42,6 +42,7 @@
     <script type="module" src="./ScrollDigit.js"></script>
     <script type="module" src="./BoatOverview.js"></script>
     <script type="module" src="./JumboDisplay.js"></script>
+    <script type="module" src="./Thermometer.js"></script>
 
     <!-- Scripts -->
     <script type="text/javascript" src="js/date.proto.js"></script>
@@ -372,6 +373,16 @@
                 bo.cdr = current.cdr;
             }
         });
+
+        events.subscribe(events.topicNames.WATER_TEMP, (val) => {
+            let wtElement = document.getElementById('water-temp');
+            wtElement.value = val;
+        });
+        events.subscribe(events.topicNames.AIR_TEMP, (val) => {
+            let atElement = document.getElementById('air-temp');            
+            atElement.value = val;
+        });
+
         events.subscribe(events.topicNames.LOG, (val) => {
             log = val;
             let sdElem = document.getElementById('scroll-digit-display-01');
@@ -1573,7 +1584,7 @@
                                width="700"
                                height="500"></world-map>
                 </div>
-                <div class="black-frame centered" style="max-height: 100px; overflow-y: scroll;" title="Chart controls">
+                <div class="black-frame centered" style="max-height: 120px; overflow-y: scroll;" title="Chart controls">
 
                     <div style="display: grid; grid-template-columns: 120px 30px 120px 30px 120px 30px 120px 30px 120px 30px 120px 30px; padding: 0px;">
                         <span style="text-align: right; margin-top: 12px;">Transparent</span>
@@ -2035,7 +2046,7 @@
                 
                 <div id="boat-data-1">
                     <div id="row-1"
-                        style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
+                        style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto auto; padding: 10px;">
                         <!--
                         BOUSSOLE... HDG
                         +-->
@@ -2188,6 +2199,35 @@
 
                             </div>
                         </div>
+
+                        <!--
+                            Temperatures
+                        -->
+                        <div id="temperatures">
+                            <div class="black-frame centered">
+                                <thermo-meter id="water-temp"
+                                              class="thermometer-day"
+                                              title="Water"
+                                              min-value="-10"
+                                              max-value="30"
+                                              major-ticks="10"
+                                              minor-ticks="1"
+                                              value="-"
+                                              width="100"
+                                              height="250"></thermo-meter>                            
+                                <thermo-meter id="air-temp"
+                                              class="thermometer-day"
+                                              title="Air"
+                                              min-value="-10"
+                                              max-value="30"
+                                              major-ticks="10"
+                                              minor-ticks="1"
+                                              value="-"
+                                              width="100"
+                                              height="250"></thermo-meter>                            
+                            </div>
+                        </div>
+
 
                     </div>
                     <div id="row-2"
