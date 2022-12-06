@@ -1,4 +1,4 @@
-# Case Study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
+# Case Study (WiP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
 - Raspberry Zero W and Higher
 - Can emit its own network
 - Two push-buttons for User Interface
