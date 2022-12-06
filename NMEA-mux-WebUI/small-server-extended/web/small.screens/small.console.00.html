@@ -243,10 +243,51 @@
 			overflow-x: auto;
 			overflow-y: auto;
 		}
+		.analogdisplay-day {
+			--bg-color: rgba(0, 0, 0, 0);
+			--digit-color: black;
+			--with-gradient: true;
+			--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: white; /* used if --withGradient: false */
+			--display-line-color: rgba(255, 255, 255, 0.5);
+			--label-fill-color: rgba(255, 255, 255, 0.5);
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--outline-color: DarkGrey;
+			--major-tick-color: black;
+			--minor-tick-color: black;
+			--value-color: grey;
+			--value-outline-color: black;
+			--value-nb-decimal: 1;
+			--hand-color: red;
+			--hand-outline-color: black;
+			--with-hand-shadow: true;
+			--knob-color: DarkGrey;
+			--knob-outline-color: black;
+			--font: Arial;
+			--value-font-size-factor: 1
+		}
+		.thermometer-day {
+			--bg-color: rgba(0, 0, 0, 0);
+			--digit-color: DarkGrey;
+			--with-gradient: true;
+			--display-background-gradient-from: black;
+			--display-background-gradient-to: LightGrey;
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--major-tick-color: DarkGrey;
+			--minor-tick-color: DarkGrey;
+			--value-color: LightRed;
+			--value-outline-color: black;
+			--value-nb-decimal: 2;
+			--font: 'Arial'; /* 'Source Code Pro' */
+		}
 
 	</style>
 
 	<script type="module" src="webcomponents/SatellitePlotter.js"></script>
+	<script type="module" src="webcomponents/AnalogDisplay.js"></script>
+	<script type="module" src="webcomponents/Thermometer.js"></script>
 
 	<script type="text/javascript" src="../js/TrackMap.js"></script>
 
@@ -254,145 +295,6 @@
 	<script type="text/javascript" src="../js/pub.sub.js"></script>
 	<script type="text/javascript" src="../js/ajax.manager.js"></script>
 
-	<script type="text/javascript">
-
-		let displayMap; // The map
-
-		let lpad = (s, w, len) => {
-			let str = s;
-			while (str.length < len) {
-				str = w + str;
-			}
-			return str;
-		};
-
-		// Left-right swipe gesture management
-		let xDown = null;
-		let yDown = null;
-
-		function handleTouchStart(evt) {
-			xDown = evt.touches[0].clientX;
-			yDown = evt.touches[0].clientY;
-		}
-
-		function handleTouchMove(evt) {
-			if (!xDown || !yDown) {
-				return;
-			}
-			let xUp = evt.touches[0].clientX;
-			let yUp = evt.touches[0].clientY;
-			let xDiff = xDown - xUp;
-			let yDiff = yDown - yUp;
-
-			// most significant
-			if (Math.abs(xDiff) > Math.abs(yDiff)) { // Left-right
-				if (xDiff > 0) {
-					/* left swipe */
-					plusSlides(1);
-				} else {
-					/* right swipe */
-					plusSlides(-1);
-				}
-			} else { // Up-Down, not needed here (yet...)
-				if (yDiff > 0) {
-					/* up swipe */
-				} else {
-					/* down swipe */
-				}
-			}
-			/* reset values */
-			xDown = null;
-			yDown = null;
-		}
-
-		function decToSex(val, ns_ew, withDeg) {
-			let absVal = Math.abs(val);
-			let intValue = Math.floor(absVal);
-			let dec = absVal - intValue;
-			let i = intValue;
-			dec *= 60;
-//    let s = i + "°" + dec.toFixed(2) + "'";
-//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
-			let s = "";
-			if (val < 0) {
-				s += (ns_ew === 'NS' ? 'S' : 'W');
-			} else {
-				s += (ns_ew === 'NS' ? 'N' : 'E');
-			}
-			s += " ";
-			let sep = " ";
-			if (withDeg === true) {
-				sep = "&deg;";
-			}
-//    s += i + "\"" + dec.toFixed(2) + "'";
-			s += i + sep + dec.toFixed(2) + "'";
-			return s;
-		}
-
-		const MONTHS = [
-				"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-				"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-		];
-		/**
-		 *  SUBSCRIBERS HERE.
-		 *
-		 * The following subscriptions make the distinction between Ajax & WebSockets
-		 * (See the initAjax & initWS methods)
-		 *
-		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
-		 */
-		events.subscribe('raw', (val) => {
-			document.getElementById('raw-data').innerHTML = `<pre>${JSON.stringify(val, null, 2)}</pre>`;
-		});
-		events.subscribe('sog', (val) => {
-			document.getElementById('sog').innerText = val.toFixed(2);
-			displayMap.setLastSog(val);
-		});
-		events.subscribe('cog', (val) => {
-			document.getElementById('cog').innerText = val.toFixed(0);
-			displayMap.setLastSog(val);
-		});
-		events.subscribe('pos', (val) => {
-			document.getElementById('lat').innerHTML = decToSex(val.lat, "NS", true); // innerHTML for the &deg; sign
-			document.getElementById('lng').innerHTML = decToSex(val.lng, "EW", true);
-			displayMap.addPoint(val);
-		});
-		events.subscribe('gps-time', (val) => {
-			if (val !== null) {
-				document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-				document.getElementById('gps-time').innerText = `${lpad(val.hour.toString(), '0', 2)}:${lpad(val.min.toString(), '0', 2)}:${lpad(val.sec.toString(), '0', 2)}`;
-			} else {
-				document.getElementById('gps-date').innerText = `Not Set`;
-				document.getElementById('gps-time').innerText = `-`;
-			}
-		});
-		events.subscribe('solar-time', (val) => {
-			if (val !== null) {
-				document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-				document.getElementById('solar-time').innerText = `${lpad(val.hour.toString(), '0', 2)}:${lpad(val.min.toString(), '0', 2)}:${lpad(val.sec.toString(), '0', 2)}`;
-			} else {
-				document.getElementById('solar-date').innerText = `Not Set`;
-				document.getElementById('solar-time').innerText = `-`;
-			}
-		});
-		events.subscribe('gps-sat', (val) => {
-			let elmt = document.getElementById('sp-01');
-            elmt.setSatellites(val);
-            elmt.repaint();
-
-		});
-
-		window.onload = () => {
-			// Swipe detection
-			document.addEventListener('touchstart', handleTouchStart);
-			document.addEventListener('touchmove', handleTouchMove);
-
-			initAjax();
-
-		    trackMap = new TrackMap('mapCanvas', 200, 250, 'black', 'red', 'green', 'green', 400);
-			displayMap.repaint();
-		}
-	</script>
 </head>
 <body>
 
@@ -401,7 +303,7 @@
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 8</div>
+		<div class="number-text">1 / 10</div>
 		<div class="display">
 			<span class="display-title">Position</span>
 			<div class="display-data-2">
@@ -415,7 +317,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 8</div>
+		<div class="number-text">2 / 10</div>
 		<div class="display">
 			<span class="display-title">Course Over Ground</span>
 			<span class="display-data" id="cog">000</span>
@@ -425,7 +327,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 8</div>
+		<div class="number-text">3 / 10</div>
 		<div class="display">
 			<span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
@@ -435,7 +337,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 8</div>
+		<div class="number-text">4 / 10</div>
 		<div class="display">
 			<span class="display-title">GPS Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -449,7 +351,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 7</div>
+		<div class="number-text">5 / 10</div>
 		<div class="display">
 			<span class="display-title">Solar Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -463,7 +365,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">6 / 8</div>
+		<div class="number-text">6 / 10</div>
 		<div class="display">
 			<span class="display-title">GPS Sat in View</span>
 
@@ -479,7 +381,49 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">7 / 8</div>
+		<div class="number-text">7 / 10</div>
+		<div class="display">
+			<span class="display-title">Atm Pressure</span>
+
+			<analog-display class="analogdisplay-day-speed display-data"
+							title="Atm Pressure&#13;in mb"
+							id="prmsl-01"
+							min-value="979"
+							max-value="1049"
+							major-ticks="10"
+							minor-ticks="1"
+							with-border="true"
+							with-min-max="false"
+							overlap="40"
+							label="PRMSL"
+							unit="mb"
+							rotate-digits="false"
+							width="400"
+							height="400"></analog-display>
+		</div>
+		<div class="text">PRMSL</div>
+	</div>
+	<div class="the-slides fade">
+		<div class="number-text">8 / 10</div>
+		<div class="display">
+			<span class="display-title">Air Temperature</span>
+
+			<thermo-meter id="mta-01"
+						  class="thermometer-day"
+						  title="Air Temperature"
+						  min-value="-10"
+						  max-value="40"
+						  major-ticks="10"
+						  minor-ticks="1"
+						  value="-"
+						  width="100"
+						  height="400"></thermo-meter>                            
+		</div>
+		<div class="text">MTA</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">9 / 10</div>
 		<div class="display">
 			<span class="display-title">Raw Data</span>
 			<div id="raw-data" class="raw-data"></div>
@@ -488,7 +432,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">8 / 8</div>
+		<div class="number-text">10 / 10</div>
 		<div class="display">
 
 			<canvas id="mapCanvas" class="displayContent" width="390" height="590" title="Track Map"></canvas>
@@ -508,13 +452,159 @@
 		<span class="dot" onclick="currentSlide(4);" title="GPS"></span>
 		<span class="dot" onclick="currentSlide(5);" title="SOL"></span>
 		<span class="dot" onclick="currentSlide(6);" title="SAT"></span>
-		<span class="dot" onclick="currentSlide(7);" title="RAW"></span>
-		<span class="dot" onclick="currentSlide(8);" title="MAP"></span>
+		<span class="dot" onclick="currentSlide(7);" title="PRMSL"></span>
+		<span class="dot" onclick="currentSlide(8);" title="MTA"></span>
+		<span class="dot" onclick="currentSlide(9);" title="RAW"></span>
+		<span class="dot" onclick="currentSlide(10);" title="MAP"></span>
 	</div>
 </div>
 <br>
 
 <script type="text/javascript">
+
+	let trackMap; // The map
+
+	let lpad = (s, w, len) => {
+		let str = s;
+		while (str.length < len) {
+			str = w + str;
+		}
+		return str;
+	};
+
+	// Left-right swipe gesture management
+	let xDown = null;
+	let yDown = null;
+
+	function handleTouchStart(evt) {
+		xDown = evt.touches[0].clientX;
+		yDown = evt.touches[0].clientY;
+	}
+
+	function handleTouchMove(evt) {
+		if (!xDown || !yDown) {
+			return;
+		}
+		let xUp = evt.touches[0].clientX;
+		let yUp = evt.touches[0].clientY;
+		let xDiff = xDown - xUp;
+		let yDiff = yDown - yUp;
+
+		// most significant
+		if (Math.abs(xDiff) > Math.abs(yDiff)) { // Left-right
+			if (xDiff > 0) {
+				/* left swipe */
+				plusSlides(1);
+			} else {
+				/* right swipe */
+				plusSlides(-1);
+			}
+		} else { // Up-Down, not needed here (yet...)
+			if (yDiff > 0) {
+				/* up swipe */
+			} else {
+				/* down swipe */
+			}
+		}
+		/* reset values */
+		xDown = null;
+		yDown = null;
+	}
+
+	function decToSex(val, ns_ew, withDeg) {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		let i = intValue;
+		dec *= 60;
+//    let s = i + "°" + dec.toFixed(2) + "'";
+//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+		let s = "";
+		if (val < 0) {
+			s += (ns_ew === 'NS' ? 'S' : 'W');
+		} else {
+			s += (ns_ew === 'NS' ? 'N' : 'E');
+		}
+		s += " ";
+		let sep = " ";
+		if (withDeg === true) {
+			sep = "&deg;";
+		}
+//    s += i + "\"" + dec.toFixed(2) + "'";
+		s += i + sep + dec.toFixed(2) + "'";
+		return s;
+	}
+
+	const MONTHS = [
+			"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+	/**
+	 *  SUBSCRIBERS HERE.
+	 *
+	 * The following subscriptions make the distinction between Ajax & WebSockets
+	 * (See the initAjax & initWS methods)
+	 *
+	 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
+	 */
+	events.subscribe('raw', (val) => {
+		document.getElementById('raw-data').innerHTML = `<pre>${JSON.stringify(val, null, 2)}</pre>`;
+	});
+	events.subscribe('sog', (val) => {
+		document.getElementById('sog').innerText = val.toFixed(2);
+		trackMap.setLastSog(val);
+	});
+	events.subscribe('cog', (val) => {
+		document.getElementById('cog').innerText = val.toFixed(0);
+		trackMap.setLastSog(val);
+	});
+	events.subscribe('at', (val) => {
+		document.getElementById('mta-01').value = val.toFixed(1);
+	});
+	events.subscribe('prmsl', (val) => {
+		document.getElementById('prmsl-01').value = val.toFixed(1);
+	});
+	events.subscribe('pos', (val) => {
+		document.getElementById('lat').innerHTML = decToSex(val.lat, "NS", true); // innerHTML for the &deg; sign
+		document.getElementById('lng').innerHTML = decToSex(val.lng, "EW", true);
+		trackMap.addPoint(val);
+	});
+	events.subscribe('gps-time', (val) => {
+		if (val !== null) {
+			document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
+			document.getElementById('gps-time').innerText = `${lpad(val.hour.toString(), '0', 2)}:${lpad(val.min.toString(), '0', 2)}:${lpad(val.sec.toString(), '0', 2)}`;
+		} else {
+			document.getElementById('gps-date').innerText = `Not Set`;
+			document.getElementById('gps-time').innerText = `-`;
+		}
+	});
+	events.subscribe('solar-time', (val) => {
+		if (val !== null) {
+			document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
+			document.getElementById('solar-time').innerText = `${lpad(val.hour.toString(), '0', 2)}:${lpad(val.min.toString(), '0', 2)}:${lpad(val.sec.toString(), '0', 2)}`;
+		} else {
+			document.getElementById('solar-date').innerText = `Not Set`;
+			document.getElementById('solar-time').innerText = `-`;
+		}
+	});
+	events.subscribe('gps-sat', (val) => {
+		let elmt = document.getElementById('sp-01');
+		elmt.setSatellites(val);
+		elmt.repaint();
+
+	});
+
+	window.onload = () => {
+		// Swipe detection
+		document.addEventListener('touchstart', handleTouchStart);
+		document.addEventListener('touchmove', handleTouchMove);
+
+		initAjax();
+
+		trackMap = new TrackMap('mapCanvas', 390, 490, 'black', 'red', 'green', 'orange', 400);
+		trackMap.repaint();
+	}
+
 	let auto = false;
 
 	function manageClick(cb) {
