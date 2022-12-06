@@ -337,6 +337,8 @@ function getQueryParameterByName(name, url) {
  *
  * @param json - The cache content.
  * TODO A schema for the json object?
+ * 
+ * Events/Topics names are defined in pub.sub.js
  */
 function onMessage(json) {
     try {

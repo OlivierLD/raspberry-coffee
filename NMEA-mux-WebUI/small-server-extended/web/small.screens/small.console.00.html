@@ -303,7 +303,7 @@
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 10</div>
+		<div class="number-text">1 / 11</div>
 		<div class="display">
 			<span class="display-title">Position</span>
 			<div class="display-data-2">
@@ -317,7 +317,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 10</div>
+		<div class="number-text">2 / 11</div>
 		<div class="display">
 			<span class="display-title">Course Over Ground</span>
 			<span class="display-data" id="cog">000</span>
@@ -327,7 +327,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 10</div>
+		<div class="number-text">3 / 11</div>
 		<div class="display">
 			<span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
@@ -337,7 +337,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 10</div>
+		<div class="number-text">4 / 11</div>
 		<div class="display">
 			<span class="display-title">GPS Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -351,7 +351,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 10</div>
+		<div class="number-text">5 / 11</div>
 		<div class="display">
 			<span class="display-title">Solar Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -365,7 +365,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">6 / 10</div>
+		<div class="number-text">6 / 11</div>
 		<div class="display">
 			<span class="display-title">GPS Sat in View</span>
 
@@ -381,7 +381,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">7 / 10</div>
+		<div class="number-text">7 / 11</div>
 		<div class="display">
 			<span class="display-title">Atm Pressure</span>
 
@@ -404,7 +404,7 @@
 		<div class="text">PRMSL</div>
 	</div>
 	<div class="the-slides fade">
-		<div class="number-text">8 / 10</div>
+		<div class="number-text">8 / 11</div>
 		<div class="display">
 			<span class="display-title">Air Temperature</span>
 
@@ -423,7 +423,31 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">9 / 10</div>
+		<div class="number-text">9 / 11</div>
+		<div class="display">
+			<span class="display-title">Relative Humidity</span>
+
+			<analog-display class="analogdisplay-day-speed display-data"
+							title="Relative Humidity&#13;in %"
+							id="hum-01"
+							min-value="0"
+							max-value="100"
+							major-ticks="10"
+							minor-ticks="1"
+							with-border="true"
+							with-min-max="false"
+							overlap="40"
+							label="HUM"
+							unit="%"
+							rotate-digits="false"
+							width="400"
+							height="400"></analog-display>
+		</div>
+		<div class="text">HUM</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">10 / 11</div>
 		<div class="display">
 			<span class="display-title">Raw Data</span>
 			<div id="raw-data" class="raw-data"></div>
@@ -432,7 +456,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">10 / 10</div>
+		<div class="number-text">11 / 11</div>
 		<div class="display">
 
 			<canvas id="mapCanvas" class="displayContent" width="390" height="590" title="Track Map"></canvas>
@@ -454,8 +478,9 @@
 		<span class="dot" onclick="currentSlide(6);" title="SAT"></span>
 		<span class="dot" onclick="currentSlide(7);" title="PRMSL"></span>
 		<span class="dot" onclick="currentSlide(8);" title="MTA"></span>
-		<span class="dot" onclick="currentSlide(9);" title="RAW"></span>
-		<span class="dot" onclick="currentSlide(10);" title="MAP"></span>
+		<span class="dot" onclick="currentSlide(9);" title="HUM"></span>
+		<span class="dot" onclick="currentSlide(10);" title="RAW"></span>
+		<span class="dot" onclick="currentSlide(11);" title="MAP"></span>
 	</div>
 </div>
 <br>
@@ -563,6 +588,9 @@
 	});
 	events.subscribe('prmsl', (val) => {
 		document.getElementById('prmsl-01').value = val.toFixed(1);
+	});
+	events.subscribe('hum', (val) => {
+		document.getElementById('hum-01').value = val.toFixed(1);
 	});
 	events.subscribe('pos', (val) => {
 		document.getElementById('lat').innerHTML = decToSex(val.lat, "NS", true); // innerHTML for the &deg; sign

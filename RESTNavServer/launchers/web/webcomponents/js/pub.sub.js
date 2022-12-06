@@ -25,7 +25,7 @@ let events = {
 		AIR_TEMP: 'at',
 		PRMSL: "prmsl",
 		REL_HUM: 'hum',
-		AWS: 'AWS',
+		AWS: 'aws',
 		AWA: 'awa',
 		CURRENT_DIR: 'cdr',
 		CURRENT_SPEED: 'csp',
