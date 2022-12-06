@@ -607,6 +607,11 @@ from any device seeing the server on its network, at `http://<rpi-ip-address>:88
 It can also use a TCP forwarder (see the `yaml` files for details), making the data it reads available to other
 softs, like OpenCPN or SeaWi for example (those 2 guys understand vanilla NMEA).
 
+### How it works, architecture summary
+- The UI pings the cache - using REST - to get all the data. This is done in `ajax.manager.js`.
+- The listeners, events and topics are defined in `pub.sub.js`.
+- The event subscriptions are defined in the HML page. When a subscribed event is published by `ajax.manager.js` and `pub.sub.js` are received in the HTML page, that takes care of updating the corresponding visual components with the valuye (payload of the received event).
+
 #### Another quick example (for small screens in this case)
 Start the NMEA-Multiplexer:
 ```
