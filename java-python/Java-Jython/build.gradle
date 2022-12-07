@@ -27,10 +27,10 @@ dependencies {
     testImplementation 'org.python:jython-standalone:2.7.2'
 }
 
-mainClassName = "tcp.server.TCPMultiServer"
+// mainClassName = "tcp.server.TCPMultiServer"
 
 shadowJar {
     zip64 true
     // to create an executable jar-file. Requires mainClassName.
-    mergeServiceFiles()
+    // mergeServiceFiles()
 }

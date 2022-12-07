@@ -1,4 +1,6 @@
 # Case Study (WiP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
+
+_**Main features:**_  
 - Raspberry Zero W and Higher
 - Can emit its own network
 - Two push-buttons for User Interface
@@ -6,15 +8,28 @@
 - Web UI - served from the same device - accessible from any _browser_, running on another device on the same network (cell-phone, tablet, laptop,...)
   - Depending on the device you want to reach the GUI from, we show here several Console options, for small screens, or bigger ones.  
     The server seems not to have any problem to serve such interfaces.  
-  - We present here _**web**_ interfaces (HTML5, CSS3), in order _**not**_ to have to mess with any OS specific features (Android, iOS, etc). All
-    you need is a recent browser, supporting HTML5 and CSS3.
-  - Android and iOS could certainly be supported, writing a client (REST client) should not be a problem. But why bother?
-- Optional BME280 (Temperature, pressure, humidity) and other sensors
-- File Logger (with WebUI, logged data can be downloaded from it)
+  - We present here _**web**_ interfaces (HTML5, CSS3), in order _**not**_ to have to mess with any OS specific features (Android, iOS, etc). All you need is a recent browser, supporting HTML5 and CSS3. Chromuim and Firefox do the job.  
+    - In other words, those UIs are written for a browser, not for an OS.
+    - Android and iOS could certainly be supported, writing a client (REST client) should not be a problem. But why bother?
+- NMEA input
+  - Through Serial port, TCP..., nothing unusual here (see the Multiplexer's channels for details) 
+- Optional BME280 (Temperature, pressure, humidity), and other sensors
+- File Logger (logged data can be downloaded and managed from the Web UI)
 - Optional TCP forwarder
+    - That makes third party programs like OpenCPN and SeaWi happy. They're fluent in NMEA over TCP.
 - ... and more (WiP 🚧).
 
-This is a case study, using different hardware configurations to run the same software configurations (the NMEA Multiplexer).
+| OpenCPN on a tablet or laptop, through TCP, between Bora-Bora and Tongareva |
+|:----------------------------------------------------:|
+| ![OpenCPN](./img/UI-OpenCpn.png) |
+
+|  SeaWi, through TCP | WebUI, Chromium | WebUI, Chromium |
+|:-------------------:|:---------------:|:---------------:|
+| ![SeaWi](./img/UI-SeaWi.jpg) | ![SeaWi](./img/UI-Web-01.jpg)| ![SeaWi](./img/UI-Web-02.jpg) |
+
+> Note: on the screenshots above, the cell phone does _**not**_ need a SIM card. Just a Network connection, on the network emitted by the Raspberry Pi.
+
+Again, this is a case study, using different hardware configurations to run the same software configurations (the NMEA Multiplexer). One of the goal is to see how small the server can be, without degrading the features and user's experience.
 
 For the hardware details, see [here](../full-server-extended-v2/README.md), as it is the exact same one as in this project.
 
