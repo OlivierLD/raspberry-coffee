@@ -642,10 +642,10 @@ The hamburger (&#9776;) on the top left will get you to the menu... FYI, three v
 
 The `Console-3` has interesting features, it allows the user to choose what screens to display, through its own menu.
 
-| All 14 screens available... | Choose the screens to use | 7 screens selected |
-|:----|:----|:----|
-|![One](./img/Console-3.01.png)|![Two](./img/Console-3.02.png)|![Three](./img/Console-3.03.png)|
-| All screens available by default. See the dots at the bottom... | Use the menu(&#9776;)'s sliders to un-select un-wanted screens | Then only selected ones are available, as you can tell by the dots at the bottom |
+| All 14 screens available... | Choose the screens to use | 7 screens selected | New Widget |
+|:----|:----|:----|:----|
+|![One](./img/Console-3.01.png)|![Two](./img/Console-3.02.png)|![Three](./img/Console-3.03.png)|![Four](./img/Console-3.04.png)|
+| All screens available by default. See the dots at the bottom... | Use the menu(&#9776;)'s sliders to un-select un-wanted screens | Then only selected ones are available, as you can tell by the dots at the bottom | New Compass widget |
 
 The screens can also be selected at startup, using query-string parameters, like in
 ```
