@@ -23,9 +23,9 @@ _**Main features:**_
 |:----------------------------------------------------:|
 | ![OpenCPN](./img/UI-OpenCpn.png) |
 
-|  SeaWi, through TCP | WebUI, Chromium | WebUI, Chromium |
-|:-------------------:|:---------------:|:---------------:|
-| ![SeaWi](./img/UI-SeaWi.jpg) | ![SeaWi](./img/UI-Web-01.jpg)| ![SeaWi](./img/UI-Web-02.jpg) |
+|  SeaWi, through TCP | WebUI, Chromium | WebUI, Chromium | WebUI, Chromium |
+|:-------------------:|:---------------:|:---------------:|:---------------:|
+| ![SeaWi](./img/UI-SeaWi.jpg) | ![SeaWi](./img/UI-Web-01.jpg)| ![SeaWi](./img/UI-Web-02.jpg) | ![SeaWi](./img/UI-Web-03.jpg) |
 
 > Note: on the screenshots above, the cell phone does _**not**_ need a SIM card. Just a Network connection, on the network emitted by the Raspberry Pi.
 
