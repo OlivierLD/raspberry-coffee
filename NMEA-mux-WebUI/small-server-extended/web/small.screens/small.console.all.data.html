@@ -767,16 +767,16 @@
 		<div class="display">
 			<div id="hdg-div" class="display" style="display: none; border: none;">
 				<span class="display-title">True Heading</span>
-				<span class="display-data" id="hdg">000</span>
+				<span class="display-data" id="hdg-dig">000</span>
 				<span class="display-unit">degrees</span>
 			</div>
 			<compass-globe id="hdg"
-						class="globe-compass-01 display-data"
-						width="200"
-						height="200"
-						value="000"
-						label="HDG"
-						title="Compass"/>
+						   class="globe-compass-01 display-data"
+						   width="200"
+						   height="200"
+						   value="000"
+						   label="HDG"
+						   title="Compass"/>
 		</div>					   
 		<div class="text">HDG</div>
 	</div>
@@ -1309,7 +1309,11 @@
 		}
 	});
 	events.subscribe('hdg', val => {
-		document.getElementById('hdg').innerText = val.toFixed(0);
+		if (digital_analog === DIGITAL_DISPLAY) {
+			document.getElementById('hdg-dig').innerText = val.toFixed(0);
+		} else {
+			document.getElementById('hdg').value = val;
+		}
 	});
 
 	let lpad = (str, len, pad) => {
