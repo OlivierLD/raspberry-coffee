@@ -1,0 +1,28 @@
+#
+# For simulation. No logging
+#
+name: "Big log replay."
+context:
+  with.http.server: true
+  http.port: 8888
+  init.cache: true
+  # default.declination: 14.0
+  default.declination: 0.0
+  max.leeway: 10.0
+  bsp.factor: 1.0
+  aws.factor: 1.0
+  hdg.offset: 0.0
+  awa.offset: 0.0
+  damping: 30
+# Channels
+channels:
+  - type: file
+    filename: ../../RESTNavServer/launchers/sample.data/logged.data.archive.zip
+    zip: true
+    path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    verbose: false
+# Forwarders
+forwarders:
+  - type: tcp
+    port: 7001
+# No Computer
