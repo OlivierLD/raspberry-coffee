@@ -345,6 +345,21 @@
 			--value-font-size-factor: 1
 		}
 
+		.globe-compass-01 {
+			--bg-color: transparent;
+			--display-background-gradient-from: none;
+			--display-background-gradient-to: none;
+			--display-globe-gradient-from: black;
+			--display-globe-gradient-to: rgb(47, 79, 79);
+			--display-cylinder-gradient-from: black;
+			--display-cylinder-gradient-to: darkgray;
+			--index-color: red;
+			--display-color: rgb(220, 220, 220);
+			--value-nb-decimal: 0;
+			--label-font: 'Courier New';
+			--value-font: Verdana;
+		}
+
 		.sidenav {
 			height: 100%;
 			width: 0;
@@ -516,6 +531,7 @@
 	<script type="module" src="./webcomponents/CompassDisplay.js"></script>
 	<script type="module" src="./webcomponents/WindAngleDisplay.js"></script>
 	<script type="module" src="./webcomponents/DirectionDisplay.js"></script>
+	<script type="module" src="./webcomponents/CompassGlobe.js"></script>
 
 	<script type="text/javascript" src="../js/TrackMap.js"></script>
 
@@ -749,10 +765,19 @@
 	<div class="the-slides fade">
 		<div class="number-text">13 / 14</div>
 		<div class="display">
-			<span class="display-title">True Heading</span>
-			<span class="display-data" id="hdg">000</span>
-			<span class="display-unit">degrees</span>
-		</div>
+			<div id="hdg-div" class="display" style="display: none; border: none;">
+				<span class="display-title">True Heading</span>
+				<span class="display-data" id="hdg">000</span>
+				<span class="display-unit">degrees</span>
+			</div>
+			<compass-globe id="hdg"
+						class="globe-compass-01 display-data"
+						width="200"
+						height="200"
+						value="000"
+						label="HDG"
+						title="Compass"/>
+		</div>					   
 		<div class="text">HDG</div>
 	</div>
 
@@ -963,6 +988,9 @@
 
 		document.getElementById('twa-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
 		document.getElementById('twa').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
+
+		document.getElementById('hdg-div').style.display = digital_analog === ANALOG_DISPLAY ? 'none' : 'inline-grid';
+		document.getElementById('hdg').style.display = digital_analog === ANALOG_DISPLAY ? 'block' : 'none';
 	}
 
 	function managePOSClick(cb) {
