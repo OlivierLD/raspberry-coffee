@@ -160,8 +160,9 @@ public class EmailSender {
             msg.setContent(content, "text/plain"); // HttpHeaders.TEXT_PLAIN);
         }
         msg.saveChanges();
-        if (verbose)
+        if (verbose) {
             System.out.println("sending:[" + content + "], " + Integer.toString(content.length()) + " characters");
+        }
         Transport.send(msg);
     }
 

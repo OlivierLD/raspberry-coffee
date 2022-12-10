@@ -61,8 +61,7 @@ public class MPL115A2 {
 		}
 	}
 
-	public void begin()
-			throws Exception {
+	public void begin() throws Exception {
 		readCoefficients();
 	}
 
@@ -145,14 +144,12 @@ public class MPL115A2 {
 		return result;
 	}
 
-	public float readTemperature()
-			throws Exception {
+	public float readTemperature() throws Exception {
 		float temp = measure()[TEMPERATURE_IDX];
 		return temp;
 	}
 
-	public float readPressure()
-			throws Exception {
+	public float readPressure() throws Exception {
 		float press = measure()[PRESSURE_IDX];
 		return press;
 	}

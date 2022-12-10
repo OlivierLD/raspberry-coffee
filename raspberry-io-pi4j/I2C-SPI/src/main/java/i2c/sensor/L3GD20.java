@@ -131,9 +131,9 @@ public class L3GD20 {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
-
+			}
 			// Get device itself
 			l3dg20 = bus.getDevice(address);
 			if (verbose) {
@@ -732,8 +732,9 @@ public class L3GD20 {
 		int result = 0;
 		try {
 			result = this.l3dg20.read(reg);
-			if (verbose)
+			if (verbose) {
 				System.out.println("(U8) I2C: Device " + toHex(L3GD20ADDRESS) + " returned " + toHex(result) + " from reg " + toHex(reg));
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

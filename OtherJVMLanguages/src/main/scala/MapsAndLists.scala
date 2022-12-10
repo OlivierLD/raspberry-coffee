@@ -126,8 +126,9 @@ object DrillTestV2 {
       var currMap:Any = null
       coordinates.foreach( k => {
         if (parentName.equals("")) { // Root
-          if (verbose)
+          if (verbose) {
             println(s" ======== AT THE ROOT for $k")
+          }
           try {
             currMap = parentMap(k)
             //      println(s"    >>>> Found root for $k")
@@ -140,8 +141,9 @@ object DrillTestV2 {
           parentMap  = brokenDownData
         } else {
           if (!k.equals(coordinates.last)) { // Intermediate, between the root and a leaf
-            if (verbose)
+            if (verbose) {
               println(s" ============= Inter Node for $k ====")
+            }
             var found = false
             var map: mutable.Map[String, Any] = null
             try {
@@ -153,8 +155,9 @@ object DrillTestV2 {
                   if (k.equals(key)) {
                     found = true
                     map = occ._2.asInstanceOf[mutable.Map[String, Any]]
-                    if (verbose)
+                    if (verbose) {
                       println(s"  ==== >>> Break. found $k under $parentName")
+                    }
                   }
                 } catch {
                   case ex: NoSuchElementException =>
@@ -169,8 +172,9 @@ object DrillTestV2 {
               val nextMap = mutable.Map.empty[String, Any]
               currMap.asInstanceOf[mutable.Map[String, Any]] += (k -> nextMap)
               parentMap += (parentName -> currMap.asInstanceOf[mutable.Map[String, Any]])
-              if (verbose)
+              if (verbose) {
                 println(s"  ----> Added a $k node under $parentName tree $brokenDownData ")
+              }
               parentMap = currMap.asInstanceOf[mutable.Map[String, Any]]
               currMap = nextMap
             } else {
@@ -178,11 +182,13 @@ object DrillTestV2 {
             }
             parentName = k
           } else { // This is a Leaf
-            if (verbose)
+            if (verbose) {
               println(s" ===========> Leaf Node for $k, $leafList ====")
+            }
             currMap.asInstanceOf[mutable.Map[String, Any]] += (k -> leafList.asInstanceOf[List[Any]])
-            if (verbose)
+            if (verbose) {
               println(s"  ---->> Added a leaf $k under $parentName in the tree, $leafList") // ${breakDownCounters} [parent map ${parentMap}]")
+            }
           }
         }
       })

@@ -336,8 +336,9 @@ public class BME280 {
 		double altitude = 0.0;
 		float pressure = readPressure();
 		altitude = 44_330.0 * (1.0 - Math.pow(pressure / standardSeaLevelPressure, 0.1903));
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Altitude = " + altitude);
+		}
 		return altitude;
 	}
 

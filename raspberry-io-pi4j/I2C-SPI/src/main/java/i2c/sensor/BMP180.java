@@ -123,8 +123,9 @@ public class BMP180 {
 		cal_MB = readS16(BMP180_CAL_MB);    // INT16
 		cal_MC = readS16(BMP180_CAL_MC);    // INT16
 		cal_MD = readS16(BMP180_CAL_MD);    // INT16
-		if (verbose)
+		if (verbose) {
 			showCalibrationData();
+		}
 	}
 
 	private void showCalibrationData() {
@@ -275,8 +276,9 @@ public class BMP180 {
 		else
 			p = (B7 / B4) * 2;
 
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: X1 = " + X1);
+		}
 
 		X1 = (p >> 8) * (p >> 8);
 		X1 = (X1 * 3038) >> 16;
@@ -287,9 +289,9 @@ public class BMP180 {
 			System.out.println("DBG: X2 = " + X2);
 		}
 		p = p + ((X1 + X2 + 3791) >> 4);
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Pressure = " + p + " Pa");
-
+		}
 		return p;
 	}
 
@@ -304,8 +306,9 @@ public class BMP180 {
 		double altitude = 0.0;
 		float pressure = readPressure();
 		altitude = 44_330.0 * (1.0 - Math.pow(pressure / standardSeaLevelPressure, 0.1903));
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Altitude = " + altitude);
+		}
 		return altitude;
 	}
 

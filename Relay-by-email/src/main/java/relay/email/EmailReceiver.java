@@ -227,8 +227,9 @@ public class EmailReceiver {
                                     "Your request [" + txtMess.trim() + "] is being taken care of.");
                             if (verbose) System.out.println("Sent an ack to " + sender);
                         } else {
-                            if (verbose)
+                            if (verbose) {
                                 System.out.println("Old message in your inbox..., received " + mess.getReceivedDate().toString());
+                            }
                         }
                     }
                 } catch (Exception ex) {
@@ -281,10 +282,10 @@ public class EmailReceiver {
                         if (verbose) System.out.println("Downloading " + messagePart.getFileName() + "...");
                         copy(is, fos);
                         if (verbose) System.out.println("...done.");
-                    } else // text/plain, text/html
-                    {
-                        if (verbose)
+                    } else { // text/plain, text/html
+                        if (verbose) {
                             System.out.println("-- Part #" + i + " --, " + messagePart.getContentType().replace('\n', ' ').replace('\r', ' ').replace("\b", "").trim());
+                        }
                         InputStream is = messagePart.getInputStream();
                         BufferedReader br = new BufferedReader(new InputStreamReader(is));
                         String line = "";

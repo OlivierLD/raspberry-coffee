@@ -122,8 +122,9 @@ public class BMP183 {
 			shutdownBMP183();
 			System.exit(1);
 		} else {
-			if (verbose)
+			if (verbose) {
 				System.out.println("Communication established.");
+			}
 			readCalibrationData();
 		}
 	}
@@ -154,8 +155,9 @@ public class BMP183 {
 		cal_MB = mkInt16(readWord(BMP183_REG.CAL_MB));    //  INT16
 		cal_MC = mkInt16(readWord(BMP183_REG.CAL_MC));    //  INT16
 		cal_MD = mkInt16(readWord(BMP183_REG.CAL_MD));    //  INT16
-		if (verbose)
+		if (verbose) {
 			showCalibrationData();
+		}
 	}
 
 	private static int mkInt16(int val) {

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 /**
  * Time of Flight Distance Sensor
- * Adapted from from https://github.com/adafruit/Adafruit_CircuitPython_VL53L0X/blob/master/adafruit_vl53l0x.py
+ * Adapted from https://github.com/adafruit/Adafruit_CircuitPython_VL53L0X/blob/master/adafruit_vl53l0x.py
  * Driver for the VL53L0X https://www.adafruit.com/product/3317
  */
 public class VL53L0X {

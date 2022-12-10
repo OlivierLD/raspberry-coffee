@@ -293,8 +293,9 @@ public class RFM95W {
 		if (val > 0x7FFF) {
 			ret -= 0x8000;
 		}
-//    if (verbose)
+//    if (verbose) {
 //      System.out.println(val + " becomes " + ret);
+//	  }
 		return ret;
 	}
 

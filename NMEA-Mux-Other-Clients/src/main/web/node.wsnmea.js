@@ -71,8 +71,9 @@ function handler(req, res) {
                     res.writeHead(500);
                     return res.end('Error loading ' + resource);
                 }
-                // if (verbose)
+                // if (verbose) {
                 //   console.log("Read resource content:\n---------------\n" + data + "\n--------------");
+                // }
                 let contentType = "text/html";
                 if (resource.endsWith(".css")) {
                     contentType = "text/css";

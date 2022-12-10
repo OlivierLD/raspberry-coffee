@@ -294,9 +294,9 @@ public class ADS1x15 {
 
 			// Get the device itself
 			adc = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
-
+			}
 			// Set pga value, so that getLastConversionResult() can use it,
 			// any function that accepts a pga value must update this.
 			this.pga = ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning();

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * TODO Introduce calibration
  *
- * Warning: uses some Java 10 syntax (var)
+ * Warning: may use some Java 10 syntax (var)
  */
 public class MagnetometerReader {
 

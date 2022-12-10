@@ -33,8 +33,9 @@ public class EnumTests {
 				}
 			}
 			if (!found) {
-				if (verbose)
+				if (verbose) {
 					System.out.println("Value [" + val + "] not found, defaulting to [" + def + "]");
+				}
 				// Check if default value is in the list
 				for (spsADS1015 one : values()) {
 					if (one.value() == def) {

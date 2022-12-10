@@ -127,10 +127,11 @@ public class WebSocketFeeder implements MindWaveCallbacks,
 
 	@Override
 	public void mindWaveError(Throwable t) {
-		if (verbose)
+		if (verbose) {
 			t.printStackTrace();
-		else
+		} else {
 			System.err.println(t.toString());
+		}
 	}
 
 	@Override

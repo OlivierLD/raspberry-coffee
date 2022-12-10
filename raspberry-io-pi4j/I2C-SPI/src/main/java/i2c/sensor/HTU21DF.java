@@ -55,8 +55,7 @@ public class HTU21DF {
 		}
 	}
 
-	public boolean begin()
-					throws Exception {
+	public boolean begin() throws Exception {
 		try {
 			reset();
 		} catch (Exception ex) {
@@ -75,8 +74,7 @@ public class HTU21DF {
 		return (r == 0x02);
 	}
 
-	public void reset()
-					throws Exception {
+	public void reset() throws Exception {
 		//  htu21df.write(HTU21DF_ADDRESS, (byte)HTU21DF_RESET);
 		try {
 			htu21df.write((byte) HTU21DF_RESET);
@@ -96,8 +94,7 @@ public class HTU21DF {
 		}
 	}
 
-	public float readTemperature()
-					throws Exception {
+	public float readTemperature() throws Exception {
 		// Reads the raw temperature from the sensor
 		if (verbose) {
 			System.out.println("Read Temp: Written 0x" + lpad(Integer.toHexString((HTU21DF_READTEMP & 0xff)), 2, "0"));
@@ -122,7 +119,7 @@ public class HTU21DF {
 
 		float temp = raw; // t;
 		temp *= 175.72;
-		temp /= 65536;
+		temp /= 65_536;
 		temp -= 46.85;
 
 		if (verbose) {
@@ -131,8 +128,7 @@ public class HTU21DF {
 		return temp;
 	}
 
-	public float readHumidity()
-					throws Exception {
+	public float readHumidity() throws Exception {
 		// Reads the raw (uncompensated) humidity from the sensor
 		htu21df.write((byte) HTU21DF_READHUM);
 		delay(50); // Wait 50ms
@@ -154,7 +150,7 @@ public class HTU21DF {
 
 		float hum = raw;
 		hum *= 125;
-		hum /= 65536;
+		hum /= 65_536;
 		hum -= 6;
 
 		if (verbose) {

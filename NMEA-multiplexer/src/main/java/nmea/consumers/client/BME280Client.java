@@ -46,8 +46,9 @@ public class BME280Client extends NMEAClient {
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if (verbose)
+		if (verbose) {
 			System.out.println(">> Received from BME280:" + e.getContent());
+		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}
