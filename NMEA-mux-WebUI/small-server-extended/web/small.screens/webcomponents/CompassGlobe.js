@@ -336,10 +336,14 @@
 		 context.fillStyle = globeGrd;
  
 		 context.beginPath();
-		 context.fillRect(0, 
-						  (this.canvas.height / 2) - Math.round(scale * CYLINDER_HALF_SIZE), 
-						  this.canvas.width, 
-						  Math.round(scale * (2 * CYLINDER_HALF_SIZE)));
+		 // context.fillRect(0, 
+		 // 	             (this.canvas.height / 2) - Math.round(scale * CYLINDER_HALF_SIZE), 
+		 //                  this.canvas.width, 
+		 // 				 Math.round(scale * (2 * CYLINDER_HALF_SIZE)));
+		 CompassGlobeDisplay.roundRect(context, 0, 
+			(this.canvas.height / 2) - Math.round(scale * CYLINDER_HALF_SIZE), 
+			this.canvas.width, 
+			Math.round(scale * (2 * CYLINDER_HALF_SIZE)), 10, true, false);
 		 context.closePath();
 		 context.fill();
  
