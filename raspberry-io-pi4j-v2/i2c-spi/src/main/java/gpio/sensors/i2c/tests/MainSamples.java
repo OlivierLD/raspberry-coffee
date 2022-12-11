@@ -50,7 +50,7 @@ public class MainSamples {
     }
 
     private static Set<String> toSet(String... args) {
-        Set<String> result = Arrays.stream(args).collect(Collectors.toSet());
-        return result;
+        return /*Set<String> result =*/ Arrays.stream(args).collect(Collectors.toSet());
+//        return result;
     }
 }
