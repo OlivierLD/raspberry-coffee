@@ -50,8 +50,9 @@ include "Joystick"
 
 // Other Java frameworks...
 include "diozero-101"
-include "pi4j_v2-101"
-include "raspberry-pi4j-v2"
+include "raspberry-io-pi4j-v2:pi4j_v2-101"
+include "raspberry-io-pi4j-v2:pi4j-v2-rpi-projects"
+include "raspberry-io-pi4j-v2:i2c-spi"
 
 // Astro Computer
 include('astro-computer:AstroComputer')
