@@ -5,35 +5,40 @@ import com.pi4j.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MainSamples {
+
     private static final Logger LOG = LoggerFactory.getLogger(MainSamples.class);
+
+    private static void dumpContext(Context context) {
+        context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s\n", k, v.getType()));
+        System.out.printf("Description: %s\n", context.describe().description());
+    }
 
     public static void main(String... args) throws Exception {
         Set<String> arguments = toSet(args);
         Context context = null;
 
-//        if (arguments.contains("ALL") || arguments.contains("HTU21D")) {
-//            context = lazyConfigInit(context);
-//            context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s\n", k, v.getType()));
-//            System.out.printf("Description: %s\n", context.describe().description());
-//            HTU21DTest.test(context);
-//        }
+        if (arguments.contains("ALL") || arguments.contains("HTU21D")) {
+            context = lazyConfigInit(context);
+            dumpContext(context);
+            HTU21DTest.test(context);
+        }
 
         if (arguments.contains("ALL") || arguments.contains("BMP180")) {
             context = lazyConfigInit(context);
-
-            context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s\n", k, v.getType()));
-            System.out.printf("Description: %s\n", context.describe().description());
-
+            dumpContext(context);
             BMP180Test.test(context);
         }
 
+        // . . .
+
         if (context == null) {
             LOG.info("No tests triggered !");
-            LOG.info("Use arguments: ALL ADS1115 BME280 BMP180 HTU21D PCF8591 BH1750");
+            LOG.info("Use arguments: ALL ADS1115 BME280 BMP180 HTU21D");
         }
     }
 
@@ -44,11 +49,8 @@ public class MainSamples {
         return context;
     }
 
-    private static Set<String> toSet(String[] args) {
-        Set<String> result = new HashSet<>();
-        for (int i=0; i<args.length; i++) {
-            result.add(args[i]);
-        }
+    private static Set<String> toSet(String... args) {
+        Set<String> result = Arrays.stream(args).collect(Collectors.toSet());
         return result;
     }
 }

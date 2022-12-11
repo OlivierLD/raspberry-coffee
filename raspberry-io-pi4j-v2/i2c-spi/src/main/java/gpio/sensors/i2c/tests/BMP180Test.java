@@ -1,5 +1,6 @@
 package gpio.sensors.i2c.tests;
 
+import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import gpio.sensors.i2c.BMP180;
 import gpio.sensors.i2c.BMP180Builder;
@@ -21,11 +22,25 @@ public class BMP180Test {
 			LOG.info("BME180 CHIP ID={}", id);
 			for (int i = 0; i < 10; i++) {
 				BMP180Impl.Data data = bmp180.getSensorValues();
-				float pressure = data.getPressure() / 1000;
+				float pressure = data.getPressure() / 1_000;
 				LOG.info("[{}] Temperature: {} C, Pressure: {} kPa", i, String.format("%.3f", data.getTemperature()), String.format("%.3f", pressure));
 				Thread.sleep(500);
 			}
 			LOG.info("BMP180Test done.");
+		}
+	}
+
+	public static void main(String... args) {
+		org.tinylog.Logger.info("Off we go ...");
+		Context context = Pi4J.newAutoContext();
+
+		context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s\n", k, v.getType()));
+		System.out.printf("Description: %s\n", context.describe().description());
+
+		try {
+			BMP180Test.test(context);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 

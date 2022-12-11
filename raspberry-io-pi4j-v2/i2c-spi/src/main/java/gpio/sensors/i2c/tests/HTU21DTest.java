@@ -1,5 +1,6 @@
 package gpio.sensors.i2c.tests;
 
+import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import gpio.sensors.i2c.HTU21DF;
 import gpio.sensors.i2c.HTU21DFBuilder;
@@ -25,5 +26,18 @@ public class HTU21DTest {
 			LOG.info("HTU21DTest done.");
 		}
 	}
-		
+
+	public static void main(String... args) {
+		org.tinylog.Logger.info("Off we go ...");
+		Context context = Pi4J.newAutoContext();
+
+		context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s\n", k, v.getType()));
+		System.out.printf("Description: %s\n", context.describe().description());
+
+		try {
+			HTU21DTest.test(context);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }

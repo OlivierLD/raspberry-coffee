@@ -1,5 +1,6 @@
 package gpio.sensors.i2c.tests;
 
+import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import gpio.sensors.i2c.ADS1115;
 import gpio.sensors.i2c.ADS1115Builder;
@@ -27,6 +28,20 @@ public class ADS1115Test {
             }
         }
         LOG.info("ADS1115Test done.");
+    }
+
+    public static void main(String... args) {
+        org.tinylog.Logger.info("Off we go ...");
+        Context context = Pi4J.newAutoContext();
+
+        context.providers().getAll().forEach((k, v) -> System.out.printf("Providers: Key: %s, Value: %s\n", k, v.getType()));
+        System.out.printf("Description: %s\n", context.describe().description());
+
+        try {
+            ADS1115Test.test(context);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
