@@ -13,6 +13,9 @@ public class ADS1115Impl implements ADS1115 {
     private static final Logger LOG = LoggerFactory.getLogger(ADS1115Impl.class);
 
     public static final int ADDRESS = 0x48;
+
+    private final static String I2C_PROVIDER = System.getProperty("i2c-provider", "linuxfs-i2c");
+
     private static final int CONVERSION_REGISTER = 0x00;
     private static final int CONFIG_REGISTER     = 0x01;
     private static final int LO_THRESH_REGISTER  = 0x02;
@@ -67,7 +70,7 @@ public class ADS1115Impl implements ADS1115 {
         this.context = pi4j;
         this.i2cBus = i2cBus;
         this.gain = gain;
-        I2CProvider i2CProvider = pi4j.provider("linuxfs-i2c");
+        I2CProvider i2CProvider = pi4j.provider(I2C_PROVIDER);
         I2CConfig i2cConfig = I2C.newConfigBuilder(pi4j).id(deviceId).bus(i2cBus).device(address).build();
         i2c = i2CProvider.create(i2cConfig);
         LOG.info("ADS1115 Connected to i2c bus={} address={}. OK.", i2cBus, address);

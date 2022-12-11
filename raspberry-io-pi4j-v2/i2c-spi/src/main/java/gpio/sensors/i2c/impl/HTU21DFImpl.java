@@ -21,6 +21,9 @@ public class HTU21DFImpl implements HTU21DF {
     private static final Logger LOG = LoggerFactory.getLogger(HTU21DFImpl.class);
 
     public static final int ADDRESS = 0x40;
+
+    private final static String I2C_PROVIDER = System.getProperty("i2c-provider", "linuxfs-i2c");
+
     // HTU21DF Registers
     public static final int HTU21DF_READTEMP = 0xE3;
     public static final int HTU21DF_READHUM = 0xE5;
@@ -47,7 +50,7 @@ public class HTU21DFImpl implements HTU21DF {
         this.deviceId = "HTU21DF";
         this.context = pi4j;
         this.i2cBus = i2cBus;
-        I2CProvider i2CProvider = pi4j.provider("linuxfs-i2c");
+        I2CProvider i2CProvider = pi4j.provider(I2C_PROVIDER);
         I2CConfig i2cConfig = I2C.newConfigBuilder(pi4j).id(deviceId).bus(i2cBus).device(address).build();
         htu21df = i2CProvider.create(i2cConfig);
         LOG.info("HTU21DF Connected to i2c bus={} address={}. OK.", i2cBus, address);

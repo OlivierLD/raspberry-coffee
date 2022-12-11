@@ -18,6 +18,9 @@ public class BME280Impl implements BME280 {
     private static final Logger LOG = LoggerFactory.getLogger(BME280Impl.class);
 
     public static final int ADDRESS = 0x76;
+
+    private final static String I2C_PROVIDER = System.getProperty("i2c-provider", "linuxfs-i2c");
+
     private static final int ID_REGISTER     = 0xD0;
     private static final int RESET_REGISTER  = 0xE0;
     private static final int STATUS_REGISTER = 0xF3;
@@ -77,7 +80,7 @@ public class BME280Impl implements BME280 {
         this.deviceId = "BME280";
         this.context = pi4j;
         this.i2cBus = i2cBus;
-        I2CProvider i2CProvider = pi4j.provider("linuxfs-i2c");
+        I2CProvider i2CProvider = pi4j.provider(I2C_PROVIDER);
         I2CConfig i2cConfig = I2C.newConfigBuilder(pi4j).id(deviceId).bus(i2cBus).device(address).build();
         bme280 = i2CProvider.create(i2cConfig);
         LOG.info("BME280 Connected to i2c bus={} address={}. OK.", i2cBus, address);
