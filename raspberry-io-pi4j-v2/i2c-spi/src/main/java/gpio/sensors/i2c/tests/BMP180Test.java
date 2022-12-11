@@ -23,7 +23,7 @@ public class BMP180Test {
 			for (int i = 0; i < 10; i++) {
 				BMP180Impl.Data data = bmp180.getSensorValues();
 				float pressure = data.getPressure() / 1_000;
-				LOG.info("[{}] Temperature: {} C, Pressure: {} kPa", i, String.format("%.3f", data.getTemperature()), String.format("%.3f", pressure));
+				LOG.info("[{}] Temperature: {}\272C, Pressure: {} hPa", i, String.format("%.3f", data.getTemperature()), String.format("%.3f", pressure * 10d));
 				Thread.sleep(500);
 			}
 			LOG.info("BMP180Test done.");
