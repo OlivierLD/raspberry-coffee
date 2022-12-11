@@ -29,7 +29,7 @@ public class ScreenBuffer {
 	}
 
 	private int w = WIDTH, // Actual values, defaulted to SSD1306
-							h = HEIGHT;
+				h = HEIGHT;
 	// This is the buffer that will be pushed on the device
 	private int[] screenBuffer = null;
 	// This represents the led array (128x32). 'X' means on, ' ' means off.

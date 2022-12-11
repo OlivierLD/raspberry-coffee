@@ -30,15 +30,15 @@ public class HMC5883L {
 	private final static float SCALE = 1F; // 0.92F; // TODO Q: This is a constant... is that any useful?
 	private final float ALPHA = 0.15f; // For the low pass filter (smoothing)
 
-	private I2CDevice magnetometer;
+	private final I2CDevice magnetometer;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
 	private static boolean verbose    = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
-	private static boolean verboseRaw = "true".equals(System.getProperty("hmc5883l.verbose.raw", "false"));
-	private static boolean verboseMag = "true".equals(System.getProperty("hmc5883l.verbose.mag", "false"));
+	private final static boolean verboseRaw = "true".equals(System.getProperty("hmc5883l.verbose.raw", "false"));
+	private final static boolean verboseMag = "true".equals(System.getProperty("hmc5883l.verbose.mag", "false"));
 
-	private static boolean useLowPassFilter = "true".equals(System.getProperty("hmc5883l.low.pass.filter", "true")); // default true
-	private static boolean logForCalibration = "true".equals(System.getProperty("hmc5883l.log.for.calibration", "false"));
+	private final static boolean useLowPassFilter = "true".equals(System.getProperty("hmc5883l.low.pass.filter", "true")); // default true
+	private final static boolean logForCalibration = "true".equals(System.getProperty("hmc5883l.log.for.calibration", "false"));
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
@@ -64,7 +64,7 @@ public class HMC5883L {
 		DEFAULT_MAP.put(MAG_Z_COEFF, 1d);
 	}
 
-	private Map<String, Double> calibrationMap = new HashMap<>(DEFAULT_MAP);
+	private final Map<String, Double> calibrationMap = new HashMap<>(DEFAULT_MAP);
 
 	private void setCalibrationValue(String key, double val) {
 		// WARNING!! The values depend heavily on USE_NORM value.
@@ -79,7 +79,7 @@ public class HMC5883L {
 		public abstract void onNewData(Map<MagValues, Double> magData);
 	}
 
-	private List<HMC5883LEventListener> listeners = new ArrayList<>();
+	private final List<HMC5883LEventListener> listeners = new ArrayList<>();
 
 	public void subscribe(HMC5883LEventListener listener) {
 		listeners.add(listener);
@@ -98,7 +98,6 @@ public class HMC5883L {
 		if (verbose) {
 			System.out.println("Starting sensors reading:");
 		}
-//		try {
 		// Get i2c bus
 		I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
 		if (verbose) {
@@ -113,9 +112,9 @@ public class HMC5883L {
 		String propFileName = System.getProperty("hmc5883l.cal.prop.file", "hmc5883l.cal.properties");
 		try {
 			hmc5883lCalProps.load(new FileReader(propFileName));
-			System.out.println(String.format("- Properties file %s loaded.", propFileName));
+			System.out.printf("- Properties file %s loaded.\n", propFileName);
 		} catch (Exception ex) {
-			System.out.println(String.format(">> File %s: %s. Defaulting Calibration Properties.", propFileName, ex.toString()));
+			System.out.printf(">> File %s: %s. Defaulting Calibration Properties.\n", propFileName, ex.toString());
 		}
 		// Calibration values
 		if (!"true".equals(System.getProperty("hmc5883l.log.for.calibration"))) {
@@ -200,7 +199,7 @@ public class HMC5883L {
 	public enum MagValues {
 		HEADING, PITCH, ROLL
 	}
-	private Map<MagValues, Double> valueMap = new HashMap<>();
+	private final Map<MagValues, Double> valueMap = new HashMap<>();
 
 	private void readingSensors()
 			throws IOException {
@@ -243,7 +242,7 @@ public class HMC5883L {
 
 				if (logForCalibration) {
 					if (!(Math.abs(magX) > 1_000) && !(Math.abs(magY) > 1_000) && !(Math.abs(magZ) > 1_000)) { // Skip aberrations
-						System.out.println(String.format("%d;%d;%d;%.03f;%.03f;%.03f", (int) magX, (int) magY, (int) magZ, magXFiltered, magYFiltered, magZFiltered));
+						System.out.printf("%d;%d;%d;%.03f;%.03f;%.03f\n", (int) magX, (int) magY, (int) magZ, magXFiltered, magYFiltered, magZFiltered);
 					}
 				}
 
@@ -268,15 +267,15 @@ public class HMC5883L {
 //		}
 
 			if (verboseRaw) {
-				System.out.println(String.format("RawMag (XYZ) (%f, %f, %f)", magX, magY, magZ));
+				System.out.printf("RawMag (XYZ) (%f, %f, %f)\n", magX, magY, magZ);
 			}
 
 			if (verbose) {
-				System.out.println(String.format(
-						"heading: %s (mag), pitch: %s, roll: %s",
+				System.out.printf(
+						"heading: %s (mag), pitch: %s, roll: %s\n",
 						Z_FMT.format(heading),
 						Z_FMT.format(pitch),
-						Z_FMT.format(roll)));
+						Z_FMT.format(roll));
 			}
 
 			// Listeners?
@@ -329,10 +328,10 @@ public class HMC5883L {
 			sensor.subscribe(new HMC5883L.HMC5883LEventListener() {
 				@Override
 				public void onNewData(Map<MagValues, Double> magData) {
-					System.out.println(String.format("Heading: %06.02f, Pitch: %06.02f, Roll: %06.02f",
+					System.out.printf("Heading: %06.02f, Pitch: %06.02f, Roll: %06.02f\n",
 							magData.get(HMC5883L.MagValues.HEADING),
 							magData.get(HMC5883L.MagValues.PITCH),
-							magData.get(HMC5883L.MagValues.ROLL)));
+							magData.get(HMC5883L.MagValues.ROLL));
 				}
 			});
 		}

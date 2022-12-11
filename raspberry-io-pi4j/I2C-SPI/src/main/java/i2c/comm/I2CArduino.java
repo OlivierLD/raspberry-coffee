@@ -4,7 +4,6 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import java.text.DecimalFormat;
@@ -28,7 +27,7 @@ import java.text.NumberFormat;
  */
 public class I2CArduino {
 	public final static int ARDUINO_ADDRESS = 0x04; // See RPi_I2C_2.ino
-	private static boolean verbose = "true".equals(System.getProperty("arduino.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("arduino.verbose", "false"));
 
 	private final static byte END_OF_MESSAGE = (byte) 0x00;
 	private final static byte STRING_REQUEST = (byte) 0x10; // Master wants a string message
@@ -89,6 +88,7 @@ public class I2CArduino {
 		try {
 			Thread.sleep((long) (d * 1_000));
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 

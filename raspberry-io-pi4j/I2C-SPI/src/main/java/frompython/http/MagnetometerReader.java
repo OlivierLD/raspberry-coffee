@@ -62,7 +62,7 @@ public class MagnetometerReader {
                 double magZ = magData.getDouble("z");
 //                var data = MagnetometerReader.calculate(magX, magY, magZ); // Java 10+
                 MagData data = MagnetometerReader.calculate(magX, magY, magZ); // Java 10-
-                System.out.println(String.format("Heading: %f Pitch: %f, Roll: %f", data.heading, data.pitch, data.roll));
+                System.out.printf("Heading: %f Pitch: %f, Roll: %f\n", data.heading, data.pitch, data.roll);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

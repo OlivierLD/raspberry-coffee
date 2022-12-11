@@ -12,7 +12,7 @@ public class MCP4725 {
     public final static int MCP4725_REG_WRITEDAC = 0x40;
     public final static int MCP4725_REG_WRITEDACEEPROM = 0x60;
 
-    private static boolean verbose = true;
+    private final static boolean verbose = "true".equals(System.getProperty("mcp4725.verbose"));
 
     private I2CBus bus;
     private I2CDevice mcp4725;

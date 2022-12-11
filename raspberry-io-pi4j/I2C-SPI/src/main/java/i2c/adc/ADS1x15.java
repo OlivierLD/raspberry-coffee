@@ -10,7 +10,7 @@ import java.io.IOException;
  * Suitable for ADS1015 and ADS1115 ADCs.
  */
 public class ADS1x15 {
-	private static boolean verbose = ("true".equals(System.getProperty("ads1x.verbose", "false")));
+	private final static boolean verbose = ("true".equals(System.getProperty("ads1x.verbose", "false")));
 
 	// IC Identifiers
 	public enum ICType {
@@ -267,7 +267,7 @@ public class ADS1x15 {
 	private I2CBus bus;
 	private I2CDevice adc;
 
-	private ICType adcType;
+	private final ICType adcType;
 	private int pga;
 
 	public ADS1x15() throws I2CFactory.UnsupportedBusNumberException {
@@ -336,9 +336,9 @@ public class ADS1x15 {
 	 * The pga must be given in mV, see page 13 for the supported values.
 	 *
 	 * @param channel 0..3
-	 * @param pga
-	 * @param sps     Samples per second
-	 * @return
+	 * @param pga in mV
+	 * @param sps Samples per second
+	 * @return single-ended ADC reading
 	 */
 	public float readADCSingleEnded(Channels channel, int pga, int sps) {
 		// Disable comparator, Non-latching, Alert/Rdy active low

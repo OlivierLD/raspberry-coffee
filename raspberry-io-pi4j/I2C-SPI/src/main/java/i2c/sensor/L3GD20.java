@@ -106,7 +106,7 @@ public class L3GD20 {
 	public final static int L3GD20_MASK_INT1_DURATION_WAIT = 0x80; // Wait number of samples or not
 	public final static int L3GD20_MASK_INT1_DURATION_D = 0x7f; // Duration of int1 to be recognized
 
-	private static boolean verbose = false;
+	private final static boolean verbose = false;
 
 	private I2CBus bus;
 	private I2CDevice l3dg20;
@@ -177,12 +177,16 @@ public class L3GD20 {
 	 */
 	public void init() throws Exception {
 		String fullScaleValue = getFullScaleValue();
-		if (fullScaleValue.equals(L3GD20Dictionaries._250_DPS)) {
-			this.gain = 0.00875;
-		} else if (fullScaleValue.equals(L3GD20Dictionaries._500_DPS)) {
-			this.gain = 0.0175;
-		} else if (fullScaleValue.equals(L3GD20Dictionaries._2000_DPS)) {
-			this.gain = 0.07;
+		switch (fullScaleValue) {
+			case L3GD20Dictionaries._250_DPS:
+				this.gain = 0.00875;
+				break;
+			case L3GD20Dictionaries._500_DPS:
+				this.gain = 0.0175;
+				break;
+			case L3GD20Dictionaries._2000_DPS:
+				this.gain = 0.07;
+				break;
 		}
 	}
 

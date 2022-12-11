@@ -28,7 +28,7 @@ public class HTU21DF {
 	public final static int HTU21DF_READREG = 0xE7;
 	public final static int HTU21DF_RESET = 0xFE;
 
-	private static boolean verbose = "true".equals(System.getProperty("htu21df.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("htu21df.verbose", "false"));
 
 	private I2CBus bus;
 	private I2CDevice htu21df;
@@ -40,7 +40,7 @@ public class HTU21DF {
 	public HTU21DF(int address) throws I2CFactory.UnsupportedBusNumberException {
 		try {
 			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPi version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}

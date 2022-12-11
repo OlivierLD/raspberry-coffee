@@ -82,6 +82,7 @@ public class DACSample {
                 try {
                     Thread.sleep(10L);
                 } catch (InterruptedException ie) {
+                    ie.printStackTrace();
                 }
             }
         }

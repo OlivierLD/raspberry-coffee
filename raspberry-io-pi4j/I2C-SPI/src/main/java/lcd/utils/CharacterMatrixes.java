@@ -1156,8 +1156,9 @@ public class CharacterMatrixes {
 			leds = new boolean[dots[0].length()][8];
 			for (int line = 0; line < dots.length; line++) {
 				String s = dots[line];
-				for (int col = 0; col < s.length(); col++)
+				for (int col = 0; col < s.length(); col++) {
 					leds[col][line] = (s.charAt(col) == 'X');
+				}
 			}
 		}
 		return leds;

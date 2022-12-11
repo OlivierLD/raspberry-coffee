@@ -94,31 +94,31 @@ public class LSM303 {
 	private static float _lsm303Mag_Gauss_LSB_XY = 1_100.0F; // Varies with gain
 	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;    // Varies with gain
 
-	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // Earth's gravity in m/s^2
-	private float SENSORS_GRAVITY_MOON = 1.6f;             // The moon's gravity in m/s^2
-	private float SENSORS_GRAVITY_SUN = 275.0f;            // The sun's gravity in m/s^2
-	private float SENSORS_GRAVITY_STANDARD = SENSORS_GRAVITY_EARTH; // Earth, by default ;)
-	private float SENSORS_MAGFIELD_EARTH_MAX = 60.0f;      // Maximum magnetic field on Earth's surface
-	private float SENSORS_MAGFIELD_EARTH_MIN = 30.0f;      // Minimum magnetic field on Earth's surface
-	private float SENSORS_PRESSURE_SEALEVELHPA = 1_013.25f;// Average sea level pressure is 1013.25 hPa, on Earth
-	private float SENSORS_DPS_TO_RADS = 0.017453293f;      // Degrees/s to rad/s multiplier
-	private float SENSORS_GAUSS_TO_MICROTESLA = 100;       // Gauss to micro-Tesla multiplier
+	private final float SENSORS_GRAVITY_EARTH = 9.80665f;        // Earth's gravity in m/s^2
+	private final float SENSORS_GRAVITY_MOON = 1.6f;             // The moon's gravity in m/s^2
+	private final float SENSORS_GRAVITY_SUN = 275.0f;            // The sun's gravity in m/s^2
+	private final float SENSORS_GRAVITY_STANDARD = SENSORS_GRAVITY_EARTH; // Earth, by default ;)
+	private final float SENSORS_MAGFIELD_EARTH_MAX = 60.0f;      // Maximum magnetic field on Earth's surface
+	private final float SENSORS_MAGFIELD_EARTH_MIN = 30.0f;      // Minimum magnetic field on Earth's surface
+	private final float SENSORS_PRESSURE_SEALEVELHPA = 1_013.25f;// Average sea level pressure is 1013.25 hPa, on Earth
+	private final float SENSORS_DPS_TO_RADS = 0.017453293f;      // Degrees/s to rad/s multiplier
+	private final float SENSORS_GAUSS_TO_MICROTESLA = 100;       // Gauss to micro-Tesla multiplier
 
-	private I2CBus bus;
+	private final I2CBus bus;
 	private I2CDevice accelerometer = null, magnetometer = null;
 	private byte[] accelData, magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
-	private static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
-	private static boolean verboseRaw = "true".equals(System.getProperty("lsm303.verbose.raw", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
+	private final static boolean verboseRaw = "true".equals(System.getProperty("lsm303.verbose.raw", "false"));
 
-	private static boolean verboseAcc = "true".equals(System.getProperty("lsm303.verbose.acc", "false"));
-	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
+	private final static boolean verboseAcc = "true".equals(System.getProperty("lsm303.verbose.acc", "false"));
+	private final static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
 
-	private static boolean useLowPassFilter = "true".equals(System.getProperty("lsm303.low.pass.filter", "true")); // default true
-	private static boolean logForCalibration = "true".equals(System.getProperty("lsm303.log.for.calibration", "false"));
+	private final static boolean useLowPassFilter = "true".equals(System.getProperty("lsm303.low.pass.filter", "true")); // default true
+	private final static boolean logForCalibration = "true".equals(System.getProperty("lsm303.log.for.calibration", "false"));
 
-	private static boolean pitchRollHeadingAdjust = "true".equals(System.getProperty("lsm303.pitch.roll.adjust", "true"));
+	private final static boolean pitchRollHeadingAdjust = "true".equals(System.getProperty("lsm303.pitch.roll.adjust", "true"));
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
@@ -159,7 +159,7 @@ public class LSM303 {
 		DEFAULT_MAP.put(ACC_Z_COEFF, 1d);
 	}
 
-	private Map<String, Double> calibrationMap = new HashMap<>(DEFAULT_MAP);
+	private final Map<String, Double> calibrationMap = new HashMap<>(DEFAULT_MAP);
 
 	public enum EnabledFeature {
 		MAGNETOMETER,
@@ -278,7 +278,7 @@ public class LSM303 {
 		try {
 			lsm303CalProps.load(new FileReader(calPropFileName));
 		} catch (Exception ex) {
-			System.out.println(String.format("File %s: %s. Defaulting Calibration Properties", calPropFileName, ex.toString()));
+			System.out.printf("File %s: %s. Defaulting Calibration Properties\n", calPropFileName, ex.toString());
 		}
 		// Calibration values
 		if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {
@@ -402,7 +402,7 @@ public class LSM303 {
 					accelZ = accel12(accelData, 4);
 
 					if (verboseAcc) {
-						System.out.println(String.format("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
+						System.out.printf("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)\n", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF);
 					}
 
 					accX = accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
@@ -412,7 +412,7 @@ public class LSM303 {
 					accNorm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
 
 					if (verboseAcc) {
-						System.out.println(String.format("Acc norm: %f", accNorm));
+						System.out.printf("Acc norm: %f\n", accNorm);
 					}
 					if (USE_NORM && accNorm != 0) {
 						accX /= accNorm;
@@ -445,8 +445,8 @@ public class LSM303 {
 
 					if (verboseAcc) {
 						System.out.println("Pitch & Roll with Accelerometer:");
-						System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accXFiltered, accYFiltered, accZFiltered));
-						System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
+						System.out.printf("\tX:%f, Y:%f, Z:%f\n", accXFiltered, accYFiltered, accZFiltered);
+						System.out.printf("\tPitch:%f, Roll:%f\n", pitchDegrees, rollDegrees);
 					}
 				} catch (IOException ioe) {
 					System.err.println("Error writing to Accelerometer");
@@ -518,7 +518,7 @@ public class LSM303 {
 					}
 
 					if (verboseRaw) {
-						System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f, after %.02f, delta %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, (afterAdjust - beforeAdjust), heading));
+						System.out.printf("RAW mag data (2): X:%f Y:%f => (before %.02f, after %.02f, delta %.02f) (HDG %.02f) \n", magXComp, magYComp, beforeAdjust, afterAdjust, (afterAdjust - beforeAdjust), heading);
 					}
 
 					setHeading(heading);
@@ -532,11 +532,11 @@ public class LSM303 {
 				}
 			}
 			if (verboseMag) {
-				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magneticX, magneticY, magneticZ, magneticX & 0xFFFF, magneticY & 0xFFFF, magneticZ & 0xFFFF, heading));
+				System.out.printf("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f\n", magneticX, magneticY, magneticZ, magneticX & 0xFFFF, magneticY & 0xFFFF, magneticZ & 0xFFFF, heading);
 			}
 
 			if (verboseRaw) {
-				System.out.println(String.format("RawAcc (XYZ) (%d, %d, %d)\tRawMag (XYZ) (%d, %d, %d)", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
+				System.out.printf("RawAcc (XYZ) (%d, %d, %d)\tRawMag (XYZ) (%d, %d, %d)\n", accelX, accelY, accelZ, magneticX, magneticY, magneticZ);
 			}
 
 			if (dataListener != null) {
@@ -544,16 +544,14 @@ public class LSM303 {
 				dataListener.dataDetected(accelX, accelY, accelZ, magneticX, magneticY, magneticZ, heading, pitchDegrees, rollDegrees);
 			} else {
 				if (verbose) {
-					System.out.println(
-							String.format("heading: %s (mag), pitch: %s, roll: %s",
+					System.out.printf("heading: %s (mag), pitch: %s, roll: %s\n",
 									Z_FMT.format(heading),
 									Z_FMT.format(pitch),
-									Z_FMT.format(roll)));
+									Z_FMT.format(roll));
 				}
 			}
 			if (logForCalibration) {
-				System.out.println(
-						String.format("%d;%d;%d;%d;%d;%d;%f;%f;%f;%f;%f;%f;%f;%f",
+				System.out.printf("%d;%d;%d;%d;%d;%d;%f;%f;%f;%f;%f;%f;%f;%f\n",
 								accelX,       // Raw data
 								accelY,
 								accelZ,
@@ -571,7 +569,7 @@ public class LSM303 {
 								magZFiltered,
 
 								accNorm,      // norms
-								magNorm));
+								magNorm);
 			}
 			try {
 				if (this.wait > 0) {

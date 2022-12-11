@@ -5,6 +5,6 @@
 - ADS1x15 SCL to Raspberry Pi SCL
 - ADS1x15 SDA to Raspberry Pi SDA
 
-![Wiring](../../../ads1115_bb.png)
+![Wiring](../../../../../ads1115_bb.png)
 
 ---

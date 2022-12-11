@@ -30,6 +30,7 @@ public class SampleL3GD20ReadRawData {
 				try {
 					Thread.sleep(1L);
 				} catch (InterruptedException ex) {
+					ex.printStackTrace();
 				}
 
 			double z = sensor.getCalOutZValue();
@@ -38,6 +39,6 @@ public class SampleL3GD20ReadRawData {
 	}
 
 	public static void main(String... args) throws Exception {
-		SampleL3GD20ReadRawData main = new SampleL3GD20ReadRawData();
+		new SampleL3GD20ReadRawData();
 	}
 }

@@ -30,7 +30,7 @@ public class MPL115A2 {
 	public final static int MPL115A2_REGISTER_C12_COEFF_LSB = 0x0B;
 	public final static int MPL115A2_REGISTER_STARTCONVERSION = 0x12;
 
-	private static boolean verbose = "true".equals(System.getProperty("mpl115a2.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("mpl115a2.verbose", "false"));
 
 	private I2CBus bus;
 	private I2CDevice mpl115a2;

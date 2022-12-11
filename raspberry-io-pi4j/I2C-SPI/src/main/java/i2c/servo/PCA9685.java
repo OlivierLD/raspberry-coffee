@@ -55,7 +55,7 @@ public class PCA9685 {
 	public final static int ALL_LED_OFF_L = 0xFC;
 	public final static int ALL_LED_OFF_H = 0xFD;
 
-	private static boolean verbose = "true".equals(System.getProperty("pca9685.verbose"));
+	private final static boolean verbose = "true".equals(System.getProperty("pca9685.verbose"));
 	private int freq = 60;
 
 	private I2CBus bus;
@@ -182,7 +182,7 @@ public class PCA9685 {
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		}, "Shutdown Hook"));
 
-		for (int i = 0; true && i < 5; i++) {
+		for (int i = 0; i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);
@@ -325,7 +325,7 @@ public class PCA9685 {
 		}, "Shutdown Hook"));
 
 		System.out.printf("min: %d, max: %d\n", servoMin, servoMax);
-		for (int i = 0; true && i < 5; i++) {
+		for (int i = 0; i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);
@@ -342,7 +342,7 @@ public class PCA9685 {
 		servoMin = 122;
 		servoMax = 615;
 		System.out.printf("min: %d, max: %d\n", servoMin, servoMax);
-		for (int i = 0; true && i < 5; i++) {
+		for (int i = 0; i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);

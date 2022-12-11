@@ -38,7 +38,7 @@ public class VL53L0X_v1 {
 	public final static int VL53L0X_LONG_RANGE_MODE         = 3;   // Long Range mode
 	public final static int VL53L0X_HIGH_SPEED_MODE         = 4;   // High Speed mode
 
-	private static boolean verbose = "true".equals(System.getProperty("vl53l0x.debug", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("vl53l0x.debug", "false"));
 
 	private I2CBus bus;
 	private I2CDevice vl53l0x;

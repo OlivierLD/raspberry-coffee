@@ -64,22 +64,20 @@ public class Arduino {
 	 * methods readArduino, writeArduino
 	 * This where the communication protocol would be implemented.
 	 */
-	public int readArduino()
-					throws Exception {
+	public int readArduino() throws Exception {
 		int r = arduino.read();
 		return r;
 	}
 
-	public void writeArduino(byte b)
-					throws Exception {
+	public void writeArduino(byte b) throws Exception {
 		arduino.write(b);
 	}
 
-	private static void delay(float d) // d in seconds.
-	{
+	private static void delay(float d) { // d in seconds.
 		try {
 			Thread.sleep((long) (d * 1_000));
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
