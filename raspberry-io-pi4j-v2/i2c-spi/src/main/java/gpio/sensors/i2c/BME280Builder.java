@@ -6,7 +6,7 @@ import gpio.sensors.i2c.impl.BME280Impl;
 public class BME280Builder {
 
     private Context pi4j;
-    private int address = BME280Impl.ADDRESS;
+    private int address = BME280Impl.BME280_ADDRESS;
     private int i2cBus = 1;
 
     public BME280Builder context(Context pi4j) {

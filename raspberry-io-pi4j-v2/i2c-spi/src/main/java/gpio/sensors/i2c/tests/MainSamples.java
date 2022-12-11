@@ -21,7 +21,7 @@ public class MainSamples {
     }
 
     public static void main(String... args) throws Exception {
-        Set<String> arguments = toSet(args);
+        Set<String> arguments =  Arrays.stream(args).collect(Collectors.toSet());
         Context context = null;
 
         if (arguments.contains("ALL") || arguments.contains("HTU21D")) {
@@ -49,10 +49,5 @@ public class MainSamples {
             context = Pi4J.newAutoContext();
         }
         return context;
-    }
-
-    private static Set<String> toSet(String... args) {
-        return /*Set<String> result =*/ Arrays.stream(args).collect(Collectors.toSet());
-//        return result;
     }
 }

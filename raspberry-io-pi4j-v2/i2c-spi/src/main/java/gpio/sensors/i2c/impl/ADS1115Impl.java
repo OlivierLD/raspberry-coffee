@@ -12,7 +12,7 @@ public class ADS1115Impl implements ADS1115 {
 
     private static final Logger LOG = LoggerFactory.getLogger(ADS1115Impl.class);
 
-    public static final int ADDRESS = 0x48;
+    public static final int ADS1115_ADDRESS = 0x48;
 
     private final static String I2C_PROVIDER = System.getProperty("i2c-provider", "linuxfs-i2c");
 
@@ -57,7 +57,7 @@ public class ADS1115Impl implements ADS1115 {
     private final GAIN gain;
 
     public ADS1115Impl(Context pi4j) {
-        this(pi4j, ADDRESS, GAIN.GAIN_4_096V, 1);
+        this(pi4j, ADS1115_ADDRESS, GAIN.GAIN_4_096V, 1);
     }
 
     public ADS1115Impl(Context pi4j, int address) {

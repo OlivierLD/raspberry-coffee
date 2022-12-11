@@ -13,14 +13,12 @@ import static gpio.sensors.i2c.impl.Utils.waitFor;
 /**
  * HTU-21D I2C
  * 3.3V temperature and relative humidity sensor
- *
- * @author gergej
  */
 public class HTU21DFImpl implements HTU21DF {
 
     private static final Logger LOG = LoggerFactory.getLogger(HTU21DFImpl.class);
 
-    public static final int ADDRESS = 0x40;
+    public static final int HTU21DF_ADDRESS = 0x40;
 
     private final static String I2C_PROVIDER = System.getProperty("i2c-provider", "linuxfs-i2c");
 
@@ -42,7 +40,7 @@ public class HTU21DFImpl implements HTU21DF {
     private I2C htu21df;
 
     public HTU21DFImpl(Context pi4j) {
-        this(pi4j, ADDRESS, 1);
+        this(pi4j, HTU21DF_ADDRESS, 1);
     }
 
     public HTU21DFImpl(Context pi4j, int address, int i2cBus) {

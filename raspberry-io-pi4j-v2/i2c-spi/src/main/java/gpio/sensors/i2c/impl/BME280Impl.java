@@ -17,7 +17,7 @@ public class BME280Impl implements BME280 {
 
     private static final Logger LOG = LoggerFactory.getLogger(BME280Impl.class);
 
-    public static final int ADDRESS = 0x76;
+    public static final int BME280_ADDRESS = 0x76;
 
     private final static String I2C_PROVIDER = System.getProperty("i2c-provider", "linuxfs-i2c");
 
@@ -72,7 +72,7 @@ public class BME280Impl implements BME280 {
     private int digH6;
 
     public BME280Impl(Context pi4j) {
-        this(pi4j, ADDRESS, 1);
+        this(pi4j, BME280_ADDRESS, 1);
     }
 
     public BME280Impl(Context pi4j, int address, int i2cBus) {

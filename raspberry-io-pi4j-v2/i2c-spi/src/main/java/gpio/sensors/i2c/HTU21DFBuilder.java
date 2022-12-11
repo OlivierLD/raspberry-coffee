@@ -6,7 +6,7 @@ import gpio.sensors.i2c.impl.HTU21DFImpl;
 public class HTU21DFBuilder {
 
     private Context pi4j;
-    private int address = HTU21DFImpl.ADDRESS;
+    private int address = HTU21DFImpl.HTU21DF_ADDRESS;
     private int i2cBus = 1;
 
     public HTU21DFBuilder context(Context pi4j) {

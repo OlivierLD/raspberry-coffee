@@ -1,5 +1,4 @@
-# PI4J V2
-This is another tentative to find a good and stable way to implement sensors and actuators drivers.
+# Porting the code from PI4J v1 to PI4 J v2
 
 PI4j-v1 is now deprecated, because of the deprecation of WiringPi.  
 Depending on third-party software is risky, as when it goes deprecated, you have to re-write whatever depends on it...
@@ -20,7 +19,7 @@ Possibilities - among many others - could be (the list is not closed!):
 - <https://github.com/jveverka/rpi-projects> <- very interesting
 
 ## Now we're talking...
-`PI4J-v2` requires [pigpio](http://abyz.me.uk/rpi/pigpio/index.html) to be installed, explicitly. 
+`PI4J-v2` requires [pigpio](http://abyz.me.uk/rpi/pigpio/index.html) to be installed, explicitly.
 > _**QUESTION**_: Really ?
 > Isn't the depemdies section sufficient, with its `implementation "com.pi4j:pi4j-library-pigpio:$pi4j_version"` ?
 ```

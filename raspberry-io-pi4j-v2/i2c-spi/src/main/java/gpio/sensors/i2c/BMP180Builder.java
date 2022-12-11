@@ -6,7 +6,7 @@ import gpio.sensors.i2c.impl.BMP180Impl;
 public class BMP180Builder {
 
     private Context pi4j;
-    private int address = BMP180Impl.ADDRESS;
+    private int address = BMP180Impl.BMP180_ADDRESS;
     private int i2cBus = 1;
 
     public BMP180Builder context(Context pi4j) {

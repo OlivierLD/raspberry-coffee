@@ -14,14 +14,12 @@ import static gpio.sensors.i2c.impl.Utils.*;
 /**
  * BMP-180 I2C
  * 3.3V Bosch temperature and barometric pressure sensor.
- *
- * @author gergej, inspired by me !
  */
 public class BMP180Impl implements BMP180 {
 
     private static final Logger LOG = LoggerFactory.getLogger(BMP180Impl.class);
 
-    public static final int ADDRESS = 0x77;
+    public static final int BMP180_ADDRESS = 0x77;
 
     private final static String I2C_PROVIDER = System.getProperty("i2c-provider", "linuxfs-i2c");
 
@@ -73,7 +71,7 @@ public class BMP180Impl implements BMP180 {
     private final I2C bmp180;
 
     public BMP180Impl(Context pi4j) {
-        this(pi4j, ADDRESS, 1);
+        this(pi4j, BMP180_ADDRESS, 1);
     }
 
     public BMP180Impl(Context pi4j, int address, int i2cBus) {

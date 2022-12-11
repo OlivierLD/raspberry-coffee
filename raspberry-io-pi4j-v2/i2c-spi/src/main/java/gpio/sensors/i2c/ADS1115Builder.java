@@ -6,7 +6,7 @@ import gpio.sensors.i2c.impl.ADS1115Impl;
 public class ADS1115Builder {
 
     private Context pi4j;
-    private int address = ADS1115Impl.ADDRESS;
+    private int address = ADS1115Impl.ADS1115_ADDRESS;
     private ADS1115Impl.GAIN gain = ADS1115Impl.GAIN.GAIN_4_096V;
     private int i2cBus = 1;
 
