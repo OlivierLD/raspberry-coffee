@@ -72,6 +72,7 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
     """
     Expects three possible inputs: "STATUS", "SLOWER", or "FASTER" (not case-sensitive).
     """
+    global nb_clients
     global between_loops
     print("New client listener")
     while True:
@@ -94,6 +95,7 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
                 print(f"Received {client_mess} request. Between Loop now {between_loops} s.")
         except BrokenPipeError as bpe:
             print("Client disconnected")
+            nb_clients -= 1
             break
         except Exception as ex:
             print("Oops!...")

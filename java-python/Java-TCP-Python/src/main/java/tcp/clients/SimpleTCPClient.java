@@ -73,7 +73,7 @@ public class SimpleTCPClient {
 
 			boolean keepWorking = true;
 			while (keepWorking) {
-				String request = System.console().readLine("Request > ");
+				String request = System.console().readLine("User Request > ");
 				if (request.trim().length() > 0) {
 					String response = client.sendMessage(request);
 					System.out.printf("Server responded %s\n", response);
