@@ -92,7 +92,7 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
             else:
                 print(f"Unknown or un-managed message [{client_mess}]")
             if len(client_mess) > 0:
-                print(f"Received {client_mess} request. Between Loop now {between_loops} s.")
+                print(f"Received {client_mess} request. Between Loop value: {between_loops} s.")
         except BrokenPipeError as bpe:
             print("Client disconnected")
             nb_clients -= 1
@@ -112,6 +112,8 @@ def produce_zda(connection: socket.socket, address: tuple) -> None:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
         nmea_zda: str = NMEABuilder.build_ZDA() + NMEA_EOS
         try:
+            if verbose:
+                print(f"Producing status: {nmea_zda}")
             connection.sendall(nmea_zda.encode())  # Send to the client
             time.sleep(between_loops)
         except BrokenPipeError as bpe:
