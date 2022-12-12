@@ -1,5 +1,7 @@
 package tcp.clients;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -7,6 +9,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -17,6 +20,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * CLI args: --host:<IP or name> --port:5555
  */
 public class SimpleTCPClient {
+
+	private final static ObjectMapper mapper = new ObjectMapper(); // Jackson
+
 	private Socket clientSocket;
 	private PrintWriter out;
 	private BufferedReader in;
@@ -81,6 +87,15 @@ public class SimpleTCPClient {
 					} else {
                         String response = client.sendMessage(request);
                         System.out.printf("Server responded %s\n", response);
+						// Parse as JSON ?
+						try {
+							final Map<String, Object> sensorData = mapper.readValue(response, Map.class);
+							sensorData.forEach((k, v) -> System.out.printf("- Key: %s, Value (%s): %s\n", k, v.getClass().getName(), v));
+						} catch (Throwable boom) {
+							System.out.println("-- Not a JSON string... --");
+							boom.printStackTrace();
+							System.out.println("--------------------------");
+						}
 					}
 				} else {
 					System.out.println("... Enter something!");

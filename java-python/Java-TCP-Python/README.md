@@ -84,7 +84,7 @@ $ python src/main/python/sensors/bmp180/TCP_BMP180_ondemand_server.py --machine-
 ```
 Start the Java client:
 ```
-./start.tcp.client.sh --port:7001 --host:192.168.1.105(tcp.clients.SimpleTCPClient) Port now set to 7001
+$ ./start.tcp.client.sh --port:7001 --host:192.168.1.105(tcp.clients.SimpleTCPClient) Port now set to 7001
 (tcp.clients.SimpleTCPClient) Enter '.' at the prompt to stop. Any non-empty string otherwise.
 User Request > STATUS
 Client sending message: STATUS
@@ -100,6 +100,7 @@ Client sending message: GET_BMP180
 Server responded {"temperature": 19.1, "pressure": 100080, "altitude": 103.4987711805293, "sea-level-pressure": 100082.0}
 User Request > .
 (tcp.clients.SimpleTCPClient) Client exiting
+$
 ```
 
 ### Python Server, Python Client(s)
@@ -113,5 +114,22 @@ Start the `simple_tcp_client.py`:
 $ python src/main/python/simple_tcp_client.py --port:7001
 ```
 This is an interactive client. Enter (in the terminal) "`faster`" or "`slower`", to change the string production rate.
+
+
+## Pros and Cons
+
+### Pros
+- TCP is language agnostic
+- TCP is a _connected_ protocol
+- If Python is doing the job, let it do the job
+  - The breakout board provider usually provides the (Python) code that allows to put it to work
+- Writing the Java driver implies mimicking what Python is doing. Talking to Python is a way to avoid this kind of duplication.
+
+### Cons
+- We need to agree of the payload (JSON is indeed an option)
+- Wrapping the Python code into a TCP server is not trivial, but the structure of such code can be done generically.
+
+### Conclusion ?
+Sounds like a good option.
 
 ---
