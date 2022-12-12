@@ -4,7 +4,7 @@
 A TCP server.
 
 Produces a json object, from the data read from a BMP180,
-on user's request
+on user's request. See method produce_result.
 """
 
 import sys
@@ -44,7 +44,6 @@ def interrupt(signal, frame):
 
 
 nb_clients: int = 0
-between_loops: float = 2.0  # in seconds
 
 
 def produce_BMP180_Data(sensor) -> str:
@@ -66,7 +65,6 @@ def produce_status() -> str:
     global nb_clients
     message: dict = {
         "source": __file__,
-        "between-loops": between_loops,
         "connected-clients": nb_clients,
         "python-version": platform.python_version(),
         "system-utc-time": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
@@ -87,13 +85,13 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
             data_str = produce_BMP180_Data(sensor)
         elif client_mess == "STATUS":
             data_str = produce_status()
-        elif client_mess == "":
-            data_str = "UN-MANAGED" + DATA_EOS
-            # pass  # ignore
+        # elif client_mess == "":
+        #     # pass  # ignore
         else:
             print(f"Unknown or un-managed message [{client_mess}]")
+            data_str = "UN-MANAGED" + DATA_EOS
         if len(client_mess) > 0:
-            print(f"Received {client_mess} request. Between Loop value: {between_loops} s.")
+            print(f"Received {client_mess} request.")
 
         if verbose:
             # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
@@ -103,9 +101,8 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
 
         try:
             # Send to the client
-            if True or len(data_str) > 0:
+            if len(data_str) > 0:
                 connection.sendall(data_str.encode())
-            # time.sleep(between_loops)
         except BrokenPipeError as bpe:
             print("Client disconnected")
             nb_clients -= 1
