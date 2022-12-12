@@ -13,6 +13,7 @@ import time
 import socket
 import threading
 import traceback
+import json
 from datetime import datetime, timezone
 from typing import List
 import Adafruit_BMP.BMP085 as BMP085
@@ -63,15 +64,16 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
             "sea-level-pressure": sea_level_pressure
         }
 
+        data_str : str = json.dumps(data)
         if verbose:
             # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
             print(f"-- At {datetime.now(timezone.utc).strftime('%d-%b-%Y %H:%M:%S') } --")
-            print(f"Sending {data.strip()}")
+            print(f"Sending {data_str.strip()}")
             print("---------------------------")
 
         try:
             # Send to the client
-            connection.sendall(data.encode())
+            connection.sendall(data_str.encode())
             time.sleep(between_loops)
         except BrokenPipeError as bpe:
             print("Client disconnected")
