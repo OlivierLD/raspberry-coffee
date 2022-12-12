@@ -74,7 +74,7 @@ public class SimpleContinuousTCPClient {
 		SimpleContinuousTCPClient client = new SimpleContinuousTCPClient();
 		try {
 			client.startConnection(host.get(), port.get());
-			System.out.printf("(%s) Enter '.' at the prompt to stop. Any non-empty string otherwise.\n", SimpleContinuousTCPClient.class.getName());
+			System.out.printf("(%s) Starting.\n", SimpleContinuousTCPClient.class.getName());
 
 			AtomicBoolean keepWorking = new AtomicBoolean(true);
 

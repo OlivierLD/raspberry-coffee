@@ -30,7 +30,7 @@ MACHINE_NAME_PRM_PREFIX: str = "--machine-name:"
 PORT_PRM_PREFIX: str = "--port:"
 VERBOSE_PREFIX: str = "--verbose:"
 
-NMEA_EOS: str = "\r\n"  # aka CR-LF
+DATA_EOS: str = "\r\n"  # aka CR-LF
 
 
 def interrupt(signal, frame):
@@ -64,7 +64,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
             "sea-level-pressure": sea_level_pressure
         }
 
-        data_str : str = json.dumps(data)
+        data_str : str = json.dumps(data) + DATA_EOS
         if verbose:
             # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
             print(f"-- At {datetime.now(timezone.utc).strftime('%d-%b-%Y %H:%M:%S') } --")
