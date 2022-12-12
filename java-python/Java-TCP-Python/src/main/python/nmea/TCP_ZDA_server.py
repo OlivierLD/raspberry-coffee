@@ -46,11 +46,13 @@ def interrupt(sig: int, frame):
 
 nb_clients: int = 0
 between_loops: float = 1.0  # For ALL the threads.
+producing_status: bool = False
 
 
 def produce_status(connection: socket.socket, address: tuple) -> None:
     global nb_clients
     global between_loops
+    global producing_status
     message: Dict = {
         "source": __file__,
         "between-loops": between_loops,
@@ -59,10 +61,12 @@ def produce_status(connection: socket.socket, address: tuple) -> None:
         "system-utc-time": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
     }
     try:
-        payload: str = str(message) + NMEA_EOS + NMEA_EOS
+        payload: str = str(message) + NMEA_EOS
         if verbose:
             print(f"Producing status: {payload}")
+        producing_status = True
         connection.sendall(payload.encode())
+        producing_status = False
     except Exception:
         print("Oops!...")
         traceback.print_exc(file=sys.stdout)
@@ -107,6 +111,7 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
 def produce_zda(connection: socket.socket, address: tuple) -> None:
     global nb_clients
     global between_loops
+    global producing_status
     print(f"Connected by client {connection}")
     while True:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
@@ -114,7 +119,8 @@ def produce_zda(connection: socket.socket, address: tuple) -> None:
         try:
             if verbose:
                 print(f"Producing ZDA: {nmea_zda}")
-            connection.sendall(nmea_zda.encode())  # Send to the client
+            if not producing_status:
+                connection.sendall(nmea_zda.encode())  # Send to the client
             time.sleep(between_loops)
         except BrokenPipeError as bpe:
             print("Client disconnected")
