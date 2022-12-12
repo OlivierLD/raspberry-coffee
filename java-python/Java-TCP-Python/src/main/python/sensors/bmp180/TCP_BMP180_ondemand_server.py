@@ -78,7 +78,7 @@ def produce_status() -> str:
 def produce_result(connection: socket.socket, address: tuple) -> None:
     global nb_clients
     global sensor
-    print(f"Connected by client {connection}. Will produce data every {between_loops} s.")
+
     while True:
         users_input: bytes = connection.recv(1024)   # If receive from client is needed...
         client_mess: str = f"{users_input.decode('utf-8')}".strip().upper()
