@@ -44,7 +44,7 @@ Same server as above, start a TCP client in python:
 This is - as above - an interactive client. 
 
 ### Python Server, Java Client(s)
-Look into the `python/nmea` folder for the servers.
+Look into the `python/nmea` folder for the servers. 
 
 #### 2-way communication, Java client for ZDA_TCP_server
 Start the TCP_ZDA_server:
@@ -57,6 +57,25 @@ $ ./start.tcp.swing.client.sh
 ```
 This is a Java Swing UI, it continuously reads the data from the server, and
 it can also send messages to the TCP server, to produce the NMEA String faster, or slower.
+
+#### Java client Continuously reading a Python server (BMP180)
+Start thw Python server:
+```
+$ python src/main/python/sensors/bmp180/TCP_BMP180_basic_server.py --machine-name:192.168.1.105
+```
+Start the Java client:
+```
+./start.continuous.tcp.client.sh --port:7001 --host:192.168.1.105
+(tcp.clients.SimpleContinuousTCPClient) Port now set to 7001
+(tcp.clients.SimpleContinuousTCPClient) Enter '.' at the prompt to stop. Any non-empty string otherwise.
+From Server: {"temperature": 18.9, "pressure": 100311, "altitude": 84.84824091482058, "sea-level-pressure": 100308.0}
+From Server: {"temperature": 18.9, "pressure": 100313, "altitude": 84.51250197210659, "sea-level-pressure": 100316.0}
+From Server: {"temperature": 18.9, "pressure": 100314, "altitude": 84.34463656570887, "sea-level-pressure": 100313.0}
+From Server: {"temperature": 18.9, "pressure": 100313, "altitude": 83.75712898271219, "sea-level-pressure": 100316.0}
+From Server: {"temperature": 18.9, "pressure": 100311, "altitude": 85.26792983782477, "sea-level-pressure": 100307.0}
+From Server: {"temperature": 18.9, "pressure": 100313, "altitude": 84.26070487871105, "sea-level-pressure": 100316.0}
+^CCtrl-C Exiting !
+```
 
 ### Python Server, Python Client(s)
 Shows how a two-way communication can work, asynchronously.  

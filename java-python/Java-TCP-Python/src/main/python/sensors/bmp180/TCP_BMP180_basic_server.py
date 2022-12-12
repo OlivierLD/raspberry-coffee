@@ -64,7 +64,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
             "sea-level-pressure": sea_level_pressure
         }
 
-        data_str : str = json.dumps(data) + DATA_EOS
+        data_str : str = json.dumps(data) + DATA_EOS  # DATA_EOS is important, the client does a readLine !
         if verbose:
             # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
             print(f"-- At {datetime.now(timezone.utc).strftime('%d-%b-%Y %H:%M:%S') } --")
