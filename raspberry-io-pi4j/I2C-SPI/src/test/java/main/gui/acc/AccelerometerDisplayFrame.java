@@ -5,8 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AccelerometerDisplayFrame
-        extends JFrame {
+public class AccelerometerDisplayFrame extends JFrame {
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menuFile = new JMenu();
     private JMenuItem menuFileExit = new JMenuItem();
@@ -16,7 +15,11 @@ public class AccelerometerDisplayFrame
 
     public AccelerometerDisplayFrame(AccelerometerUI parent) {
         this.caller = parent;
-        displayPanel = new AccelerometerDisplayPanel();
+        try {
+            displayPanel = new AccelerometerDisplayPanel();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         try {
             jbInit();
         } catch (Exception e) {
@@ -24,8 +27,7 @@ public class AccelerometerDisplayFrame
         }
     }
 
-    private void jbInit()
-            throws Exception {
+    private void jbInit() throws Exception {
         this.setJMenuBar(menuBar);
         this.getContentPane().setLayout(new BorderLayout());
         this.setSize(new Dimension(800, 400));
