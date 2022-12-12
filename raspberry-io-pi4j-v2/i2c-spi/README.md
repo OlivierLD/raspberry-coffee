@@ -18,10 +18,13 @@ Possibilities - among many others - could be (the list is not closed!):
 - <https://pi4j.com/examples/>
 - <https://github.com/jveverka/rpi-projects> <- very interesting
 
+I was glad to see in this last one that we write the code the same way.
+We even make the same typos in the comments 😉.
+
 ## Now we're talking...
 `PI4J-v2` requires [pigpio](http://abyz.me.uk/rpi/pigpio/index.html) to be installed, explicitly.
 > _**QUESTION**_: Really ?
-> Isn't the depemdies section sufficient, with its `implementation "com.pi4j:pi4j-library-pigpio:$pi4j_version"` ?
+> Isn't the dependencies section sufficient, with its `implementation "com.pi4j:pi4j-library-pigpio:$pi4j_version"` ?
 ```
 sudo apt-get update
 sudo apt-get install pigpio python-pigpio python3-pigpio

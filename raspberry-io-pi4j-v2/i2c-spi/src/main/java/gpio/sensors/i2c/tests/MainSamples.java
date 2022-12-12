@@ -36,7 +36,17 @@ public class MainSamples {
             BMP180Test.test(context);
         }
 
-        // . . .
+        if (arguments.contains("ALL") || arguments.contains("BME280")) {
+            context = lazyConfigInit(context);
+            dumpContext(context);
+            BME280Test.test(context);
+        }
+
+        if (arguments.contains("ALL") || arguments.contains("ADS1115")) {
+            context = lazyConfigInit(context);
+            dumpContext(context);
+            ADS1115Test.test(context);
+        }
 
         if (context == null) {
             LOG.info("No tests triggered !");
@@ -45,9 +55,6 @@ public class MainSamples {
     }
 
     private static Context lazyConfigInit(Context context) {
-        if (context == null) {
-            context = Pi4J.newAutoContext();
-        }
-        return context;
+        return (context == null) ? Pi4J.newAutoContext() : context;
     }
 }

@@ -1,6 +1,7 @@
 package main.gui.acc;
 
 import i2c.sensor.listener.SensorL3GD20Context;
+import org.junit.Test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +29,11 @@ public class AccelerometerUI {
         });
         System.out.println("Displaying frame");
         frame.setVisible(true);
+    }
+
+    @Test
+    public void showUI() {
+        new AccelerometerUI();
     }
 
     public static void main(String... args) {

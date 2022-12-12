@@ -30,6 +30,8 @@ dependencies {
   implementation project(':raspberry-io-pi4j:Utils')
   implementation project(':http-tiny-server')
   implementation project(':astro-computer:AstroUtilities')
+
+  testImplementation "junit:junit:$junit_version"
 }
 
 // Warning: Must be run as root

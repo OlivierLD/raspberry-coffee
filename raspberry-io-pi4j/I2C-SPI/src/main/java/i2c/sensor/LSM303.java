@@ -620,6 +620,8 @@ public class LSM303 {
 	 * @param args Duh
 	 */
 	public static void main(String... args) {
+		final String FEATURE_PREFIX = "--feature:";
+
 //	verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 //	System.out.println("Verbose: " + verbose);
 
@@ -629,8 +631,8 @@ public class LSM303 {
 
 		if (args.length > 0) {
 			for (String arg : args) {
-				if (arg.startsWith("--feature:")) {
-					String theOne = arg.substring("--feature:".length());
+				if (arg.startsWith(FEATURE_PREFIX)) {
+					String theOne = arg.substring(FEATURE_PREFIX.length());
 					for (EnabledFeature f : EnabledFeature.values()) {
 						if (f.toString().equals(theOne)) {
 							feature = f;

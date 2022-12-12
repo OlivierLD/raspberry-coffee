@@ -12,5 +12,6 @@ JAVA_OPTS=
 # JAVA_OPTS="${JAVA_OPTS} -Dlsm303.pitch.roll.adjust=true"
 # JAVA_OPTS="${JAVA_OPTS} -Dlsm303.log.for.calibration=true"
 #
+# Can receive the "feature" as cli prm. BOTH, MAGNETOMETER, ACCELEROMETER
 sudo java ${JAVA_OPTS} -cp ${CP} i2c.sensor.LSM303 $*
 
