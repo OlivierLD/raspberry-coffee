@@ -115,8 +115,10 @@ $ python src/main/python/simple_tcp_client.py --port:7001
 ```
 This is an interactive client. Enter (in the terminal) "`faster`" or "`slower`", to change the string production rate.
 
-
 ## Pros and Cons
+For the option that considers 
+- Python server
+- Java client(s)
 
 ### Pros
 - TCP is language agnostic
