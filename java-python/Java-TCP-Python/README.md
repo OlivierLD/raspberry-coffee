@@ -77,6 +77,31 @@ From Server: {"temperature": 18.9, "pressure": 100313, "altitude": 84.2607048787
 ^CCtrl-C Exiting !
 ```
 
+#### Java client reading a Python 'on-demand' server (BMP180)
+Start thw Python server:
+```
+$ python src/main/python/sensors/bmp180/TCP_BMP180_ondemand_server.py --machine-name:192.168.1.105
+```
+Start the Java client:
+```
+./start.tcp.client.sh --port:7001 --host:192.168.1.105(tcp.clients.SimpleTCPClient) Port now set to 7001
+(tcp.clients.SimpleTCPClient) Enter '.' at the prompt to stop. Any non-empty string otherwise.
+User Request > STATUS
+Client sending message: STATUS
+Server responded {"source": "/home/pi/repos/raspberry-coffee/java-python/Java-TCP-Python/src/main/python/sensors/bmp180/TCP_BMP180_ondemand_server.py", "connected-clients": 1, "python-version": "3.9.2", "system-utc-time": "2022-12-12T13:18:37.000Z"}
+User Request > GET_BMP180
+Client sending message: GET_BMP180
+Server responded {"temperature": 19.1, "pressure": 100091, "altitude": 103.0783456575366, "sea-level-pressure": 100088.0}
+User Request > whatever
+Client sending message: whatever
+Server responded UN-MANAGED
+User Request > GET_BMP180
+Client sending message: GET_BMP180
+Server responded {"temperature": 19.1, "pressure": 100080, "altitude": 103.4987711805293, "sea-level-pressure": 100082.0}
+User Request > .
+(tcp.clients.SimpleTCPClient) Client exiting
+```
+
 ### Python Server, Python Client(s)
 Shows how a two-way communication can work, asynchronously.  
 Start the `TCP_ZDA_server`:
