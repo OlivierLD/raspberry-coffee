@@ -32,6 +32,7 @@ public class SimpleTCPClient {
 	}
 
 	public String sendMessage(String msg) throws Exception {
+		System.out.printf("Client sending message: %s\n", msg);
 		out.println(msg);
 		/*String resp =*/ return in.readLine();
 		// return resp;
