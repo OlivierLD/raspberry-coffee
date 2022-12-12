@@ -113,7 +113,7 @@ def produce_zda(connection: socket.socket, address: tuple) -> None:
         nmea_zda: str = NMEABuilder.build_ZDA() + NMEA_EOS
         try:
             if verbose:
-                print(f"Producing status: {nmea_zda}")
+                print(f"Producing ZDA: {nmea_zda}")
             connection.sendall(nmea_zda.encode())  # Send to the client
             time.sleep(between_loops)
         except BrokenPipeError as bpe:
