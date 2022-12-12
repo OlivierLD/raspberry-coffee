@@ -3,6 +3,7 @@ CP=./build/libs/Java-TCP-Python-1.0-all.jar
 #
 OPTIONS=
 # OPTIONS="-Dtcp.port=7002 -Dtcp.host=192.168.1.106"
+OPTIONS="${OPTIONS} -Dtcp.verbose=true"
 #
 echo -e "Client for the server TCP_ZDA_server.py"
 #
