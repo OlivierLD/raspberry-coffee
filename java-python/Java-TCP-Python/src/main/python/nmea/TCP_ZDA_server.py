@@ -59,7 +59,9 @@ def produce_status(connection: socket.socket, address: tuple) -> None:
         "system-utc-time": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
     }
     try:
-        payload: str = str(message)
+        payload: str = str(message) + NMEA_EOS
+        if verbose:
+            print(f"Producing status: {payload}")
         connection.sendall(payload.encode())
     except Exception:
         print("Oops!...")
