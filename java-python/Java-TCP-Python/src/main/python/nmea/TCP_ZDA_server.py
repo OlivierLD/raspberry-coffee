@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 That one produces ZDA Strings for each connected client.
-It also understands input from the client: "STATUS", "SLOWER" ar "FASTER" (not case sensitive)
+It also understands input from the client: "STATUS", "SLOWER" ar "FASTER" (not case sensitive), see client_listener.
 """
 import sys
 import signal
@@ -75,6 +75,8 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
     while True:
         try:
             data: bytes = connection.recv(1024)   # If receive from client is needed...
+            if verbose:
+                print(f"Received from client: {data}")
             client_mess = f"{data.decode('utf-8')}".strip().upper()
             if  client_mess == "FASTER":
                 between_loops /= 2.0
@@ -95,7 +97,7 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
             print("Oops!...")
             traceback.print_exc(file=sys.stdout)
             break  # Client disconnected
-    # print("Exiting client listener")
+    print("Exiting client listener")
 
 
 def produce_zda(connection: socket.socket, address: tuple) -> None:
