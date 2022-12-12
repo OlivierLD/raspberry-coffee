@@ -87,8 +87,9 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
             data_str = produce_BMP180_Data(sensor)
         elif client_mess == "STATUS":
             data_str = produce_status()
-        # elif client_mess == "":
-        #     pass  # ignore
+        elif client_mess == "":
+            data_str = "UN-MANAGED" + DATA_EOS
+            # pass  # ignore
         else:
             print(f"Unknown or un-managed message [{client_mess}]")
         if len(client_mess) > 0:
@@ -102,7 +103,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
 
         try:
             # Send to the client
-            if len(data_str) > 0:
+            if True or len(data_str) > 0:
                 connection.sendall(data_str.encode())
             # time.sleep(between_loops)
         except BrokenPipeError as bpe:
