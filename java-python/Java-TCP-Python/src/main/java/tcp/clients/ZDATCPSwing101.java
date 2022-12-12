@@ -44,6 +44,8 @@ public class ZDATCPSwing101 {
     private final String defaultHost = "localhost";
     private final int defaultPort = 7001;
 
+    private final boolean VERBOSE = "true".equals(System.getProperty("tcp.verbose"));
+
     private Consumer<String> dataConsumer;
 
     public void startConnection(String ip, int port) throws Exception {
@@ -68,10 +70,12 @@ public class ZDATCPSwing101 {
 
     private void initTCPClient() {
         try {
-            startConnection(
-                    System.getProperty("tcp.host", defaultHost),
-                    Integer.parseInt(System.getProperty("tcp.port", String.valueOf(defaultPort)))
-            );
+            String tcpHost = System.getProperty("tcp.host", defaultHost);
+            int tcpPort = Integer.parseInt(System.getProperty("tcp.port", String.valueOf(defaultPort)));
+            if (VERBOSE) {
+                System.out.printf("Connecting on %s:%d\n", tcpHost, tcpPort);
+            }
+            startConnection(tcpHost, tcpPort);
         } catch (Exception ex) {
             // Ooch!
             ex.printStackTrace();
@@ -81,6 +85,9 @@ public class ZDATCPSwing101 {
 
         dataConsumer = nmea -> {
             if (nmeaLabel != null) {
+                if (VERBOSE) {
+                    System.out.printf("\tReceived [%s]\n", nmea);
+                }
                 nmeaLabel.setText(nmea);
                 nmeaLabel.repaint();
             } else {

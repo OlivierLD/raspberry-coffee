@@ -69,7 +69,7 @@ public class SimpleTCPClient {
 		SimpleTCPClient client = new SimpleTCPClient();
 		try {
 			client.startConnection(host.get(), port.get());
-			System.out.printf("(%s) Enter '.' at the prompt to stop\n", SimpleTCPClient.class.getName());
+			System.out.printf("(%s) Enter '.' at the prompt to stop. Any non-empty string otherwise.\n", SimpleTCPClient.class.getName());
 
 			boolean keepWorking = true;
 			while (keepWorking) {
