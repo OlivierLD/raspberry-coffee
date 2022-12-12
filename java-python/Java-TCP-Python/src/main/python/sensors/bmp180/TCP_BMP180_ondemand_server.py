@@ -78,7 +78,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
     global sensor
 
     while True:
-        users_input: bytes = connection.recv(1024)   # If receive from client is needed...
+        users_input: bytes = connection.recv(1024)   # If receive from client is needed... Blocking statement.
         client_mess: str = f"{users_input.decode('utf-8')}".strip().upper()
         data_str: str = ""
         if client_mess == "GET_BMP180":
@@ -86,7 +86,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
         elif client_mess == "STATUS":
             data_str = produce_status()
         # elif client_mess == "":
-        #     # pass  # ignore
+        #     pass  # ignore
         else:
             print(f"Unknown or un-managed message [{client_mess}]")
             data_str = "UN-MANAGED" + DATA_EOS
@@ -95,7 +95,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
 
         if verbose:
             # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
-            print(f"-- At {datetime.now(timezone.utc).strftime('%d-%b-%Y %H:%M:%S') } --")
+            print(f"-- At {datetime.now(timezone.utc).strftime('%d-%b-%Y %H:%M:%S.%f') } --")
             print(f"Sending {data_str.strip()}")
             print("---------------------------")
 
