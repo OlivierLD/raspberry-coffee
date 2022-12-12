@@ -46,25 +46,28 @@ nb_clients: int = 0
 between_loops: float = 2.0  # in seconds
 
 
+def produce_BMP180_Data(sensor) -> str:
+    temperature: float = sensor.read_temperature()  # Celsius
+    pressure: float = sensor.read_pressure()  # Pa
+    altitude: float = sensor.read_altitude()  # meters
+    sea_level_pressure: float = sensor.read_sealevel_pressure()
+    data: dict = {
+        "temperature": temperature,
+        "pressure": pressure,
+        "altitude": altitude,
+        "sea-level-pressure": sea_level_pressure
+    }
+    data_str: str = json.dumps(data) + DATA_EOS  # DATA_EOS is important, the client does a readLine !
+    return data_str
+
+
 def produce_result(connection: socket.socket, address: tuple) -> None:
     global nb_clients
     global sensor
     print(f"Connected by client {connection}. Will produce data every {between_loops} s.")
     while True:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
-        temperature: float = sensor.read_temperature()  # Celsius
-        pressure: float = sensor.read_pressure()        # Pa
-        altitude: float = sensor.read_altitude()        # meters
-        sea_level_pressure: float = sensor.read_sealevel_pressure()
-
-        data: dict = {
-            "temperature": temperature,
-            "pressure": pressure,
-            "altitude": altitude,
-            "sea-level-pressure": sea_level_pressure
-        }
-
-        data_str : str = json.dumps(data) + DATA_EOS  # DATA_EOS is important, the client does a readLine !
+        data_str: str = produce_BMP180_Data(sensor)
         if verbose:
             # Date formatting: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
             print(f"-- At {datetime.now(timezone.utc).strftime('%d-%b-%Y %H:%M:%S') } --")

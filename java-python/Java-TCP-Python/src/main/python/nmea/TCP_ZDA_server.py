@@ -65,7 +65,7 @@ def produce_status(connection: socket.socket, address: tuple) -> None:
         if verbose:
             print(f"Producing status: {payload}")
         producing_status = True
-        connection.sendall(payload.encode())
+        connection.sendall(payload.encode())  # This one does not go through...
         producing_status = False
     except Exception:
         print("Oops!...")
@@ -117,10 +117,12 @@ def produce_zda(connection: socket.socket, address: tuple) -> None:
         # data: bytes = conn.recv(1024)   # If receive from client is needed...
         nmea_zda: str = NMEABuilder.build_ZDA() + NMEA_EOS
         try:
-            if verbose:
-                print(f"Producing ZDA: {nmea_zda}")
             if not producing_status:
+                if verbose:
+                    print(f"Producing ZDA and sending: {nmea_zda}")
                 connection.sendall(nmea_zda.encode())  # Send to the client
+            else:
+                print("Waiting for the status to be completed.")
             time.sleep(between_loops)
         except BrokenPipeError as bpe:
             print("Client disconnected")
