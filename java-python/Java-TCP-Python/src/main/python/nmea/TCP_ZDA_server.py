@@ -84,7 +84,7 @@ def client_listener(connection: socket.socket, address: tuple) -> None:
             data: bytes = connection.recv(1024)   # If receive from client is needed...
             if verbose:
                 print(f"Received from client: {data}")
-            client_mess = f"{data.decode('utf-8')}".strip().upper()
+            client_mess: str = f"{data.decode('utf-8')}".strip().upper()
             if  client_mess == "FASTER":
                 between_loops /= 2.0
             elif client_mess == "SLOWER":
