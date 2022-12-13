@@ -26,7 +26,7 @@ import adafruit_lsm303dlh_mag
 
 keep_listening: bool = True
 # print(f"Board/I2C is a {type(i2c)}")
-sensor: adafruit_lsm303dlh_mag.LSM303DLH_Mag = adafruit_lsm303dlh_mag.LSM303DLH_Mag(i2c)
+sensor: adafruit_lsm303dlh_mag.LSM303DLH_Mag
 
 HOST: str = "127.0.0.1"  # Standard loopback interface address (localhost). Set to actual IP or name (from CLI) to make it reacheable from outside.
 PORT: int = 7001         # Port to listen on (non-privileged ports are > 1023)
