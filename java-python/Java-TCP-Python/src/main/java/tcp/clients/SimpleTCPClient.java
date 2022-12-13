@@ -92,9 +92,9 @@ public class SimpleTCPClient {
 							final Map<String, Object> sensorData = mapper.readValue(response, Map.class);
 							sensorData.forEach((k, v) -> System.out.printf("- Key: %s, Value (%s): %s\n", k, v.getClass().getName(), v));
 						} catch (Throwable boom) {
-							System.out.println("-- Not a JSON string... --");
+							System.out.println("-- Not a JSON string/Map... --");
 							boom.printStackTrace();
-							System.out.println("--------------------------");
+							System.out.println("------------------------------");
 						}
 					}
 				} else {

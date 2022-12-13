@@ -12,7 +12,7 @@ $ sudo pip3 install adafruit-circuitpython-lis3mdl
 |:-------:|:------------:|
 |   VIN   |   #1 (3V3)   |
 |   GND   |  #14 (GND)   |
-| SCL     | #5 (GPIO3 - SCL) |
+|   SCL   | #5 (GPIO3 - SCL) |
 |   SDA   | #3 (GPIO2 - SDA) |
 
 ## Basics: Read raw data
