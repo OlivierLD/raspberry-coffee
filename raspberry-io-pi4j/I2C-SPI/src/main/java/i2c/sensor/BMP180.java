@@ -191,7 +191,7 @@ public class BMP180 {
 		B5 = X1 + X2;
 		temp = ((B5 + 8) >> 4) / 10.0f;
 		if (verbose) {
-			System.out.println("DBG: Calibrated temperature = " + temp + " C");
+			System.out.println("DBG: Calibrated temperature = " + temp + "\272C");
 		}
 		return temp;
 	}
@@ -218,8 +218,8 @@ public class BMP180 {
 		boolean dsValues = false;
 
 		if (dsValues) {
-			UT = 27898;
-			UP = 23843;
+			UT = 27_898;
+			UP = 23_843;
 			this.cal_AC6 = 23_153;
 			this.cal_AC5 = 32_757;
 			this.cal_MB = -32_768;
@@ -281,8 +281,8 @@ public class BMP180 {
 		}
 
 		X1 = (p >> 8) * (p >> 8);
-		X1 = (X1 * 3038) >> 16;
-		X2 = (-7357 * p) >> 16;
+		X1 = (X1 * 3_038) >> 16;
+		X2 = (-7_357 * p) >> 16;
 		if (verbose) {
 			System.out.println("DBG: p  = " + p);
 			System.out.println("DBG: X1 = " + X1);
@@ -295,7 +295,7 @@ public class BMP180 {
 		return p;
 	}
 
-	private int standardSeaLevelPressure = 101_325;
+	private int standardSeaLevelPressure = 101_325; // In Pa.
 
 	public void setStandardSeaLevelPressure(int standardSeaLevelPressure) {
 		this.standardSeaLevelPressure = standardSeaLevelPressure;
@@ -353,7 +353,9 @@ public class BMP180 {
 			ie.printStackTrace();
 		} catch (IOException e) {
 			System.err.println("Get CPU data:" + e.getMessage());
-			e.printStackTrace();
+			if ("true".equals(System.getProperty("bmp180.verbose"))) {
+				e.printStackTrace();
+			}
 		}
 		System.out.println("--- End of Test ---");
 	}
