@@ -25,6 +25,9 @@ WIDTH: int = 128
 HEIGHT: int = 32  # Change to 64 if needed
 BORDER: int = 5
 
+WHITE: int = 255
+BLACK: int = 0
+
 # Use for I2C.
 i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
@@ -37,7 +40,7 @@ oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3C, reset=oled_re
 # oled = adafruit_ssd1306.SSD1306_SPI(WIDTH, HEIGHT, spi, oled_dc, oled_reset, oled_cs)
 
 # Clear display.
-oled.fill(0)
+oled.fill(BLACK)
 oled.show()
 
 # Create blank image for drawing.
@@ -48,13 +51,13 @@ image = Image.new("1", (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
 # Draw a white background
-draw.rectangle((0, 0, oled.width, oled.height), outline=255, fill=255)
+draw.rectangle((0, 0, oled.width, oled.height), outline=WHITE, fill=WHITE)
 
-# Draw a smaller inner rectangle
+# Draw a smaller inner rectangle, in black
 draw.rectangle(
     (BORDER, BORDER, oled.width - BORDER - 1, oled.height - BORDER - 1),
-    outline=0,
-    fill=0,
+    outline=BLACK,
+    fill=BLACK,
 )
 
 # Load default font.
@@ -67,7 +70,7 @@ draw.text(
     (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
     text,
     font=font,
-    fill=255,
+    fill=WHITE,
 )
 
 # Display image
@@ -78,21 +81,23 @@ oled.show()
 time.sleep(3)
 
 for i in range(5):
+    # Draw a black background
+    draw.rectangle((0, 0, oled.width, oled.height), outline=BLACK, fill=BLACK)
     text = f"Still {5 - i} s..."
     (font_width, font_height) = font.getsize(text)
     draw.text(
         (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
         text,
         font=font,
-        fill=255,
+        fill=WHITE,
     )
     #  cls
-    oled.fill(0)
+    oled.fill(BLACK)
     oled.show()
     # new display
     oled.image(image)
     oled.show()
     time.sleep(1)
 
-oled.fill(0)
+oled.fill(BLACK)
 oled.show()
