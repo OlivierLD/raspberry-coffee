@@ -3,6 +3,9 @@ import board
 import math
 import signal
 import adafruit_lsm303dlh_mag
+#
+# 1 Tesla = 10000 Gauss
+#
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = adafruit_lsm303dlh_mag.LSM303DLH_Mag(i2c)
@@ -26,7 +29,8 @@ while keep_listening:
     heading: float = math.degrees(math.atan2(mag_y, mag_x))
     while heading < 0:
         heading += 360
-    print('Magnetometer (gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), heading {3:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, heading))
+    # print('Magnetometer (Gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), HDM {3:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, heading))
+    print('Magnetometer (\u03BCT): ({0:5.3f}, {1:5.3f}, {2:5.3f}), HDM {3:3.1f}\u00B0'.format(mag_x * 100, mag_y * 100, mag_z * 100, heading))
     # print('')
     if keep_listening:
         time.sleep(1.0)
