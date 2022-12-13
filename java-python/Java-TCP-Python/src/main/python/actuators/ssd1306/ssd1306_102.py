@@ -74,8 +74,21 @@ draw.text(
 oled.image(image)
 oled.show()
 
-# Wait
+# Wait 3 sec
 time.sleep(3)
+
+for i in range(5):
+    text = f"Still {5 - i} s..."
+    (font_width, font_height) = font.getsize(text)
+    draw.text(
+        (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
+        text,
+        font=font,
+        fill=255,
+    )
+    oled.image(image)
+    oled.show()
+    time.sleep(1)
 
 oled.fill(0)
 oled.show()
