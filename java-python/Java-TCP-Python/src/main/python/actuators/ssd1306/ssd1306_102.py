@@ -14,15 +14,16 @@ import board
 import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
+import time
 
 # Define the Reset Pin
 oled_reset = digitalio.DigitalInOut(board.D4)
 
 # Change these
 # to the right size for your display!
-WIDTH = 128
-HEIGHT = 32  # Change to 64 if needed
-BORDER = 5
+WIDTH: int = 128
+HEIGHT: int = 32  # Change to 64 if needed
+BORDER: int = 5
 
 # Use for I2C.
 i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -46,6 +47,9 @@ image = Image.new("1", (oled.width, oled.height))
 # Get drawing object to draw on image.
 draw = ImageDraw.Draw(image)
 
+# Wait
+time.sleep(3)
+
 # Draw a white background
 draw.rectangle((0, 0, oled.width, oled.height), outline=255, fill=255)
 
@@ -60,7 +64,7 @@ draw.rectangle(
 font = ImageFont.load_default()
 
 # Draw Some Text
-text = "Hello World!"
+text: str = "Hello SSD1306!"
 (font_width, font_height) = font.getsize(text)
 draw.text(
     (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
