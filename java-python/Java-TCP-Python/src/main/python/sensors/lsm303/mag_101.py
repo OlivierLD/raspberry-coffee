@@ -26,7 +26,8 @@ while keep_listening:
     heading: float = math.degrees(math.atan2(mag_y, mag_x))
     while heading < 0:
         heading += 360
-    print('Magnetometer (gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), heading {3:3.3f}'.format(mag_x, mag_y, mag_z, heading))
+    print('Magnetometer (gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), heading {3:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, heading))
     # print('')
-    time.sleep(1.0)
+    if keep_listening:
+        time.sleep(1.0)
 print("Bye!")
