@@ -86,6 +86,7 @@ for i in range(5):
         font=font,
         fill=255,
     )
+    oled.fill(0)
     oled.image(image)
     oled.show()
     time.sleep(1)
