@@ -3,10 +3,9 @@
 """
 A TCP server.
 
-Produces a json object, from the data read from a BMP180,
+Produces a json object, from the data read from a LSM303 Magnetometer,
 on user's request. See method produce_result.
-Supports requests like "GET_BMP180", "STATUS"
-
+Supports requests like "GET_LSM303_MAG", "STATUS"
 """
 
 import sys
@@ -17,13 +16,17 @@ import threading
 import traceback
 import json
 import platform
+import board
 from datetime import datetime, timezone
 from typing import List
-import Adafruit_BMP.BMP085 as BMP085  # also fits the BMP180
+import busio
+import adafruit_lsm303dlh_mag
+
 
 
 keep_listening: bool = True
-sensor: BMP085.BMP085
+# print(f"Board/I2C is a {type(i2c)}")
+sensor: adafruit_lsm303dlh_mag.LSM303DLH_Mag = adafruit_lsm303dlh_mag.LSM303DLH_Mag(i2c)
 
 HOST: str = "127.0.0.1"  # Standard loopback interface address (localhost). Set to actual IP or name (from CLI) to make it reacheable from outside.
 PORT: int = 7001         # Port to listen on (non-privileged ports are > 1023)
@@ -48,16 +51,12 @@ def interrupt(signal, frame):
 nb_clients: int = 0
 
 
-def produce_BMP180_Data(sensor: BMP085.BMP085) -> str:
-    temperature: float = sensor.read_temperature()  # Celsius
-    pressure: float = sensor.read_pressure()  # Pa
-    altitude: float = sensor.read_altitude()  # meters
-    sea_level_pressure: float = sensor.read_sealevel_pressure()
+def produce_LSM303_MAG_Data(sensor: adafruit_lsm303dlh_mag.LSM303DLH_Mag) -> str:
+    mag_x, mag_y, mag_z = sensor.magnetic
     data: dict = {
-        "temperature": temperature,
-        "pressure": pressure,
-        "altitude": altitude,
-        "sea-level-pressure": sea_level_pressure
+        "mag_x": mag_x,
+        "mag_y": mag_y,
+        "mag_z": mag_z
     }
     data_str: str = json.dumps(data) + DATA_EOS  # DATA_EOS is important, the client does a readLine !
     return data_str
@@ -83,8 +82,8 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
         users_input: bytes = connection.recv(1024)   # If receive from client is needed... Blocking statement.
         client_mess: str = f"{users_input.decode('utf-8')}".strip().upper()
         data_str: str = ""
-        if client_mess == "GET_BMP180":
-            data_str = produce_BMP180_Data(sensor)
+        if client_mess == "GET_LSM303_MAG":
+            data_str = produce_LSM303_MAG_Data(sensor)
         elif client_mess == "STATUS":
             data_str = produce_status()
         # elif client_mess == "":
@@ -146,7 +145,8 @@ def main(args: List[str]) -> None:
         print("-------------------------------------")
 
     signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
-    sensor = BMP085.BMP085(busnum=1)
+    i2c: busio.I2C = board.I2C()  # uses board.SCL and board.SDA
+    sensor = adafruit_lsm303dlh_mag.LSM303DLH_Mag(i2c)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if verbose:
