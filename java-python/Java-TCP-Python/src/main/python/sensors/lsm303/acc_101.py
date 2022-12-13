@@ -9,5 +9,5 @@ while True:
     acc_x, acc_y, acc_z = sensor.acceleration
 
     print('Acceleration (m/s^2): ({0:10.3f}, {1:10.3f}, {2:10.3f})'.format(acc_x, acc_y, acc_z))
-    print('')
+    # print('')
     time.sleep(1.0)
