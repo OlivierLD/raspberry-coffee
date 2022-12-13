@@ -4,11 +4,13 @@ import math
 import signal
 import adafruit_lsm303dlh_mag
 #
-# 1 Tesla = 10000 Gauss
+# 1 Gauss = 100 microTesla
+# 1 T = 10^4 G
 #
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = adafruit_lsm303dlh_mag.LSM303DLH_Mag(i2c)
+print(f"sensor is a {type(sensor)}")
 
 keep_listening: bool = True
 

@@ -1,4 +1,4 @@
-# BMP180
+# BMP180 - Pressure and Temperature sensor
 > Warning: This sensor has been discontinued. Replaced by a `BMP085`, that works the same way (with the same code).
 
 To get started, for Raspberry Pi wiring, see <https://learn.adafruit.com/using-the-bmp085-with-raspberry-pi>.  
