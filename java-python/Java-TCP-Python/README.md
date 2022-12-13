@@ -108,6 +108,8 @@ User Request > .
 (tcp.clients.SimpleTCPClient) Client exiting
 $
 ```
+Same server is available for `LSM303`.   
+Also try the `LISTOP` request.
 
 ### Python Server, Python Client(s)
 Shows how a two-way communication can work, asynchronously.  

@@ -5,7 +5,7 @@ A TCP server.
 
 Produces a json object, from the data read from a BMP180,
 on user's request. See method produce_result.
-Supports requests like "GET_BMP180", "STATUS"
+Supports requests like "GET_BMP180", "STATUS", "LISTOP"
 
 """
 
@@ -63,6 +63,19 @@ def produce_BMP180_Data(sensor: BMP085.BMP085) -> str:
     return data_str
 
 
+def produce_listop() -> str:
+    oplist: List[str] = [
+        "LISTOP",
+        "STATUS",
+        "GET_BMP180"
+    ]
+    message: dict = {
+        "operations": oplist
+    }
+    payload: str = json.dumps(message) + DATA_EOS
+    return payload
+
+
 def produce_status() -> str:
     global nb_clients
     message: dict = {
@@ -85,6 +98,8 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
         data_str: str = ""
         if client_mess == "GET_BMP180":
             data_str = produce_BMP180_Data(sensor)
+        elif client_mess == "LISTOP":
+            data_str = produce_listop()
         elif client_mess == "STATUS":
             data_str = produce_status()
         # elif client_mess == "":
