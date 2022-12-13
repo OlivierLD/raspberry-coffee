@@ -2,8 +2,13 @@
 echo -e "+----------------+"
 echo -e "| Machine status |"
 echo -e "+----------------+"
-echo -e "Temp $(/opt/vc/bin/vcgencmd measure_temp)"
-echo -e "Core Voltage $(/opt/vc/bin/vcgencmd measure_volts core)"
+VCGENCMD=/opt/vc/bin/vcgencmd
+if [[ -f ${VCGENCMD} ]]; then
+  echo -e "Temp $(/opt/vc/bin/vcgencmd measure_temp)"
+  echo -e "Core Voltage $(/opt/vc/bin/vcgencmd measure_volts core)"
+else
+  echo -e "${VCGENCMD} not available."
+fi
 echo -e "UName: $(uname -a | awk '{print $2}')"
 echo -e "IP: $(hostname -I | cut -d' ' -f1)"
 echo -e "CPU Load: $(top -bn1 | grep load | awk '{printf "CPU Load: %.2f%%", $(NF-2)*100}')"

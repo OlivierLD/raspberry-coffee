@@ -314,6 +314,8 @@ public class BMP180 {
 
 	// Just for tests
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+		System.out.println("--- Starting Test ---");
+
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		BMP180 sensor = new BMP180();
 		float press = 0;
@@ -340,7 +342,7 @@ public class BMP180 {
 			ex.printStackTrace();
 		}
 
-		System.out.println("Temperature: " + NF.format(temp) + " C");
+		System.out.println("Temperature: " + NF.format(temp) + "\272C");
 		System.out.println("Pressure   : " + NF.format(press / 100) + " hPa");
 		System.out.println("Altitude   : " + NF.format(alt) + " m");
 		// Bonus : CPU Temperature
@@ -350,7 +352,9 @@ public class BMP180 {
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
 		} catch (IOException e) {
+			System.err.println("Get CPU data:" + e.getMessage());
 			e.printStackTrace();
 		}
+		System.out.println("--- End of Test ---");
 	}
 }

@@ -4,7 +4,7 @@ PI4j-v1 is now deprecated, because of the deprecation of WiringPi.
 Depending on third-party software is risky, as when it goes deprecated, you have to re-write whatever depends on it...
 
 Possibilities - among many others - could be (the list is not closed!):
-- [PI4J-v2](https://github.com/Pi4J/pi4j-v2/)
+- [PI4J-v2](https://github.com/Pi4J/pi4j-v2/) - Requires JDK 11.
 - [diozero](https://github.com/mattjlewis/diozero)
 - [JOB](https://github.com/OlivierLD/JOB)
 - [Using a bridge between Java and Python, using TCP ?](../../java-python/README.md)
