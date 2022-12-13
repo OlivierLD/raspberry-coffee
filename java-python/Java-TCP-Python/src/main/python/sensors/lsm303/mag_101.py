@@ -1,12 +1,27 @@
 import time
 import board
 import math
+import signal
 import adafruit_lsm303dlh_mag
 
 i2c = board.I2C()  # uses board.SCL and board.SDA
 sensor = adafruit_lsm303dlh_mag.LSM303DLH_Mag(i2c)
 
-while True:
+keep_listening: bool = True
+
+
+def interrupt(signal, frame):
+    global keep_listening
+    print("\nCtrl+C intercepted!")
+    keep_listening = False
+    time.sleep(1.5)
+    print("Exiting.")
+    # sys.exit()   # DTC
+
+
+signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
+
+while keep_listening:
     mag_x, mag_y, mag_z = sensor.magnetic
     heading: float = math.degrees(math.atan2(mag_y, mag_x))
     while heading < 0:
@@ -14,3 +29,4 @@ while True:
     print('Magnetometer (gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), heading {3:3.3f}'.format(mag_x, mag_y, mag_z, heading))
     # print('')
     time.sleep(1.0)
+print("Bye!")
