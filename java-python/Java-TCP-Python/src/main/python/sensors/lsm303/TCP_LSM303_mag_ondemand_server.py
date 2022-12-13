@@ -5,7 +5,7 @@ A TCP server.
 
 Produces a json object, from the data read from a LSM303 Magnetometer,
 on user's request. See method produce_result.
-Supports requests like "GET_LSM303_MAG", "STATUS"
+Supports requests like "LISTOP", "GET_LSM303_MAG", "STATUS"
 """
 
 import sys
@@ -62,6 +62,16 @@ def produce_LSM303_MAG_Data(sensor: adafruit_lsm303dlh_mag.LSM303DLH_Mag) -> str
     return data_str
 
 
+def produce_listop() -> str:
+    message: List[str] = [
+        "LISTOP",
+        "STATUS",
+        "GET_LSM303_MAG"
+    ]
+    payload: str = json.dumps(message) + DATA_EOS
+    return payload
+
+
 def produce_status() -> str:
     global nb_clients
     message: dict = {
@@ -84,6 +94,8 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
         data_str: str = ""
         if client_mess == "GET_LSM303_MAG":
             data_str = produce_LSM303_MAG_Data(sensor)
+        elif client_mess == "LISTOP":
+            data_str = produce_listop()
         elif client_mess == "STATUS":
             data_str = produce_status()
         # elif client_mess == "":

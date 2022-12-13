@@ -89,7 +89,8 @@ $ python src/main/python/sensors/bmp180/TCP_BMP180_ondemand_server.py --machine-
 ```
 Start the Java client:
 ```
-$ ./start.tcp.client.sh --port:7001 --host:192.168.1.105(tcp.clients.SimpleTCPClient) Port now set to 7001
+$ ./start.tcp.client.sh --port:7001 --host:192.168.1.105
+(tcp.clients.SimpleTCPClient) Port now set to 7001
 (tcp.clients.SimpleTCPClient) Enter '.' at the prompt to stop. Any non-empty string otherwise.
 User Request > STATUS
 Client sending message: STATUS
