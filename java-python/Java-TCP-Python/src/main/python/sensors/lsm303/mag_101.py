@@ -32,13 +32,13 @@ signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
 
 while keep_listening:
     mag_x, mag_y, mag_z = sensor.magnetic
-    norm: float = math.sqrt(mag_x ** 2 + mag_y **2 + mag_z ** 2)
+    norm: float = math.sqrt(mag_x ** 2 + mag_y ** 2 + mag_z ** 2)
     # print(f"mag_x:{type(mag_x)}, mag_y:{type(mag_y)}, mag_z:{type(mag_z)}")
     heading: float = math.degrees(math.atan2(mag_y, mag_x))
     while heading < 0:
         heading += 360
     # print('Magnetometer (Gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), HDM {3:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, heading))
-    print('Magnetometer (\u03BCT): ({0:5.3f}, {1:5.3f}, {2:5.3f}), norm {3:6.3f}, HDM {4:3.1f}\u00B0'.format(mag_x * 100, mag_y * 100, mag_z * 100, norm, heading))
+    print('Magnetometer (\u03BCT): ({0:5.3f}, {1:5.3f}, {2:5.3f}), norm {3:6.3f}, HDM {4:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, norm, heading))
     # print('')
     if keep_listening:
         time.sleep(1.0)
