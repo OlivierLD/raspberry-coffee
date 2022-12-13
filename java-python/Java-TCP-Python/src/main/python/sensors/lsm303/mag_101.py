@@ -8,6 +8,8 @@ import adafruit_lsm303dlh_mag
 # 1 Gauss = 100 microTesla
 # 1 T = 10^4 G
 #
+# Note: This is the same code (and same I2C address, 0x1E) for the HMC5883L
+#
 
 i2c: busio.I2C = board.I2C()  # uses board.SCL and board.SDA
 # print(f"Board/I2C is a {type(i2c)}")
