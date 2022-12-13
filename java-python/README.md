@@ -13,6 +13,8 @@ This also means that you _do depend_ on the stability and availability of those 
 Typically, PI4J-v1 itself depends on WiringPi, that has itself been recently deprecated... Ooch.    
 Now you have to re-write your drivers 😩.
 
+Also, PI4J-v2 requires JDK 11, and it sounds like PI4J-v1 seems to prefer JDK 8 (issues with JDK 11 when reading sensors...)
+
 To avoid this mis-fortune, we could try to establish a (two-way) communication
 between Python and Java... If it works, it also allows you not to re-write the drivers from Python to Java.
 

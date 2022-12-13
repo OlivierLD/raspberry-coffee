@@ -17,15 +17,20 @@ Let's see if we can come up with some scaffolding for this structure.
 
 ## Examples
 As opposed to HTTP, TCP is a connected protocol.  
-An HTTP request works like this: 
+A _single_ HTTP request works like this: 
 - connect to the server
 - make a request
 - get the response
-- disconnect from the server
+- disconnect from the server  
+
+Every HTTP request generates a new connection-disconnection.
 
 A TCP client would connect to the server; once connected, it can make requests, and/or get responses.
 And this until the client explicitly disconnects.  
 See [here](https://realpython.com/python-sockets/#tcp-sockets), good Real-Python document.
+
+> Theorically, a TCP server should be able to manage several clients. This is probably a good thing, but it might not always be a requirement here. 
+> But we'll need to be careful.
 
 ### All Java (Java Server, Java Client(s))
 This is a simple client-server duo. They both exchange _lines_ (finished with a NL).

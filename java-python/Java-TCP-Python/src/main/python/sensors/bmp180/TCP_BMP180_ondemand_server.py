@@ -17,7 +17,7 @@ import json
 import platform
 from datetime import datetime, timezone
 from typing import List
-import Adafruit_BMP.BMP085 as BMP085
+import Adafruit_BMP.BMP085 as BMP085  # also fits the BMP180
 
 
 keep_listening: bool = True

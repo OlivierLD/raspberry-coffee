@@ -288,7 +288,7 @@ public class BMP180 {
 			System.out.println("DBG: X1 = " + X1);
 			System.out.println("DBG: X2 = " + X2);
 		}
-		p = p + ((X1 + X2 + 3791) >> 4);
+		p = p + ((X1 + X2 + 3_791) >> 4);
 		if (verbose) {
 			System.out.println("DBG: Pressure = " + p + " Pa");
 		}
