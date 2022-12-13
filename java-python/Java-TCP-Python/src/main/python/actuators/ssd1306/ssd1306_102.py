@@ -101,3 +101,4 @@ for i in range(5):
 
 oled.fill(BLACK)
 oled.show()
+print("Bye!")
