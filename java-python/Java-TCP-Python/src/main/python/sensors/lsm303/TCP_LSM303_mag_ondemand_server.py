@@ -63,11 +63,14 @@ def produce_LSM303_MAG_Data(sensor: adafruit_lsm303dlh_mag.LSM303DLH_Mag) -> str
 
 
 def produce_listop() -> str:
-    message: List[str] = [
+    oplist: List[str] = [
         "LISTOP",
         "STATUS",
         "GET_LSM303_MAG"
     ]
+    message: dict = {
+        "operations": oplist
+    }
     payload: str = json.dumps(message) + DATA_EOS
     return payload
 
