@@ -12,6 +12,7 @@ not support PIL/pillow (python imaging library)!
 
 import board
 import digitalio
+import PIL
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
 import time
