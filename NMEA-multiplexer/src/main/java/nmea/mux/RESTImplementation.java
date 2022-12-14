@@ -1444,12 +1444,12 @@ public class RESTImplementation {
 							String[] devFilters = null;
 							String[] senFilters = null;
 							if (deviceFilters != null && deviceFilters.size() > 0 && deviceFilters.get(0).length() > 0) {
-								List<String> devList = deviceFilters.stream().map(df -> df.trim()).collect(Collectors.toList());
+								List<String> devList = deviceFilters.stream().map(String::trim).collect(Collectors.toList());
 								devFilters = new String[devList.size()];
 								devFilters = devList.toArray(devFilters);
 							}
 							if (sentenceFilters != null && sentenceFilters.size() > 0 && sentenceFilters.get(0).length() > 0) {
-								List<String> senList = sentenceFilters.stream().map(df -> df.trim()).collect(Collectors.toList());
+								List<String> senList = sentenceFilters.stream().map(String::trim).collect(Collectors.toList());
 								senFilters = new String[senList.size()];
 								senFilters = senList.toArray(senFilters);
 							}
@@ -1914,7 +1914,7 @@ public class RESTImplementation {
 				return response;
 			}
 		}
-		switch (type) {
+		switch (type) { // TODO More cases, for TW only...
 			case "tw-current":
 				ExtraDataComputer.ComputerBean twJson = new Gson().fromJson(new String(request.getContent()), ExtraDataComputer.ComputerBean.class);
 				opComputer = nmeaDataComputers.stream()
@@ -2312,7 +2312,7 @@ public class RESTImplementation {
 					((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Usually useless for the client, drop it.
 					if (tiny || txt) {
 						REMOVE_WHEN_TINY.stream()
-								.forEach(member -> ((JsonObject) _jsonElement).remove(member));
+								.forEach(((JsonObject) _jsonElement)::remove);
 					}
 					jsonElement = _jsonElement; // Same as above
 				}
@@ -2391,15 +2391,15 @@ public class RESTImplementation {
 			double hum = 0, press = 0, airTemp = 0;
 			try {
 				hum = ((JsonObject) jsonElement).get(NMEADataCache.RELATIVE_HUMIDITY).getAsDouble();
-			} catch (Exception aborb) {
+			} catch (Exception absorb) {
 			}
 			try {
 				press = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.BARO_PRESS).get("pressure").getAsDouble();
-			} catch (Exception aborb) {
+			} catch (Exception absorb) {
 			}
 			try {
 				airTemp = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.AIR_TEMP).get("temperature").getAsDouble();
-			} catch (Exception aborb) {
+			} catch (Exception absorb) {
 			}
 
 			content = String.format(
