@@ -45,8 +45,7 @@
 		</td>
 		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
 			<!-- Heading -->
-			<div id="svg-hdg" style="text-align: center;">
-			</div>
+			<div id="svg-hdg" style="text-align: center;"></div>
 		</td>
 		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
 			<div style="font-size: 2em;">App. Wind</div>
@@ -56,11 +55,11 @@
 			</div>
 		</td>
 		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
-			<div style="border: 0px solid silver;">
+			<div style="border: 0px solid silver; display: grid; grid-template-columns: auto auto;">
 				<span style="text-align: left; font-size: 2em; color: white;">Depth</span>
 				<span id="dbt" style="text-align: right; font-size: 3em; color: yellow;">-.- m</span>
 			</div>
-			<div style="border: 0px solid silver;">
+			<div style="border: 0px solid silver; display: grid; grid-template-columns: auto auto;">
 				<span style="text-align: left; font-size: 2em; color: white;">Temp.</span>
 				<span id="wt" style="text-align: right; font-size: 3em; color: yellow;">-.- &deg;C</span>
 			</div>
@@ -89,11 +88,11 @@
 			</div>
 		</td>
 		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
-			<div style="border: 0px solid silver;">
+			<div style="border: 0px solid silver; display: grid; grid-template-columns: auto auto;">
 				<span style="text-align: left; font-size: 2em; color: white;">VMG</span>
-				<span id="vmg" style="text-align: right; font-size: 3em; color: yellow;">-.- kt</span>
+				<span id="vmg" style="text-align: right; font-size: 3em; color: yellow;" title="On Wind">-.- kt</span>
 			</div>
-			<div style="border: 0px solid silver;">
+			<div style="border: 0px solid silver; display: grid; grid-template-columns: auto auto;">
 				<span style="text-align: left; font-size: 2em; color: white;">Force</span>
 				<span id="beaufort" style="text-align: right; font-size: 3em; color: yellow;">- Beaufort</span>
 			</div>
@@ -418,13 +417,17 @@
 		// console.log(`HDG: ${val}`);
 	});
 	events.subscribe('vmg', val => {
-		console.log(`VMG: ${JSON.stringify(val)}`);
+		if (val.onwind) {
+			document.getElementById('vmg').innerHTML = val.onwind.toFixed(1) + ' kt';
+		} else {
+			console.log(`VMG: ${JSON.stringify(val)}`);
+		}
 	});
 	events.subscribe('wt', val => {
 		document.getElementById('wt').innerHTML = val.toFixed(1) + '&deg;C';
 	});
 	events.subscribe('dbt', val => {
-		document.getElementById('dbt').innerHTML = val.toFixed(1) + 'm';
+		document.getElementById('dbt').innerHTML = val.toFixed(1) + ' m';
 	});
 
 	let lpad = (str, len, pad) => {

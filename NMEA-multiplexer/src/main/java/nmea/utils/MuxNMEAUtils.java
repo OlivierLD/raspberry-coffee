@@ -174,6 +174,8 @@ public class MuxNMEAUtils {
             cache.put(NMEADataCache.CDR, new Angle360(cr[0]));
             cache.put(NMEADataCache.CSP, new Speed(cr[1]));
         }
+
+        calculateVMGs(cache);
     }
 
     public static void calculateVMGs(NMEADataCache cache) {
