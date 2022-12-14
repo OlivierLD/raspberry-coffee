@@ -5,7 +5,7 @@ A TCP server.
 
 Produces a json object, from the data read from a BMP180,
 on user's request. See method produce_result.
-Supports requests like "GET_BMP180", "STATUS", "LISTOP"
+Supports requests like "MANAGE_SSD1306", "STATUS", "LISTOP"
 
 """
 
@@ -19,11 +19,20 @@ import json
 import platform
 from datetime import datetime, timezone
 from typing import List
-import Adafruit_BMP.BMP085 as BMP085  # also fits the BMP180
+import board
+import digitalio
+import busio
+import PIL
+from PIL import Image, ImageDraw, ImageFont
+import adafruit_ssd1306
 
 
 keep_listening: bool = True
-sensor: BMP085.BMP085
+oled_screen: adafruit_ssd1306.SSD1306_I2C
+image: PIL.Image.Image
+draw: PIL.ImageDraw.ImageDraw
+font: PIL.ImageFont.ImageFont
+
 
 HOST: str = "127.0.0.1"  # Standard loopback interface address (localhost). Set to actual IP or name (from CLI) to make it reacheable from outside.
 PORT: int = 7001         # Port to listen on (non-privileged ports are > 1023)
@@ -34,6 +43,13 @@ PORT_PRM_PREFIX: str = "--port:"
 VERBOSE_PREFIX: str = "--verbose:"
 
 DATA_EOS: str = "\r\n"  # aka CR-LF
+# Change these to the right size for your display!
+WIDTH: int = 128
+HEIGHT: int = 32  # Change to 64 if needed
+BORDER: int = 5
+
+WHITE: int = 255
+BLACK: int = 0
 
 
 def interrupt(signal, frame):
@@ -48,26 +64,45 @@ def interrupt(signal, frame):
 nb_clients: int = 0
 
 
-def produce_BMP180_Data(sensor: BMP085.BMP085) -> str:
-    temperature: float = sensor.read_temperature()  # Celsius
-    pressure: float = sensor.read_pressure()  # Pa
-    altitude: float = sensor.read_altitude()  # meters
-    sea_level_pressure: float = sensor.read_sealevel_pressure()
+def clear_screen(oled: adafruit_ssd1306.SSD1306_I2C) -> None:
+    oled.fill(BLACK)
+    oled.show()
+
+
+def display_SSD1306_Data(oled: adafruit_ssd1306.SSD1306_I2C, text: str) -> str:
+    global draw
+    global font
+    
+    draw.rectangle((0, 0, oled.width, oled.height), outline=BLACK, fill=BLACK)
+    (font_width, font_height) = font.getsize(text)
+    draw.text(
+        (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
+        text,
+        font=font,
+        fill=WHITE,
+    )
+    #  cls
+    oled.fill(BLACK)
+    oled.show()
+    # new display
+    oled.image(image)
+    oled.show()
+
     data: dict = {
-        "temperature": temperature,
-        "pressure": pressure,
-        "altitude": altitude,
-        "sea-level-pressure": sea_level_pressure
+        "status": "OK"
     }
     data_str: str = json.dumps(data) + DATA_EOS  # DATA_EOS is important, the client does a readLine !
     return data_str
+
+
+DISPLAY_REQUEST_PREFIX: str = "DISPLAY_SSD1306:"
 
 
 def produce_listop() -> str:
     oplist: List[str] = [
         "LISTOP",
         "STATUS",
-        "GET_BMP180"
+        DISPLAY_REQUEST_PREFIX + "{ 'str': 'XXXX' }"
     ]
     message: dict = {
         "operations": oplist
@@ -90,14 +125,16 @@ def produce_status() -> str:
 
 def produce_result(connection: socket.socket, address: tuple) -> None:
     global nb_clients
-    global sensor
+    global oled_screen
 
     while True:
         users_input: bytes = connection.recv(1024)   # If receive from client is needed... Blocking statement.
-        client_mess: str = f"{users_input.decode('utf-8')}".strip().upper()
+        client_mess: str = f"{users_input.decode('utf-8')}".strip()  # .upper()
         data_str: str = ""
-        if client_mess == "GET_BMP180":
-            data_str = produce_BMP180_Data(sensor)
+        if client_mess[:len(DISPLAY_REQUEST_PREFIX)] == DISPLAY_REQUEST_PREFIX:
+            display_data = client_mess[len(DISPLAY_REQUEST_PREFIX):]
+            json_str: dict = json.loads(display_data)
+            data_str = display_SSD1306_Data(oled_screen, json_str['str'])
         elif client_mess == "LISTOP":
             data_str = produce_listop()
         elif client_mess == "STATUS":
@@ -138,7 +175,10 @@ def main(args: List[str]) -> None:
     global PORT
     global verbose
     global nb_clients
-    global sensor
+    global oled_screen
+    global image
+    global draw
+    global font
 
     print("Usage is:")
     print(
@@ -161,7 +201,21 @@ def main(args: List[str]) -> None:
         print("-------------------------------------")
 
     signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
-    sensor = BMP085.BMP085(busnum=1)
+
+    # Define the Reset Pin
+    oled_reset = digitalio.DigitalInOut(board.D4)
+
+    # Use for I2C.
+    i2c: busio.I2C = board.I2C()  # uses board.SCL and board.SDA
+    # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
+    oled_screen = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3C, reset=oled_reset)
+    # Create blank image for drawing.
+    # Make sure to create image with mode '1' for 1-bit color.
+    image: PIL.Image.Image = Image.new("1", (oled_screen.width, oled_screen.height))
+
+    # Get drawing object to draw on image.
+    draw: PIL.ImageDraw.ImageDraw = ImageDraw.Draw(image)
+    font: PIL.ImageFont.ImageFont = ImageFont.load_default()
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if verbose:
