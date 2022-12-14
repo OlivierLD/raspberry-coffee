@@ -32,6 +32,8 @@ BLACK: int = 0
 i2c = board.I2C()  # uses board.SCL and board.SDA
 # i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
 oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3C, reset=oled_reset)
+print(f"Oled is a {type(oled)}")
+
 
 # Use for SPI
 # spi = board.SPI()
@@ -46,9 +48,11 @@ oled.show()
 # Create blank image for drawing.
 # Make sure to create image with mode '1' for 1-bit color.
 image = Image.new("1", (oled.width, oled.height))
+print(f"Image is a {type(image)}")
 
 # Get drawing object to draw on image.
 draw = ImageDraw.Draw(image)
+print(f"Draw is a {type(draw)}")
 
 # Draw a white background
 draw.rectangle((0, 0, oled.width, oled.height), outline=WHITE, fill=WHITE)
@@ -62,6 +66,7 @@ draw.rectangle(
 
 # Load default font.
 font = ImageFont.load_default()
+print(f"Font is a {type(font)}")
 
 # Draw Some Text
 text: str = "Hello SSD1306!"
