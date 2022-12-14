@@ -140,7 +140,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
         users_input: bytes = connection.recv(1024)   # If receive from client is needed... Blocking statement.
         client_mess: str = f"{users_input.decode('utf-8')}".strip()  # .upper()
         data_str: str = ""
-        if client_mess[:len(DISPLAY_REQUEST_PREFIX)] == DISPLAY_REQUEST_PREFIX:
+        if client_mess[:len(DISPLAY_REQUEST_PREFIX)].upper() == DISPLAY_REQUEST_PREFIX:
             display_data = client_mess[len(DISPLAY_REQUEST_PREFIX):]
             json_str: dict = json.loads(display_data)
             data_str = display_SSD1306_Data(oled_screen, json_str['str'])
