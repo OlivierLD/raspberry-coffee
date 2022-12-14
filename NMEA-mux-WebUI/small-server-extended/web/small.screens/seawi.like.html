@@ -155,9 +155,9 @@
 	 * @param force Optional. Used for wind (Beaufort)
 	 * @returns {{svgContent: SVGSVGElement, x: number, y: number}} if divId is undefined.
 	 */
-	let drawArrow = (divId, dir) => {
+	let drawArrow = (divId, dir, color) => {
 		let label = '';
-		let fillColor = 'yellow';
+		let fillColor = color ? color : 'silver';
 		let direction;  // = dir; //  + 180;
 		if (typeof(dir) === 'number') {
 			direction = dir - 180;
@@ -237,7 +237,7 @@
 		let text = document.createElementNS(XMLNS, 'text');
 		text.setAttributeNS(null, 'x', '10');
 		text.setAttributeNS(null, 'y', '25');
-		text.setAttributeNS(null, 'font-size', '16');
+		text.setAttributeNS(null, 'font-size', '12');
 		text.setAttributeNS(null, 'font-weight', 'bold');
 		text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
 		text.setAttributeNS(null, 'fill', 'white'); // 'rgba(255, 244, 255, 0.75)');
@@ -418,7 +418,7 @@
 	});
 	events.subscribe('hdg', val => {
 		document.getElementById('hdg').innerHTML = val.toFixed(0) + '&deg;';
-		drawArrow('svg-hdg', val);
+		drawArrow('svg-hdg', val, 'yellow');
 		// console.log(`HDG: ${val}`);
 	});
 	events.subscribe('vmg', val => {
@@ -489,7 +489,7 @@
 	window.onload = () => {
 		initAjax();
 
-		// drawArrow('svg-hdg', 10);
+		drawArrow('svg-hdg', 180);
 	}
 </script>
 
