@@ -72,7 +72,7 @@ def clear_screen(oled: adafruit_ssd1306.SSD1306_I2C) -> None:
 def display_SSD1306_Data(oled: adafruit_ssd1306.SSD1306_I2C, text: str) -> str:
     global draw
     global font
-    
+
     draw.rectangle((0, 0, oled.width, oled.height), outline=BLACK, fill=BLACK)
     (font_width, font_height) = font.getsize(text)
     draw.text(
@@ -211,11 +211,11 @@ def main(args: List[str]) -> None:
     oled_screen = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3C, reset=oled_reset)
     # Create blank image for drawing.
     # Make sure to create image with mode '1' for 1-bit color.
-    image: PIL.Image.Image = Image.new("1", (oled_screen.width, oled_screen.height))
+    image = Image.new("1", (oled_screen.width, oled_screen.height))
 
     # Get drawing object to draw on image.
-    draw: PIL.ImageDraw.ImageDraw = ImageDraw.Draw(image)
-    font: PIL.ImageFont.ImageFont = ImageFont.load_default()
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default()
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if verbose:
