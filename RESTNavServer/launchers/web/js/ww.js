@@ -27,9 +27,13 @@ var DEFAULT_TIMEOUT = 120000;
 //	lat:   37.7489,
 //	lng: -122.5070
 //};
-var position = { // Vannes
+//var position = { // Vannes
+//	lat: 47.661667,
+//	lng: -2.758167
+//};
+var position = { // Belz
 	lat: 47.661667,
-	lng: -2.758167
+	lng: -3.135667
 };
 
 const MINUTE = 60000; // in ms.
