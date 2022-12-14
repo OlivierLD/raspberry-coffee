@@ -22,6 +22,12 @@
 			font-family: Verdana, Geneva, Tahoma, sans-serif;
 		}
 
+		.one-cell {
+			border: 1px solid silver; 
+			border-radius: 5px;
+			padding: 0.5em;
+		}
+
 	</style>
 
 	<script type="text/javascript" src="../js/date.proto.js"></script>
@@ -34,27 +40,27 @@
 	SeaWi way
 </h1>
 
-<table style="width: 100%; border: 1px solid silver;">
+<table style="width: 100%; border: 0px solid silver;">
 	<tr>
-		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 30%;">
 			<div style="font-size: 2em;">UTC Time/Date</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="utc-time"></div>
 				<div id="utc-date"></div>
 			</div>
 		</td>
-		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 20%;">
 			<!-- Heading -->
 			<div id="svg-hdg" style="text-align: center;"></div>
 		</td>
-		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 20%;">
 			<div style="font-size: 2em;">App. Wind</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="aws" style="text-align: center;"></div>
 				<div id="awa" style="text-align: center;"></div>
 			</div>
 		</td>
-		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 30%;">
 			<div style="border: 0px solid silver; display: grid; grid-template-columns: auto auto;">
 				<span style="text-align: left; font-size: 2em; color: white;">Depth</span>
 				<span id="dbt" style="text-align: right; font-size: 3em; color: yellow;">-.- m</span>
@@ -66,28 +72,28 @@
 		</td>
 	</tr>
 	<tr>
-		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 30%;">
 			<div style="font-size: 2em;">Position</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="gps-latitude"></div>
 				<div id="gps-longitude"></div>
 			</div>
 		</td>
-		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 20%;">
 			<div style="font-size: 2em;">SOG/COG</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="sog" style="text-align: center;"></div>
 				<div id="cog" style="text-align: center;"></div>
 			</div>
 		</td>
-		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 20%;">
 			<div style="font-size: 2em;">True Wind</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="tws-1" style="text-align: center;"></div>
 				<div id="twa" style="text-align: center;"></div>
 			</div>
 		</td>
-		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 30%;">
 			<div style="border: 0px solid silver; display: grid; grid-template-columns: auto auto;">
 				<span style="text-align: left; font-size: 2em; color: white;">VMG</span>
 				<span id="vmg" style="text-align: right; font-size: 3em; color: yellow;" title="On Wind">-.- kt</span>
@@ -99,24 +105,24 @@
 		</td>
 	</tr>
 	<tr>
-		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 30%;">
 
 		</td>
-		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 20%;">
 			<div style="font-size: 2em;">Speed/Heading</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="bsp" style="text-align: center;"></div>
 				<div id="hdg" style="text-align: center;"></div>
 			</div>
 		</td>
-		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 20%;">
 			<div style="font-size: 2em;">Ground Wind</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="tws-2" style="text-align: center;"></div>
 				<div id="twd" style="text-align: center;"></div>
 			</div>
 		</td>
-		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+		<td class="one-cell" style="width: 30%;">
 			<div style="font-size: 2em;">Wind Rose</div>
 			<div style="color: yellow; font-size: 3em;">
 				<div id="twd-1" style="text-align: center;"></div>
@@ -124,7 +130,6 @@
 			<div style="color: yellow; font-size: 2em; border-radius: 5px;">
 				<div id="twd-2" style="text-align: center; overflow-x: scroll;"></div>
 			</div>
-
 		</td>
 	</tr>
 </table>
