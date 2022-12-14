@@ -69,6 +69,15 @@ def clear_screen(oled: adafruit_ssd1306.SSD1306_I2C) -> None:
     oled.show()
 
 
+def cls_SSD1306(oled: adafruit_ssd1306.SSD1306_I2C) -> str:
+    clear_screen(oled)
+    data: dict = {
+        "status": "CLS OK"
+    }
+    data_str: str = json.dumps(data) + DATA_EOS  # DATA_EOS is important, the client does a readLine !
+    return data_str
+
+
 def display_SSD1306_Data(oled: adafruit_ssd1306.SSD1306_I2C, text: str) -> str:
     global draw
     global font
@@ -82,14 +91,13 @@ def display_SSD1306_Data(oled: adafruit_ssd1306.SSD1306_I2C, text: str) -> str:
         fill=WHITE,
     )
     #  cls
-    oled.fill(BLACK)
-    oled.show()
+    clear_screen(oled)
     # new display
     oled.image(image)
     oled.show()
 
     data: dict = {
-        "status": "OK"
+        "status": "Display OK"
     }
     data_str: str = json.dumps(data) + DATA_EOS  # DATA_EOS is important, the client does a readLine !
     return data_str
@@ -102,7 +110,8 @@ def produce_listop() -> str:
     oplist: List[str] = [
         "LISTOP",
         "STATUS",
-        DISPLAY_REQUEST_PREFIX + "{ 'str': 'XXXX' }"
+        "CLS",
+        DISPLAY_REQUEST_PREFIX + "{ \"str\": \"XXXX\" }"
     ]
     message: dict = {
         "operations": oplist
@@ -135,9 +144,11 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
             display_data = client_mess[len(DISPLAY_REQUEST_PREFIX):]
             json_str: dict = json.loads(display_data)
             data_str = display_SSD1306_Data(oled_screen, json_str['str'])
-        elif client_mess == "LISTOP":
+        elif client_mess.upper() == "CLS":
+            data_str = cls_SSD1306(oled_screen)
+        elif client_mess.upper() == "LISTOP":
             data_str = produce_listop()
-        elif client_mess == "STATUS":
+        elif client_mess.upper() == "STATUS":
             data_str = produce_status()
         # elif client_mess == "":
         #     pass  # ignore
