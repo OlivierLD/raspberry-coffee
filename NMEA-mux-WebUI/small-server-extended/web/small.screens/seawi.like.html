@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<!--
+ | WiP. SeaWi like page
+ |
+ | Should be suitable for a small screen device (tablet, smart-phone, smart-watch...)
+ | Warning: this is not a responsive UI.
+ |
+ +-->
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>SeaWi like</title>
+    <link rel="icon" type="image/png" href="../icons/seawi.png">
+	<style>
+
+		html {
+			display: table;
+			width: 100%;
+			height: 100%;
+			background: black;
+			color: white;
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+		}
+
+	</style>
+
+	<script type="text/javascript" src="../js/date.proto.js"></script>
+	<script type="text/javascript" src="../js/pub.sub.js"></script>
+	<script type="text/javascript" src="../js/ajax.manager.js"></script>
+</head>
+<body>
+
+<h1 style="text-align: left; width: 100%; font-style: normal; text-shadow: 1px 1px 2px black, 0 0 25px white, 0 0 5px silver;">
+	SeaWi way
+</h1>
+
+<table style="width: 100%; border: 1px solid silver;">
+	<tr>
+		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">UTC Time/Date</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="utc-time"></div>
+				<div id="utc-date"></div>
+			</div>
+		</td>
+		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+			<!-- Heading -->
+			<div id="svg-hdg" style="text-align: center;">
+			</div>
+		</td>
+		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">App. Wind</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="aws" style="text-align: center;"></div>
+				<div id="awa" style="text-align: center;"></div>
+			</div>
+		</td>
+		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+			<div style="border: 0px solid silver;">
+				<span style="text-align: left; font-size: 2em; color: white;">Depth</span>
+				<span id="dbt" style="text-align: right; font-size: 3em; color: yellow;">-.- m</span>
+			</div>
+			<div style="border: 0px solid silver;">
+				<span style="text-align: left; font-size: 2em; color: white;">Temp.</span>
+				<span id="wt" style="text-align: right; font-size: 3em; color: yellow;">-.- &deg;C</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">Position</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="gps-latitude"></div>
+				<div id="gps-longitude"></div>
+			</div>
+		</td>
+		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">SOG/COG</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="sog" style="text-align: center;"></div>
+				<div id="cog" style="text-align: center;"></div>
+			</div>
+		</td>
+		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">True Wind</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="tws-1" style="text-align: center;"></div>
+				<div id="twa" style="text-align: center;"></div>
+			</div>
+		</td>
+		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+			<div style="border: 0px solid silver;">
+				<span style="text-align: left; font-size: 2em; color: white;">VMG</span>
+				<span id="vmg" style="text-align: right; font-size: 3em; color: yellow;">-.- kt</span>
+			</div>
+			<div style="border: 0px solid silver;">
+				<span style="text-align: left; font-size: 2em; color: white;">Force</span>
+				<span id="beaufort" style="text-align: right; font-size: 3em; color: yellow;">- Beaufort</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+
+		</td>
+		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">Speed/Heading</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="bsp" style="text-align: center;"></div>
+				<div id="hdg" style="text-align: center;"></div>
+			</div>
+		</td>
+		<td style="width: 20%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">Ground Wind</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="tws-2" style="text-align: center;"></div>
+				<div id="twd" style="text-align: center;"></div>
+			</div>
+		</td>
+		<td style="width: 30%; border: 1px solid silver; border-radius: 5px;">
+			<div style="font-size: 2em;">Wind Rose</div>
+			<div style="color: yellow; font-size: 3em;">
+				<div id="twd-1" style="text-align: center;"></div>
+			</div>
+			<div style="color: yellow; font-size: 2em; border-radius: 5px;">
+				<div id="twd-2" style="text-align: center; overflow-x: scroll;"></div>
+			</div>
+
+		</td>
+	</tr>
+</table>
+
+<script type="text/javascript">
+
+	// XMLNS Required.
+	const XMLNS = "http://www.w3.org/2000/svg";
+	const DEBUG = false;
+
+	if (Math.toRadians === undefined) {
+		Math.toRadians = (deg) => {
+			return deg * (Math.PI / 180);
+		};
+	}
+
+	/**
+	 * Draw a wind direction arrow, using SVG
+	 *
+	 * @param divId ID of the div to draw the arrow in
+	 * @param dir Direction to represent in degrees, number [0..360], or object { value: number, label: 'string' }.
+	 *            label would be like "ENE" when dir is 67.5, for example.
+	 * @param force Optional. Used for wind (Beaufort)
+	 * @returns {{svgContent: SVGSVGElement, x: number, y: number}} if divId is undefined.
+	 */
+	let drawArrow = (divId, dir) => {
+		let label = '';
+		let fillColor = 'yellow';
+		let direction;  // = dir; //  + 180;
+		if (typeof(dir) === 'number') {
+			direction = dir - 180;
+			label += `HDG: ${dir.toFixed(0)}`; // . °`
+		} else {
+			try {
+				direction = dir.value;
+				label += dir.label;
+			} catch (oops) {
+				console.log('Akeu what?')
+				direction = 0;
+			}
+		}
+		let title = null;
+		direction = -direction;
+
+		let parent = (divId !== null) ? document.getElementById(divId) : null;
+		if (title !== null && parent !== null) {
+			parent.setAttribute('title', title);
+		}
+		let frameWidth = 0;
+		let frameHeight = 0;
+		if (parent !== null) {
+			frameWidth = 160; // getComputedStyle(parent).width; // parent.clientWidth; // Math.max(160, parent.clientWidth);
+			frameHeight = 160; // getComputedStyle(parent).height; // Math.max(160, parent.clientHeight);
+		}
+		let svg = document.createElementNS(XMLNS, 'svg');
+		// svg.setAttribute('xmlns', xmlns);
+		svg.setAttributeNS(null, 'width', frameWidth.toString());
+		svg.setAttributeNS(null, 'height', frameHeight.toString());
+		svg.setAttribute('style', 'background-color: transparent; border-radius: 10px; border: 2px solid rgba(128, 128, 128, 0.25);');
+
+		if (parent !== null) {
+			parent.appendChild(svg);
+		}
+
+		let circle = document.createElementNS(XMLNS, 'circle');
+		circle.setAttributeNS(null, 'cx', (frameWidth / 2).toString());
+		circle.setAttributeNS(null, 'cy', (frameHeight / 2).toString());
+		circle.setAttributeNS(null, 'r', '40');
+		circle.setAttributeNS(null, 'stroke', 'rgba(255, 255, 2550, 0.35)');
+		circle.setAttributeNS(null, 'stroke-width', '4');
+		circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 128, 0.15)');
+		svg.appendChild(circle);
+
+		let polygon = document.createElementNS(XMLNS, 'polygon');
+		polygon.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2;`);
+
+		let headX = (frameWidth / 2) + (60 * Math.sin(Math.toRadians(direction)));
+		let headY = (frameHeight / 2) + (60 * Math.cos(Math.toRadians(direction)));
+		let arrow = [{
+			// head
+			x: headX,
+			y: headY
+		}, {
+			// tail - left
+			x: (frameWidth / 2) - (60 * Math.sin(Math.toRadians(direction + 10))),
+			y: (frameHeight / 2) - (60 * Math.cos(Math.toRadians(direction + 10)))
+		}, {
+			// tail - center
+			x: (frameWidth / 2) - (55 * Math.sin(Math.toRadians(direction))),
+			y: (frameHeight / 2) - (55 * Math.cos(Math.toRadians(direction)))
+		}, {
+			// tail - right
+			x: (frameWidth / 2) - (60 * Math.sin(Math.toRadians(direction - 10))),
+			y: (frameHeight / 2) - (60 * Math.cos(Math.toRadians(direction - 10)))
+		}];
+		// Draw polygon points here
+		let points = ""; // `${head.x.toFixed(0)},${head.y.toFixed(0)} ${tailRight.x.toFixed(0)},${tailRight.y.toFixed(0)} ${tail.x.toFixed(0)},${tail.y.toFixed(0)} ${tailLeft.x.toFixed(0)},${tailLeft.y.toFixed(0)}`;
+		arrow.forEach(pt => {
+			points += `${pt.x.toFixed(0)},${pt.y.toFixed(0)} `;
+		});
+		// console.log('Points:' + points.trim());
+		polygon.setAttributeNS(null, 'points', points.trim());
+		svg.appendChild(polygon);
+
+		let text = document.createElementNS(XMLNS, 'text');
+		text.setAttributeNS(null, 'x', '10');
+		text.setAttributeNS(null, 'y', '25');
+		text.setAttributeNS(null, 'font-size', '16');
+		text.setAttributeNS(null, 'font-weight', 'bold');
+		text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
+		text.setAttributeNS(null, 'fill', 'white'); // 'rgba(255, 244, 255, 0.75)');
+		text.appendChild(document.createTextNode(`${label}`));
+		svg.appendChild(text);
+
+		if (parent !== null && DEBUG) {
+			console.log(parent.innerHTML);
+		}
+		//debugger;
+		let svgContent = {x: headX, y: headY, svgContent: svg};
+		if (divId !== undefined) {
+			let svgDiv = document.getElementById(divId);
+			// It's a replace, remove first.
+			let content = svgDiv.firstElementChild;
+			if (content !== null && content !== undefined) {
+				svgDiv.removeChild(content);
+			}
+			svgDiv.appendChild(svg);
+		} else {
+			return svgContent;
+		}
+	};
+
+	const BEAUFORT_SCALE = [
+		// Beaufort Scale, in knots:
+		//  0  1  2  3  4   5   6   7   8   9   10  11  12
+			0, 1, 4, 7, 11, 16, 22, 28, 34, 41, 48, 56, 64
+	];
+
+	let getBeaufort = tws => {
+		let b = 12; // BEAUFORT_SCALE.length - 1 ?
+		for (let i = 0; i < BEAUFORT_SCALE.length; i++) {
+			if (tws < BEAUFORT_SCALE[i]) {
+				b = i - 1;
+				break;
+			}
+		}
+		return b;
+	};
+
+	const SECTORS = [
+		"N",
+		"NNE",
+		"NE",
+		"ENE",
+		"E",
+		"ESE",
+		"SE",
+		"SSE",
+		"S",
+		"SSW",
+		"SW",
+		"WSW",
+		"W",
+		"WNW",
+		"NW",
+		"NNW"
+	];
+	const SECTOR_NAMES = [
+		"North",
+		"North North East",
+		"North East",
+		"East North East",
+		"East",
+		"East South East",
+		"South East",
+		"South South East",
+		"South",
+		"South South West",
+		"South West",
+		"West South West",
+		"West",
+		"West North West",
+		"North West",
+		"North North West"
+	];
+	let getSector = (dir) => {
+		let inc = (360 / SECTORS.length);
+		let index = 0;
+		for (let i=0; i<SECTORS.length; i++) {
+			if ((dir - (i * inc)) < (inc / 2)) {
+				index = i;
+				break;
+			}
+		}
+		return SECTORS[index];
+	};
+
+	let getSectorName = (dir) => {
+		let inc = (360 / SECTOR_NAMES.length);
+		let index = 0;
+		for (let i=0; i<SECTOR_NAMES.length; i++) {
+			if ((dir - (i * inc)) < (inc / 2)) {
+				index = i;
+				break;
+			}
+		}
+		return SECTOR_NAMES[index];
+	};
+	
+	/**
+	 *  EVENT SUBSCRIBERS HERE.
+	 *
+	 * See js/ajax.manager.js
+	 * Note: All event definitions (topic's name) and events payload are defined in ajax.manager.js, method onMessage.
+	 * This is also new topics should be added, if needed.
+	 * Below, topics are subscribed to.
+	 * In ajax.manager.js, this is where data are published to the topics.
+	 * events (aka topics), listeners, publish and subscribe functions are defines in pub.sub.js
+	 */
+	let tws = 0.0;
+	let aws = 0.0;
+	events.subscribe('raw', val => {
+		console.log(`raw: ${JSON.stringify(val, null, 2)}`);
+		// document.getElementById('raw-data').innerHTML = `<pre>${JSON.stringify(val, null, 2)}</pre>`;
+	});
+	events.subscribe('pos', val => {
+		let strLat = decToSex(val.lat, 'NS');
+		let strLng = decToSex(val.lng, 'EW');
+		document.getElementById('gps-latitude').innerHTML = strLat;
+		document.getElementById('gps-longitude').innerHTML = strLng;
+	});
+	events.subscribe('gps-time', val => {
+		// val.format("Y-M-d H:i:s")
+		// let date = gpsTime.format("d-m-Y-l"); // Requires date.proto.js
+		// console.log(`GPS-TIME: ${val.format("Y-M-d H:i:s")}`);
+		let valDate = new Date(val.epoch); // Warning! We need UTC Date !
+		let gpsDate = new Date(valDate.getTime() + (valDate.getTimezoneOffset() * 60000))
+		document.getElementById('utc-date').innerText = gpsDate.format("M d, Y");
+		document.getElementById('utc-time').innerText = gpsDate.format("H:i:s");
+	});
+	events.subscribe('sog', val => {
+		document.getElementById('sog').innerHTML = val.toFixed(1) + ' kt';
+		// console.log(`SOG: ${val}`);
+	});
+	events.subscribe('cog', val => {
+		document.getElementById('cog').innerHTML = val.toFixed(0) + '&deg;';
+		// console.log(`COG: ${val}`);
+	});
+	events.subscribe('bsp', val => {
+		document.getElementById('bsp').innerHTML = val.toFixed(1) + ' kt';
+		// console.log(`BSP: ${val}`);
+	});
+	events.subscribe('awa', val => {
+		let displayStr = val.toFixed(0) + '&deg; Sb';
+		if (val < 0) {
+			displayStr = Math.abs(val).toFixed(0) + '&deg; Pt';
+		}
+		document.getElementById('awa').innerHTML = displayStr;
+		// console.log(`AWA: ${val}`);
+	});
+	events.subscribe('aws', val => {
+		document.getElementById('aws').innerHTML = val.toFixed(1) + ' kt';
+		// console.log(`AWS: ${val}`);
+	});
+	events.subscribe('twa', val => {
+		let displayStr = val.toFixed(0) + '&deg; Sb';
+		if (val < 0) {
+			displayStr = Math.abs(val).toFixed(0) + '&deg; Pt';
+		}
+		document.getElementById('twa').innerHTML = displayStr;
+
+		// console.log(`TWA: ${val}`);
+	});
+	events.subscribe('tws', val => {
+		document.getElementById('tws-1').innerHTML = val.toFixed(1) + ' kt';
+		document.getElementById('tws-2').innerHTML = val.toFixed(1) + ' kt';
+		document.getElementById('beaufort').innerHTML = getBeaufort(val) + ' Beaufort';
+		// console.log(`TWS: ${val}`);
+	});
+	events.subscribe('twd', val => {
+		document.getElementById('twd').innerHTML = val.toFixed(0) + '&deg;';
+		// console.log(`TWD: ${val}`);
+		document.getElementById('twd-1').innerHTML = getSector(val);
+		document.getElementById('twd-2').innerHTML = getSectorName(val);
+
+	});
+	events.subscribe('hdg', val => {
+		document.getElementById('hdg').innerHTML = val.toFixed(0) + '&deg;';
+		drawArrow('svg-hdg', val);
+		// console.log(`HDG: ${val}`);
+	});
+	events.subscribe('vmg', val => {
+		console.log(`VMG: ${JSON.stringify(val)}`);
+	});
+	events.subscribe('wt', val => {
+		document.getElementById('wt').innerHTML = val.toFixed(1) + '&deg;C';
+	});
+	events.subscribe('dbt', val => {
+		document.getElementById('dbt').innerHTML = val.toFixed(1) + 'm';
+	});
+
+	let lpad = (str, len, pad) => {
+		let s = str;
+		while (s.length < len) {
+			s = (pad === undefined ? ' ' : pad) + s;
+		}
+		return s;
+	};
+
+	let decToSex = (val, ns_ew) => {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		let i = intValue;
+		dec *= 60;
+//    var s = i + "°" + dec.toFixed(2) + "'";
+//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+		let s = "";
+		if (ns_ew !== undefined) {
+			if (val < 0) {
+				s += (ns_ew === 'NS' ? 'S' : 'W');
+			} else {
+				s += (ns_ew === 'NS' ? 'N' : 'E');
+			}
+			s += " ";
+		} else {
+			if (val < 0) {
+				s += '-'
+			}
+		}
+		s += i + "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
+
+		return s;
+	};
+
+	let getQSPrm = (prm) => {
+		let loc = document.location.toString();
+		if (loc.indexOf("?") > -1) {
+			let qs = loc.substring(loc.indexOf("?") + 1);
+			let prms = qs.split('&');
+			for (let i=0; i<prms.length; i++) {
+				let nv = prms[i].split('=');
+				if (nv.length === 2) {
+					if (nv[0] === prm) {
+						return nv[1];
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	window.onload = () => {
+		initAjax();
+
+		// drawArrow('svg-hdg', 10);
+	}
+</script>
+
+</body>
+</html>

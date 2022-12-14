@@ -25,4 +25,8 @@ channels:
 forwarders:
   - type: tcp
     port: 7001
-# No Computer
+# 1 Computer
+computers:
+  - type: tw-current
+    prefix: CC
+    time.buffer.length: 30, 60, 600

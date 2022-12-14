@@ -191,6 +191,14 @@ function onMessage(json) {
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWS");
 		}
+		try {
+			if (json.Depth) {
+				let dbt = json.Depth.depthInMeters;
+                events.publish('dbt', dbt);
+			}
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "DBT");
+		}
 
 		try {
 		    if (json["Water Temperature"]) {
@@ -314,6 +322,7 @@ function onMessage(json) {
                 });
 			}
 		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Bearing to WP");
 		}
 
 		try {
