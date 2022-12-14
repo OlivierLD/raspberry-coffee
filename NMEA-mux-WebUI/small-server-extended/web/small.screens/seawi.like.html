@@ -383,9 +383,9 @@
 		// console.log(`BSP: ${val}`);
 	});
 	events.subscribe('awa', val => {
-		let displayStr = val.toFixed(0) + '&deg; Sb';
+		let displayStr = val.toFixed(0) + '&deg; Sb'; // Starboard
 		if (val < 0) {
-			displayStr = Math.abs(val).toFixed(0) + '&deg; Pt';
+			displayStr = Math.abs(val).toFixed(0) + '&deg; Pt'; // Port
 		}
 		document.getElementById('awa').innerHTML = displayStr;
 		// console.log(`AWA: ${val}`);
@@ -400,7 +400,6 @@
 			displayStr = Math.abs(val).toFixed(0) + '&deg; Pt';
 		}
 		document.getElementById('twa').innerHTML = displayStr;
-
 		// console.log(`TWA: ${val}`);
 	});
 	events.subscribe('tws', val => {

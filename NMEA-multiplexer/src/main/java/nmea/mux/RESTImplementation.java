@@ -2305,6 +2305,7 @@ public class RESTImplementation {
 			if (cache != null) {
 				synchronized (cache) {
 				// 	NMEAUtils.calculateVMGs(cache);
+					// TODO See how to use Jackson here.
 					Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create(); // To avoid NaN/Double issues
 					final JsonElement _jsonElement = gson.toJsonTree(cache); // I know, ah shit!
 					//	String str = new Gson().toJson(cache);

@@ -21,16 +21,19 @@ version = '1.0'
 // targetCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
-  if (JavaVersion.current() != project.targetCompatibility) {
+
+    if (JavaVersion.current() != project.targetCompatibility) {
 //    throw new GradleException(
-    println "+------ Warning: Java version (JAVA_HOME) possible mismatch -----\n" +
-            "| In task $name ($project.name), the java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.\n" +
-            "+----------------------------------------------------------------"
+        println "+------ Warning: Java version (JAVA_HOME) possible mismatch -----\n" +
+                "| In task $name ($project.name), the java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.\n" +
+                "+----------------------------------------------------------------"
 //    )
-  } else {
-    println ">> From task $name (in $project.name), using java version ${JavaVersion.current()} "
-  }
-  options.encoding = 'UTF-8'
+    } else {
+        println ">> From task $name (in $project.name), using java version ${JavaVersion.current()} "
+    }
+    println ">>> When needed, using PI4J v$pi4j_version"
+
+    options.encoding = 'UTF-8'
 }
 
 dependencies {
