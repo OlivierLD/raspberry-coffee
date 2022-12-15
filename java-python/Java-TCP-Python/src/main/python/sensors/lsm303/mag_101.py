@@ -69,7 +69,7 @@ while keep_listening:
 
     # 'magnetic' returns values in micro Tesla (see https://docs.circuitpython.org/projects/lsm303/en/latest/_modules/adafruit_lsm303.html)
     # print('Magnetometer (Gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), HDM {3:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, heading))
-    print('Magnetometer (\u03BCT): ({0:5.3f}, {1:5.3f}, {2:5.3f}), norm {3:6.3f}, HDM {4:3.1f}\u00B0, PTCH {5:3.1f}\u00B0, ROLL {6:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, norm, heading, pitch, roll))
+    print('Magnetometer (\u03BCT): ({0:5.3f}, {1:5.3f}, {2:5.3f}), norm {3:6.3f}, HEAD {4:3.1f}\u00B0, PTCH {5:3.1f}\u00B0, ROLL {6:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, norm, heading, pitch, roll))
     if log_for_calibration:
         log_file.write("{0:f};{1:f};{2:f};{3:f}\n".format(mag_x, mag_y, mag_z, norm))
     # print('')
