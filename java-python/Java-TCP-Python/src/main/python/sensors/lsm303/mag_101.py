@@ -74,7 +74,7 @@ while keep_listening:
         log_file.write("{0:f};{1:f};{2:f};{3:f}\n".format(mag_x, mag_y, mag_z, norm))
     # print('')
     if keep_listening:
-        time.sleep(1.0 if not log_for_calibration > 1 else 0.1)  # Smaller for calibration
+        time.sleep(1.0 if not log_for_calibration else 0.1)  # Smaller for calibration
 
 if log_for_calibration:  # Close log file
     log_file.close()
