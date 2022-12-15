@@ -8,7 +8,7 @@ import busio
 import adafruit_lsm303dlh_mag
 #
 # 1 Gauss = 100 microTesla
-# 1 T = 10^4 G
+# 1 Tesla = 10^4 Gauss
 #
 # Note: This is the same code (and same I2C address, 0x1E) for the HMC5883L
 # Also includes an option for calibration (CLI prm --log-for-calibration:true)
@@ -17,6 +17,7 @@ LOG_FOR_CAL_PRM_PREFIX: str = "--log-for-calibration:"
 VERBOSE_PRM_PREFIX: str = "--verbose:"
 log_for_calibration: bool = False
 verbose: bool = False
+LOG_FILE_NAME: str = "lsm303_log.csv"
 
 # CLI prms management
 args: List[str] = sys.argv
@@ -53,7 +54,7 @@ def interrupt(signal, frame):
 signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
 
 if log_for_calibration:  # Open log file
-    log_file = open("lsm303_log.csv", "w")   # Overrides if exists.
+    log_file = open(LOG_FILE_NAME, "w")   # Overrides if exists.
     log_file.write("rawMagX;rawMagY;rawMagZ;magNorm\n")
     print("Start moving the device in all possible directions, Ctrl-C when done.")
 
@@ -64,8 +65,8 @@ while keep_listening:
     heading: float = math.degrees(math.atan2(mag_y, mag_x))  # Orientation in plan x,y
     while heading < 0:
         heading += 360
-    pitch: float = math.degrees(math.atan2(mag_y, mag_z))  # Orientation in plan y,z
-    roll: float = math.degrees(math.atan2(mag_x, mag_z))   # Orientation in plan x,z
+    pitch: float = math.degrees(math.atan2(mag_y, mag_z))    # Orientation in plan y,z
+    roll: float = math.degrees(math.atan2(mag_x, mag_z))     # Orientation in plan x,z
 
     # 'magnetic' returns values in micro Tesla (see https://docs.circuitpython.org/projects/lsm303/en/latest/_modules/adafruit_lsm303.html)
     # print('Magnetometer (Gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), HDM {3:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, heading))
@@ -78,4 +79,5 @@ while keep_listening:
 
 if log_for_calibration:  # Close log file
     log_file.close()
+    print(f"Check out the log file {LOG_FILE_NAME}.")
 print("Bye!")

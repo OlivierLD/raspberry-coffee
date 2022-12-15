@@ -1,4 +1,4 @@
-## Magnetometer calibration
+## Magnetometer - and accelerometer - calibration
 Magnetic field values at your location, see [here](http://www.magnetic-declination.com/).
 
 Magnetometers often - if not always - require calibration.
