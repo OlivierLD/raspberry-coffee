@@ -11,12 +11,14 @@ import adafruit_lsm303dlh_mag
 # 1 T = 10^4 G
 #
 # Note: This is the same code (and same I2C address, 0x1E) for the HMC5883L
+# Also includes an option for calibration (CLI prm --log-for-calibration:true)
 #
 LOG_FOR_CAL_PRM_PREFIX: str = "--log-for-calibration:"
 VERBOSE_PRM_PREFIX: str = "--verbose:"
 log_for_calibration: bool = False
 verbose: bool = False
 
+# CLI prms management
 args: List[str] = sys.argv
 if len(args) > 0:  # Script name + X args. > 1 should do the job.
     for arg in args:
@@ -50,7 +52,7 @@ def interrupt(signal, frame):
 
 signal.signal(signal.SIGINT, interrupt)  # callback, defined above.
 
-if log_for_calibration:
+if log_for_calibration:  # Open log file
     log_file = open("lsm303_log.csv", "w")   # Overrides if exists.
     log_file.write("rawMagX;rawMagY;rawMagZ;magNorm\n")
     print("Start moving the device in all possible directions, Ctrl-C when done.")
@@ -72,8 +74,8 @@ while keep_listening:
         log_file.write("{0:f};{1:f};{2:f};{3:f}\n".format(mag_x, mag_y, mag_z, norm))
     # print('')
     if keep_listening:
-        time.sleep(1.0)
+        time.sleep(1.0 if not log_for_calibration > 1 else 0.1)  # Smaller for calibration
 
-if log_for_calibration:
+if log_for_calibration:  # Close log file
     log_file.close()
 print("Bye!")
