@@ -1914,7 +1914,7 @@ public class RESTImplementation {
 				return response;
 			}
 		}
-		switch (type) { // TODO More cases, for TW only...
+		switch (type) { // TODO More cases?, for TW only...
 			case "tw-current":
 				ExtraDataComputer.ComputerBean twJson = new Gson().fromJson(new String(request.getContent()), ExtraDataComputer.ComputerBean.class);
 				opComputer = nmeaDataComputers.stream()
