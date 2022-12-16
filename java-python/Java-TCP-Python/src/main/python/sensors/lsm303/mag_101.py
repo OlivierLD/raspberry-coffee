@@ -65,8 +65,8 @@ while keep_listening:
     heading: float = math.degrees(math.atan2(mag_y, mag_x))  # Orientation in plan x,y
     while heading < 0:
         heading += 360
-    pitch: float = math.degrees(math.atan2(mag_y, mag_z))    # Orientation in plan y,z
-    roll: float = math.degrees(math.atan2(mag_x, mag_z))     # Orientation in plan x,z
+    pitch: float = math.degrees(math.atan2(mag_y, mag_z))    # Orientation in plan y,z TODO 180 +- ?
+    roll: float = math.degrees(math.atan2(mag_x, mag_z))     # Orientation in plan x,z TODO 180 +- ?
 
     # 'magnetic' returns values in micro Tesla (see https://docs.circuitpython.org/projects/lsm303/en/latest/_modules/adafruit_lsm303.html)
     # print('Magnetometer (Gauss): ({0:10.3f}, {1:10.3f}, {2:10.3f}), HDM {3:3.1f}\u00B0'.format(mag_x, mag_y, mag_z, heading))
