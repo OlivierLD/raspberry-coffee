@@ -111,18 +111,10 @@ Date.prototype.isLeapYear = function() {
 // Provide Number of Days in a given month
 Date.prototype.getMonthDayCount = function() {
     const MONTH_DAY_COUNTS = [
-        31,
-        this.isLeapYear() ? 29 : 28,
-        31,
-        30,
-        31,
-        30,
-        31,
-        31,
-        30,
-        31,
-        30,
-        31
+        31, this.isLeapYear() ? 29 : 28, 31,
+        30, 31, 30,
+        31, 31, 30,
+        31, 30, 31
     ];
     return MONTH_DAY_COUNTS[this.getMonth()];
 };

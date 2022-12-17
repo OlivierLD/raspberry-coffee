@@ -30,7 +30,8 @@ class Thermometer extends HTMLElement {
 			"max-value",    // Float. Max value for temperature
 			"major-ticks",  // Float. value between major ticks (those with labels)
 			"minor-ticks",  // Float. value between minor ticks
-			"value"         // Float. Temperature to display
+			"value",        // Float. Temperature to display
+			"unit"          // String. C (for Celsius) or F (for Farenheit), or any thing. ' ' means no unit.
 		];
 	}
 
@@ -53,6 +54,7 @@ class Thermometer extends HTMLElement {
 		this._max_value   =  10;
 		this._major_ticks =   1;
 		this._minor_ticks =   0.25;
+		this._unit        = '';
 
 		this._previousClassName = "";
 		this.thermometerColorConfig = thermometerColorConfigDefault; // Init
@@ -108,6 +110,9 @@ class Thermometer extends HTMLElement {
 			case "minor-ticks":
 				this._minor_ticks = parseFloat(newVal);
 				break;
+			case "unit":
+				this._unit = newVal;
+				break;
 			default:
 				break;
 		}
@@ -146,6 +151,9 @@ class Thermometer extends HTMLElement {
 	set minorTicks(val) {
 		this.setAttribute("minor-ticks", val);
 	}
+	set unit(val) {
+		this.setAttribute("unit", val);
+	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -170,6 +178,9 @@ class Thermometer extends HTMLElement {
 	}
 	get majorTicks() {
 		return this._major_ticks;
+	}
+	get unit() {
+		return this._unit;
 	}
 
 	get shadowRoot() {
@@ -385,7 +396,7 @@ class Thermometer extends HTMLElement {
 		// Value
 		// console.log(`tempValue: ${tempValue}`);
 		if (!isNaN(tempValue)) {
-			let text = tempValue.toFixed(this.thermometerColorConfig.valueNbDecimal);
+			let text = tempValue.toFixed(this.thermometerColorConfig.valueNbDecimal) + (this.unit.trim().length > 0 ? `°${this.unit}` : '' );
 			context.font = "bold 20px Arial";
 			let metrics = context.measureText(text);
 			let len = metrics.width;

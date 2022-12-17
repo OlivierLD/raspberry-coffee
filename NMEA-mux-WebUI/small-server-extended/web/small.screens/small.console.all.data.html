@@ -536,7 +536,7 @@
 
 	<script type="text/javascript" src="../js/TrackMap.js"></script>
 
-	<!--script type="text/javascript" src="../js/date.proto.js"></script-->
+	<script type="text/javascript" src="../js/date.proto.js"></script>
 	<script type="text/javascript" src="../js/pub.sub.js"></script>
 	<script type="text/javascript" src="../js/ajax.manager.js"></script>
 </head>
@@ -1313,9 +1313,47 @@
 		if (digital_analog === DIGITAL_DISPLAY) {
 			document.getElementById('hdg-dig').innerText = val.toFixed(0);
 		} else {
-			document.getElementById('hdg').value = val;
+			// Smooth move
+			compassSmoothMove('hdg', val);
+			// direct
+			// document.getElementById('hdg').value = val;
 		}
 	});
+
+	compassSmoothMove = (compassId, targetValue) => {
+		let element = document.getElementById(compassId);
+		
+		let origin = element.value;
+		// console.log(`Ah! ${origin}, to ${targetVal}`);
+		let delta = Math.abs(origin - targetValue);
+		let inc = (origin > targetValue) ? - 1 : 1;
+		if  (delta > 180) {
+			inc *= -1;
+		}
+		let currentValue = origin;
+
+		function doIt() {
+			element.value = currentValue;
+			element.repaint();
+			// currentValue += inc;
+			if (currentValue !== targetValue) {
+				window.setTimeout(() => {
+						doIt();
+				}, 50);
+			}
+			currentValue += inc;
+			if (currentValue > 359) {
+				currentValue = 0;
+			}
+			if (currentValue < 0) {
+				currentValue = 359;
+			}
+		};
+		// Start it.
+		window.setTimeout(() => {
+						doIt();
+					}, 50);
+	};
 
 	let lpad = (str, len, pad) => {
 		let s = str;
