@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--meta charset="windows-1252"-->
+    <!--meta charset="iso-8859-1"-->
+    <!--meta charset="utf-8"-->
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>QR Codes Generator</title>
+    <script type="text/javascript" src="js/qrcode.js"></script>
+    <script type="text/javascript">
+
+
+let makeCode = () => {
+    const PATH_NAME = '/web/index.html';
+    let toDisplay = document.location.origin + PATH_NAME;
+  // let toDisplay = 'http://' + server.value + ':' + (dataport.value.length === 0 ? "80" : dataport.value) + pathprms.value;
+
+    let qrcode = new QRCode(document.getElementById("qrcode"), {
+        width:  250,
+        height: 250
+    });
+    qrcode.makeCode(toDisplay);
+};
+
+
+window.onload = () => {
+    // console.log(`Hostname: ${document.location.hostname}`);
+    makeCode();
+};
+
+    </script>
+  </head>
+  <body style="background-color: rgba(255, 255, 255, 0.2); background-image: none;">
+    <div id="qrcode" style="width:250px; height:250px; margin-top:15px; margin: auto;"></div>
+  </body>
+</html>
