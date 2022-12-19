@@ -1,5 +1,15 @@
-# Python TCP Server
-Can be used from the NMEA-multiplexer, using its `TCP` channel (but not only).
+# Python TCP Server(s)
+Can be used from the NMEA-multiplexer, using its `TCP` channel (but not only, it would also work for all sotfware NMEA and TCP savvy).  
+Example:
+```yaml
+channels:
+  - type: tcp
+    server: localhost
+    port: 7002
+    verbose: true
+```
+In the snippet above, the `localhost:7002` can be the name and port of the `TCP_ZDA_server.py`. The `ZDA` sentences
+received from this port can be directly used by the NMEA-multiplexer.
 
 ## Several components
 - `checksum.py` contains utilities for NMEA CheckSum.

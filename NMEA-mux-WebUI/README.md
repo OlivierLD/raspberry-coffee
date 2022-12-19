@@ -7,7 +7,6 @@ By WebUI, we mean web pages, and REST services able to communicate with the serv
 
 At the bottom of those HTTP and REST features in the module of this project named `tiny-http-server`.   
 
-
 ---
 
 We want to have a Nav Server:
