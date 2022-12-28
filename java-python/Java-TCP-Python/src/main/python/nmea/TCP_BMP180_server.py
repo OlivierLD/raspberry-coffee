@@ -142,7 +142,7 @@ def main(args: List[str]) -> None:
             print(f">> New accept: Conn is a {type(conn)}, addr is a {type(addr)}")
             nb_clients += 1
             print(f"{nb_clients} {'clients are' if nb_clients > 1 else 'client is'} now connected.")
-            # Generate ZDA sentences for this client in its own thread.
+            # Generate NMEA sentences for this client in its own thread.
             client_thread = threading.Thread(target=produce_nmea, args=(conn, addr, True, False, True,))
             client_thread.daemon = True  # Dies on exit
             client_thread.start()

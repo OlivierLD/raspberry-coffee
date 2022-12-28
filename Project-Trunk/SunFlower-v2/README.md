@@ -103,7 +103,7 @@ Run `sunflower.main.ConsoleMain`, from the script `console.sh`.
 Hit Ctrl-C to stop the program
 
 ```
-### HTTP Server (WiP) <img src="./cone.png" alt="WIP" width="48" height="48" align="middle">
+### HTTP Server (WiP) <img src="./cone.png" alt="WiP" width="48" height="48" align="middle">
 Same as above, but no UI in the console. Designed to run in background mode.
 Data previously displayed on the terminal are accessible through REST requests.
 See `server.sh` for details.

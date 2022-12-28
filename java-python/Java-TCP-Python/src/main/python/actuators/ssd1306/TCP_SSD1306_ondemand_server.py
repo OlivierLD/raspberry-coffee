@@ -177,7 +177,7 @@ def produce_result(connection: socket.socket, address: tuple) -> None:
             traceback.print_exc(file=sys.stdout)
             nb_clients -= 1
             break  # Client disconnected
-    print(f"Done with request from {connection}")
+    print(f"Exiting thread. Done with request from {connection}")
     print(f"{nb_clients} {'clients are' if nb_clients > 1 else 'client is'} now connected.")
 
 

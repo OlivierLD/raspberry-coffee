@@ -1,0 +1,10 @@
+#
+# This is an example
+#
+MAG_X_COEFF: 1.0
+MAG_Y_COEFF: 1.05
+MAG_Z_COEFF: 1.0
+
+MAG_X_OFFSET: 12
+MAG_Y_OFFSET: -15
+MAG_Z_OFFSET: -5

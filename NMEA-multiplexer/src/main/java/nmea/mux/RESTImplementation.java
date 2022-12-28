@@ -359,6 +359,9 @@ public class RESTImplementation {
 				.toArray(new Object[channelList.size()]);
 		try {
 			String content = new Gson().toJson(channelArray);
+			if (restVerbose()) {
+				System.out.printf("Channel Array:\n%s\n----------\n", content);
+			}
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception jpe) {

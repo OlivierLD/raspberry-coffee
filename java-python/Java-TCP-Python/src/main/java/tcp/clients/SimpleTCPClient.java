@@ -40,8 +40,14 @@ public class SimpleTCPClient {
 	public String sendMessage(String msg) throws Exception {
 		System.out.printf("Client sending message: %s\n", msg);
 		out.println(msg);
-		/*String resp =*/ return in.readLine();
+		/*String resp =*/ return readMessage();
 		// return resp;
+	}
+
+	public String readMessage() throws Exception {
+		synchronized (in) {
+			return in.readLine();
+		}
 	}
 
 	public void stopConnection() throws Exception {
