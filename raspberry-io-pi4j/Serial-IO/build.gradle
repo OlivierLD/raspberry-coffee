@@ -2,7 +2,7 @@ plugins {
     id 'java'
 //    id 'scala'
     id 'idea'
-    id 'maven'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
@@ -31,7 +31,7 @@ task runArduinoSample(type: JavaExec, dependsOn: classes, description: 'Runs the
     jvmArgs '-Dbaud.rate=9600'
 //  jvmArgs '-Djava.library.path=/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5' // On a Mac
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 runArduinoSample.doFirst {
@@ -49,6 +49,6 @@ task runGPSSample(type: JavaExec, dependsOn: classes, description: 'Runs the GPS
     jvmArgs '-Dbaud.rate=4800'
 //  jvmArgs '-Djava.library.path=/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5' // On a Mac
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 

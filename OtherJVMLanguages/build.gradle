@@ -110,25 +110,25 @@ task runJAXRSScript(type: JavaExec) {
 task interactive(type: JavaExec, dependsOn: classes, description: 'Runs an interactice Scala console app') {
     main = 'serial.SerialPI4J'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runHelloActor(type: JavaExec, dependsOn: classes, description: 'Runs the Scala Actors app') {
     main = 'HelloActor'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runDLListener(type: JavaExec, dependsOn: classes, description: 'Runs the Scala Actors app, with DeadLetter detection') {
     main = 'DLListener'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runClock(type: JavaExec, dependsOn: classes, description: 'Runs the SevenSegment Clock, from Scala') {
     main = 'sevenseg.Clock'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 // Run like this: gradle repl --console plain --no-daemon

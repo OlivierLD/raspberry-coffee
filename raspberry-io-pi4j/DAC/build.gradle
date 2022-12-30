@@ -1,7 +1,7 @@
 plugins {
   id 'java'
   id 'idea'
-  id 'maven'
+  id 'maven-publish'
 }
 
 group = 'oliv.raspi.coffee'

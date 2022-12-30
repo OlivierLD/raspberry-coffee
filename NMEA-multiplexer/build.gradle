@@ -6,7 +6,7 @@ plugins {
     id 'java'
     id 'scala'
     id 'idea'
-    id 'maven'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 

@@ -23,7 +23,7 @@ apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
 apply plugin: 'idea'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 //plugins {
@@ -31,7 +31,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 //    id 'scala'
 //    id 'kotlin'
 //    id 'groovy'
-//    id 'maven'
+//    id 'maven-publish'
 //    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 //}
 
@@ -106,6 +106,6 @@ compileTestKotlin {
 task startScalaServer(type: JavaExec, dependsOn: classes, description: 'Start the Scala server') {
     main = 'scalahttp.ScalaHttpRequestServer'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 

@@ -2,7 +2,7 @@ plugins {
   id 'java'
 //id 'scala'
   id 'idea'
-  id 'maven' // Includes 'gradle install'. 'maven-publish' would say 'gradle publish'
+  id 'maven-publish' // Includes 'gradle install'. 'maven-publish' would say 'gradle publish'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 //id 'findbugs'
 }
@@ -71,7 +71,7 @@ shadowJar {
 //}
 
 task harmonicsXML(type: JavaExec, dependsOn: build, description: "Generate the XML Document from the harmonic files") {
-  classpath = configurations.runtime
+//  classpath = configurations.runtime
 //classpath project.configurations.default
 //classpath sourceSets.main.output.classesDir
   classpath sourceSets.main.runtimeClasspath

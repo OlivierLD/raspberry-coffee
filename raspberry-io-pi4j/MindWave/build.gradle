@@ -4,7 +4,7 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id 'maven'
+    id 'maven-publish'
 }
 
 group = 'oliv.raspi.pi4j'
@@ -32,23 +32,23 @@ dependencies {
 task runTest(type: JavaExec, dependsOn: classes, description: 'Runs an interactive Mindwave console app (basic tests)') {
     main = 'mindwave.MindWaveController'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runOne(type: JavaExec, dependsOn: classes, description: 'Runs ClientOne (RPi)') {
     main = 'mindwave.samples.pi.ClientOne'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runTwo(type: JavaExec, dependsOn: classes, description: 'Runs ClientTwo (RPi)') {
     main = 'mindwave.samples.pi.ClientTwo'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runWS(type: JavaExec, dependsOn: classes, description: 'Runs the WebSocket feeder (RPi)') {
     main = 'mindwave.samples.pi.ws.WebSocketFeeder'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }

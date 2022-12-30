@@ -1,7 +1,7 @@
 plugins {
   id 'java'
 //id 'scala'
-  id 'maven'
+  id 'maven-publish'
   id 'idea'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
@@ -28,5 +28,5 @@ shadowJar {
 task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the app') {
   main = 'monitor.SwingTemperatureMonitor'
   classpath sourceSets.main.runtimeClasspath
-  classpath configurations.runtime
+//  // classpath configurations.runtime
 }

@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'maven'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
@@ -9,10 +9,10 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
+    mavenLocal()
     mavenCentral()
 //  maven { url "https://mvnrepository.com/artifact" }
-    maven { url "http://clojars.org/repo" }
-    mavenLocal()
+    maven { url "https://clojars.org/repo" }
 }
 
 dependencies {
@@ -40,7 +40,7 @@ shadowJar.dependsOn(copyResources)
 task chordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'chordfinder.UkuleleChordFinder'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 chordFinder.doFirst {
@@ -52,7 +52,7 @@ chordFinder.doFirst {
 task keyChordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'section.one.KeyChordFinder'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 keyChordFinder.doFirst {

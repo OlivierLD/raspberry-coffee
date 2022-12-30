@@ -1,7 +1,7 @@
 plugins {
   id 'java'
   id 'idea'
-  id 'maven'
+  id 'maven-publish'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
@@ -9,17 +9,17 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
-  mavenCentral()
-  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
-  maven { url "http://lediouris.net/maven2" }
-  maven { url "https://oss.sonatype.org/content/groups/public" }
   mavenLocal()
+  mavenCentral()
+  maven { url "https://mvnrepository.com/artifact/javax.media/jai_core" }
+  maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {
 //implementation 'com.sun.media:jai_codec:1.1.3'
-  implementation 'javax:jai_codec:1.1.3'
-  implementation 'javax:jai_core:1.1.3'
+  // Problems with jai_co*... :(
+  implementation 'javax.media:jai_codec:1.1.3' // -NODEP
+  implementation 'javax.media:jai_core:1.1.3' // -NODEP
   implementation project (':common-utils')
   implementation project (':common-image-utils')
 }

@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'maven'
+    id 'maven-publish'
     id 'idea'
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
@@ -47,7 +47,7 @@ task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the sample
     jvmArgs '-Dserial.port=/dev/tty.usbserial'
     jvmArgs '-Dbaud.rate=115200'
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 runSample.doFirst {

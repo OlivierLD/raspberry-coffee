@@ -2,7 +2,7 @@ plugins {
   id 'java'
 //id 'scala'
   id 'idea'
-  id 'maven'
+  id 'maven-publish'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 compileJava {
@@ -12,22 +12,6 @@ compileJava {
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
-
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//    resources {
-//      srcDir 'src/resources'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
 
 repositories {
   mavenCentral()
@@ -50,7 +34,7 @@ shadowJar {
 }
 
 task runSample(type: JavaExec, dependsOn: build, description: "Sample calculation, and output.") {
-  classpath = configurations.runtime
+//  classpath = configurations.runtime
 //classpath project.configurations.default
 //classpath sourceSets.main.output.classesDir
   classpath sourceSets.main.runtimeClasspath

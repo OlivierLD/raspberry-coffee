@@ -5,7 +5,7 @@ buildscript {
 plugins {
     id 'java'
     id 'idea'
-    id 'maven'
+    id 'maven-publish'
     id 'application'  // also include installDist and distZip tasks
     id 'com.github.johnrengelman.shadow'
 }

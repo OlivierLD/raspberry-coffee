@@ -2,7 +2,7 @@ plugins {
   id 'java'
 //id 'scala'
   id 'idea'
-  id 'maven'
+  id 'maven-publish'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 //id 'findbugs'
 }
@@ -33,7 +33,7 @@ compileJava {
 task runSmoother(type: JavaExec, dependsOn: classes, description: 'Runs the Polar Smoother GUI') {
   main = 'polarmaker.polars.main.PolarSmoother'
   classpath sourceSets.main.runtimeClasspath
-  classpath configurations.runtime
+  // classpath configurations.runtime
 }
 
 runSmoother.doFirst {

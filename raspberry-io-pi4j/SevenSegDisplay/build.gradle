@@ -4,7 +4,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 group = 'oliv.raspi.pi4j'
 version = '1.0'

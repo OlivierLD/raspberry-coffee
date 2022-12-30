@@ -4,7 +4,7 @@ buildscript {
 plugins {
   id 'java'
 //id 'scala'
-  id 'maven'
+  id 'maven-publish'
   id 'idea'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }

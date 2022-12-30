@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'maven'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
@@ -30,28 +30,28 @@ task runJuke(type: JavaExec, dependsOn: classes, description: 'Runs the sample')
     main = 'javasounddemo.Juke'
     workingDir "."
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+//    // classpath configurations.runtime
 }
 
 task runCapturePlayback(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'javasounddemo.CapturePlayback'
     workingDir "."
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runMidiSynth(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'javasounddemo.MidiSynth'
     workingDir "."
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runGroove(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'javasounddemo.Groove'
     workingDir "."
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 task runSamples(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
@@ -61,7 +61,7 @@ task runSamples(type: JavaExec, dependsOn: classes, description: 'Runs the sampl
 //  jvmArgs '-Dbaud.rate=9600'
     workingDir "."
     classpath sourceSets.main.runtimeClasspath
-    classpath configurations.runtime
+    // classpath configurations.runtime
 }
 
 runSamples.doFirst {

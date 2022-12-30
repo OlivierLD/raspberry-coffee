@@ -20,7 +20,7 @@ apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
 apply plugin: 'idea'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'com.github.johnrengelman.shadow' // version '4.0.2'
 
 group = 'oliv.raspi.coffee'
