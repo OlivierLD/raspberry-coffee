@@ -145,9 +145,10 @@ In the above, `W` is called the Compass Variation
 
 ![The curve](./screenshot.01.png)
 
-The cyan line is showing the `dev` on `Magnetic Headings`.
+The blue line is showing the `dev` on `Compass Headings` (HDG + D + d).  
+The cyan line is showing the `dev` on `Magnetic Headings` (HDG + D).
 
-The two top-right boxes contain the `csv` values to put in the files holding the deviation curves.
+The two top-right boxes contain the `csv` values to put in the files holding the deviation curves. This content is to be copied and pasted.
 
 > - You use `dev on Compass Headings` to get the True Heading from the Compass Heading (from the cockpit to the chart table).
 > - You use `dev on Magnetic Headings` to get the Compass Heading from the True Heading (from the chart table to the cockpit).
