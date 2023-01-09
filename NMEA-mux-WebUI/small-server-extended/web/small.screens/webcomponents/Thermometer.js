@@ -31,7 +31,7 @@ class Thermometer extends HTMLElement {
 			"major-ticks",  // Float. value between major ticks (those with labels)
 			"minor-ticks",  // Float. value between minor ticks
 			"value",        // Float. Temperature to display
-			"unit"          // String. C (for Celsius) or F (for Farenheit), or any thing. ' ' means no unit.
+			"unit"          // String. C (for Celsius) or F (for Fahrenheit), or any thing. ' ' means no unit.
 		];
 	}
 
