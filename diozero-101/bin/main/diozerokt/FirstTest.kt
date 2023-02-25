@@ -15,6 +15,7 @@ const val buttonPin = 12 // Seems OK
 
 fun main(args: Array<String>) {
     println("Starting diozero test.")
+    println("${args.size} arg(s)")
     LED(ledPin).use { led ->  // PINs are BCM numbers.
         println("Turning led ${ledPin} ON")
         led.on()

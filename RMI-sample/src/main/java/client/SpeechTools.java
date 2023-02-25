@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SpeechTools {
-  private static Map<String, String> speechTools = new HashMap<>();
+  private final static Map<String, String> speechTools = new HashMap<>();
   static{
     speechTools.put("Mac OS X", "say");
     speechTools.put("Linux", "espeak");

@@ -30,7 +30,7 @@ public class AllChordFrame_AboutBoxPanel1
 					throws Exception {
 		setLayout(this.layoutMain);
 		setBorder(this.border);
-		this.labelTitle.setText("Ukulele 101");
+		this.labelTitle.setText("Ukulele 101 - Click on chords to hear them.");
 		this.labelAuthor.setText("Olivier LeDiouris");
 		this.labelCopyright.setText("Copyright OlivSoft, 2012");
 		this.labelCompany.setText("OlivSoft strikes again");

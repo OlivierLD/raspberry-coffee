@@ -2,7 +2,6 @@ package client;
 
 import compute.Task;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class Speak implements Task<Boolean>, Serializable {
 

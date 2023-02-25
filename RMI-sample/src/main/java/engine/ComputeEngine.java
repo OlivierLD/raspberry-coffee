@@ -10,10 +10,10 @@ import compute.Task;
 
 public class ComputeEngine extends UnicastRemoteObject implements Compute {
 
-	private Registry registry     = null;
-	private int registryPort      = 1099;
+	private Registry registry = null;
+	private final int registryPort = 1_099;
 	private String serverAddress = "";
-	private String bindingName = "Compute";
+	private final String bindingName = "Compute";
 
 
 	public ComputeEngine() throws RemoteException {
@@ -22,7 +22,7 @@ public class ComputeEngine extends UnicastRemoteObject implements Compute {
 		} catch(Exception e) {
 			throw new RemoteException("Can't get inet address.");
 		}
-		System.out.println(String.format("Server address : %s, port %d", serverAddress, registryPort));
+		System.out.printf("Server address : %s, port %d\n", serverAddress, registryPort);
 		try{
 			registry = LocateRegistry.createRegistry(registryPort);
 			registry.rebind(bindingName, this);

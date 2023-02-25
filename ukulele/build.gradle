@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+    id 'com.github.johnrengelman.shadow'
 }
 
 group = 'oliv.raspi.coffee'
@@ -37,8 +37,9 @@ compileJava {
 jar.dependsOn(copyResources)
 shadowJar.dependsOn(copyResources)
 
+// For mainClass, see https://docs.gradle.org/current/dsl/org.gradle.api.tasks.JavaExec.html
 task chordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
-    main = 'chordfinder.UkuleleChordFinder'
+    mainClass = 'chordfinder.UkuleleChordFinder'
     classpath sourceSets.main.runtimeClasspath
     // classpath configurations.runtime
 }
@@ -50,7 +51,7 @@ chordFinder.doFirst {
 }
 
 task keyChordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
-    main = 'section.one.KeyChordFinder'
+    mainClass = 'section.one.KeyChordFinder'
     classpath sourceSets.main.runtimeClasspath
     // classpath configurations.runtime
 }

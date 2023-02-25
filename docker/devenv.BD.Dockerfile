@@ -86,7 +86,7 @@ WORKDIR workdir
 # USER oliv
 RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
 WORKDIR raspberry-coffee
-RUN git clone https://github.com/OlivierLD/AstroComputer.git
+# RUN git clone https://github.com/OlivierLD/AstroComputer.git
 WORKDIR ..
 RUN git clone https://github.com/OlivierLD/WebComponents.git
 

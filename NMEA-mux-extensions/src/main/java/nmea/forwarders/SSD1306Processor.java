@@ -364,7 +364,7 @@ public class SSD1306Processor implements Forwarder {
 		};
 		scrollThread.start();
 
-		// This is the loop providong the data to display, from the cache (when needed)
+		// This is the loop providing the data to display, from the cache (when needed)
 		Thread cacheThread = new Thread("SSD1306Processor CacheThread") {
 			public void run() {
 				while (keepWorking) {

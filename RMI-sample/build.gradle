@@ -1,6 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-apply plugin: 'idea'
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow'
+}
 
 group = 'oliv.raspi.coffee'
 version = '1.0'

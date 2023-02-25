@@ -15,7 +15,7 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
  * Invoke the initCtx method
  * Invoke the freeResources method
  *
- * TODO Upgrade to ./Project.Trunk/Button-Relex/src/main/java/breadboard/button/v2/PushButtonMaster.java
+ * TODO Upgrade to ./Project.Trunk/Button-Reflex/src/main/java/breadboard/button/v2/PushButtonMaster.java
  */
 public class PushButtonMaster {
 	private final GpioController gpio = GpioFactory.getInstance();

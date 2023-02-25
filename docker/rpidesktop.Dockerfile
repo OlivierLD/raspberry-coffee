@@ -62,10 +62,12 @@ COPY ./gtk ./gtk
 #    On the host (this machine)
 #
 RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
-WORKDIR raspberry-coffee
-RUN git clone https://github.com/OlivierLD/AstroComputer.git
-WORKDIR ..
+# WORKDIR raspberry-coffee
+# RUN git clone https://github.com/OlivierLD/AstroComputer.git
+# WORKDIR ..
 RUN git clone https://github.com/OlivierLD/WebComponents.git
+
+RUN git clone https://github.com/OlivierLD/ROB.git
 
 #WORKDIR gtk
 #RUN gcc `pkg-config --cflags --libs gtk+-2.0` gtktest.c -o gtktest
