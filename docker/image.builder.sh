@@ -37,7 +37,7 @@ while [[ "${OK}" = "false" ]]; do
   echo -e "|                                             inkscape, gtk samples... |"
   echo -e "|  8a. Raspberry Pi Desktop, (like option 8), for BoatDesign...        |"
   echo -e "|  9. Debian 10, Java, Scala, Spark, Jupyter Notebook                  |"
-#  echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
+# echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
   echo -e "| 10. Debian 10, TensorFlow, Keras, Python3, Jupyter, PyCharm,         |"
   echo -e "|                                 VNC, nodejs, npm,... it's a big one. |"
   echo -e "| 11. Debian dev env, git, java, maven, node, npm, yarn, VNC...        |"
