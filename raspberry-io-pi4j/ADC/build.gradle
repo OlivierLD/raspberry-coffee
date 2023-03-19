@@ -20,13 +20,14 @@ repositories {
   mavenCentral()
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 dependencies {
   implementation "com.pi4j:pi4j-core:$pi4j_version"
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'org.java-websocket:Java-WebSocket:1.3.7'
-  implementation project(':common-utils')
+  implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
   implementation project(":raspberry-io-pi4j:Utils")
 }
 

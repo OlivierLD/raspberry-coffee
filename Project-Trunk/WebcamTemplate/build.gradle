@@ -14,13 +14,15 @@ repositories {
     mavenLocal()
 //    maven { url "https://jcenter.bintray.com" }
     maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 def opencvVersion = "4.5.0"
 
 dependencies {
-    implementation project(':common-utils')
-    implementation project(':http-tiny-server')
+    implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
+    implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
+
     implementation "com.google.code.gson:gson:$google_gson_gson"
 
     // The one below depends on where you have installed OpenCV

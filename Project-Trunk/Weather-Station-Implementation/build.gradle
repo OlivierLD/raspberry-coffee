@@ -30,7 +30,7 @@ repositories {
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
-  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
+  maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -38,14 +38,14 @@ dependencies {
   implementation 'org.java-websocket:Java-WebSocket:1.3.7' // Already in ADC
   implementation 'org.json:json:20141113'
   implementation 'com.sun.mail:javax.mail:1.6.2'
-  implementation project(':common-utils')
-  implementation project(':http-tiny-server')
+  implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
+  implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
   implementation project(':raspberry-io-pi4j:I2C-SPI')
   implementation project(':raspberry-io-pi4j:ADC')
   implementation project(':WeatherStation')
   implementation project(':Adafruit-IO')
-  implementation project(':raspberry-sailor:NMEA-Parser')
-  implementation project(':NMEA-multiplexer')
+  implementation 'raspberry.on.board:NMEA-Parser:1.0'  // in the Maven on GIT
+  implementation 'raspberry.on.board:NMEA-multiplexer:1.0'  // in the Maven on GIT
   testImplementation 'junit:junit:4.13'
 }
 

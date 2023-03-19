@@ -10,7 +10,6 @@ include 'WeatherStation'
 include 'OtherJVMLanguages'
 include "RMI-sample"
 
-include "NMEA-multiplexer"
 include "NMEA-multiplexer-impl"
 include "NMEA-mux-extensions"
 include "NMEA-Mux-Other-Clients"
@@ -19,10 +18,8 @@ include "Monitor-Battery"
 include "JavaSoundDemo"
 include "ukulele"
 include "opencv"
-include "common-utils"
 include "common-utils-swing"
 include "common-image-utils"
-include "http-tiny-server"
 include "http-client-paradigm"
 include "http-client-samples"
 include "java-python:Java-HTTP-Python"
@@ -32,12 +29,6 @@ include "java-python:Java-Jython"
 include "polo-shirt"
 include "ReadSerialPort"
 include "GPSandSun"
-include "RESTNavServer"
-//include "TideEngine"
-include "RESTTideEngine"
-include "RESTNauticalAlmanac"
-include 'RESTImageProcessor'
-include "RESTRouting"
 include "RESTCam"
 include "RESTRelay"
 include "Camera"
@@ -53,10 +44,6 @@ include "diozero-101"
 include "raspberry-io-pi4j-v2:pi4j_v2-101"
 include "raspberry-io-pi4j-v2:pi4j-v2-rpi-projects"
 include "raspberry-io-pi4j-v2:i2c-spi"
-
-// Astro Computer
-include('astro-computer:AstroComputer')
-include('astro-computer:AstroUtilities')
 
 // Raspberry IO Pi4J
 include('raspberry-io-pi4j:Utils')
@@ -79,9 +66,6 @@ include('raspberry-io-pi4j:Relay')
 include('raspberry-io-pi4j:Serial-IO')
 include('raspberry-io-pi4j:Serial-PI4J-reader')
 include('raspberry-io-pi4j:SevenSegDisplay')
-// Raspberry Sailor
-include('raspberry-sailor:NMEA-Parser')
-include('raspberry-sailor:TideEngine')
 
 // NMEA-mux-WebUI sub-projects
 include(':NMEA-mux-WebUI:full-server')

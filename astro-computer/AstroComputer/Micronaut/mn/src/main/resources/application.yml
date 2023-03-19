@@ -1,7 +1,0 @@
-micronaut:
-  server:
-    port: 8081
-  application:
-    name: mn
-values:
-  deltaT: 69.220100

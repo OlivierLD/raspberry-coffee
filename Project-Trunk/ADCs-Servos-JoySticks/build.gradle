@@ -22,7 +22,7 @@ repositories {
   mavenCentral()
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
-  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }
 }
 
 dependencies {
@@ -31,7 +31,7 @@ dependencies {
   implementation 'org.json:json:20141113'
   implementation 'org.fusesource.jansi:jansi:1.11'
   implementation 'org.java-websocket:Java-WebSocket:1.5.2'
-  implementation project(':common-utils')
+  implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
   implementation project(":raspberry-io-pi4j:Utils")
   implementation project(':HanoiTower')
   implementation project(':raspberry-io-pi4j:ADC')

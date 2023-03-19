@@ -21,6 +21,7 @@ repositories {
     maven { url "https://www.datanucleus.org/downloads/maven2" }
 //    maven { url "https://oss.sonatype.org/content/groups/public" }
     maven { url "https://mvnrepository.com/artifact" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }
 }
 
 application {
@@ -32,6 +33,6 @@ dependencies {
 //    implementation 'org.json:json:20141113'
     implementation "com.google.code.gson:gson:$google_gson_gson"
     implementation 'oracle:xmlparser:2.0'
-    implementation project(':http-tiny-server')
+    implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
     testImplementation "junit:junit:$junit_version"
 }

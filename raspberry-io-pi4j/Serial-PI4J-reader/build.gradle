@@ -16,12 +16,12 @@ version = '1.0'
 repositories {
     mavenCentral()
     mavenLocal()
-//    maven { url "https://oss.sonatype.org/content/groups/public" } // For PI4J
+    maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 dependencies {
     implementation "com.pi4j:pi4j-core:$pi4j_version"
-    implementation project(':common-utils')
+    implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
 }
 
 shadowJar {

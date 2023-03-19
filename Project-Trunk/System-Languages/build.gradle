@@ -48,6 +48,7 @@ repositories {
   mavenCentral()
   mavenLocal()
 //  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -60,6 +61,6 @@ dependencies {
 //  implementation "com.netflix.nebula:nebula-clojure-plugin:4.3.1"
 //  implementation 'org.clojure:clojure:1.5.1'
   implementation "org.scala-lang:scala-library:$scala_version"
-  implementation project(':http-tiny-server')
+  implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
   testImplementation "junit:junit:$junit_version"
 }

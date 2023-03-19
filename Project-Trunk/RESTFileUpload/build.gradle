@@ -19,12 +19,13 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }
 }
 
 mainClassName = "httpserver.HttpRequestServer"
 
 dependencies {
-    implementation project(':http-tiny-server')
+    implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
     implementation 'org.json:json:20141113'
     implementation "com.google.code.gson:gson:$google_gson_gson"
     testImplementation "junit:junit:$junit_version"
