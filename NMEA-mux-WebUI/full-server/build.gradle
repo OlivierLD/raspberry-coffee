@@ -14,7 +14,7 @@ repositories {
     mavenLocal()
     maven { url "https://oss.sonatype.org/content/groups/public" }
     maven { url "https://www.datanucleus.org/downloads/maven2" }
-    // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }
     // maven { url "http://lediouris.net/maven2" }
 }
 
@@ -41,8 +41,8 @@ compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
     implementation project(':NMEA-mux-extensions')
-    implementation project(':RESTNavServer')
 //    implementation project(':NMEA-multiplexer') // RESTNavServer contains NMEA-multiplexer
+    implementation 'raspberry.on.board:RESTNavServer:1.0'  // in the Maven on GIT
 }
 
 shadowJar {

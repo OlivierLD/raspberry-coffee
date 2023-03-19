@@ -14,10 +14,11 @@ repositories {
   mavenLocal()
   maven { url "https://www.datanucleus.org/downloads/maven2" }
   maven { url "https://mvnrepository.com/artifact" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 dependencies {
-  implementation project(':common-utils')
+  implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
   implementation project(':Algebra')
 }
 

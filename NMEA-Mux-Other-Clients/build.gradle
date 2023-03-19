@@ -15,11 +15,12 @@ repositories {
   mavenCentral()
   maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "https://www.datanucleus.org/downloads/maven2" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 dependencies {
-  implementation project(':raspberry-sailor:NMEA-Parser')  // For the NMEA Parsers
-  implementation project(':astro-computer:AstroUtilities')  // For GeoPos & GeomUtil
+  implementation 'astro.computer:AstroComputer:1.0'         // in the Maven on GIT
+  implementation 'raspberry.on.board:NMEA-Parser:1.0'  // in the Maven on GIT
 
   testImplementation "junit:junit:$junit_version"
 }

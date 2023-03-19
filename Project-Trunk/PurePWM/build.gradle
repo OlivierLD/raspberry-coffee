@@ -21,12 +21,12 @@ repositories {
   mavenLocal()
   maven { url "https://oss.sonatype.org/content/groups/public" }
 //  maven { url "https://mvnrepository.com/artifact" }
-  // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+  maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }
 }
 
 dependencies {
   implementation "com.pi4j:pi4j-core:$pi4j_version"
-  implementation project(':common-utils')
+  implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
   implementation project(':raspberry-io-pi4j:Utils')
   implementation project(':raspberry-io-pi4j:I2C-SPI')
 }

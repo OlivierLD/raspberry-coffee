@@ -19,6 +19,7 @@ repositories {
     maven { url "https://www.datanucleus.org/downloads/maven2" }
 //  // maven { url "http://lediouris.net/maven2" }
     // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
+    maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 //compileJava.options.compilerArgs += ["-Xlint:none"]
@@ -34,16 +35,18 @@ dependencies {
     implementation 'org.rxtx:rxtx:2.1.7'
     implementation "com.google.code.gson:gson:$google_gson_gson"
     implementation 'org.json:json:20190722'
-    implementation project(':common-utils')
-    implementation project(':http-tiny-server')
-//    implementation 'astro.computer:astro.computer:1.0'
-    implementation project(':astro-computer:AstroUtilities')
+
+    implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
+    implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
+    implementation 'astro.computer:AstroComputer:1.0'         // in the Maven on GIT
+    implementation 'raspberry.on.board:NMEA-Parser:1.0'  // in the Maven on GIT
+    implementation 'raspberry.on.board:NMEA-multiplexer:1.0'  // in the Maven on GIT
+
     implementation project(':raspberry-io-pi4j:Utils')
     implementation project(':raspberry-io-pi4j:I2C-SPI')
     implementation project(':raspberry-io-pi4j:Serial-IO')
     implementation project(':raspberry-io-pi4j:LoRa')
-    implementation project(':raspberry-sailor:NMEA-Parser')
-    implementation project(':NMEA-multiplexer')
+
     implementation project(':Project-Trunk:SunFlower') // For the Servo Board (PCA9685) and the LSM303
 }
 

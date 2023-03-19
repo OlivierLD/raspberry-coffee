@@ -46,7 +46,7 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven { url "https://oss.sonatype.org/content/groups/public" }
-    // maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }  // maven repo in git
+    maven { url "https://raw.githubusercontent.com/OlivierLD/ROB/repository" }  // maven repo in git
 }
 
 dependencies {
@@ -68,8 +68,9 @@ dependencies {
     implementation 'org.ajoberstar:gradle-git:1.1.0'
     implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
 
-    implementation project(':common-utils')
-    implementation project(':http-tiny-server')
+    implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
+    implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
+
     implementation project(':raspberry-io-pi4j:Utils')
     implementation project(':raspberry-io-pi4j:ADC')
 }
