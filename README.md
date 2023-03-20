@@ -26,18 +26,6 @@ Main keywords:
 ---
 - Some modules will also use [`OpenCV`](https://opencv.org/) (an OpenSource Project for Computer Vision). See below how _not_ to use them, if needed. It's worth a look, though. 
 
-<!--
-To make this repo a bit lighter and more flexible, it will depend on some code stored 
-in other git repos, and deployed as artifacts on a maven repo (hosted by Github, as explained [below](#a-maven-repo-in-github)).  
-Those other repos are:
-- <https://github.com/OlivierLD/raspberry-io-pi4j>, for PI4J devices implementations.
-  - This will provide - later - the possibility to also use other IO libraries for the communication required by break-out boards.
-- <https://github.com/OlivierLD/raspberry-sailor>, for navigation and sailing related pieces of code.
-- <https://github.com/OlivierLD/AstroComputer> for all kinds of celestial computations, in several languages.
-
-The maven repo where artifacts are deployed is actually a branch of this repo, at <https://github.com/OlivierLD/raspberry-coffee/tree/repository>. See [below](#a-maven-repo-in-github) for more details.
--->
-
 ---
 The project - and its different modules - are built using [`Gradle`](https://gradle.org/).  
 Some modules also use the `librxtx` library for Serial IO (details given below)
@@ -45,23 +33,11 @@ Some modules also use the `librxtx` library for Serial IO (details given below)
 ---
 This project is divided in several modules (Gradle modules, not git sub-modules).  
 Some noticeable ones are
-- `astro-computer`
-  - Some astronomical routines used to get the positions of celestial bodies at a given time,
-    used for real-time calculation, or almanacs publication.
 - `raspberry-io-pi4j`
   - Contains implementation modules for various break-out boards and various communication protocols (I2C, SPI, UART, GPIO) through
     the Raspberry Pi's GPIO header, and the `PI4J` library
   - Other libraries (like `diozero`) might show up later.
-- `raspberry-sailor`
-  - Contains navigation-related modules, like `TideEngine`, and NMEA-related routines (parsers, generators, etc)
-
-Other modules - at the root level - can reuse the modules mentioned above.
-For example, the `NMEA-multiplexer` will use:
-- `raspberry-sailor`, for NMEA Data Parsing (like GPS or NMEA station), and Tide calculation utilities
-- `raspberry-io-pi4j`, for extra sensors (like pressure, humidity, temperature, magnetometer, etc)
-
-The `RESTNavServer` uses all the above, and `astro-computer` as well, and `http-tiny-server` to implement a REST interface.  
-And so on!
+- . . .
 
 The point of truth, telling you what module uses what modules, is the `build.gradle` of the module you are interested in.  
 To see the full structure, from the repo's root, type
@@ -135,37 +111,14 @@ This is the file to deal with, if an upgrade of the Gradle version is required.
 > _<u>Another note</u>_: Some scripts will be featured here, to run the different modules.
 > **Those scripts are written to run in the development environment**. They can be easily tweaked to run 
 > in any other context.  
-> _Example_:  
-> The `NMEA-multiplexer` project has many dependencies, remote ones, and local ones:
 > ```
->    implementation "com.pi4j:pi4j-core:$pi4j_version"
->    implementation 'org.rxtx:rxtx:2.1.7'
->    implementation 'org.scala-lang:scala-library:2.13.3'
->    implementation "org.scala-lang:scala-compiler:2.13.3"
->    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
->    implementation 'org.java-websocket:Java-WebSocket:1.5.2'
->    implementation 'com.google.code.gson:gson:2.8.0'
->    implementation 'org.fusesource.jansi:jansi:1.11'
->    implementation 'oracle:xmlparser:2.0'
->    implementation 'org.yaml:snakeyaml:1.21'
->    implementation group: 'org.xerial', name: 'sqlite-jdbcB', version: '3.34.0'
->    implementation group: 'org.json', name: 'json', version: '20190722'
->    implementation project(':http-tiny-server')
->    implementation project(':common-utils')
->    implementation 'oliv.raspi.pi4j:I2C-SPI:1.0'
->    implementation 'astro.computer:astro.computer:1.0'
->    implementation 'oliv.raspi.pi4j:LoRa:1.0'    // Needed for a publisher
-> ```
-> Building the module with a `../gradlew shadowJar` will generate a **_single jar file_** named `./build/libs/NMEA-multiplexer-1.0-all.jar`, 
-> used for example in the script `ais.test.sh`:
-> ```
-> CP=./build/libs/NMEA-multiplexer-1.0-all.jar
+> CP=./build/libs/NMEA-mux-PI4J-1.0-all.jar
 > java -cp ${CP} nmea.consumers.client.AISClient
 > ```
 > You may very well run the **exact** same thing, by delivering only the script and the jar, together in the same folder,
 > all you need to do is to change the location of the delivered jar-file (saying script and jar are in the same location):
 > ```
-> java -cp ./NMEA-multiplexer-1.0-all.jar nmea.consumers.client.AISClient
+> java -cp ./NMEA-mux-PI4J-1.0-all.jar nmea.consumers.client.AISClient
 > ```
 > _Think about that_: You might not be able to **build** (using the provided Gradle scripts) an application on a small board like a Raspberry Pi Zero,
 > but this small board could very well be big enough to **run** it comfortably.  

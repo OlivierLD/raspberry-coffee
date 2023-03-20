@@ -77,7 +77,7 @@ JAVA_OPTIONS="${JAVA_OPTIONS} -Dtry.to.speak=true"
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
-CP=./build/libs/NMEA-multiplexer-1.0-all.jar
+CP=./build/libs/NMEA-mux-PI4J-1.0-all.jar
 SUDO=
 if [[ "$OS" == "Darwin" ]]; then
   # CP=${CP}:./libs/RXTXcomm.jar          # for Mac

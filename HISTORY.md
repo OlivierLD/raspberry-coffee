@@ -26,15 +26,17 @@
     | + TideEngine
     ```
   - The point of truth for the dependencies remains the `build.gradle` of each module.
+- March 2023
+  - Big refactoring.
+  - Moved the NMEA-multiplexer part to another repo (<https://github.com/OlivierLD/ROB>).
+  - Leave the PI4J part here, not to lose it.
 
 # TODO
-- Separate REST and Navigation (NMEA) parts in another repo
-  - May take some time...
-- Sync the Maven branches.
+- . . .
 
 # Dependencies (known ones)
 - Depends on
-    - [~~AstroComputer~~](https://github.com/OlivierLD/AstroComputer)
+    - [Raspberry-On-Board](https://github.com/OlivierLD/ROB)
     
 
 --- 

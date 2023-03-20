@@ -2,6 +2,8 @@
 # MUX definition.
 #
 name: "Read a HMC5883L, feeds a cache, optional forward on TCP."
+description:
+  - Obsolete. Use dynamic consumers.
 context:
   with.http.server: true
   http.port: 9991

@@ -38,12 +38,12 @@ dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.5.2'
     implementation 'org.fusesource.jansi:jansi:1.11'
     implementation 'oracle:xmlparser:2.0'
-    implementation 'org.yaml:snakeyaml:1.21'
-    implementation 'org.xerial:sqlite-jdbc:3.34.0'
-    implementation "com.google.code.gson:gson:$google_gson_gson"   // TODO Move to Jackson
+//    implementation 'org.yaml:snakeyaml:1.21'
+//    implementation 'org.xerial:sqlite-jdbc:3.34.0'
+//    implementation "com.google.code.gson:gson:$google_gson_gson"   // TODO Move to Jackson
     implementation 'org.json:json:20190722'
-    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
-    implementation 'net.thisptr:jackson-jq:1.0.0-preview.20220705'  // jackson-jq
+//    implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
+//    implementation 'net.thisptr:jackson-jq:1.0.0-preview.20220705'  // jackson-jq
 
     implementation 'astro.computer:AstroComputer:1.0'         // in the Maven on GIT
     implementation 'raspberry.on.board:NMEA-Parser:1.0'       // in the Maven on GIT

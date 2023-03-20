@@ -29,7 +29,7 @@ dependencies {
   implementation 'raspberry.on.board:common-utils:1.0'  // in the Maven on GIT
   implementation project(':raspberry-io-pi4j:Utils')
   implementation 'raspberry.on.board:http-tiny-server:1.0'  // in the Maven on GIT
-  implementation 'astro.computer:AstroComputer:1.0'         // in the Maven on GIT
+  implementation 'astro.computer:AstroUtilities:1.0'        // in the Maven on GIT
 
   testImplementation "junit:junit:$junit_version"
 }

@@ -1,0 +1,15 @@
+name: "Dynamic Sensors Consumer"
+description:
+  - Consumes data from a BME280, using PI4J v1
+context:
+  with.http.server: false
+  init.cache: false
+channels:
+  - class: nmea.consumers.client.BME280Client
+    reader: nmea.consumers.reader.BME280Reader
+    # properties: mux-configs/txt.properties
+    verbose: true
+    # device.filters: . . .
+    # sentence.filters: . . .
+forwarders:
+  - type: console
