@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'astro.computer:AstroComputer:1.0'         // in the Maven on GIT
+  implementation 'astro.computer:AstroUtilities:1.0'         // in the Maven on GIT
   implementation 'raspberry.on.board:NMEA-Parser:1.0'  // in the Maven on GIT
 
   testImplementation "junit:junit:$junit_version"
