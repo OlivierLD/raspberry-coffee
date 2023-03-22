@@ -28,7 +28,7 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
     private final static String HELP = "Simple 2D Bezier sample.\n4 Draggable Ctrl Points.\nUse the Animate button to see how the curve is build.";
     // All z = 0, 2D bezier.
     // 4 control points
-    private List<Bezier.Point3D> ctrlPoints = List.of(
+    private final List<Bezier.Point3D> ctrlPoints = List.of(
             new Bezier.Point3D(-60, -20, 0),
             new Bezier.Point3D(0, 40, 0),
             new Bezier.Point3D(50, -40, 0),
@@ -75,10 +75,10 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
         // Prepare data for display
         // Ctrl Points
         double[] xCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getX())
+                .mapToDouble(Bezier.Point3D::getX)
                 .toArray();
         double[] yCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getY())
+                .mapToDouble(Bezier.Point3D::getY)
                 .toArray();
         List<VectorUtils.Vector2D> ctrlPtsVectors = new ArrayList<>();
         for (int i=0; i<xCtrlPoints.length; i++) {
@@ -88,10 +88,10 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
 
         // Curve points
         double[] xData = bezierPoints.stream()
-                .mapToDouble(bp -> bp.getX())
+                .mapToDouble(VectorUtils.Vector3D::getX)
                 .toArray();
         double[] yData = bezierPoints.stream()
-                .mapToDouble(bp -> bp.getY())
+                .mapToDouble(VectorUtils.Vector3D::getY)
                 .toArray();
         List<VectorUtils.Vector2D> dataVectors = new ArrayList<>();
         for (int i=0; i<xData.length; i++) {
@@ -152,7 +152,7 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
             if (animator == null || !animator.isAlive()) {
                 System.out.println("Starting new Animator");
                 animateSuspended = false;
-                animator = new Thread(() -> animate(), "Animator");
+                animator = new Thread(this::animate, "Animator");
                 animator.start();
             } else {
                 System.out.println("Animator already running");
@@ -180,10 +180,10 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
         menuFileExit.setText("Exit");
-        menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
+        menuFileExit.addActionListener(this::fileExit_ActionPerformed);
         menuHelp.setText("Help");
         menuHelpAbout.setText("About");
-        menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
+        menuHelpAbout.addActionListener(this::helpAbout_ActionPerformed);
         menuFile.add(menuFileExit);
         menuBar.add(menuFile);
         menuHelp.add(menuHelpAbout);
@@ -227,7 +227,7 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
     }
 
     private boolean animateSuspended = false;
-    private Object lock = new Object(); // wait/notify on the animator thread did not work for me... :(
+    private final Object lock = new Object(); // wait/notify on the animator thread did not work for me... :(
     private Thread animator = null;
 
     public void animate() {
@@ -237,10 +237,10 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
 
         // Ctrl Points
         double[] xCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getX())
+                .mapToDouble(Bezier.Point3D::getX)
                 .toArray();
         double[] yCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getY())
+                .mapToDouble(Bezier.Point3D::getY)
                 .toArray();
 
         List<VectorUtils.Vector2D> ctrlPtsVectors = new ArrayList<>();
@@ -273,10 +273,10 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
                         bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
                     }
                     double[] xData = bezierPoints.stream()
-                            .mapToDouble(bp -> bp.getX())
+                            .mapToDouble(VectorUtils.Vector3D::getX)
                             .toArray();
                     double[] yData = bezierPoints.stream()
-                            .mapToDouble(bp -> bp.getY())
+                            .mapToDouble(VectorUtils.Vector3D::getY)
                             .toArray();
                     List<VectorUtils.Vector2D> dataVectors = new ArrayList<>();
                     for (int i=0; i<xData.length; i++) {
