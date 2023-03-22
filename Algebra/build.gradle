@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.8.10'  //'1.6.0'
+    ext.kotlin_version = '1.5.20' // '1.8.10'  //'1.6.0'
     ext.shadowVersion = '6.0.0'
     repositories {
         mavenCentral()
@@ -58,11 +58,11 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box s
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
     classpath sourceSets.test.runtimeClasspath
-    main = 'gsg.examples.box3d.Sample' + testNum  // Default 01, see above
+    mainClass = 'gsg.examples.box3d.Sample' + testNum  // Default 01, see above
     if (project.hasProperty('num')) { // gradlew -Pnum=XX runSample
         testNum = project.getProperty('num')
         println ">>> Running test ${testNum}, ${name}"
-        main = 'gsg.examples.box3d.Sample' + testNum
+        mainClass = 'gsg.examples.box3d.Sample' + testNum
     }
 
     if (testNum == '11') {
@@ -98,7 +98,7 @@ task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a B
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
     classpath sourceSets.test.runtimeClasspath
-    main = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum  // Default 01, see above
+    mainClass = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum  // Default 01, see above
     if (project.hasProperty('num')) { // gradlew runBezierSample -Pnum=XX
         bezierTestNum = project.getProperty('num')
         if (false && name == "runBezierSample") {
@@ -109,7 +109,7 @@ task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a B
                 System.exit(1)
             } else {
                 println ">>> Running test " + bezierTestNum
-                main = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum
+                mainClass = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum
             }
         }
     } else {
@@ -117,7 +117,7 @@ task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a B
             println ">>> Running test " + bezierTestNum
         }
     }
-    println "--- Use the [Activate] button to see the Bezier progressing."
+    println "--- Use the [Animate] button to see the Bezier progressing."
     workingDir "."
 }
 
@@ -129,7 +129,7 @@ task runSample2(type: JavaExec, dependsOn: build, description: "Swing UI sample.
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
     classpath sourceSets.test.runtimeClasspath
-    main = 'gsg.examples.wb.lowpass.SwingSample10'
+    mainClass = 'gsg.examples.wb.lowpass.SwingSample10'
     workingDir "."
 }
 
@@ -141,7 +141,7 @@ task runSample3(type: JavaExec, dependsOn: build, description: "Swing UI sample.
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
     classpath sourceSets.test.runtimeClasspath
-    main = 'gsg.examples.wb.bezier.SwingSample11'
+    mainClass = 'gsg.examples.wb.bezier.SwingSample11'
     workingDir "."
 }
 
@@ -153,7 +153,7 @@ task runSample4(type: JavaExec, dependsOn: build, description: "Swing UI sample.
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
     classpath sourceSets.test.runtimeClasspath
-    main = 'gsg.examples.wb.bezier.SwingSample12'
+    mainClass = 'gsg.examples.wb.bezier.SwingSample12'
     workingDir "."
 }
 
