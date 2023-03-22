@@ -1,10 +1,13 @@
 buildscript {
-    ext.kotlin_version = '1.6.0'
+    ext.kotlin_version = '1.8.10'  //'1.6.0'
     ext.shadowVersion = '6.0.0'
     repositories {
         mavenCentral()
         maven {
             url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin"
         }
     }
     dependencies {
@@ -30,9 +33,9 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
-    mavenCentral()
     mavenLocal()
-//  maven { url "https://oss.sonatype.org/content/groups/public" }
+    mavenCentral()
+    // maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin" }
 }
 
 //compileJava.options.encoding = 'ISO-8859-1'
