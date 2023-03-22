@@ -35,7 +35,7 @@ version = '1.0'
 repositories {
     mavenLocal()
     mavenCentral()
-    // maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin" }
+    maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin" }
 }
 
 //compileJava.options.encoding = 'ISO-8859-1'
