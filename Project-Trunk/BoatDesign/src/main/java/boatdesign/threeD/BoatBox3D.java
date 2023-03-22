@@ -11,13 +11,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -1751,7 +1746,9 @@ public class BoatBox3D extends Box3D {
         }
         long after = System.currentTimeMillis();
         if (messCallback != null) {
-            messCallback.accept(String.format("Refresh done in %s ms.", NumberFormat.getInstance().format(after - before)));
+            messCallback.accept(String.format("%s\nRefresh done in %s ms.",
+                    new Date(),
+                    NumberFormat.getInstance().format(after - before)));
         }
     }
 

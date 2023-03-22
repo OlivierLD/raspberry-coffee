@@ -1,6 +1,13 @@
 # Boat Design
 > Work in Progress, a test.  
-> Several (if not many) assumptions on options.
+> Several (if not many) assumptions on options.  
+> One goal here is to create a boat defined with as few control points as possible.
+> 
+> Here we choose to define the keel and the rail.  
+> Each frame will have 3 control points:
+> - One on the rail
+> - One on the keel
+> - One at the rail's width, and keel's height.
 
 Based on the `Algebra` module, in this project.
 
