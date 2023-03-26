@@ -5,7 +5,7 @@ import java.util.ResourceBundle;
 
 public class BoatDesignResourceBundle {
     //                                Package               File Base name
-    private static String baseName = "boatdesign.utils." + "bd";
+    private final static String baseName = "boatdesign.utils." + "bd";
     private static ResourceBundle resourceBundle;
 
     private final static boolean BUNDLE_VERBOSE = "true".equals(System.getProperty("bundle-verbose"));

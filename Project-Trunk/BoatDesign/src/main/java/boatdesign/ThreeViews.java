@@ -572,9 +572,7 @@ public class ThreeViews {
         boatData.appendChild(comments);
 
         List<String> mapComments = (List<String>) dataMap.get("comments");
-        mapComments.forEach(mapComment -> {
-            comments.appendChild(createTextNode(doc, "comment", mapComment));
-        });
+        mapComments.forEach(mapComment -> comments.appendChild(createTextNode(doc, "comment", mapComment)));
         boatData.appendChild(createTextNode(doc, "description", (String) dataMap.get("description")));
 
         XMLElement defaultPoints = (XMLElement) doc.createElement("ctrl-points");
@@ -708,9 +706,7 @@ public class ThreeViews {
         // Coordinates
         XMLElement frameCoordinates = (XMLElement) doc.createElement("frame-coordinates");
         drawings.appendChild(frameCoordinates);
-        allFramesCtrlPts.forEach(frameBezier -> {
-            processFrame(doc, frameCoordinates, loa, frameBezier);
-        });
+        allFramesCtrlPts.forEach(frameBezier -> processFrame(doc, frameCoordinates, loa, frameBezier));
         // Transom
         processFrame(doc, frameCoordinates, loa, ctrlPointsTransom);
 
@@ -895,9 +891,7 @@ public class ThreeViews {
                             } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.WATERLINE)) {
                                 List<Bezier.Point3D> data = (List<Bezier.Point3D>) map.get(BoatBox3D.DATA);
                                 List<VectorUtils.Vector2D> waterlinePtsXYVectors = new ArrayList<>();
-                                data.forEach(pt -> {
-                                    waterlinePtsXYVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getY()));
-                                });
+                                data.forEach(pt -> waterlinePtsXYVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getY())));
                                 WhiteBoardPanel.DataSerie frameXYSerie = new WhiteBoardPanel.DataSerie()
                                         .data(waterlinePtsXYVectors)
                                         .graphicType(WhiteBoardPanel.GraphicType.LINE)
@@ -908,9 +902,7 @@ public class ThreeViews {
                             } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.BUTTOCK)) {
                                 List<Bezier.Point3D> data = (List<Bezier.Point3D>) map.get(BoatBox3D.DATA);
                                 List<VectorUtils.Vector2D> buttockPtsXZVectors = new ArrayList<>();
-                                data.forEach(pt -> {
-                                    buttockPtsXZVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getZ()));
-                                });
+                                data.forEach(pt -> buttockPtsXZVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getZ())));
                                 WhiteBoardPanel.DataSerie buttockXZSerie = new WhiteBoardPanel.DataSerie()
                                         .data(buttockPtsXZVectors)
                                         .graphicType(WhiteBoardPanel.GraphicType.LINE)
