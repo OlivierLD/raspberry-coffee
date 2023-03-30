@@ -1054,8 +1054,8 @@ public class SunFlowerDriver {
 			String lineTwo = String.format(
 					"Sun - El:  %.02f, Z: %.02f",
 					this.sunElevation, this.sunAzimuth);
-			sb.text(lineOne, 2, 1 + (fontFactor * 4) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(lineTwo, 2, 1 + (fontFactor * 4) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineOne, 2, 1 + (fontFactor * 7) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineTwo, 2, 1 + (fontFactor * 7) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
 
 		if ("true".equals(System.getProperty("ssd1306.verbose"))) {
