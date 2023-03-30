@@ -1030,8 +1030,8 @@ public class SunFlowerDriver {
 	// TODO Option for the Sun or Device Data.
 	private void displayOled() {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		boolean oneLine = false; // Hard coded option.
-		boolean allData = true; // Hard coded option.
+		boolean oneLine = false; // Hard coded option. TODO prm
+		boolean allData = true; // Hard coded option. TODO prm
 		int fontFactor = 2;
 		if (oneLine) {
 			fontFactor = 3;
@@ -1054,8 +1054,8 @@ public class SunFlowerDriver {
 			String lineTwo = String.format(
 					"Sun - El:  %.02f, Z: %.02f",
 					this.sunElevation, this.sunAzimuth);
-			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineOne, 2, 1 + (fontFactor * 4) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineTwo, 2, 1 + (fontFactor * 4) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
 
 		if ("true".equals(System.getProperty("ssd1306.verbose"))) {
