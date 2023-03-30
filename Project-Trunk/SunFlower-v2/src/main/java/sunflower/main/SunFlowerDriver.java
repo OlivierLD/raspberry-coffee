@@ -656,7 +656,7 @@ public class SunFlowerDriver {
 		return solar;
 	}
 
-	private static class CelestialComputerThread extends Thread {
+	private class CelestialComputerThread extends Thread {
 		private boolean keepCalculating = true;
 		private Calendar previousDate = null; // Used for simulation, when required
 		private int incrementPerSecond = -1;  // Used for simulation
@@ -760,6 +760,9 @@ public class SunFlowerDriver {
 					// TODO Compare with acv2.getSolarDateAtPos(devicePosition.getLatitude(), devicePosition.getLongitude())
 					if (ASTRO_VERBOSE) {
 						System.out.printf("At %s, from %s, Z: %.02f, Elev: %.02f \n", date.getTime(), devicePosition, sunAzimuth, sunElevation);
+					}
+					if (withSSD1306) {
+						instance.displayOled(); // Update oled display
 					}
 				} else {
 					System.out.println("No position yet!"); // See below the "date.simulation" property. If true, requires -Dstart.date.simulation=2020-03-06T20:00:00" (UTC)
@@ -1062,10 +1065,10 @@ public class SunFlowerDriver {
 					this.currentDeviceAzimuth);
 			String lineThree = String.format(
 					"Sun El:  %.02f",
-					this.sunElevation);
+					sunElevation);
 			String lineFour = String.format(
 					"    Z: %.02f",
-					this.sunAzimuth);
+					sunAzimuth);
 			sb.text(lineOne, 2, 1 + (fontFactor * 7) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 7) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineThree, 2, 1 + (fontFactor * 7) + (2 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
