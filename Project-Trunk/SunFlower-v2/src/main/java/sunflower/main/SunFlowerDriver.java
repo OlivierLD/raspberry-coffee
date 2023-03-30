@@ -1027,17 +1027,23 @@ public class SunFlowerDriver {
 		return adjusted;
 	}
 
+	enum DisplayOption {
+		ONE_LINE,
+		TWO_LINES,
+		FOUR_LINES
+	}
+
 	// TODO Option for the Sun or Device Data.
 	private void displayOled() {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		boolean oneLine = false; // Hard coded option. TODO prm
-		boolean allData = true; // Hard coded option. TODO prm
+		DisplayOption ssd1306Option = DisplayOption.FOUR_LINES; // Hard-coded. TODO: prm
 		int fontFactor = 2;
-		if (oneLine) {
+		if (ssd1306Option.equals(DisplayOption.ONE_LINE)) {
 			fontFactor = 3;
 			String display = String.format("%.01f/%.01f", this.currentDeviceElevation, this.currentDeviceAzimuth);
 			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		} else if (!allData) {
+		} else if (ssd1306Option.equals(DisplayOption.TWO_LINES)) {
+			fontFactor = 2;
 			String lineOne = String.format(
 					"El: %.02f", // "Dev. Elevation %.02f",
 					this.currentDeviceElevation);
@@ -1046,16 +1052,24 @@ public class SunFlowerDriver {
 					this.currentDeviceAzimuth);
 			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		} else if (allData) {
+		} else if (ssd1306Option.equals(DisplayOption.FOUR_LINES)) {
 			fontFactor = 1;
 			String lineOne = String.format(
-					"Dev - El: %.02f, Z: %.02f",
-					this.currentDeviceElevation, this.currentDeviceAzimuth);
+					"Dev El: %.02f",
+					this.currentDeviceElevation);
 			String lineTwo = String.format(
-					"Sun - El:  %.02f, Z: %.02f",
-					this.sunElevation, this.sunAzimuth);
+					"    Z: %.02f",
+					this.currentDeviceAzimuth);
+			String lineThree = String.format(
+					"Sun El:  %.02f",
+					this.sunElevation);
+			String lineFour = String.format(
+					"    Z: %.02f",
+					this.sunAzimuth);
 			sb.text(lineOne, 2, 1 + (fontFactor * 7) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 7) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineThree, 2, 1 + (fontFactor * 7) + (2 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineFour, 2, 1 + (fontFactor * 7) + (3 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
 
 		if ("true".equals(System.getProperty("ssd1306.verbose"))) {
