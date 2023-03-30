@@ -1027,21 +1027,33 @@ public class SunFlowerDriver {
 		return adjusted;
 	}
 
+	// TODO Option for the Sun or Device Data.
 	private void displayOled() {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		boolean oneLine = false; // Hard coded option.
+		boolean allData = true; // Hard coded option.
 		int fontFactor = 2;
 		if (oneLine) {
 			fontFactor = 3;
-			String display = String.format("%.01f/%.01f", currentDeviceElevation, currentDeviceAzimuth);
+			String display = String.format("%.01f/%.01f", this.currentDeviceElevation, this.currentDeviceAzimuth);
 			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		} else {
+		} else if (!allData) {
 			String lineOne = String.format(
 					"El: %.02f", // "Dev. Elevation %.02f",
-					currentDeviceElevation);
+					this.currentDeviceElevation);
 			String lineTwo = String.format(
 					"Z:  %.02f", // "Dev. Azimuth %.02f",
-					currentDeviceAzimuth);
+					this.currentDeviceAzimuth);
+			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+		} else if (allData) {
+			fontFactor = 1;
+			String lineOne = String.format(
+					"Dev - El: %.02f, Z: %.02f",
+					this.currentDeviceElevation, this.currentDeviceAzimuth);
+			String lineTwo = String.format(
+					"Sun - El:  %.02f, Z: %.02f",
+					this.sunElevation, this.sunAzimuth);
 			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}

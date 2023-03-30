@@ -130,7 +130,7 @@ public class RESTImplementation {
 					"POST",
 					SF_PREFIX + "/force-shutdown-substitute",
 					this::forceSubstituteScreenShutdown,
-					"Fore the shutdown of the Swing JPanel substitute."
+					"Force the shutdown of the Swing JPanel substitute."
 			)
 	);
 
