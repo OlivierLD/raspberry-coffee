@@ -1030,16 +1030,20 @@ public class SunFlowerDriver {
 		return adjusted;
 	}
 
-	enum DisplayOption {
+	public enum DisplayOption {
 		ONE_LINE,
 		TWO_LINES,
 		FOUR_LINES
 	}
+	private DisplayOption ssd1306Option = DisplayOption.FOUR_LINES; // Default.
 
-	// TODO Option for the Sun or Device Data.
+	// Exposed through featureManager, REST.
+	public void setDisplayOption(DisplayOption displayOption) {
+		this.ssd1306Option = displayOption;
+	}
+
 	private void displayOled() {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		DisplayOption ssd1306Option = DisplayOption.FOUR_LINES; // Hard-coded. TODO: prm
 		int fontFactor = 2;
 		if (ssd1306Option.equals(DisplayOption.ONE_LINE)) {
 			fontFactor = 3;

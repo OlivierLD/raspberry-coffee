@@ -9,6 +9,9 @@ import static sunflower.utils.ANSIUtil.ANSI_DEFAULT_TEXT;
 import static sunflower.utils.ANSIUtil.ANSI_NORMAL;
 import static sunflower.utils.ANSIUtil.ansiLocate;
 
+/**
+ * ANSI Console for the SunFlowerDriver
+ */
 public class ConsoleMain {
 	/**
 	 * System properties:

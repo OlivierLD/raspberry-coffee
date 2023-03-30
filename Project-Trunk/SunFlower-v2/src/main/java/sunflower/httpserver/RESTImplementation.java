@@ -117,6 +117,11 @@ public class RESTImplementation {
 					this::setDeviceHeading,
 					"Set the device heading ('value' as QueryString parameter)"),
 			new Operation(
+					"POST",
+					SF_PREFIX + "/display-option",
+					this::setDisplayOption,
+					"Set display option on SSD1306 ('value' as QueryString parameter, 1..3)"),
+			new Operation(
 					"GET",
 					SF_PREFIX + "/test-oled",
 					this::testOledScreen,
@@ -495,6 +500,74 @@ public class RESTImplementation {
 			response.setPayload("requires 'key' and 'value' QS parameters".getBytes());
 		}
 		return response;
+	}
+
+	private Response setDisplayOption(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+		List<String> pathParameters = request.getPathParameters(); // Not needed...
+		// heading in the query, as 'value'
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		if (queryStringParameters == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0014")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		}
+		Optional<String> value = queryStringParameters
+				.keySet()
+				.stream()
+				.filter(key -> "value".equals(key))
+				.map(key -> queryStringParameters.get(key))
+				.findFirst();
+		if (!value.isPresent()) { // .isEmpty not available in JDK 8
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0014")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		} else {
+			String val = value.get();
+			int option = 0;
+			try {
+				option = Integer.parseInt(val);
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0014")
+								.errorMessage(nfe.toString()));
+				return response;
+			}
+			try {
+				// TODO More options
+				SunFlowerDriver.DisplayOption newOption = null;
+				if (option == 1) {
+					newOption = SunFlowerDriver.DisplayOption.ONE_LINE;
+				} else if (option == 2) {
+					newOption = SunFlowerDriver.DisplayOption.TWO_LINES;
+				} else if (option == 3) {
+					newOption = SunFlowerDriver.DisplayOption.FOUR_LINES;
+				}
+				this.featureManager.setDisplayOption(newOption);
+				ValueHolder valueHolder = new ValueHolder().value(option);
+				String content = new Gson().toJson(valueHolder);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			} catch (Exception ex1) {
+				System.err.println(">> Managed Exception SUN_FLOWER-0014:");
+				ex1.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0014")
+								.errorMessage(ex1.toString()));
+				return response;
+			}
+		}
 	}
 
 	/**

@@ -25,5 +25,6 @@ dependencies {
     implementation "com.pi4j:pi4j-core:$pi4j_version"
     implementation 'raspberry.on.board:common-utils:1.0'      // in the Maven on GIT
     implementation 'astro.computer:AstroComputer:1.0'         // in the Maven on GIT
+    implementation 'raspberry.on.board:NMEA-Parser:1.0'       // in the Maven on GIT
     implementation 'raspberry.on.board:NMEA-multiplexer:1.0'  // in the Maven on GIT
 }
