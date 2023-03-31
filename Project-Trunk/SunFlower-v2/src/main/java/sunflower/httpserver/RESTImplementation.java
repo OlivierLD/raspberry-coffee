@@ -538,7 +538,7 @@ public class RESTImplementation {
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
 									.errorCode("SUN_FLOWER-0014")
-									.errorMessage("prm 'value' in [1..3] please"));
+									.errorMessage(String.format("prm 'value' in [1..%d] please", SunFlowerDriver.DisplayOption.values().length)));
 					return response;
 				}
 			} catch (NumberFormatException nfe) {
