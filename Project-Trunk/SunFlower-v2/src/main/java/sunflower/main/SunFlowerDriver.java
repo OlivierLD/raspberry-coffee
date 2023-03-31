@@ -1033,7 +1033,8 @@ public class SunFlowerDriver {
 	public enum DisplayOption {
 		ONE_LINE,
 		TWO_LINES,
-		FOUR_LINES
+		FOUR_LINES,
+		DEVICE_POSITION
 	}
 	private DisplayOption ssd1306Option = DisplayOption.FOUR_LINES; // Default.
 
@@ -1077,7 +1078,17 @@ public class SunFlowerDriver {
 			sb.text(lineTwo, 2, 1 + (fontFactor * 7) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineThree, 2, 1 + (fontFactor * 7) + (2 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineFour, 2, 1 + (fontFactor * 7) + (3 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		}
+		} else if (ssd1306Option.equals(DisplayOption.DEVICE_POSITION)) {
+			fontFactor = 2;
+			String lineOne = "Position:";
+			String lineTwo = "null";
+			if (devicePosition != null) {
+				lineOne = String.format("%s", GeomUtil.decToSex(devicePosition.getLatitude(), GeomUtil.SWING, GeomUtil.NS));
+				lineTwo = String.format("%s", GeomUtil.decToSex(devicePosition.getLongitude(), GeomUtil.SWING, GeomUtil.EW));
+			}
+			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+		} // else { NOOP }
 
 		if ("true".equals(System.getProperty("ssd1306.verbose"))) {
 			System.out.printf("At %s%n", SDF.format(new Date()));

@@ -1,6 +1,6 @@
 package sunflower.httpserver;
 
-import com.google.gson.Gson;
+import com.google.gson.Gson;  // TODO Use Jackson
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
@@ -120,7 +120,7 @@ public class RESTImplementation {
 					"POST",
 					SF_PREFIX + "/display-option",
 					this::setDisplayOption,
-					"Set display option on SSD1306 ('value' as QueryString parameter, 1..3)"),
+					String.format("Set display option on SSD1306 ('value' as QueryString parameter, 1..%d)", SunFlowerDriver.DisplayOption.values().length)),
 			new Operation(
 					"GET",
 					SF_PREFIX + "/test-oled",
@@ -550,15 +550,15 @@ public class RESTImplementation {
 				return response;
 			}
 			try {
-				// TODO More options
-				SunFlowerDriver.DisplayOption newOption = null;
-				if (option == 1) {
-					newOption = SunFlowerDriver.DisplayOption.ONE_LINE;
-				} else if (option == 2) {
-					newOption = SunFlowerDriver.DisplayOption.TWO_LINES;
-				} else if (option == 3) {
-					newOption = SunFlowerDriver.DisplayOption.FOUR_LINES;
-				}
+				// Display options
+				SunFlowerDriver.DisplayOption newOption = SunFlowerDriver.DisplayOption.values()[option - 1];
+//				if (option == 1) {
+//					newOption = SunFlowerDriver.DisplayOption.ONE_LINE;
+//				} else if (option == 2) {
+//					newOption = SunFlowerDriver.DisplayOption.TWO_LINES;
+//				} else if (option == 3) {
+//					newOption = SunFlowerDriver.DisplayOption.FOUR_LINES;
+//				}
 				this.featureManager.setDisplayOption(newOption);
 				ValueHolder valueHolder = new ValueHolder().value(option);
 				String content = new Gson().toJson(valueHolder);
