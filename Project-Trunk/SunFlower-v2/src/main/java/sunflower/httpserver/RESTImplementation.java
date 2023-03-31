@@ -533,7 +533,7 @@ public class RESTImplementation {
 			int option = 0;
 			try {
 				option = Integer.parseInt(val);
-				if (option < 0 || option > 3) {
+				if (option < 0 || option > SunFlowerDriver.DisplayOption.values().length) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
