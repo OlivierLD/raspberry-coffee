@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Drives the stepper motors to orient the solar panel.
+ * Provides a REST interface.
+ *
+ * @see sunflower.httpserver.FeatureRequestManager to see the available features
+ * @see sunflower.httpserver.RESTImplementation to see how features are exposed through REST
  */
 public class SunFlowerServer {
 
@@ -53,10 +58,6 @@ public class SunFlowerServer {
 				.collect(Collectors.toList());
 	}
 
-	public static void main(String... args) {
-		new SunFlowerServer();
-	}
-
 	public HTTPServer startHttpServer(int port, FeatureRequestManager requestManager) {
 		HTTPServer newHttpServer = null;
 		try {
@@ -67,5 +68,9 @@ public class SunFlowerServer {
 			e.printStackTrace();
 		}
 		return newHttpServer;
+	}
+
+	public static void main(String... args) {
+		new SunFlowerServer();
 	}
 }

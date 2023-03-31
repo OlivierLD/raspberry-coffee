@@ -533,12 +533,13 @@ public class RESTImplementation {
 			int option = 0;
 			try {
 				option = Integer.parseInt(val);
-				if (option < 0 || option > SunFlowerDriver.DisplayOption.values().length) {
+				final int maxOption = SunFlowerDriver.DisplayOption.values().length;
+				if (option < 0 || option > maxOption) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
 									.errorCode("SUN_FLOWER-0014")
-									.errorMessage(String.format("prm 'value' in [1..%d] please", SunFlowerDriver.DisplayOption.values().length)));
+									.errorMessage(String.format("prm 'value' in [1..%d] please", maxOption)));
 					return response;
 				}
 			} catch (NumberFormatException nfe) {
@@ -550,7 +551,7 @@ public class RESTImplementation {
 				return response;
 			}
 			try {
-				// Display options
+				// Set display options
 				SunFlowerDriver.DisplayOption newOption = SunFlowerDriver.DisplayOption.values()[option - 1];
 //				if (option == 1) {
 //					newOption = SunFlowerDriver.DisplayOption.ONE_LINE;

@@ -17,6 +17,8 @@ import java.util.Map;
 
 /**
  * Dedicated to heading, latitude, and longitude.
+ *
+ * @see RESTImplementation to see how features are exposed through REST
  */
 public class FeatureRequestManager implements RESTRequestManager {
 
@@ -77,7 +79,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 					String response = HTTPClient.doGet(resource, null);
 //					System.out.println("Cache:" + response);
 					alreadyRaisedConnectException = false;
-					Gson gson = new GsonBuilder().create();
+					Gson gson = new GsonBuilder().create();  // TODO Use Jackson
 					StringReader stringReader = new StringReader(response);
 					Map<String, Object> cache = gson.fromJson(stringReader, Map.class);
 //					System.out.println("Cache > " + cache.toString());

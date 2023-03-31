@@ -30,7 +30,7 @@ JAVA_OPTS="${JAVA_OPTS} -Dazimuth.inverted=false"  # For V5
 #
 JAVA_OPTS="${JAVA_OPTS} -Dminimum.elevation=10"
 #
-JAVA_OPTS="${JAVA_OPTS} -Duse.step.accumulation=true"
+JAVA_OPTS="${JAVA_OPTS} -Duse.step.accumulation=false"  # true
 #
 PORT=8989
 JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=${PORT}"
@@ -50,9 +50,9 @@ JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=10" # Give some time to the motor.
 #JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=1"
 JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=false" # Set to true NOT to use the motors
 #
-# NMEA Data server (NMEA-multiplexer), position and heading
-JAVA_OPTS="${JAVA_OPTS} -Dping.nmea.server=false"
-JAVA_OPTS="${JAVA_OPTS} -Dnmea.server.base.url=http://192.168.42.30:9991"  # Do touch that one!
+# NMEA Data server (NMEA-multiplexer), position and heading (See in FeatureRequestManager)
+JAVA_OPTS="${JAVA_OPTS} -Dping.nmea.server=false"  # Fetch data from multiplexer
+JAVA_OPTS="${JAVA_OPTS} -Dnmea.server.base.url=http://192.168.42.30:9991"  # Used as base for GET /mux/cache. Can be on any machine.
 #
 JAVA_OPTS="${JAVA_OPTS} -Dwith.ssd1306=true" # OLED! Default 128x32
 JAVA_OPTS="${JAVA_OPTS} -Dssd1306.verbose=false"
