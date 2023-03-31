@@ -1031,12 +1031,13 @@ public class SunFlowerDriver {
 	}
 
 	public enum DisplayOption {
-		ONE_LINE,
-		TWO_LINES,
-		FOUR_LINES,
+		DEVICE_STATUS_ONE,
+		DEVICE_STATUS_TWO,
+		STATUS_AND_SUN,
+		SUN_STATUS,
 		DEVICE_POSITION
 	}
-	private DisplayOption ssd1306Option = DisplayOption.FOUR_LINES; // Default.
+	private DisplayOption ssd1306Option = DisplayOption.STATUS_AND_SUN; // Default.
 
 	// Exposed through featureManager, REST.
 	public void setDisplayOption(DisplayOption displayOption) {
@@ -1046,21 +1047,21 @@ public class SunFlowerDriver {
 	private void displayOled() {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		int fontFactor = 2;
-		if (ssd1306Option.equals(DisplayOption.ONE_LINE)) {
+		if (ssd1306Option.equals(DisplayOption.DEVICE_STATUS_ONE)) {
 			fontFactor = 3;
 			String display = String.format("%.01f/%.01f", this.currentDeviceElevation, this.currentDeviceAzimuth);
 			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		} else if (ssd1306Option.equals(DisplayOption.TWO_LINES)) {
+		} else if (ssd1306Option.equals(DisplayOption.DEVICE_STATUS_TWO)) {
 			fontFactor = 2;
 			String lineOne = String.format(
-					"El: %.02f", // "Dev. Elevation %.02f",
+					"Dev El: %.02f", // "Dev. Elevation %.02f",
 					this.currentDeviceElevation);
 			String lineTwo = String.format(
-					"Z:  %.02f", // "Dev. Azimuth %.02f",
+					"    Z:  %.02f", // "Dev. Azimuth %.02f",
 					this.currentDeviceAzimuth);
 			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		} else if (ssd1306Option.equals(DisplayOption.FOUR_LINES)) {
+		} else if (ssd1306Option.equals(DisplayOption.STATUS_AND_SUN)) {
 			fontFactor = 1;
 			String lineOne = String.format(
 					"Dev El: %.02f",
@@ -1078,9 +1079,19 @@ public class SunFlowerDriver {
 			sb.text(lineTwo, 2, 1 + (fontFactor * 7) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineThree, 2, 1 + (fontFactor * 7) + (2 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(lineFour, 2, 1 + (fontFactor * 7) + (3 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+		} else if (ssd1306Option.equals(DisplayOption.SUN_STATUS)) {
+			fontFactor = 2;
+			String lineOne = String.format(
+					"Sun El: %.02f",
+					sunElevation);
+			String lineTwo = String.format(
+					"    Z:  %.02f",
+					sunAzimuth);
+			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		} else if (ssd1306Option.equals(DisplayOption.DEVICE_POSITION)) {
 			fontFactor = 2;
-			String lineOne = "Position:";
+			String lineOne = "Dev Position:";
 			String lineTwo = "null";
 			if (devicePosition != null) {
 				lineOne = String.format("%s", GeomUtil.decToSex(devicePosition.getLatitude(), GeomUtil.SWING, GeomUtil.NS));

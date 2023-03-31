@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -120,7 +121,13 @@ public class RESTImplementation {
 					"POST",
 					SF_PREFIX + "/display-option",
 					this::setDisplayOption,
-					String.format("Set display option on SSD1306 ('value' as QueryString parameter, 1..%d)", SunFlowerDriver.DisplayOption.values().length)),
+					String.format("Set display option on SSD1306 ('value' as QueryString parameter, 1..%d => %s)",
+							SunFlowerDriver.DisplayOption.values().length,
+							Arrays.asList(SunFlowerDriver.DisplayOption.values())
+									.stream()
+									.map(Object::toString)
+									.collect(Collectors.joining(", "))
+							)),
 			new Operation(
 					"GET",
 					SF_PREFIX + "/test-oled",
