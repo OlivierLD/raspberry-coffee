@@ -533,6 +533,14 @@ public class RESTImplementation {
 			int option = 0;
 			try {
 				option = Integer.parseInt(val);
+				if (option < 0 || option > 3) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("SUN_FLOWER-0014")
+									.errorMessage("prm 'value' in [1..3] please"));
+					return response;
+				}
 			} catch (NumberFormatException nfe) {
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
