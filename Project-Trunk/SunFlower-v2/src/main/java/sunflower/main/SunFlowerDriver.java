@@ -761,7 +761,7 @@ public class SunFlowerDriver {
 					if (ASTRO_VERBOSE) {
 						System.out.printf("At %s, from %s, Z: %.02f, Elev: %.02f \n", date.getTime(), devicePosition, sunAzimuth, sunElevation);
 					}
-					if (withSSD1306) {
+					if (withSSD1306 && keepGoing) {
 						instance.displayOled(); // Update oled display
 					}
 				} else {
@@ -1183,11 +1183,11 @@ public class SunFlowerDriver {
 		astroThread = new CelestialComputerThread();
 		astroThread.start(); // Start calculating
 
-		if (withSSD1306) {
+		if (withSSD1306 && this.keepGoing) {
 			displayOled();
 		}
 
-		while (keepGoing) {
+		while (this.keepGoing) {
 			Date date = (gpsDate != null ? gpsDate : new Date()); // System date... May come from a GPS (RMC)
 			DeviceData deviceData = new DeviceData(date,
 					devicePosition, currentDeviceAzimuth, currentDeviceElevation,
@@ -1307,7 +1307,7 @@ public class SunFlowerDriver {
 								currentDeviceAzimuthStepOffset);
 					}
 					// OLED Screen?
-					if (withSSD1306) {
+					if (withSSD1306 && this.keepGoing) {
 						displayOled();
 					}
 				}
