@@ -1325,7 +1325,7 @@ public class SunFlowerDriver {
 				synchronized (lock) {
 					System.out.println("Waiting for a signal to turn SSD1306 off");
 					lock.wait();
-					System.out.println("Signal received.");
+					System.out.println("Signal (SSD1306) received.");
 				}
 			} catch (InterruptedException ie) {
 				System.err.println("Exception in the wait:");
@@ -1348,13 +1348,13 @@ public class SunFlowerDriver {
 			}
 			System.out.println("SSD1306 terminated");
 			synchronized (lock) {
-				System.out.println("\t>> Sending signal to the hook");
+				System.out.println("\t>> Sending SSD1306 signal to the hook");
 				lock.notify();
-				System.out.println("\t>> Signal sent to the hook.");
+				System.out.println("\t>> Signal SSD1306 sent to the hook.");
 			}
 		}
 		System.out.println("\n\n\n... Done with the SunFlowerDriver program ...");
-//	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
+		// try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
 	public void forceSubstituteShutdown() {
@@ -1487,7 +1487,7 @@ public class SunFlowerDriver {
 
 		// Displaying message on screen
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		boolean oneLine = false; // Hard coded option.
+		boolean oneLine = false; // Hard coded option...
 		int fontFactor = 2;
 		if (oneLine) {
 			fontFactor = 3;
@@ -1563,7 +1563,7 @@ public class SunFlowerDriver {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-//			System.out.println("\nShutting down, releasing resources.");
+			System.out.println("\nShutting down, releasing resources.");
 			if (gpsReader != null) {
 				gpsReader.stopReading();
 			}
