@@ -202,6 +202,7 @@ using ES6 Promises to get to the REST data (WiP, there's a lot to do here).
 
 ![Raw Data](./pictures/web.screen.shot.01.png)
 
+When the server is running, try reaching `http://<server.ip>:8989/web/index.html` from a browser.
 
 ### Date Simulation
 The default date used for Celestial Computation is the current system date.
