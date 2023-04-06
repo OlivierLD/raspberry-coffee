@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+ ! See https://www.mathjax.org/#gettingstarted
+ !     https://docs.mathjax.org/en/latest/index.html
+ !     https://www.overleaf.com/learn/latex/Matrices
+ +-->
+<head>
+    <meta charset="UTF-8">
+    <title>MathJax</title>
+
+    <!--script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    "HTML-CSS" : {
+        availableFonts : ["STIX"],
+        preferredFont : "STIX",
+        webFont : "STIX-Web",
+        imageFont : null
+    }
+});
+    </script-->
+
+
+    <!--script-- src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script-->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style type="text/css">
+html {
+    font-family: "Courier New", "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+    color: navy;
+}
+
+.my-stuff {
+    font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+    color: red;
+}
+
+mjx-math {
+    font-family: "Courier New", "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+}
+
+    </style>
+</head>
+<body>
+<!--
+ ! LaTeX expressions begin with \( and end with \), or \[ and \].
+ +-->
+<p>
+    When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+    \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+</p>
+<hr/>
+<span class="my-stuff">Matrix samples:</span>
+<p>
+    \begin{vmatrix}
+    1 & 2 & 3\\
+    a & b & c
+    \end{vmatrix}
+</p>
+<hr/>
+<p>
+    \(
+
+    \begin{bmatrix}
+    a_{11} & a_{12} & \cdots & a_{1n}\\
+    a_{21} & a_{22} & \cdots & a_{2n}\\
+    \vdots & \vdots & \ddots & \vdots\\
+    a_{m1} & a_{m2} & \cdots & a_{mn}
+    \end{bmatrix}
+    \times
+    \begin{bmatrix}
+    b_{11} & b_{12} & \cdots & b_{1p}\\
+    b_{21} & b_{22} & \cdots & b_{2p}\\
+    \vdots & \vdots & \ddots & \vdots\\
+    b_{n1} & b_{n2} & \cdots & b_{np}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    c_{11} & c_{12} & \cdots & c_{1p}\\
+    c_{21} & c_{22} & \cdots & c_{2p}\\
+    \vdots & \vdots & \ddots & \vdots\\
+    c_{m1} & c_{m2} & \cdots & c_{mp}
+    \end{bmatrix}
+
+    \)
+</p>
+<hr/>
+<p>
+    \(
+    c_{ij}= a_{i1} b_{1j} + a_{i2} b_{2j} +\cdots+ a_{in} + b_{nj} = \sum_{k=1}^n a_{ik}b_{kj}
+    \)
+</p>
+<hr/>
+<p style="text-align: center; font-family: 'Courier New' !important;">
+    \(
+
+    \begin{vmatrix}
+    a & b & c
+    \end{vmatrix}
+    =
+    \begin{vmatrix}
+    \sum x^4 & \sum x^3 & \sum x^2\\
+    \sum x^3 & \sum x^2 & \sum x^1\\
+    \sum x^2 & \sum x^1 & \sum x^0
+    \end{vmatrix}^{-1}
+    \times
+    \begin{vmatrix}
+    \sum yx^2\\
+    \sum yx^1\\
+    \sum yx^0
+    \end{vmatrix}
+
+    \)
+</p>
+<span class="my-stuff">Partial derivative:</span>
+<p>
+    \(
+{\partial f}
+    \)
+</p>
+<hr/>
+<p>
+    \(
+    TWS = [AWS^2 + BSP^2 - (2 \times BSP \times AWS \times cos(AWA))]^{1/2}
+    \)
+</p>
+<p>
+    \(
+    TWA = arctg[{{AWS \times sin(AWA)} \over {(AWS \times cos(AWA)) - BSP}}]
+    \)
+</p>
+<p>
+    \(
+    VMG = BSP \times cos(TWA)
+    \)
+</p>
+<hr/>
+</body>
+</html>
