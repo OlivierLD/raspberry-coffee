@@ -3,7 +3,20 @@ package gsg;
 import java.util.Arrays;
 import java.util.List;
 
-import static gsg.VectorUtils.*;
+import static gsg.VectorUtils.Vector2D;
+import static gsg.VectorUtils.angleBetween;
+import static gsg.VectorUtils.component;
+import static gsg.VectorUtils.cross;
+import static gsg.VectorUtils.dot;
+import static gsg.VectorUtils.findGraphicRange;
+import static gsg.VectorUtils.length;
+import static gsg.VectorUtils.multiply;
+import static gsg.VectorUtils.perimeter;
+import static gsg.VectorUtils.rotate;
+import static gsg.VectorUtils.scale;
+import static gsg.VectorUtils.toPolar;
+import static gsg.VectorUtils.translate;
+import static gsg.VectorUtils.unit;
 
 public class VectorUtilsTests {
     /**
@@ -75,5 +88,20 @@ public class VectorUtilsTests {
 
         VectorUtils.Vector3D v3_prime = new VectorUtils.Vector3D(1, 2, 3);
         System.out.printf("V3 %s => length: %f%n", v3_prime.toString(), length(v3_prime));
+
+        // For Getting Started with NLP
+        Vector2D query = new Vector2D().x(1).y(1);
+        Vector2D doc1 = new Vector2D().x(3).y(5);
+        double cosine = dot(query, doc1) / (length(query) * length(doc1));
+        System.out.printf("Cosine: %.016f\n", cosine);
+
+        Vector2D query90 = new Vector2D().x(-1).y(1);
+        System.out.printf("Orthogonal dot product: %f\n", dot(query, query90));
+
+        one =  new Vector2D().x(1).y(1);
+        two =  new Vector2D().x(1.1).y(0.9);
+        System.out.printf("Convergent dot product: %f\n", dot(one, two));
+        two =  new Vector2D().x(-1.1).y(0.0);
+        System.out.printf("Divergent dot product: %f\n", dot(one, two));
     }
 }

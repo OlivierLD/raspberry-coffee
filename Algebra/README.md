@@ -1,7 +1,7 @@
 ## Linear Algebra, and graphical utilities
 
 Basic linear algebra (from the arabic [الجبر](https://en.wikipedia.org/wiki/Algebra), _al-jabr_, from the book _ilm al-jabr - i-muquabala_, by the Persian mathematician _al-Khwarizmi_, that literally means _reunion of broken parts_), and statistical functions, in Java. 
-> This is a work in progress.
+> This is a work (constantly) in progress.
 - Square matrix
 - System resolution
 - Least squares method (regression)

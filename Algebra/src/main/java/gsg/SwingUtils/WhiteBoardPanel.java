@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -29,8 +30,13 @@ public class WhiteBoardPanel extends JPanel {
     private final static boolean VERBOSE = "true".equals(System.getProperty("swing.verbose"));
     private final static boolean TINY_AXIS_LABEL = false;
 
+    private BiConsumer<Graphics2D, WhiteBoardPanel> beforeWhiteBoardWriter = null;
+    private BiConsumer<Graphics2D, WhiteBoardPanel> afterWhiteBoardWriter = null;
+
     private List<DataSerie> dataSeries = new ArrayList<>();
     private List<TextSerie> textSeries = new ArrayList<>();
+
+    private List<VectorSerie> vectorSeries = new ArrayList<>();
 
     public enum TitleJustification {
         LEFT,
@@ -193,6 +199,36 @@ public class WhiteBoardPanel extends JPanel {
 
         public Justification getJustification() {
             return justification;
+        }
+    }
+    public static class VectorSerie { // TODO Add text
+        private VectorUtils.Vector2D from;
+        private VectorUtils.Vector2D to;
+        private Color vectorColor = null;
+
+        public VectorSerie(VectorUtils.Vector2D from, VectorUtils.Vector2D to) {
+            this.from = from;
+            this.to = to;
+        }
+        public VectorSerie(VectorUtils.Vector2D from, VectorUtils.Vector2D to, Color color) {
+            this.from = from;
+            this.to = to;
+            this.vectorColor = color;
+        }
+
+        public Color getVectorColor() {
+            return vectorColor;
+        }
+
+        public void setVectorColor(Color vectorColor) {
+            this.vectorColor = vectorColor;
+        }
+
+        public Vector2D getFrom() {
+            return from;
+        }
+        public Vector2D getTo() {
+            return to;
         }
     }
 
@@ -362,11 +398,19 @@ public class WhiteBoardPanel extends JPanel {
 
     private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
 
-        if (dataSeries.size() == 0) {
-            throw new RuntimeException("No data");
+        if (dataSeries.size() == 0 && vectorSeries.size() == 0) {
+            throw new RuntimeException("No data (no serie, no vector)");
+            // System.out.println("No data...");
         }
-        List<List<Vector2D>> allData = new ArrayList<>();
+        List<List<Vector2D>> allData = new ArrayList<>(); // Accumulate all series
         dataSeries.forEach(serie -> { synchronized(serie) { allData.add(serie.getData()); } });
+
+        List<Vector2D> vectorPoints = new ArrayList<>();
+        vectorSeries.forEach(vect -> {
+            vectorPoints.add(vect.getFrom());
+            vectorPoints.add(vect.getTo());
+        });
+        allData.add(vectorPoints);
 
         VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRanges(allData);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
@@ -376,6 +420,7 @@ public class WhiteBoardPanel extends JPanel {
         double yAmplitude = maxDblY - minDblY;
 
         int margins = graphicMargins;
+        int graphHeight = this.getHeight();
 
         double oneUnitX = (this.getSize().width - (2 * margins)) / xAmplitude;
         double oneUnitY = (this.getSize().height - (2 * margins)) / yAmplitude;
@@ -406,35 +451,15 @@ public class WhiteBoardPanel extends JPanel {
 
         // Transformers
         Function<Double, Integer> findCanvasXCoord = spaceXCoord -> (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
-        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
-//        Function<Double, Integer> findCanvasXCoord = spaceXCoord -> {
-//            int value = (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
-//            System.out.println(String.format("Margin: %d, SpaceX: %f, minX: %f, unit: %f => %d",
-//                    margins,
-//                    spaceXCoord,
-//                    graphicRange.getMinX(),
-//                    (xEqualsY ? oneUnit : oneUnitX),
-//                    value));
-//            return value;
-//        };
-//        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> {
-//            int value = (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
-//            System.out.println(String.format("Margin: %d, SpaceY: %f, minYX: %f, unit: %f => %d",
-//                    margins,
-//                    spaceYCoord,
-//                    minDblY,
-//                    (xEqualsY ? oneUnit : oneUnitY),
-//                    value));
-//            return value;
-//        };
-
+        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> {
+            int deltaY = (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
+            // System.out.printf("Space Y: %f, deltaY: %d, final Y: %d\n", spaceYCoord, deltaY, (graphHeight - deltaY));
+            return graphHeight - deltaY;
+            // return graphHeight - (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
+        };
         // canvasToSpace
         Function<Integer, Double> canvasToSpaceX = canvasX -> ((canvasX - margins) / (xEqualsY ? oneUnit : oneUnitX)) + graphicRange.getMinX();
         Function<Integer, Double> canvasToSpaceY = canvasY -> ((this.getSize().height - margins - canvasY) / (xEqualsY ? oneUnit : oneUnitY)) + minDblY;
-//        Function<Integer, Double> canvasToSpaceY = canvasY -> {
-//            System.out.println(String.format("Margin:%d, MinY:%.02f", margins, minDblY));
-//            return ((this.getSize().height - margins - canvasY) / (xEqualsY ? oneUnit : oneUnitY)) + minDblY;
-//        }; // + graphicRange.getMinY();
 
         // For external access
         getCanvasXCoord = findCanvasXCoord;
@@ -553,7 +578,7 @@ public class WhiteBoardPanel extends JPanel {
             int _y = (int)Math.floor(this.enforceYAxisAt);
             yTick = _y;
             int _canvasY = findCanvasYCoord.apply((double)_y);
-            while (_canvasY >= 0) {
+            while (_canvasY >= 0 && _canvasY <= height) {
                 _y -= _inc;
                 _canvasY = findCanvasYCoord.apply((double)_y);
                 if (_canvasY >= 0) {
@@ -562,7 +587,7 @@ public class WhiteBoardPanel extends JPanel {
             }
         }
         int canvasY = 0;
-        while (canvasY <= height) {
+        while (canvasY <= height && canvasY >= 0) {
             canvasY = findCanvasYCoord.apply((double)yTick);
 //            System.out.printf("Y notch %d%n", yTick);
             g2d.setStroke(new BasicStroke(yTick == 0 ? 2 : 1));
@@ -821,6 +846,29 @@ public class WhiteBoardPanel extends JPanel {
                 g2d.setColor(previousColor);
             }
         });
+
+        // Any vector?
+        vectorSeries.forEach(vect -> {
+            final Function<Double, Integer> spaceToCanvasXTransformer = getSpaceToCanvasXTransformer();
+            final Function<Double, Integer> spaceToCanvasYTransformer = getSpaceToCanvasYTransformer();
+            // System.out.println(vect);
+            if (spaceToCanvasXTransformer != null && spaceToCanvasYTransformer != null) {
+                final int fromGraphX = spaceToCanvasXTransformer.apply(vect.getFrom().getX());
+                final int fromGraphY = spaceToCanvasYTransformer.apply(vect.getFrom().getY());
+                final int toGraphX = spaceToCanvasXTransformer.apply(vect.getTo().getX());
+                final int toGraphY = spaceToCanvasYTransformer.apply(vect.getTo().getY());
+                // System.out.println("Aha!");
+                WhiteBoardPanel.drawArrow(g2d,
+                        new Point(fromGraphX, fromGraphY),
+                        new Point(toGraphX, toGraphY),
+                        vect.getVectorColor());
+                if (VERBOSE) {
+                    System.out.printf("Vector: [%f, %f] to [%f, %f] -> [%d, %d] to [%d, %d]\n",
+                            vect.getFrom().getX(), vect.getFrom().getY(), vect.getTo().getX(), vect.getTo().getY(),
+                            fromGraphX, fromGraphY, toGraphX, toGraphY);
+                }
+            }
+        });
     };
 
     private GradientPaint getGradientPaint(Color top, Color bottom) {
@@ -830,7 +878,6 @@ public class WhiteBoardPanel extends JPanel {
 
     // THE Renderer. The most important part here. Invoked from the paintComponent method.
     private Consumer<Graphics2D> whiteBoardWriter = DEFAULT_DASHBOARD_WRITER;
-
     // Graphic title, margins, axis color, fonts, etc, as setters.
     public WhiteBoardPanel() {
     }
@@ -849,12 +896,37 @@ public class WhiteBoardPanel extends JPanel {
         this.whiteBoardWriter = DEFAULT_DASHBOARD_WRITER;
     }
 
+    public void setBeforeWhiteBoardWriter(BiConsumer<Graphics2D, WhiteBoardPanel> writer) {
+        this.beforeWhiteBoardWriter = writer;
+    }
+    public void setAfterWhiteBoardWriter(BiConsumer<Graphics2D, WhiteBoardPanel> writer) {
+        this.afterWhiteBoardWriter = writer;
+    }
+
+    public List<VectorSerie> getVectorSeries() {
+        return this.vectorSeries;
+    }
+
+    public List<TextSerie> getTextSeries() {
+        return this.textSeries;
+    }
+    public List<DataSerie> getDataSeries() {
+        return this.dataSeries;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 //      System.out.println("paintComponent invoked on JPanel");
         Graphics2D g2d = (Graphics2D) g;
+
+        if (beforeWhiteBoardWriter != null) {
+            beforeWhiteBoardWriter.accept(g2d, this);
+        }
         whiteBoardWriter.accept(g2d);     // Invoke the whiteBoardWriter
+        if (afterWhiteBoardWriter != null) {
+            afterWhiteBoardWriter.accept(g2d, this);
+        }
     }
 
     /**
@@ -964,14 +1036,28 @@ public class WhiteBoardPanel extends JPanel {
         this.textSeries.add(serie);
     }
 
+    public void addVectorSerie(VectorSerie serie) {
+        this.vectorSeries.add(serie);
+    }
+
+    public void resetAllText() {
+        this.textSeries.clear();
+    }
+
+    public void removeVectorSerie(VectorSerie serie) {
+        if (this.vectorSeries.contains(serie)) {
+            this.vectorSeries.remove(serie);
+        }
+    }
+
     public void removeTextSerie(TextSerie serie) {
         if (this.textSeries.contains(serie)) {
             this.textSeries.remove(serie);
         }
     }
 
-    public void resetAllText() {
-        this.textSeries.clear();
+    public void resetAllVectors() {
+        this.vectorSeries.clear();
     }
 
     /**

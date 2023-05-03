@@ -320,7 +320,7 @@ public class VectorUtils {
      */
 
     /*
-     * Dot product (in French: produit scalaire):
+     * Dot product (in French: "produit scalaire"):
      * - if positive: vectors are convergent
      * - if negative: vectors are divergent
      * - if zero: vectors are perpendicular
