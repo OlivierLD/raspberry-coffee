@@ -201,29 +201,45 @@ public class WhiteBoardPanel extends JPanel {
             return justification;
         }
     }
-    public static class VectorSerie { // TODO Add text
+    public static class VectorSerie { // TODO: A font for the label.
         private VectorUtils.Vector2D from;
         private VectorUtils.Vector2D to;
         private Color vectorColor = null;
+        private String vectorLabel = null;
 
         public VectorSerie(VectorUtils.Vector2D from, VectorUtils.Vector2D to) {
             this.from = from;
             this.to = to;
+        }
+        public VectorSerie(VectorUtils.Vector2D from, VectorUtils.Vector2D to, String label) {
+            this.from = from;
+            this.to = to;
+            this.vectorLabel = label;
         }
         public VectorSerie(VectorUtils.Vector2D from, VectorUtils.Vector2D to, Color color) {
             this.from = from;
             this.to = to;
             this.vectorColor = color;
         }
+        public VectorSerie(VectorUtils.Vector2D from, VectorUtils.Vector2D to, Color color, String label) {
+            this.from = from;
+            this.to = to;
+            this.vectorColor = color;
+            this.vectorLabel = label;
+        }
 
+        public String getVectorLabel() {
+            return vectorLabel;
+        }
+        public void setVectorLabel(String vectorLabel) {
+            this.vectorLabel = vectorLabel;
+        }
         public Color getVectorColor() {
             return vectorColor;
         }
-
         public void setVectorColor(Color vectorColor) {
             this.vectorColor = vectorColor;
         }
-
         public Vector2D getFrom() {
             return from;
         }
@@ -493,11 +509,11 @@ public class WhiteBoardPanel extends JPanel {
         int width  = this.getSize().width;
         if (VERBOSE) {
             System.out.printf("HxW: %d x %d%n", height, width);
-            System.out.printf(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d%n", minX, height - maxY, (maxX - minX), (maxY - minY));
+            System.out.printf(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d%n", minX, /*height -*/ maxY, (maxX - minX), (maxY - minY));
             System.out.println("-----------------------------------------------------");
         }
         if (this.frameGraphic) {
-            g2d.drawRect(minX, height - maxY, (maxX - minX), (maxY - minY));
+            g2d.drawRect(minX, /*height -*/ maxY, (maxX - minX), (maxY - minY));
         }
 
         // Label font
@@ -544,12 +560,12 @@ public class WhiteBoardPanel extends JPanel {
                 if (withGrid) {
                     g2d.drawLine(canvasX, height, canvasX, 0);
                 } else {
-                    g2d.drawLine(canvasX, height - (int) Math.round(y0 - 5),
-                            canvasX, height - (int) Math.round(y0 + 5));
+                    g2d.drawLine(canvasX, /*height -*/ (int) Math.round(y0 - 5),
+                            canvasX, /*height -*/ (int) Math.round(y0 + 5));
                 }
                 String label = xLabelGenerator.apply(xTick);
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, canvasX - (strWidth / 2),height - (int) Math.round(y0 - 5 - (labelFont.getSize())));
+                g2d.drawString(label, canvasX - (strWidth / 2),/*height -*/ (int) Math.round(y0 + 5 + (labelFont.getSize())));
             }
             xTick += (xEqualsY ?
                     (forceTickIncrement != null ? forceTickIncrement : tickIncrement) :
@@ -559,8 +575,8 @@ public class WhiteBoardPanel extends JPanel {
         // Horizontal Y (bottom) Arrow. Horizontal: orientation of the notches.
         g2d.setStroke(new BasicStroke(2));             // Line Thickness
         WhiteBoardPanel.drawArrow(g2d,
-                new Point(0, height - (int)Math.round(y0)),
-                new Point(width, height - (int)Math.round(y0)),
+                new Point(0, /*height -*/ (int)Math.round(y0)),
+                new Point(width, /*height -*/ (int)Math.round(y0)),
                 axisColor);
 
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
@@ -589,19 +605,19 @@ public class WhiteBoardPanel extends JPanel {
         int canvasY = 0;
         while (canvasY <= height && canvasY >= 0) {
             canvasY = findCanvasYCoord.apply((double)yTick);
-//            System.out.printf("Y notch %d%n", yTick);
+//            if (false && yTick == 0) { // For debug
+//                System.out.printf("Y notch %d => canvasY: %d%n", yTick, canvasY);
+//            }
             g2d.setStroke(new BasicStroke(yTick == 0 ? 2 : 1));
             if (canvasY <= height) {
                 if (withGrid) {
-                    g2d.drawLine(0, height - canvasY,
-                            width, height - canvasY);
+                    g2d.drawLine(0, /*height -*/ canvasY, width, /* height -*/ canvasY);
                 } else {
-                    g2d.drawLine((int) Math.round(x0 - 5), height - canvasY,
-                            (int) Math.round(x0 + 5), height - canvasY);
+                    g2d.drawLine((int) Math.round(x0 - 5), /*height -*/ canvasY, (int) Math.round(x0 + 5), /*height -*/ canvasY);
                 }
                 String label = String.valueOf(yTick);
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, height - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
+                g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, /*height -*/ canvasY + (int)(labelFont.getSize() * 0.9 / 2));
             }
             yTick += (xEqualsY ?
                     (forceTickIncrement != null ? forceTickIncrement : tickIncrement) :
@@ -617,7 +633,7 @@ public class WhiteBoardPanel extends JPanel {
             int strWidth = g2d.getFontMetrics().stringWidth(this.xAxisLabel);
             int strHeight = g2d.getFont().getSize();
             int xCenter = width; // - (strWidth + 2);
-            int yCenter = height - (int)Math.round(y0); // + (strHeight / 2);
+            int yCenter = /*height -*/ (int)Math.round(y0); // + (strHeight / 2);
 //            System.out.println(String.format("String %s at %d, %d", this.xAxisLabel, xCenter, yCenter));
             double bgCoeff = 1.5;
             g2d.setColor(this.axisLabelBGColor);
@@ -740,15 +756,17 @@ public class WhiteBoardPanel extends JPanel {
                 for (Vector2D v : serie.getData()) {
                     int pointX = findCanvasXCoord.apply(v.getX());
                     int pointY = findCanvasYCoord.apply(v.getY());
-//              System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
+                    if (VERBOSE) {
+                        System.out.println(String.format("Serie of %d points: x:%f, y:%f => X:%d, Y:%d", serie.getData().size(), v.getX(), v.getY(), pointX, pointY));
+                    }
                     Point here = new Point(pointX, pointY);
                     if (withPoints) {
                         g2d.fillOval(pointX - (serie.circleDiam / 2),
-                                height - pointY - (serie.circleDiam / 2),
+                                /*height -*/ pointY - (serie.circleDiam / 2),
                                 serie.circleDiam, serie.circleDiam);
                     }
                     if (previous != null) {
-                        g2d.drawLine(previous.x, height - previous.y, here.x, height - here.y);
+                        g2d.drawLine(previous.x, /*height -*/ previous.y, here.x, /*height -*/ here.y);
                     }
                     previous = here;
                 }
@@ -758,9 +776,9 @@ public class WhiteBoardPanel extends JPanel {
                     if (previous != null) { // Close the loop
                         g2d.drawLine(
                                 previous.x,
-                                height - previous.y,
+                                /*height -*/ previous.y,
                                 findCanvasXCoord.apply(serie.getData().get(0).getX()),
-                                height - findCanvasYCoord.apply(serie.getData().get(0).getY()));
+                                /*height -*/ findCanvasYCoord.apply(serie.getData().get(0).getY()));
                     }
                 }
             } else if (serie.getGraphicType().equals(GraphicType.POINTS)) {
@@ -771,7 +789,7 @@ public class WhiteBoardPanel extends JPanel {
                     int pointY = findCanvasYCoord.apply(v.getY());
 //              System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
                     g2d.fillOval(pointX - (circleDiam / 2),
-                            height - pointY - (circleDiam / 2),
+                            /*height -*/ pointY - (circleDiam / 2),
                             circleDiam, circleDiam);
 
                 });
@@ -788,9 +806,9 @@ public class WhiteBoardPanel extends JPanel {
                 serie.getData().forEach(v -> {
                     int pointX = findCanvasXCoord.apply(v.getX());
                     int pointY = findCanvasYCoord.apply(v.getY());
-                    polygon.addPoint(pointX, height - pointY);
+                    polygon.addPoint(pointX, /*height -*/ pointY);
                 });
-                polygon.addPoint(width - graphicMargins, height - graphicMargins);
+                polygon.addPoint(width - graphicMargins, /*height -*/ graphicMargins);
                 g2d.fillPolygon(polygon);
                 // The curve
                 if (serie.getColor() != null) {
@@ -804,7 +822,7 @@ public class WhiteBoardPanel extends JPanel {
 //                      System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
                         Point here = new Point(pointX, pointY);
                         if (previous != null) {
-                            g2d.drawLine(previous.x, height - previous.y, here.x, height - here.y);
+                            g2d.drawLine(previous.x, /*height -*/ previous.y, here.x, /*height -*/ here.y);
                         }
                         previous = here;
                     }
@@ -838,7 +856,7 @@ public class WhiteBoardPanel extends JPanel {
                 int sl = g2d.getFontMetrics().stringWidth(txt.getStr());
                 justOffset = txt.getJustification() == TextSerie.Justification.RIGHT ? sl : (sl / 2);
             }
-            g2d.drawString(txt.getStr(), pointX + txt.getxOffset() - justOffset, height - (pointY + txt.getyOffset()));
+            g2d.drawString(txt.getStr(), pointX + txt.getxOffset() - justOffset, /*height -*/ (pointY + txt.getyOffset()));
             if (previousFont != null) {
                 g2d.setFont(previousFont);
             }
@@ -866,6 +884,22 @@ public class WhiteBoardPanel extends JPanel {
                     System.out.printf("Vector: [%f, %f] to [%f, %f] -> [%d, %d] to [%d, %d]\n",
                             vect.getFrom().getX(), vect.getFrom().getY(), vect.getTo().getX(), vect.getTo().getY(),
                             fromGraphX, fromGraphY, toGraphX, toGraphY);
+                }
+                if (vect.getVectorLabel() != null) {
+                    String label = vect.getVectorLabel();
+                    // Find direction up/down. TODO Tweak this...
+                    boolean goingUp = false;
+                    if (fromGraphY > toGraphY) { // Up. Note: coordinates in the GRAPH. [0, 0] is the top-left.
+                        goingUp = true;
+                    }
+                    System.out.printf("With label %s, going %s\n", label, goingUp ? "Up" : "Down");
+                    // Label width
+                    int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+                    if (vect.getVectorColor() != null) {
+                        g2d.setColor(vect.getVectorColor());
+                    }
+                    // TODO: A font for the label.
+                    g2d.drawString(label, toGraphX - (strWidth / 2), toGraphY + (goingUp ? -3 : (g2d.getFont().getSize() + 3)));
                 }
             }
         });

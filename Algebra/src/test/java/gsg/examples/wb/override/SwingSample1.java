@@ -38,21 +38,31 @@ public class SwingSample1 {
         Dimension dimension = whiteBoard.getSize();
 
         whiteBoard.resetDefaultWhiteBoardWriter();
-        whiteBoard.setForcedMinY(-12d);
-        whiteBoard.setForcedMaxY(12d);
-        whiteBoard.setXEqualsY(true);
+        whiteBoard.setGraphicTitle(null);
+        // whiteBoard.setWithGrid(true);
 
-        whiteBoard.setEnforceXAxisAt(0d);
-        whiteBoard.setEnforceYAxisAt(0d);
+        if (true) { // Flip at will
+            whiteBoard.setXEqualsY(true);
 
-        whiteBoard.addVectorSerie(new WhiteBoardPanel.VectorSerie(new VectorUtils.Vector2D(0, 0), new VectorUtils.Vector2D(10, 10), Color.CYAN));
-        whiteBoard.addVectorSerie(new WhiteBoardPanel.VectorSerie(new VectorUtils.Vector2D(0, 0), new VectorUtils.Vector2D(-10, 10), Color.ORANGE));
+            whiteBoard.setForcedMinY(-12d);
+            whiteBoard.setForcedMaxY(12d);
 
+            whiteBoard.setEnforceXAxisAt(0d);
+            whiteBoard.setEnforceYAxisAt(0d);
+        }
+
+        whiteBoard.addVectorSerie(new WhiteBoardPanel.VectorSerie(new VectorUtils.Vector2D(0, 0), new VectorUtils.Vector2D(10, 10), Color.RED, "Akeu"));
+        whiteBoard.addVectorSerie(new WhiteBoardPanel.VectorSerie(new VectorUtils.Vector2D(0, 0), new VectorUtils.Vector2D(-10, 10), Color.RED, "Coucou"));
+        whiteBoard.addVectorSerie(new WhiteBoardPanel.VectorSerie(new VectorUtils.Vector2D(0, 0), new VectorUtils.Vector2D(-5, 7.5), Color.DARK_GRAY));
+        whiteBoard.addVectorSerie(new WhiteBoardPanel.VectorSerie(new VectorUtils.Vector2D(0, 0), new VectorUtils.Vector2D(1, -7.5), Color.MAGENTA, "Bam!"));
+
+        // This is for Swing.
         whiteBoard.repaint();
+
         whiteBoard.createImage(snap, "jpg", dimension.width, dimension.height);
     }
     private void fileExit_ActionPerformed(ActionEvent ae) {
-        System.out.println("Exit requested...");
+        System.out.println("Exit requested..., not implemented.");
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.println("Help requested");
@@ -81,7 +91,7 @@ public class SwingSample1 {
     }
 
     public SwingSample1() {
-        frame = new JFrame("This is an example");
+        frame = new JFrame("This is a vector example");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
