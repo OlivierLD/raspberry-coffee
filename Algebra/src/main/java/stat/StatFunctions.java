@@ -1,6 +1,7 @@
 package stat;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Good resources at https://www.scribbr.com/statistics/standard-deviation/
@@ -38,10 +39,15 @@ public class StatFunctions {
      * @param dataset
      * @return the standard deviation
      */
-    public static double standardDeviation(double[] dataset) {
+//    public static double standardDeviation(double[] dataset) {
+//        return Math.sqrt(variance(dataset));
+//    }
+    public static double standardDeviation(double... dataset) {
         return Math.sqrt(variance(dataset));
     }
-
+    public static double standardDeviation(List<Double> dataset) {
+        return Math.sqrt(variance(dataset.stream().mapToDouble(d -> d).toArray()));
+    }
     /**
      * For tests. Use --details as CLI parameter to see more details
      *
@@ -69,7 +75,9 @@ public class StatFunctions {
             System.out.printf("StdDev: %f%n", Math.sqrt(variance));
         }
         // StdDev
-        System.out.printf("Direct Std-Dev: %f%n", standardDeviation(dataset));
+        System.out.printf("1 - Direct Std-Dev: %f%n", standardDeviation(dataset));
+        System.out.printf("2 - Direct Std-Dev: %f%n", standardDeviation(46, 69, 32, 60, 52, 41));
+        System.out.printf("3 - Direct Std-Dev: %f%n", standardDeviation(List.of(46d, 69d, 32d, 60d, 52d, 41d)));
 
     }
 }
