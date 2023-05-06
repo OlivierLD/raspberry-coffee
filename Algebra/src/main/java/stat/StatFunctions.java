@@ -10,7 +10,7 @@ public class StatFunctions {
 
     /**
      * Mean
-     * @param dataset
+     * @param dataset array of doubles
      * @return the mean
      */
     public static double mean(double[] dataset) {
@@ -25,7 +25,7 @@ public class StatFunctions {
 
     /**
      * Variance
-     * @param dataset
+     * @param dataset array of doubles
      * @return the variance
      */
     public static double variance(double[] dataset) {
@@ -36,7 +36,7 @@ public class StatFunctions {
 
     /**
      * Standard Deviation
-     * @param dataset
+     * @param dataset array of doubles
      * @return the standard deviation
      */
 //    public static double standardDeviation(double[] dataset) {
@@ -51,7 +51,7 @@ public class StatFunctions {
     /**
      * For tests. Use --details as CLI parameter to see more details
      *
-     * @param args
+     * @param args See in the code below (--details)
      */
     public static void main(String... args) {
         double[] dataset = new double[] {46, 69, 32, 60, 52, 41};
