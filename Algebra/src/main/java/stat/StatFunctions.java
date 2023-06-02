@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Good resources at https://www.scribbr.com/statistics/standard-deviation/
- * TODO Equivalent functions with List<Double> instead of double[]
+ * Also see https://www.calculator.net/standard-deviation-calculator.html
  */
 public class StatFunctions {
 
@@ -65,6 +65,7 @@ public class StatFunctions {
      */
     public static void main(String... args) {
         double[] dataset = new double[] { 46, 69, 32, 60, 52, 41 };
+                                        // { 10, 12, 23, 23, 16, 23, 21, 16 };
         boolean details = false;
         for (String arg : args) {
             if ("--details".equals(arg)) {
