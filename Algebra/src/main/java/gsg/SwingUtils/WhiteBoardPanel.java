@@ -52,7 +52,8 @@ public class WhiteBoardPanel extends JPanel {
         CLOSED_DOTTED_LINE,
         CLOSED_LINE_WITH_DOTS,
         POINTS,
-        AREA,
+        AREA, // At the bottom
+        AREA_SUP, // On top
         DONUT,
         PIE // More to come
     }
@@ -793,7 +794,7 @@ public class WhiteBoardPanel extends JPanel {
                             circleDiam, circleDiam);
 
                 });
-            } else if (serie.getGraphicType().equals(GraphicType.AREA)) {
+            } else if (serie.getGraphicType().equals(GraphicType.AREA) || serie.getGraphicType().equals(GraphicType.AREA_SUP)) {
                 g2d.setColor(serie.getColor());
                 if (serie.getGradientTop() != null && serie.getGradientBottom() != null) {
                     g2d.setPaint(this.getGradientPaint(serie.getGradientTop(), serie.getGradientBottom()));
@@ -802,13 +803,21 @@ public class WhiteBoardPanel extends JPanel {
                 }
                 // Background
                 final Polygon polygon = new Polygon();
-                polygon.addPoint(graphicMargins, height - graphicMargins);
+                if (serie.getGraphicType().equals(GraphicType.AREA)) {
+                    polygon.addPoint(graphicMargins, height - graphicMargins);
+                } else if (serie.getGraphicType().equals(GraphicType.AREA_SUP)) {
+                    polygon.addPoint(graphicMargins, graphicMargins);
+                }
                 serie.getData().forEach(v -> {
                     int pointX = findCanvasXCoord.apply(v.getX());
                     int pointY = findCanvasYCoord.apply(v.getY());
                     polygon.addPoint(pointX, /*height -*/ pointY);
                 });
-                polygon.addPoint(width - graphicMargins, /*height -*/ graphicMargins);
+                if (serie.getGraphicType().equals(GraphicType.AREA)) {
+                    polygon.addPoint(width - graphicMargins, height - graphicMargins);
+                } else if (serie.getGraphicType().equals(GraphicType.AREA_SUP)) {
+                    polygon.addPoint(width - graphicMargins, graphicMargins);
+                }
                 g2d.fillPolygon(polygon);
                 // The curve
                 if (serie.getColor() != null) {

@@ -26,6 +26,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
 
     private final static String TITLE = "Simple 2D Bezier sample (draggable control points).";
     private final static String HELP = "Generic Swing Graphic.\nSimple 2D Bezier sample (draggable control points).";
+    private final static boolean VERBOSE = "true".equals(System.getProperty("verbose"));
 
     private JFrame frame;
     private final JMenuBar menuBar = new JMenuBar();
@@ -231,14 +232,16 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         Bezier.Point3D closePoint = null;
         Function<Double, Integer> spaceToCanvasXTransformer = whiteBoard.getSpaceToCanvasXTransformer();
         Function<Double, Integer> spaceToCanvasYTransformer = whiteBoard.getSpaceToCanvasYTransformer();
-        int height = whiteBoard.getHeight();
+        // int height = whiteBoard.getHeight();
         if (spaceToCanvasXTransformer != null && spaceToCanvasYTransformer != null) {
             for (Bezier.Point3D ctrlPt : ctrlPoints) {
                 Integer canvasX = spaceToCanvasXTransformer.apply(ctrlPt.getX());
                 Integer canvasY = spaceToCanvasYTransformer.apply(ctrlPt.getY());
-                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (height - canvasY)) < 5) {
-//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (height - canvasY)));
-//                    System.out.printf("Close to %s\n", ctrlPt);
+                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (/*height -*/ canvasY)) < 5) {
+                    if (VERBOSE) {
+                        System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(me.getX() - canvasX), Math.abs(me.getY() - (/*height -*/ canvasY)));
+                        System.out.printf("Close to %s\n", ctrlPt);
+                    }
                     closePoint = ctrlPt;
                     break;
                 }
@@ -251,7 +254,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-//        System.out.println("Mouse moved");
+        // System.out.println("Mouse moved");
         Bezier.Point3D closePoint = getClosePoint(e);
         if (closePoint != null) {
             whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -267,7 +270,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
     }
     @Override
     public void mousePressed(MouseEvent e) {
-//        System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
+        // System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
         Bezier.Point3D closePoint = getClosePoint(e);
         if (closePoint != null) {
 //            System.out.println("Found it!");

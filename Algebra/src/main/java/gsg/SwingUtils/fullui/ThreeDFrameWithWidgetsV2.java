@@ -27,19 +27,23 @@ public class ThreeDFrameWithWidgetsV2
 	public final static int DEFAULT_HEIGHT = 800;
 
 	public ThreeDFrameWithWidgetsV2(Box3D box3D) {
-		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, null);
+		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, null, false);
+	}
+	public ThreeDFrameWithWidgetsV2(Box3D box3D, boolean showAnimate) {
+		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, null, showAnimate);
 	}
 
+
 	public ThreeDFrameWithWidgetsV2(Box3D box3D, String title) {
-		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, title);
+		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, title, false);
 	}
 
 	public ThreeDFrameWithWidgetsV2(Box3D box3D, int width, int height) {
-		this(box3D, width, height, null);
+		this(box3D, width, height, null, false);
 	}
-	public ThreeDFrameWithWidgetsV2(Box3D box3D, int width, int height, String title) {
+	public ThreeDFrameWithWidgetsV2(Box3D box3D, int width, int height, String title, boolean showAnimate) {
 		this.box3D = box3D;
-		this.threeDPanel = new ThreeDPanelWithWidgets(box3D, width, height, title);
+		this.threeDPanel = new ThreeDPanelWithWidgets(box3D, width, height, title, showAnimate);
 
 		initComponents();
 		this.setSize(new Dimension(width, height));  // Maybe conflicting...

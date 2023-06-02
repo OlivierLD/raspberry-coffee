@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 /**
  * Draw a 3D Bezier
  * With interactive Swing widgets.
+ *
+ * TODO Add the "animate" feature...
  */
 public class Sample10 {
 
@@ -91,7 +93,7 @@ public class Sample10 {
         // Invoke the above
         box3D.setAfterDrawer(afterDrawer);
 
-        ThreeDFrameWithWidgetsV2 frame = new ThreeDFrameWithWidgetsV2(box3D);
+        ThreeDFrameWithWidgetsV2 frame = new ThreeDFrameWithWidgetsV2(box3D, true);
         frame.setVisible(true);
     }
 }

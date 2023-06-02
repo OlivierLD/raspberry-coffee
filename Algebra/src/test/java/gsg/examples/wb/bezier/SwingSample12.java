@@ -212,14 +212,14 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
         Bezier.Point3D closePoint = null;
         Function<Double, Integer> spaceToCanvasXTransformer = whiteBoard.getSpaceToCanvasXTransformer();
         Function<Double, Integer> spaceToCanvasYTransformer = whiteBoard.getSpaceToCanvasYTransformer();
-        int height = whiteBoard.getHeight();
+        // int height = whiteBoard.getHeight();
         if (spaceToCanvasXTransformer != null && spaceToCanvasYTransformer != null) {
             // TODO 2 ctrl point arrays, one point synched with other array.
             for (Bezier.Point3D ctrlPt : ctrlPoints1) {
                 Integer canvasX = spaceToCanvasXTransformer.apply(ctrlPt.getX());
                 Integer canvasY = spaceToCanvasYTransformer.apply(ctrlPt.getY());
-                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (height - canvasY)) < 5) {
-//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (height - canvasY)));
+                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (/*height -*/ canvasY)) < 5) {
+//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (/*height -*/ canvasY)));
 //                    System.out.printf("Close to %s\n", ctrlPt);
                     closePoint = ctrlPt;
                     break;
@@ -228,8 +228,8 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
             for (Bezier.Point3D ctrlPt : ctrlPoints2) {
                 Integer canvasX = spaceToCanvasXTransformer.apply(ctrlPt.getX());
                 Integer canvasY = spaceToCanvasYTransformer.apply(ctrlPt.getY());
-                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (height - canvasY)) < 5) {
-//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (height - canvasY)));
+                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (/*height -*/ canvasY)) < 5) {
+//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (/*height -*/ canvasY)));
 //                    System.out.printf("Close to %s\n", ctrlPt);
                     closePoint = ctrlPt;
                     break;

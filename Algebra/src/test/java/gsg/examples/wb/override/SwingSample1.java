@@ -62,7 +62,8 @@ public class SwingSample1 {
         whiteBoard.createImage(snap, "jpg", dimension.width, dimension.height);
     }
     private void fileExit_ActionPerformed(ActionEvent ae) {
-        System.out.println("Exit requested..., not implemented.");
+        System.out.println("Exit requested...");
+        System.exit(0);
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.println("Help requested");

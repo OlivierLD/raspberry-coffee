@@ -5,6 +5,7 @@ import java.util.List;
 
 /**
  * Good resources at https://www.scribbr.com/statistics/standard-deviation/
+ * TODO Equivalent functions with List<Double> instead of double[]
  */
 public class StatFunctions {
 
@@ -13,11 +14,14 @@ public class StatFunctions {
      * @param dataset array of doubles
      * @return the mean
      */
-    public static double mean(double[] dataset) {
+    public static double mean(double... dataset) {
         int size = dataset.length; // Arrays.stream(dataset).count();
         double sum = Arrays.stream(dataset).sum();
         return (sum / size);
     }
+    public static double mean(List<Double> dataset) {
+        return dataset.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+            }
 
     private static double deviationFromMean(double score, double mean) {
         return score - mean;
@@ -28,10 +32,16 @@ public class StatFunctions {
      * @param dataset array of doubles
      * @return the variance
      */
-    public static double variance(double[] dataset) {
+    public static double variance(double... dataset) {
         double mean = mean(dataset);
         double sqSum = Arrays.stream(dataset).map(x -> Math.pow(deviationFromMean(x, mean), 2)).sum();
         return sqSum / (dataset.length - 1);
+    }
+
+    public static double variance(List<Double> dataset) {
+        double mean = mean(dataset);
+        double sqSum = dataset.stream().mapToDouble(x -> Math.pow(deviationFromMean(x, mean), 2)).sum();
+        return sqSum / (dataset.size() - 1);
     }
 
     /**
@@ -46,7 +56,7 @@ public class StatFunctions {
         return Math.sqrt(variance(dataset));
     }
     public static double standardDeviation(List<Double> dataset) {
-        return Math.sqrt(variance(dataset.stream().mapToDouble(d -> d).toArray()));
+        return Math.sqrt(variance(dataset));
     }
     /**
      * For tests. Use --details as CLI parameter to see more details
@@ -54,7 +64,7 @@ public class StatFunctions {
      * @param args See in the code below (--details)
      */
     public static void main(String... args) {
-        double[] dataset = new double[] {46, 69, 32, 60, 52, 41};
+        double[] dataset = new double[] { 46, 69, 32, 60, 52, 41 };
         boolean details = false;
         for (String arg : args) {
             if ("--details".equals(arg)) {

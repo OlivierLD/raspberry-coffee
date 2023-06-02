@@ -21,6 +21,7 @@ import java.util.function.Function;
  * 2D Bezier example.
  *
  * Shows how the Bezier is elaborated, graphically. 4 Ctrl points
+ * Draggable Ctrl Points.
  */
 public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener {
 
@@ -389,13 +390,13 @@ public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener
         Bezier.Point3D closePoint = null;
         Function<Double, Integer> spaceToCanvasXTransformer = whiteBoard.getSpaceToCanvasXTransformer();
         Function<Double, Integer> spaceToCanvasYTransformer = whiteBoard.getSpaceToCanvasYTransformer();
-        int height = whiteBoard.getHeight();
+        // int height = whiteBoard.getHeight();
         if (spaceToCanvasXTransformer != null && spaceToCanvasYTransformer != null) {
             for (Bezier.Point3D ctrlPt : ctrlPoints) {
                 Integer canvasX = spaceToCanvasXTransformer.apply(ctrlPt.getX());
                 Integer canvasY = spaceToCanvasYTransformer.apply(ctrlPt.getY());
-                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (height - canvasY)) < 5) {
-//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (height - canvasY)));
+                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (/*height -*/ canvasY)) < 5) {
+//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (/*height -*/ canvasY)));
 //                    System.out.printf("Close to %s\n", ctrlPt);
                     closePoint = ctrlPt;
                     break;

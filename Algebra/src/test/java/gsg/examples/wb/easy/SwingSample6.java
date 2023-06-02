@@ -51,7 +51,7 @@ public class SwingSample6 {
             frameSize.width = screenSize.width;
         }
         if (frameSize.width == 0 || frameSize.height == 0) {
-            frameSize = new Dimension(WIDTH, HEIGHT + 50); // 50: ... menu, title bar, etc.
+            frameSize = new Dimension(WIDTH, HEIGHT + 60); // 60: ... menu, title bar, etc.
             frame.setSize(frameSize);
         }
         frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);

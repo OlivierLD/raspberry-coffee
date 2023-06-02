@@ -240,6 +240,5 @@ public class SwingSampleTempNVolt {
 
         thisThing.refreshData();
         thisThing.show();
-
     }
 }

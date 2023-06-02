@@ -57,6 +57,8 @@ public class SwingSample {
     }
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.println("Exit requested");
+        System.exit(0);
+
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.println("Help requested");

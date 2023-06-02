@@ -51,7 +51,7 @@ public class SwingSample9 {
             frameSize.width = screenSize.width;
         }
         if (frameSize.width == 0 || frameSize.height == 0) {
-            frameSize = new Dimension(WIDTH, HEIGHT + 50); // 50: ... menu, title bar, etc.
+            frameSize = new Dimension(WIDTH, HEIGHT + 60); // 60: ... menu, title bar, etc.
             frame.setSize(frameSize);
         }
         frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
@@ -139,6 +139,7 @@ public class SwingSample9 {
             dataVectors.add(new VectorUtils.Vector2D(xData[i], yData[i]));
         }
 
+        // As an area, under the curve.
         WhiteBoardPanel.DataSerie dataSerie = new WhiteBoardPanel.DataSerie()
                 .data(dataVectors)
                 .graphicType(WhiteBoardPanel.GraphicType.AREA)
@@ -146,6 +147,20 @@ public class SwingSample9 {
                 .color(Color.BLUE)
                 .areaGradient(new Color(1f, 0f, 0f, 0.5f), new Color(0f, 0f, 1f, 0.5f));
         whiteBoard.addSerie(dataSerie);
+
+        // Second curve, based on first one, with some random diff
+        List<VectorUtils.Vector2D> dataVectors2 = new ArrayList<>();
+        for (int i=0; i<xData.length; i++) {
+            dataVectors2.add(new VectorUtils.Vector2D(xData[i], (3 + yData[i]) + (Math.random() - 0.5)));
+        }
+        // As an area, over the curve
+        WhiteBoardPanel.DataSerie dataSerie2 = new WhiteBoardPanel.DataSerie()
+                .data(dataVectors2)
+                .graphicType(WhiteBoardPanel.GraphicType.AREA_SUP)
+                .lineThickness(3)
+                .color(Color.RED)
+                .areaGradient(new Color(0f, 1f, 1f, 0.5f), new Color(0f, 1f, 0f, 0.5f));
+        whiteBoard.addSerie(dataSerie2);
 
         // Finally, display it.
         whiteBoard.repaint();  // This is for a pure Swing context

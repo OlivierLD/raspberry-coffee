@@ -7,9 +7,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
 
@@ -23,6 +21,7 @@ public class ThreeDPanelWithWidgets
 	private int prevX, prevY;
 
 	private final Box3D box3D;
+	private final boolean showAnimateButton;
 
 	private final JLabel xLabel = new JLabel("X");
 	private final JLabel yLabel = new JLabel("Y");
@@ -121,22 +120,23 @@ public class ThreeDPanelWithWidgets
 	private final static int MAX_SLIDER_VALUE = 180;
 
 	public ThreeDPanelWithWidgets(Box3D box3D) {
-		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, null);
+		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, null, false);
 	}
 
 	public ThreeDPanelWithWidgets(Box3D box3D, String title) {
-		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, title);
+		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, title, false);
 	}
 
 	public ThreeDPanelWithWidgets(Box3D box3D, int width, int height) {
-		this(box3D, width, height, null);
+		this(box3D, width, height, null, false);
 	}
-	public ThreeDPanelWithWidgets(Box3D box3D, int width, int height, String title) {
+	public ThreeDPanelWithWidgets(Box3D box3D, int width, int height, String title, boolean showAnimate) {
+		this.showAnimateButton = showAnimate;
 		this.box3D = box3D;
 		initComponents(width, height);
 		this.setSize(new Dimension(width, height));  // Maybe conflicting...
 		this.setPreferredSize(new Dimension(width, height));
-//		this.setTitle(title == null ? "Box3D demo - Figure is draggable" : title); // TODO Move this at the frame level
+//		this.setTitle(title == null ? "Box3D demo - Figure is draggable" : title); // Moved at the frame level
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = this.getSize();
@@ -147,7 +147,7 @@ public class ThreeDPanelWithWidgets
 			frameSize.width = screenSize.width;
 		}
 		this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO Move this at the frame level
+//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Moved at the frame level
 		this.setVisible(true);
 	}
 
@@ -244,9 +244,22 @@ public class ThreeDPanelWithWidgets
 		JPanel bottomPanelHolder = new JPanel();
 		bottomPanelHolder.setLayout(new BorderLayout());
 
+		JPanel controlHolder = new JPanel();  // For checkbox and button below
+		controlHolder.setLayout(new GridBagLayout());
+
 		JCheckBox displayConfig = new JCheckBox("Display Config Widgets");
 		displayConfig.setSelected(true);
-		bottomPanelHolder.add(displayConfig, BorderLayout.NORTH);
+		controlHolder.add(displayConfig);
+
+		JButton animateButton = new JButton("Animate");
+		animateButton.addActionListener(e -> {
+			// TODO Do it. See in gsg.examples.wb.bezier.BeziersAtWorkSample02
+			System.out.println("TO DO...");
+		});
+		controlHolder.add(animateButton);
+		animateButton.setVisible(this.showAnimateButton);
+
+		bottomPanelHolder.add(controlHolder, BorderLayout.NORTH);
 
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridBagLayout());
