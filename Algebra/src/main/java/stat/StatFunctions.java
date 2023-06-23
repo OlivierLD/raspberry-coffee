@@ -21,7 +21,7 @@ public class StatFunctions {
     }
     public static double mean(List<Double> dataset) {
         return dataset.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
-            }
+    }
 
     private static double deviationFromMean(double score, double mean) {
         return score - mean;
@@ -31,6 +31,8 @@ public class StatFunctions {
      * Variance
      * @param dataset array of doubles
      * @return the variance
+     *
+     * TODO The sample for population/sample (length, length - 1)
      */
     public static double variance(double... dataset) {
         double mean = mean(dataset);
