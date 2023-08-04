@@ -58,6 +58,12 @@ public class LeastSquaresMethod {
 		System.out.println(String.format("Y in [%f, %f]", miny, maxy));
 	}
 
+	/**
+	 * Produces an array [ { "x": x, "y": y }, ... ] from csv data like x,y
+	 * @param csvName input csv file name
+	 * @param jsonName output json file name
+	 * @throws IOException
+	 */
 	public static void csvToJson(String csvName, String jsonName) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(csvName));
 		BufferedWriter bw = new BufferedWriter(new FileWriter(jsonName));
@@ -78,7 +84,6 @@ public class LeastSquaresMethod {
 		bw.write("]");
 		bw.close();
 		br.close();
-
 	}
 
 	public static class Tuple {
