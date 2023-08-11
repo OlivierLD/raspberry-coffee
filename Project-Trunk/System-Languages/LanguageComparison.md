@@ -24,13 +24,12 @@ For example, `n` = 3, and given the system:
 -->
 $$
 \begin{math}
-\left\{
-\begin{array}{ll}
+\Biggl\{
+\begin{array}{l}
 (12 * X)    + (13 * Y)   + (14 * Z)     = 234   \\
 (1.345 * X) + (-654 * Y) + (0.001 * Z)  = 98.87 \\
 (23.09 * X) + (5.3 * Y)  + (-12.34 * Z) = 9.876
 \end{array}
-\right.
 \end{math}
 $$
 
