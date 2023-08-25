@@ -1,6 +1,6 @@
 # Boat Design
 > Work in Progress, a test.  
-> Several (if not many) assumptions on options.  
+> Several (if not many) assumptions or options.  
 > One goal here is to create a boat defined with as few control points as possible.
 > 
 > Here we choose to define the keel and the rail.  
