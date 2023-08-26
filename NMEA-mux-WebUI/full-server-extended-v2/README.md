@@ -1,4 +1,7 @@
 # Case study (WiP) Full NavServer running on a Raspberry Pi Zero W, A+, and others...
+```
+@Deprecated, see in https://github.com/OlivierLD/ROB
+```
 This is a case study, using different hardware configurations to run the same software configuration (the full RESTNavServer).
 
 The hardware configuration will be made out of two parts:

@@ -1,4 +1,7 @@
 # Building and Customizing your own Nav Server
+```
+@Deprecated, see in https://github.com/OlivierLD/ROB
+```
 
 #### How to customize, extend, enrich the base classes of the `NMEA-multiplexer`.
 Those different versions may come with some WebUI, but this is obviously not mandatory,

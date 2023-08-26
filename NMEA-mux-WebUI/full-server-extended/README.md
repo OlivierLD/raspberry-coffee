@@ -1,3 +1,6 @@
+```
+@Deprecated, see in https://github.com/OlivierLD/ROB
+```
 This example shows how to _**extend**_  the `NavServer`.
 
 It shows how to add features like push-buttons, and take ownership of a screen (Nokia, SSD1306...)

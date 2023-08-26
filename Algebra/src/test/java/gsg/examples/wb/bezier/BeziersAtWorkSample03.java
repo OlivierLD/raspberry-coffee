@@ -25,7 +25,7 @@ import java.util.function.Function;
  */
 public class BeziersAtWorkSample03 implements MouseListener, MouseMotionListener {
 
-    private final static String TITLE = "Simple 2D Bezier sample.";
+    private final static String TITLE = "Simple 2D Bezier sample(Draggable points).";
     private final static String HELP = "Simple 2D Bezier sample.\n4 Draggable Ctrl Points.\nUse the Animate button to see how the curve is build.";
     // All z = 0, 2D bezier.
     // 4 control points

@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * Buttons with click, double-click, long-click, and other combinations.
  * Uses a small screen (oled SSD1306, Nokia, etc)
  *
- * This class use making use of Runnable and Consumers (thank you Java 8).
+ * This class is making use of Runnable and Consumers (thank you Java 8).
  *
  * System properties:
  * - button.verbose, default false
