@@ -1,7 +1,7 @@
 # Boat Design
 > Work in Progress, a test.  
 > Several (if not many) assumptions or options.  
-> One goal here is to create a boat defined with as few control points as possible.
+> **One goal here is to create a boat defined with as few control points as possible.**
 > 
 > Here we choose to define the keel and the rail.  
 > Each frame will have 3 control points:
@@ -67,6 +67,7 @@ Then do the hydrostatic calculations.
   - <https://photos.google.com/share/AF1QipM3Byy5dbo2Y4yIPwltfxCnPWq7kFEZneMXE1w7nQ3OWDDNuWW_EN_8W4TeB027fA?key=aXZTek5sRXozRm5VWTF2WWpzdWI2MnIxY2FyZTlR> 
   - <https://www.boat-et-koad.com/plans-de-voilier-de-plus-de-5m.php>.
 - Beniguet, Francois Vivier <https://www.vivierboats.com/produit/beniguet/>
+- Fran&ccedil;ois Lucas <https://www.fr-lucas.com/>
 - <https://www.asmaraudeur.com/>
 - ...
 
