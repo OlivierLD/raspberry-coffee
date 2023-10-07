@@ -60,6 +60,7 @@ import java.util.stream.Collectors;
  */
 public class ThreeViews {
 
+    private static boolean VERBOSE_3D = "true".equals(System.getProperty("3d-verbose"));
     private final static NumberFormat NUM_FMT = new DecimalFormat("#0.0000");
     private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS z '(UTC'Z')'");
 
@@ -1585,7 +1586,7 @@ public class ThreeViews {
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXY, Orientation.XY);
                 if (closePoint != null) {
 //            getLogger().log(Level.INFO, "Found it!");
-                    whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // TODO Drag cursor ?
                 }
             }
         });
@@ -1630,6 +1631,9 @@ public class ThreeViews {
                 } else {
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
+                    if (VERBOSE_3D) {
+                        System.out.println("No close point was found.");
+                    }
                 }
                 VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardXY); //, Orientation.XZ);
                 if (whiteBoardMousePos != null) {
@@ -1836,7 +1840,9 @@ public class ThreeViews {
                             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                                 double newX = canvasToSpaceXTransformer.apply(e.getX());
                                 double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
-//                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
+                                if (VERBOSE_3D) {
+                                    System.out.printf("Point dragged to %f / %f\n", newX, newY);
+                                }
                                 Bezier.Point3D point3D = new Bezier.Point3D().y(newX).z(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
                                 List<Bezier.Point3D> origList = curve == AddCtrlPointPanel.CurveName.RAIL ? railCtrlPoints : keelCtrlPoints;
@@ -1852,7 +1858,9 @@ public class ThreeViews {
                                 } else {
                                     keelCtrlPoints = newList;
                                 }
-                                System.out.printf("List now has %d elements.\n", origList.size());
+                                if (VERBOSE_3D) {
+                                    System.out.printf("List now has %d elements.\n", origList.size());
+                                }
                                 refreshData();
                             }
                         } catch (NumberFormatException nfe) {
@@ -1864,7 +1872,9 @@ public class ThreeViews {
 
             @Override
             public void mousePressed(MouseEvent e) {
-//              System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
+                if (VERBOSE_3D) {
+                    System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
+                }
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                 if (closePoint != null) {
 //                  getLogger().log(Level.INFO, "Found it!");
@@ -1884,7 +1894,9 @@ public class ThreeViews {
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newY = canvasToSpaceXTransformer.apply(e.getX());
                         double newZ = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
-//                System.out.printf("Point dragged to %f / %f\n", newX, newY);
+                        if (VERBOSE_3D) {
+                            System.out.printf("Point dragged to (y/z) %f / %f\n", newY, newZ);
+                        }
                         if (closestPointIndex < railCtrlPoints.size()) {
                             Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
                             point3D.y(newY).z(newZ);
@@ -2550,6 +2562,7 @@ public class ThreeViews {
                                              Function<Double, Integer> xTransformer,
                                              Function<Double, Integer> yTransformer,
                                              int canvasHeight) {
+        final int PROXIMITY_TOLERANCE = 5;
         Bezier.Point3D closePoint = null;
         for (Bezier.Point3D ctrlPt : ctrlPoints) {
             double ptX = ctrlPt.getX();
@@ -2563,9 +2576,11 @@ public class ThreeViews {
             }
             Integer canvasX = xTransformer.apply(ptX);
             Integer canvasY = yTransformer.apply(ptY);
-            if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (canvasHeight - canvasY)) < 5) { // 5: proximity tolerance
-//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (height - canvasY)));
-//                    System.out.printf("Close to %s\n", ctrlPt);
+            if (Math.abs(me.getX() - canvasX) < PROXIMITY_TOLERANCE && Math.abs(me.getY() - (canvasHeight - canvasY)) < PROXIMITY_TOLERANCE) { // 5: proximity tolerance
+                if (VERBOSE_3D) {
+                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(me.getX() - canvasX), Math.abs(me.getY() - (canvasHeight - canvasY)));
+                    System.out.printf("Close to %s\n", ctrlPt);
+                }
                 closePoint = ctrlPt;
                 break;
             }
