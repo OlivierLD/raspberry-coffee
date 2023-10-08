@@ -50,7 +50,7 @@ We'll see.
 > Look in the `jupyter` folder for notebooks.   
 > Look in the `test` folder for Swing and other examples.
 
-## Java Graphics (Generic Swing Graphics, GSG)
+## Java Graphics (Generic Swing Graphics, aka GSG)
 
 This module also includes a _Swing based Java_ library for graphics (2 & 3D), that can be used in pure Swing applications,
 as well as in Jupyter Notebooks (IJava). 
