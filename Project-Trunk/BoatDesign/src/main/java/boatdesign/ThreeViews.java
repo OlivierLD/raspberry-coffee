@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * A Swing Application. The main.
  * <p>
- * Using default WhiteBoard Writer
+ * Using default WhiteBoard Writer, three times. XZ, YZ, XY.
  * </p>
  * <p>
  * 2D Bezier example. (<- So so...) <br/>
@@ -1602,15 +1602,28 @@ public class ThreeViews {
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newX = canvasToSpaceXTransformer.apply(e.getX());
                         double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
-//                System.out.printf("Point dragged to %f / %f\n", newX, newY);
+                        if (VERBOSE_3D) {
+                            System.out.printf("XY Point idx %d dragged to %f / %f\n", closestPointIndex, newX, newY);
+                        }
                         if (closestPointIndex < railCtrlPoints.size()) {
                             Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
                             point3D.x(newX).y(newY);
+                            if (VERBOSE_3D) {
+                                System.out.printf("Rail point idx %d now %f / %f\n", closestPointIndex, newX, newY);
+                                // Dump ctrl points ?
+                                for (int i=0; i<railCtrlPoints.size(); i++) {
+                                    System.out.printf("%d - %f - %f\n", i, railCtrlPoints.get(i).getX(), railCtrlPoints.get(i).getY());
+                                }
+                            }
                         } else {
                             Bezier.Point3D point3D = keelCtrlPoints.get(closestPointIndex - railCtrlPoints.size());
                             point3D.x(newX).y(newY);
                         }
                         refreshData();
+                    }
+                } else {
+                    if (VERBOSE_3D) {
+                        System.out.println("XY Dragged, but no index...");
                     }
                 }
             }
@@ -1677,7 +1690,7 @@ public class ThreeViews {
                         BezierPopup popup = new BezierPopup(instance, closePoint);
                         popup.show(whiteBoardXZ, e.getX(), e.getY());
                     } else {
-                        System.out.println("Dummy right-click. No point close to it.");
+                        System.out.println("XZ: Dummy right-click. No point close to it.");
                     }
                 } else {
                     // Regular click.
@@ -1748,15 +1761,28 @@ public class ThreeViews {
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newX = canvasToSpaceXTransformer.apply(e.getX());
                         double newZ = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
-//                System.out.printf("Point dragged to %f / %f\n", newX, newY);
+                        if (VERBOSE_3D) {
+                            System.out.printf("XZ Point idx %d dragged to %f / %f\n", closestPointIndex, newX, newZ);
+                        }
                         if (closestPointIndex < railCtrlPoints.size()) {
                             Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
                             point3D.x(newX).z(newZ);
+                            if (VERBOSE_3D) {
+                                System.out.printf("Rail point idx %d now %f / %f\n", closestPointIndex, newX, newZ);
+                                // Dump ctrl points ?
+                                for (int i=0; i<railCtrlPoints.size(); i++) {
+                                    System.out.printf("%d - %f - %f\n", i, railCtrlPoints.get(i).getX(), railCtrlPoints.get(i).getZ());
+                                }
+                            }
                         } else {
                             Bezier.Point3D point3D = keelCtrlPoints.get(closestPointIndex - railCtrlPoints.size());
                             point3D.x(newX).z(newZ);
                         }
                         refreshData();
+                    }
+                } else {
+                    if (VERBOSE_3D) {
+                        System.out.println("XZ Dragged, but no index...");
                     }
                 }
             }
@@ -1774,7 +1800,6 @@ public class ThreeViews {
 //                        getLogger().log(Level.INFO, "Close Point on the keel!");
                         closestPointIndex = railCtrlPoints.size() + keelCtrlPoints.indexOf(closePoint);
                     }
-//                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
                 } else {
                     whiteBoardXZ.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
@@ -1890,21 +1915,36 @@ public class ThreeViews {
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardYZ.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardYZ.getCanvasToSpaceYTransformer();
-//                    int height = whiteBoardYZ.getHeight();
+//                  int height = whiteBoardYZ.getHeight();
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newY = canvasToSpaceXTransformer.apply(e.getX());
                         double newZ = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
                         if (VERBOSE_3D) {
-                            System.out.printf("Point dragged to (y/z) %f / %f\n", newY, newZ);
+                            System.out.printf("YZ Point idx %d dragged to (y/z) %f / %f\n", closestPointIndex, newY, newZ);
                         }
                         if (closestPointIndex < railCtrlPoints.size()) {
                             Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
                             point3D.y(newY).z(newZ);
+                            if (VERBOSE_3D) {
+                                System.out.printf("Rail point idx %d now %f / %f\n", closestPointIndex, newY, newZ);
+                                // Dump ctrl points ?
+                                for (int i=0; i<railCtrlPoints.size(); i++) {
+                                    System.out.printf("%d - %f - %f\n", i, railCtrlPoints.get(i).getY(), railCtrlPoints.get(i).getZ());
+                                }
+                            }
                         } else {
                             Bezier.Point3D point3D = keelCtrlPoints.get(closestPointIndex - railCtrlPoints.size());
                             point3D.y(newY).z(newZ);
+                            if (VERBOSE_3D) {
+                                System.out.printf(">>> Keel point idx %d now %f / %f\n", closestPointIndex, newY, newZ);
+                                // TODO Dump ctrl points ?
+                            }
                         }
                         refreshData();
+                    }
+                } else {
+                    if (VERBOSE_3D) {
+                        System.out.println("YZ Dragged, but no index...");
                     }
                 }
             }
@@ -2562,28 +2602,46 @@ public class ThreeViews {
                                              Function<Double, Integer> xTransformer,
                                              Function<Double, Integer> yTransformer,
                                              int canvasHeight) {
-        final int PROXIMITY_TOLERANCE = 5;
+        final int PROXIMITY_TOLERANCE = 8; // 5;  // TODO Parameter ?
         Bezier.Point3D closePoint = null;
         for (Bezier.Point3D ctrlPt : ctrlPoints) {
-            double ptX = ctrlPt.getX();
+            double ptX = ctrlPt.getX();                 // Default XY, From above
             double ptY = ctrlPt.getY();
-            if (orientation == Orientation.XZ) {
-                ptX = ctrlPt.getX();
+            if (orientation == Orientation.XZ) {        // Side
+                // ptX = ctrlPt.getX(); // already there
                 ptY = ctrlPt.getZ();
-            } else if (orientation == Orientation.YZ) {
+            } else if (orientation == Orientation.YZ) { // Front
                 ptX = ctrlPt.getY();
                 ptY = ctrlPt.getZ();
             }
             Integer canvasX = xTransformer.apply(ptX);
             Integer canvasY = yTransformer.apply(ptY);
-            if (Math.abs(me.getX() - canvasX) < PROXIMITY_TOLERANCE && Math.abs(me.getY() - (canvasHeight - canvasY)) < PROXIMITY_TOLERANCE) { // 5: proximity tolerance
+            int deltaX = Math.abs(me.getX() - canvasX);
+            int deltaY = Math.abs(me.getY() - canvasY);
+            if (VERBOSE_3D) {
+                System.out.printf("\tlookForClosePoint for point %s, orientation %s : deltaX: %d, deltaY: %d (m.y: %d, c.Y: %d, c.H: %d)\n",
+                        ctrlPt,
+                        orientation,
+                        deltaX,
+                        deltaY,
+                        me.getY(), canvasY, canvasHeight);
+            }
+            // if (Math.abs(me.getX() - canvasX) < PROXIMITY_TOLERANCE && Math.abs(me.getY() - (canvasHeight - canvasY)) < PROXIMITY_TOLERANCE) { // 5: proximity tolerance
+            if (deltaX < PROXIMITY_TOLERANCE && deltaY < PROXIMITY_TOLERANCE) {
                 if (VERBOSE_3D) {
-                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(me.getX() - canvasX), Math.abs(me.getY() - (canvasHeight - canvasY)));
-                    System.out.printf("Close to %s\n", ctrlPt);
+                    System.out.printf("- lookForClosePoint, Orientation %s, DeltaX: %d, DeltaY: %d\n",
+                            orientation,
+                            deltaX,
+                            deltaY);
+                    System.out.printf("- Close to %s\n", ctrlPt);
                 }
                 closePoint = ctrlPt;
                 break;
             }
+        }
+        if (VERBOSE_3D && closePoint == null) {
+            System.out.printf("- lookForClosePoint, Orientation %s, NO close point found.\n",
+                    orientation);
         }
         return closePoint;
     }
@@ -2617,6 +2675,10 @@ public class ThreeViews {
             closePoint = lookForClosePoint(me, railCtrlPoints, orientation, spaceToCanvasXTransformer, spaceToCanvasYTransformer, height);
             if (closePoint == null) { // Then look on the keel
                 closePoint = lookForClosePoint(me, keelCtrlPoints, orientation, spaceToCanvasXTransformer, spaceToCanvasYTransformer, height);
+            }
+        } else {
+            if (VERBOSE_3D) {
+                System.out.printf(">> NO SPaceToCanvas Tx found, for orientation %s\n", orientation);
             }
         }
         return closePoint;

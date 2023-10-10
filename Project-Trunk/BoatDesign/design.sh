@@ -17,9 +17,9 @@ fi
 OPT="${OPT} -Dspit-out-points=true"
 OPT="${OPT} -Duser.language=en -Duser.country=US"
 #
-OPT="${OPT} -D3d-verbose=true"
+OPT="${OPT} -D3d-verbose=false"
 #
-# The main class boatdesign.ThreeViews is in the MANIFEST.
+# The main class boatdesign.ThreeViews is in the MANIFEST (and build.gradle)
 #
 COMMAND="java ${OPT} ${LOGGING_FLAGS} -jar ${CP} $*"
 echo -e "Running ${COMMAND}"
