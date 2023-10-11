@@ -24,6 +24,8 @@ import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -61,6 +63,17 @@ import java.util.stream.Collectors;
 public class ThreeViews {
 
     private static boolean VERBOSE_3D = "true".equals(System.getProperty("3d-verbose"));
+    private static int PROXIMITY_TOLERANCE = 8; // in pixels.
+    static {
+        String ptString = System.getProperty("proximity-tolerance", String.valueOf(PROXIMITY_TOLERANCE));
+        try {
+            PROXIMITY_TOLERANCE = Integer.parseInt(ptString);
+        } catch (NumberFormatException nfe) {
+            System.err.printf("Bad value for proximity-tolerance: [%s]\n", ptString);
+            System.err.printf("Value set to %d\n", PROXIMITY_TOLERANCE);
+            nfe.printStackTrace();
+        }
+    }
     private final static NumberFormat NUM_FMT = new DecimalFormat("#0.0000");
     private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS z '(UTC'Z')'");
 
@@ -582,6 +595,9 @@ public class ThreeViews {
         Map<String, Object> mapDefaultPoints = (Map<String, Object>) dataMap.get("default-points");
         List<Object> mapKeelPoints = (List<Object>) mapDefaultPoints.get("keel");
         mapKeelPoints.forEach(kp -> {
+            if (true) { // Debug verbose
+                System.out.printf(">> KP is a %s, x is a %s\n", kp.getClass().getName(), ((Map) kp).get("x").getClass().getName());
+            }
             double x = ((Map<String, Double>) kp).get("x");
             double y = ((Map<String, Double>) kp).get("y");
             double z = ((Map<String, Double>) kp).get("z");
@@ -2602,7 +2618,7 @@ public class ThreeViews {
                                              Function<Double, Integer> xTransformer,
                                              Function<Double, Integer> yTransformer,
                                              int canvasHeight) {
-        final int PROXIMITY_TOLERANCE = 8; // 5;  // TODO Parameter ?
+        // final int PROXIMITY_TOLERANCE = 8; // 5;  // Defined at the top level. See -Dproximity-tolerance
         Bezier.Point3D closePoint = null;
         for (Bezier.Point3D ctrlPt : ctrlPoints) {
             double ptX = ctrlPt.getX();                 // Default XY, From above

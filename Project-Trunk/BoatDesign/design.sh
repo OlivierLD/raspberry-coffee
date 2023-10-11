@@ -18,6 +18,7 @@ OPT="${OPT} -Dspit-out-points=true"
 OPT="${OPT} -Duser.language=en -Duser.country=US"
 #
 OPT="${OPT} -D3d-verbose=false"
+# OPT="${OPT} -Dproximity-tolerance=8"
 #
 # The main class boatdesign.ThreeViews is in the MANIFEST (and build.gradle)
 #
