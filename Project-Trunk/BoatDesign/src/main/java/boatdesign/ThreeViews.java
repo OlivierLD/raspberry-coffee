@@ -592,6 +592,7 @@ public class ThreeViews {
         XMLElement defaultPoints = (XMLElement) doc.createElement("ctrl-points");
         boatData.appendChild(defaultPoints);
         // The ctrl points
+        // TODO Make sure of the types.
         Map<String, Object> mapDefaultPoints = (Map<String, Object>) dataMap.get("default-points");
         List<Object> mapKeelPoints = (List<Object>) mapDefaultPoints.get("keel");
         mapKeelPoints.forEach(kp -> {
@@ -822,6 +823,7 @@ public class ThreeViews {
                             List<List<Bezier.Point3D>> allFramesCtrlPts = this.box3D.getFrameCtrlPts();
                             List<List<Bezier.Point3D>> allBeamsCtrlPts = this.box3D.getBeamCtrlPts();
                             List<Bezier.Point3D> ctrlPointsTransom = this.box3D.getTransomCtrlPoint();
+                            messageTextArea.setText("Starting XML Calculation...");
                             XMLDocument doc = ThreeViews.buildXMLforPublishing(initConfig,
                                     map,
                                     allFramesCtrlPts,
