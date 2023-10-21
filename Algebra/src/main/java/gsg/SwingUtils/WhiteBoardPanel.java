@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -29,6 +30,7 @@ public class WhiteBoardPanel extends JPanel {
 
     private final static boolean VERBOSE = "true".equals(System.getProperty("swing.verbose"));
     private final static boolean TINY_AXIS_LABEL = false;
+    private AtomicBoolean busyGeneratingImage = new AtomicBoolean(false);
 
     private BiConsumer<Graphics2D, WhiteBoardPanel> beforeWhiteBoardWriter = null;
     private BiConsumer<Graphics2D, WhiteBoardPanel> afterWhiteBoardWriter = null;
@@ -972,6 +974,10 @@ public class WhiteBoardPanel extends JPanel {
         }
     }
 
+    public boolean isBusyGeneratingImage() {
+        return this.busyGeneratingImage.get();
+    }
+
     /**
      * Save the current view to a file
      * @param f the file to create
@@ -984,7 +990,8 @@ public class WhiteBoardPanel extends JPanel {
         // Create a buffered image in which to draw
         final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         final WhiteBoardPanel instance = this;
-        Thread refreshThread = new Thread(() -> {
+        Thread imageGenerator = new Thread(() -> {
+            busyGeneratingImage.set(true);
             try {
                 SwingUtilities.invokeAndWait(() -> {
                     // Create a graphics contents on the buffered image
@@ -1005,8 +1012,10 @@ public class WhiteBoardPanel extends JPanel {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            System.out.printf(">> End of image generator, for %s\n", f.getAbsolutePath());
+            busyGeneratingImage.set(false);
         });
-        refreshThread.start();
+        imageGenerator.start();
     }
 
     public static void drawArrow(Graphics2D g2d, Point from, Point to, Color c) {

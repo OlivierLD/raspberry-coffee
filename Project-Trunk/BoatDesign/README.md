@@ -51,7 +51,8 @@ Then do the hydrostatic calculations.
 - **pdf / xsl-fop** output... with XY.png, XZ.png, etc.
   - Images are generated with a `[Shift+Right-Click]` on the 3 drawing boards.
   - Work in progress in the `pub` folder.
-  - Make it an option, like a headless mode for the `ThreeViews.java`. Start from a `JSON` definition, and generate images and `XML` data for the `fop` script. 
+  - Make it an option, like a headless mode for the `ThreeViews.java`. Start from a `JSON` definition, 
+    and generate images and `XML` data for the `fop` script. 
 - Multi-lang - Soft and publications (resource bundle), in progress.
 - For the calculation/drawings: A step for the computation, a step for the drawing.
 - Case of other modules, like roofs (keel is on top).

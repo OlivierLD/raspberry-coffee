@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -752,35 +754,51 @@ public class ThreeViews {
             // Done
             getLogger().log(Level.INFO, "Done repainting.");
 
-            if (((UserWBParameters) whiteBoardXZ.getUserParameters()).generateImage) {
-                System.out.println("Generating image, as requested");
+            if (headLess || ((UserWBParameters) whiteBoardXZ.getUserParameters()).generateImage) {
+                System.out.println(">> Generating image, as requested");
                 // Store XZ panel as an image
                 File imageFile = new File("XZ.png");
                 this.whiteBoardXZ.createImage(imageFile, "png", this.whiteBoardXZ.getWidth(), this.whiteBoardXZ.getHeight());
                 System.out.printf("See file %s\n", imageFile.getAbsolutePath());
             } else {
-                System.out.println("Skipping XZ image generation");
+                System.out.println("!! Skipping XZ image generation");
             }
-            if (((UserWBParameters) whiteBoardXY.getUserParameters()).generateImage) {
-                System.out.println("Generating image, as requested");
+            if (headLess || ((UserWBParameters) whiteBoardXY.getUserParameters()).generateImage) {
+                System.out.println(">> Generating image, as requested");
                 // Store XY panel as an image
                 File imageFile = new File("XY.png");
                 this.whiteBoardXY.createImage(imageFile, "png", this.whiteBoardXY.getWidth(), this.whiteBoardXY.getHeight());
                 System.out.printf("See file %s\n", imageFile.getAbsolutePath());
             } else {
-                System.out.println("Skipping XY image generation");
+                System.out.println("!! Skipping XY image generation");
             }
-            if (((UserWBParameters) whiteBoardYZ.getUserParameters()).generateImage) {
-                System.out.println("Generating image, as requested");
+            if (headLess || ((UserWBParameters) whiteBoardYZ.getUserParameters()).generateImage) {
+                System.out.println(">> Generating image, as requested");
                 // Store XY panel as an image
                 File imageFile = new File("YZ.png");
                 this.whiteBoardYZ.createImage(imageFile, "png", this.whiteBoardYZ.getWidth(), this.whiteBoardYZ.getHeight());
                 System.out.printf("See file %s\n", imageFile.getAbsolutePath());
             } else {
-                System.out.println("Skipping YZ image generation");
+                System.out.println("!! Skipping YZ image generation");
             }
 
             getLogger().log(Level.INFO, "Bottom of repainter thread.");
+
+            // headless ?
+            if (headLess) {
+                System.out.println("End of Refresher Thread, bye !");
+                try {
+                    while (whiteBoardXY.isBusyGeneratingImage() ||
+                           whiteBoardXZ.isBusyGeneratingImage() ||
+                           whiteBoardYZ.isBusyGeneratingImage()) {
+                        System.out.println("Waiting for images to be generated...");
+                        Thread.sleep(1_000L); // Some slack to finish with the images...
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                System.exit(0);
+            }
         });
         repainter.start();
 
@@ -836,7 +854,19 @@ public class ThreeViews {
 //                    System.out.println(xmlString);
                                 // TODO Do we need another callback here (in refreshData) ?
                                 xmlTextArea.setText(xmlString);
-
+                                // headless: produce a file containing the XML content
+                                if (headLess) {
+                                    // String xslFoFileName = "xsl-fo-data.xml";
+                                    try {
+                                        FileOutputStream xslFo = new FileOutputStream(xslFoFileName);
+                                        doc.print(xslFo);
+                                        xslFo.flush();
+                                        xslFo.close();
+                                        System.out.printf("HeadLess, file %s generated.\n", xslFoFileName);
+                                    } catch (Throwable thrown) {
+                                        thrown.printStackTrace();
+                                    }
+                                }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
@@ -877,7 +907,7 @@ public class ThreeViews {
                                             .graphicType(WhiteBoardPanel.GraphicType.AREA)
                                             .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
                                             .color(Color.BLACK);
-                                    if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCC) {
+                                    if (!headLess && !((UserWBParameters) whiteBoardXY.getUserParameters()).hideCC) {
                                         whiteBoardXY.addSerie(areasSerie);
                                     }
                                 }
@@ -905,7 +935,7 @@ public class ThreeViews {
                                         .graphicType(WhiteBoardPanel.GraphicType.LINE)
                                         .lineThickness(1)
                                         .color(Color.RED);
-                                whiteBoardYZ.addSerie(frameYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+                                whiteBoardYZ.addSerie(frameYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw || headLess ? Color.BLACK : null);
                                 whiteBoardYZ.repaint();
                             } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.WATERLINE)) {
                                 List<Bezier.Point3D> data = (List<Bezier.Point3D>) map.get(BoatBox3D.DATA);
@@ -916,7 +946,7 @@ public class ThreeViews {
                                         .graphicType(WhiteBoardPanel.GraphicType.LINE)
                                         .lineThickness(1)
                                         .color(Color.RED);
-                                whiteBoardXY.addSerie(frameXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+                                whiteBoardXY.addSerie(frameXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw || headLess ? Color.BLACK : null);
                                 whiteBoardXY.repaint();
                             } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.BUTTOCK)) {
                                 List<Bezier.Point3D> data = (List<Bezier.Point3D>) map.get(BoatBox3D.DATA);
@@ -927,7 +957,7 @@ public class ThreeViews {
                                         .graphicType(WhiteBoardPanel.GraphicType.LINE)
                                         .lineThickness(1)
                                         .color(Color.RED);
-                                whiteBoardXZ.addSerie(buttockXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+                                whiteBoardXZ.addSerie(buttockXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw || headLess ? Color.BLACK : null);
                                 whiteBoardXZ.repaint();
                             } else {
                                 // TODO Others, BEAM
@@ -948,11 +978,11 @@ public class ThreeViews {
                         .graphicType(WhiteBoardPanel.GraphicType.POINTS)
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
-                if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCC) {
+                if (!headLess && !((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCC) {
                     whiteBoardXZ.addSerie(ccXZSerie);
                 }
 
-                if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCC) {
+                if (!headLess && !((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCC) {
                     WhiteBoardPanel.TextSerie ccXZTextSerie = new WhiteBoardPanel.TextSerie(xzCC.get(0), "CC", 0, 6, WhiteBoardPanel.TextSerie.Justification.CENTER);
                     ccXZTextSerie.setTextColor(new Color(0, 102, 0, 200));
                     ccXZTextSerie.setFont(new Font("Courier", Font.BOLD, 12));
@@ -967,7 +997,7 @@ public class ThreeViews {
                         .graphicType(WhiteBoardPanel.GraphicType.POINTS)
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
-                if (!((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCC) {
+                if (!headLess && !((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCC) {
                     whiteBoardYZ.addSerie(ccYZSerie);
                     WhiteBoardPanel.TextSerie ccYZTextSerie = new WhiteBoardPanel.TextSerie(yzCC.get(0), "CC", 7, -6, WhiteBoardPanel.TextSerie.Justification.LEFT);
                     ccYZTextSerie.setTextColor(new Color(0, 102, 0, 200));
@@ -983,7 +1013,7 @@ public class ThreeViews {
                         .graphicType(WhiteBoardPanel.GraphicType.POINTS)
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
-                if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCC) {
+                if (!headLess && !((UserWBParameters) whiteBoardXY.getUserParameters()).hideCC) {
                     whiteBoardXY.addSerie(ccXYSerie);
                     WhiteBoardPanel.TextSerie ccXYTextSerie = new WhiteBoardPanel.TextSerie(xyCC.get(0), "CC", 0, -14, WhiteBoardPanel.TextSerie.Justification.CENTER);
                     ccXYTextSerie.setTextColor(new Color(0, 102, 0, 200));
@@ -1253,7 +1283,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCP) {
+            if (!headLess && !((UserWBParameters) whiteBoardXY.getUserParameters()).hideCP) {
                 whiteBoardXY.addSerie(railCtrlXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
             }
             // XY - Keel
@@ -1262,7 +1292,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters) whiteBoardXY.getUserParameters()).hideCP) {
+            if (!headLess && !((UserWBParameters) whiteBoardXY.getUserParameters()).hideCP) {
                 whiteBoardXY.addSerie(keelCtrlXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
             }
 
@@ -1272,7 +1302,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCP) {
+            if (!headLess && !((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCP) {
                 whiteBoardXZ.addSerie(railCtrlXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
             }
             // XZ - Keel
@@ -1281,7 +1311,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCP) {
+            if (!headLess && !((UserWBParameters) whiteBoardXZ.getUserParameters()).hideCP) {
                 whiteBoardXZ.addSerie(keelCtrlXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
             }
 
@@ -1291,7 +1321,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCP) {
+            if (!headLess && !((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCP) {
                 whiteBoardYZ.addSerie(railCtrlYZSerie);
             }
             // YZ - Keel
@@ -1300,7 +1330,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                     .lineThickness(1)
                     .color(Color.ORANGE);
-            if (!((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCC) {
+            if (!headLess && !((UserWBParameters) whiteBoardYZ.getUserParameters()).hideCC) {
                 whiteBoardYZ.addSerie(keelCtrlYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
             }
             // Bezier points series
@@ -1310,14 +1340,14 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardXY.addSerie(railDataXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXY.addSerie(railDataXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw || headLess ? Color.BLACK : null);
             // XY - Keel
             WhiteBoardPanel.DataSerie keelDataXYSerie = new WhiteBoardPanel.DataSerie()
                     .data(keelDataXYVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardXY.addSerie(keelDataXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXY.addSerie(keelDataXYSerie, ((UserWBParameters) whiteBoardXY.getUserParameters()).bw || headLess  ? Color.BLACK : null);
 
             // XZ - Rail
             WhiteBoardPanel.DataSerie railDataXZSerie = new WhiteBoardPanel.DataSerie()
@@ -1325,14 +1355,14 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardXZ.addSerie(railDataXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXZ.addSerie(railDataXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw || headLess  ? Color.BLACK : null);
             // XZ - Keel
             WhiteBoardPanel.DataSerie keelDataXZSerie = new WhiteBoardPanel.DataSerie()
                     .data(keelDataXZVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE); // ((UserWBParameters)whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : Color.BLUE);
-            whiteBoardXZ.addSerie(keelDataXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardXZ.addSerie(keelDataXZSerie, ((UserWBParameters) whiteBoardXZ.getUserParameters()).bw || headLess  ? Color.BLACK : null);
 
             // YZ - Rail
             WhiteBoardPanel.DataSerie railDataYZSerie = new WhiteBoardPanel.DataSerie()
@@ -1340,14 +1370,14 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardYZ.addSerie(railDataYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardYZ.addSerie(railDataYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw || headLess  ? Color.BLACK : null);
             // Other side (on the left of the axis)
             WhiteBoardPanel.DataSerie railDataYZSerieOther = new WhiteBoardPanel.DataSerie()
                     .data(railDataYZVectorsOther)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardYZ.addSerie(railDataYZSerieOther, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardYZ.addSerie(railDataYZSerieOther, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw || headLess  ? Color.BLACK : null);
 
             // YZ - Keel
             WhiteBoardPanel.DataSerie keelDataYZSerie = new WhiteBoardPanel.DataSerie()
@@ -1355,7 +1385,7 @@ public class ThreeViews {
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoardYZ.addSerie(keelDataYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw ? Color.BLACK : null);
+            whiteBoardYZ.addSerie(keelDataYZSerie, ((UserWBParameters) whiteBoardYZ.getUserParameters()).bw || headLess  ? Color.BLACK : null);
 
             // Finally, display it.
             whiteBoardXY.repaint();  // This is for a pure Swing context
@@ -2543,6 +2573,16 @@ public class ThreeViews {
                 new Insets(0, 0, 0, 10), 0, 0));
         frame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 //        frame.pack();
+
+        if (headLess) { // Set the steps
+            System.out.printf("--> Setting steps - frame: %f, wl: %f, buttocks: %f\n", frameStep, wlStep, buttockStep);
+            frameStepValue.setValue(frameStep);
+            wlStepValue.setValue(wlStep);
+            buttockStepValue.setValue(buttockStep);
+            // Minimize the JFrame
+            System.out.println("--> Minimizing the JFrame");
+            frame.setState(Frame.ICONIFIED);
+        }
     }
 
     public ThreeViews() {
@@ -2563,6 +2603,11 @@ public class ThreeViews {
         this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT, this);
         threeDPanel = new ThreeDPanelWithWidgets(box3D);
         this.initComponents();
+
+        // headless ? Wow !
+        if (headLess) {
+            this.refreshBoatShape();
+        }
     }
 
     public static Logger getLogger() {
@@ -2918,10 +2963,115 @@ public class ThreeViews {
         }
     }
 
+    public static class CLIPrm {
+
+        private final String prefix;
+        private final String desc;
+        private final BiConsumer<String, CLIPrm> action;
+        public CLIPrm(String prefix, String desc, BiConsumer<String, CLIPrm> action) {
+            this.prefix = prefix;
+            this.desc = desc;
+            this.action = action;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public BiConsumer<String, CLIPrm> getAction() {
+            return action;
+        }
+    }
+
+    private final static String HELP_PRM = "--help";
+    private final static String HEAD_LESS_PRM = "--headless:";
+    private final static String JSON_FILE_PRM = "--boat-def:";
+    private final static String XML_FILE_PRM = "--xsl-fo-data:";
+    private final static String BETWEEN_FRAME_PRM = "--between-frames:";
+    private final static String BETWEEN_WL_PRM = "--between-wl:";
+    private final static String BETWEEN_BUTTOCKS_PRM = "--between_buttocks:";
+
+
+    private static CLIPrm[] CLI_PRMS = {
+            new CLIPrm(HELP_PRM, "Help!!!", (str, prm) -> {
+                System.out.println("CLI Parameters:");
+                displayHelp();
+                System.exit(0);
+            }),
+            new CLIPrm(HEAD_LESS_PRM, "Headless version.", (str, prm) -> {
+                headLess = "true".equals(str.substring(prm.getPrefix().length()));
+                System.out.printf("Managed %s, %s, %s\n", prm.getPrefix(), prm.getDesc(), str);
+            }),
+            new CLIPrm(JSON_FILE_PRM, "Boat definition, json file.", (str, prm) -> {
+                dataFile = str.substring(prm.getPrefix().length());
+                System.out.printf("Managed %s, %s, %s\n", prm.getPrefix(), prm.getDesc(), str);
+            }),
+            new CLIPrm(XML_FILE_PRM, "Data file to use with xsl-fo (pub).", (str, prm) -> {
+                xslFoFileName = str.substring(prm.getPrefix().length());
+                System.out.printf("Managed %s, %s, %s\n", prm.getPrefix(), prm.getDesc(), str);
+            }),
+            new CLIPrm(BETWEEN_FRAME_PRM, "Space between frames, in cm", (str, prm) -> {
+                try {
+                    frameStep = Double.parseDouble(str.substring(prm.getPrefix().length()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                System.out.printf("Managed %s, %s, %s\n", prm.getPrefix(), prm.getDesc(), str);
+            }),
+            new CLIPrm(BETWEEN_WL_PRM, "Space between Water Lines, in cm", (str, prm) -> {
+                try {
+                    wlStep = Double.parseDouble(str.substring(prm.getPrefix().length()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                System.out.printf("Managed %s, %s, %s\n", prm.getPrefix(), prm.getDesc(), str);
+            }),
+            new CLIPrm(BETWEEN_BUTTOCKS_PRM, "Space between buttocks, in cm", (str, prm) -> {
+                try {
+                    buttockStep = Double.parseDouble(str.substring(prm.getPrefix().length()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                System.out.printf("Managed %s, %s, %s\n", prm.getPrefix(), prm.getDesc(), str);
+            })
+    };
+
+    private static void displayHelp() {
+        Arrays.asList(CLI_PRMS).forEach(prm -> System.out.printf("%s, %s\n", prm.getPrefix(), prm.getDesc()));
+    }
+    private static boolean headLess = false;
+    private static String dataFile = null;
+    private static String xslFoFileName = "xsl-fo-data.xml";
+    private static double frameStep = 10.0;
+    private static double wlStep = 10.0;
+    private static double buttockStep = 10.0;
+
+    private static void processCliPrms(String... args) {
+
+        for (String arg : args) {
+            final CLIPrm cliPrm = Arrays.asList(CLI_PRMS).stream().filter(prm -> arg.startsWith(prm.getPrefix())).findFirst().orElse(null);
+            if (cliPrm != null) {
+                cliPrm.getAction().accept(arg, cliPrm);
+            } else {
+                System.out.printf("CLI Prm [%s] not managed.\n", arg);
+            }
+        }
+        if (headLess) { // Required data...
+            if (dataFile == null) {
+                System.err.printf("No %s found in the CLI prms, ignoring the %s%s option.\n", JSON_FILE_PRM, HEAD_LESS_PRM, "true");
+                headLess = false;
+            }
+        }
+    }
+
     /**
      * Main for the Swing app.
      *
-     * @param args Unused.
+     * @param args CLI Prms.
      */
     @SuppressWarnings("unchecked")
     public static void main(String... args) {
@@ -2934,11 +3084,14 @@ public class ThreeViews {
             e.printStackTrace();
         }
 
+        // CLI parameters processing here
+        processCliPrms(args);
+
         System.out.println("----------------------------------------------");
         System.out.printf("Running from folder %s\n", System.getProperty("user.dir"));
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
-        String initFileName = "init.json";
+        String initFileName = (dataFile != null) ? dataFile : "init.json";
         initFileName = System.getProperty("init-file", initFileName);
         System.out.printf("Opening %s\n", initFileName);
 
@@ -2949,18 +3102,19 @@ public class ThreeViews {
             LOGGER.log(Level.INFO, String.format("Reading URL %s (for %s)", configResource, initFileName));
             initConfig = mapper.readValue(configResource.openStream(), Map.class);
         } catch (Exception ex) {
-            LOGGER.log(Level.WARNING, String.format("Error reading URL %s (for %s), trying File System", configResource, initFileName), ex);
+            // Trying on the file system...
             File config = new File(initFileName);
             if (config.exists()) {
                 try {
                     configResource = config.toURI().toURL();
                     initConfig = mapper.readValue(configResource.openStream(), Map.class);
-                    LOGGER.log(Level.INFO, String.format("Read URL %s (for %s)", configResource, initFileName));
+                    LOGGER.log(Level.INFO, String.format("Read URL %s (for %s, from file system.)", configResource, initFileName));
                 } catch (Exception ex2) {
                     LOGGER.log(Level.WARNING, String.format("Error reading URL %s (for %s).", configResource, initFileName), ex2);
                     ex2.printStackTrace();
                 }
             } else {
+                LOGGER.log(Level.WARNING, String.format("Error reading URL %s (for %s), no Resource, no File System", configResource, initFileName), ex);
                 LOGGER.log(Level.SEVERE, String.format("Error: no %s was found.", initFileName));
             }
         }
