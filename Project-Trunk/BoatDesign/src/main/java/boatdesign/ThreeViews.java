@@ -737,7 +737,7 @@ public class ThreeViews {
 
     @SuppressWarnings("unchecked")
     private void refreshBoatShape() {
-        Thread repainter = new Thread(() -> {
+        Thread repainter = new Thread(() -> { // Keep the 3D visualization in sync
             keepLooping.set(true);
             while (keepLooping.get()) {
                 try {
@@ -1109,7 +1109,7 @@ public class ThreeViews {
     }
 
     private void setBezierData() {
-        // Display in textArea
+        // Display in textArea, json or scad
         try {
             if (jsonRadioButton.isSelected()) {
                 String json = mapper.writerWithDefaultPrettyPrinter()
@@ -1181,7 +1181,7 @@ public class ThreeViews {
                 railCtrlPtsYZVectors.add(new VectorUtils.Vector2D(yRailCtrlPoints[i], zRailCtrlPoints[i]));
             }
 
-            // Curve points
+            // Rail Curve points
             double[] xData = bezierRailPoints.stream()
                     .mapToDouble(VectorUtils.Vector3D::getX)
                     .toArray();
@@ -1249,7 +1249,7 @@ public class ThreeViews {
                 }
             }
 
-            // Curve points
+            // Keel Curve points
             xData = bezierKeelPoints.stream()
                     .mapToDouble(VectorUtils.Vector3D::getX)
                     .toArray();
@@ -2995,7 +2995,7 @@ public class ThreeViews {
     private final static String BETWEEN_WL_PRM = "--between-wl:";
     private final static String BETWEEN_BUTTOCKS_PRM = "--between_buttocks:";
 
-
+    // Define cli prm names, and actions to take.
     private static CLIPrm[] CLI_PRMS = {
             new CLIPrm(HELP_PRM, "Help!!!", (str, prm) -> {
                 System.out.println("CLI Parameters:");
@@ -3040,6 +3040,10 @@ public class ThreeViews {
             })
     };
 
+    /*
+      That one need to be here (and not in the BiConsumer)
+      to avoid illegal self-reference.
+     */
     private static void displayHelp() {
         Arrays.asList(CLI_PRMS).forEach(prm -> System.out.printf("%s, %s\n", prm.getPrefix(), prm.getDesc()));
     }
@@ -3060,7 +3064,7 @@ public class ThreeViews {
                 System.out.printf("CLI Prm [%s] not managed.\n", arg);
             }
         }
-        if (headLess) { // Required data...
+        if (headLess) { // Required data, if headless...
             if (dataFile == null) {
                 System.err.printf("No %s found in the CLI prms, ignoring the %s%s option.\n", JSON_FILE_PRM, HEAD_LESS_PRM, "true");
                 headLess = false;

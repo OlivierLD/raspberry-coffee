@@ -965,12 +965,14 @@ public class WhiteBoardPanel extends JPanel {
 //      System.out.println("paintComponent invoked on JPanel");
         Graphics2D g2d = (Graphics2D) g;
 
-        if (beforeWhiteBoardWriter != null) {
-            beforeWhiteBoardWriter.accept(g2d, this);
+        // Before ?
+        if (this.beforeWhiteBoardWriter != null) {
+            this.beforeWhiteBoardWriter.accept(g2d, this);
         }
-        whiteBoardWriter.accept(g2d);     // Invoke the whiteBoardWriter
-        if (afterWhiteBoardWriter != null) {
-            afterWhiteBoardWriter.accept(g2d, this);
+        this.whiteBoardWriter.accept(g2d);     // Invoke the whiteBoardWriter
+        // After ?
+        if (this.afterWhiteBoardWriter != null) {
+            this.afterWhiteBoardWriter.accept(g2d, this);
         }
     }
 

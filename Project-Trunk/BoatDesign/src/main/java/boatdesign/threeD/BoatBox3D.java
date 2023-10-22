@@ -20,6 +20,9 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 /**
+ * 3D Visualization of the boat, draggable with the mouse,
+ * drivable with widgets like sliders...
+ *
  * Many hard-coded values and options...
  *
  * Also see -Dspit-out-points=true
