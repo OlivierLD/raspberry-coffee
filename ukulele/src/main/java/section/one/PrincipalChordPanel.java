@@ -23,7 +23,8 @@ import ukulele.ChordPanel;
 
 
 public class PrincipalChordPanel
-				extends JPanel {
+		extends JPanel
+		implements PanelWithContent {
 	private static final String[] colName = {"I", "IV", "V7"};
 
 	private static final String[][] chordData = {
@@ -53,6 +54,10 @@ public class PrincipalChordPanel
 		}
 	}
 
+	@Override
+	public JTable getJTable() {
+		return this.table;
+	}
 	private void jbInit()
 					throws Exception {
 		initTable();

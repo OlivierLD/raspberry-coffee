@@ -1735,8 +1735,8 @@ public class BoatBox3D extends Box3D {
             try {
                 final ObjectMapper mapper = parent.getObjectMapper(); // new ObjectMapper();
                 String allPoints = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(allCalculatedPoints);
-//            System.out.println(allPoints);
-                File f = new File("calculated.json");
+//              System.out.println(allPoints);
+                File f = new File("calculated.json"); // Can be used by ThreeJS
                 FileWriter fw = new FileWriter(f);
                 BufferedWriter out = new BufferedWriter(fw);
                 out.write(allPoints + "\n");

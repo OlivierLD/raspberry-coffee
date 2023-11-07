@@ -23,7 +23,8 @@ import ukulele.ChordPanel;
 
 
 public class VampChordPanel
-				extends JPanel {
+		extends JPanel
+		implements PanelWithContent {
 	private static final String[] colName = {"I", "II7", "V7"};
 
 	private static final String[][] chordData = {
@@ -54,8 +55,12 @@ public class VampChordPanel
 		}
 	}
 
-	private void jbInit()
-					throws Exception {
+	@Override
+	public JTable getJTable() {
+		return this.table;
+	}
+
+	private void jbInit() throws Exception {
 		initTable();
 
 		this.data = new Chord[MAX_ROW][NB_COLUMNS];

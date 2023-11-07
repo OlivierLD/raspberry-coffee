@@ -2,15 +2,16 @@ package chordfinder;
 
 import chords.ChordList;
 import chords.ChordUtil;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.EventObject;
-import javax.swing.AbstractCellEditor;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -37,8 +38,7 @@ public class AllChordPanel
 		}
 	}
 
-	private void jbInit()
-					throws Exception {
+	private void jbInit() throws Exception {
 		initTable();
 
 		this.data = new Chord[MAX_ROW][NB_COLUMNS];
@@ -165,4 +165,50 @@ public class AllChordPanel
 			return null;
 		}
 	}
+
+
+	/**
+	 * Save the current FULL view to a file. Full -> JTable (this.table)
+	 * @param f the file to create
+	 * @param ext the image extension (jpg, png, etc), used by ImageIO, no dot in this value.
+	 * @param width image width. Unused (taken from the JTable)
+	 * @param height image height. Unused (taken from the JTable)
+	 */
+	public void createImageFromContent(File f, String ext, int width, int height) {
+
+		final JTable instance = this.table;
+		width = this.table.getWidth();   // Override
+		height = this.table.getHeight(); // Override
+
+		// Create a buffered image in which to draw
+		final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		Thread imageGenerator = new Thread(() -> {
+			// busyGeneratingImage.set(true);
+			try {
+				SwingUtilities.invokeAndWait(() -> {
+					// Create a graphics contents on the buffered image
+					Graphics2D g2d = bufferedImage.createGraphics();
+					// instance.paintComponent(g2d);
+					instance.paint(g2d);
+					// Write generated image to a file
+					try {
+						OutputStream os = new FileOutputStream(f);
+						ImageIO.write(bufferedImage, ext, os);
+						os.flush();
+						os.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					// Graphics context no longer needed so dispose it
+					g2d.dispose();
+				});
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			System.out.printf(">> End of image generator, for %s\n", f.getAbsolutePath());
+			// busyGeneratingImage.set(false);
+		});
+		imageGenerator.start();
+	}
+
 }

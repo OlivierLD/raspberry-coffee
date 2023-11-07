@@ -28,3 +28,7 @@ $ ../gradle chordFinder
 $ ../gradle keyChordFinder
 ```
 ---
+
+Tonalités: See https://www.larousse.fr/encyclopedie/musdico/tonalit%C3%A9/170406
+
+---

@@ -23,7 +23,8 @@ import ukulele.Chord;
 
 
 public class TonalRegionChordPanel
-				extends JPanel {
+		extends JPanel
+		implements PanelWithContent {
 	private static final String[] colName = {" <- 5th - ", " <- 5th - ", " ", " - 5th -> ", " - 5th -> "};
 
 	private static final String[][] chordData = {
@@ -50,6 +51,9 @@ public class TonalRegionChordPanel
 		}
 	}
 
+	public JTable getJTable() {
+		return this.table;
+	}
 	private void jbInit()
 					throws Exception {
 		initTable();
