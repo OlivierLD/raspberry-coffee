@@ -2,7 +2,7 @@
 
 This is just an example: for a given problem, provide a solution. Solutions will be implemented in different languages.
 
-> _Note_: This document is a `KISS` document (Keep It Small and Stupid). We will _not_ provide here all you need to know to read it fluently.
+> _Note_: This document is a `KISS` document (Keep It Small and Stupid). We will _not_ provide here all you need to know, to read it fluently.  
 > If - for example - you do not know what a compiler is, you will need to find it somewhere else.
 > This being said, good luck!
 
