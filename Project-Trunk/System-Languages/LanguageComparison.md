@@ -23,7 +23,7 @@ For example, `n` = 3, and given the system:
 <!-- -->
 $$
 \begin{math}
-\Biggl\{
+\Bigl\{
 \begin{array}{l}
 (12 * X)    + (13 * Y)   + (14 * Z)     = 234   \\
 (1.345 * X) + (-654 * Y) + (0.001 * Z)  = 98.87 \\
