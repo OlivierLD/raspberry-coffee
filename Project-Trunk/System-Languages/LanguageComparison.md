@@ -20,7 +20,7 @@ For example, `n` = 3, and given the system:
   |   (23.09 * X) + (5.3 * Y)  + (-12.34 * Z) = 9.876
   \
 ```
-<!--
+<!-- -->
 $$
 \begin{math}
 \Biggl\{
@@ -31,7 +31,7 @@ $$
 \end{array}
 \end{math}
 $$
--->
+<!-- -->
 
 The question is: _What are the values of X, Y, and Z?_
 

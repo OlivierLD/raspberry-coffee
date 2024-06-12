@@ -25,7 +25,7 @@ while [[ "${exit}" == "FALSE" ]]; do
     echo -en "Hit [return]"
     read a
   elif nocase "${opt}" "I" ; then
-    ./ip
+    ./ip.sh
     read a
   elif nocase "${opt}" "C"; then
     sudo ./switch.sh

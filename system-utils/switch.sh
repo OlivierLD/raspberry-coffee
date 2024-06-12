@@ -17,7 +17,7 @@ echo -n 'You choose > '
 read choice
 if nocase "${choice}" "AH"; then
   echo -e "Switching to AD-HOC"
-  ./switch-to-ad-hoc Ad-Hoc
+  ./switch-to-ad-hoc.sh Ad-Hoc
   sudo cp /etc/default/hostapd.no /etc/default/hostapd
   echo -n 'Reboot is required, reboot now y|n ? > '
   read a
@@ -26,7 +26,7 @@ if nocase "${choice}" "AH"; then
   fi
 elif nocase "${choice}" "AP"; then
   echo -e "Switching to Access Point"
-  ./switch-to-ad-hoc Access-Point
+  ./switch-to-ad-hoc.sh Access-Point
   sudo cp /etc/default/hostapd.yes /etc/default/hostapd
   echo -n 'Reboot is required, reboot now y|n ? > '
   read a

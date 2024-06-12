@@ -1,4 +1,5 @@
 #!/bin/bash
+cp /etc/network/interfaces /etc/network/interfaces.backup
 cp /etc/network/interfaces.ad-hoc /etc/network/interfaces
 ifdown --force wlan0
 ifup wlan0
