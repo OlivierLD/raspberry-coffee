@@ -72,7 +72,7 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box s
     mainClass = 'gsg.examples.box3d.Sample' + testNum  // Default 01, see above
     if (project.hasProperty('num')) { // gradlew -Pnum=XX runSample
         testNum = project.getProperty('num')
-        println ">>> Running test ${testNum}, ${name}"
+        println ">>> Running test ${testNum}, of ${name}"
         mainClass = 'gsg.examples.box3d.Sample' + testNum
     }
 
@@ -102,7 +102,7 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box s
 def bezierTestNum = '01'
 
 task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a Bezier works. Use -Pnum=[01..02] (default 01)") {
-    // println("Task [${name}]: Yoho!!")
+    println("Task [${name}]: Yoho!!")
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -112,7 +112,7 @@ task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a B
     mainClass = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum  // Default 01, see above
     if (project.hasProperty('num')) { // gradlew runBezierSample -Pnum=XX
         bezierTestNum = project.getProperty('num')
-        if (/*false &&*/ name == "runBezierSample") {
+        if (false && name == "runBezierSample") { // false is here because of interferences with the task runSample...
             if (!"01".equals(bezierTestNum) && !"02".equals(bezierTestNum)) {
                 println("-------------------------------")
                 println("Error >>> 01 or 02 only please.")
