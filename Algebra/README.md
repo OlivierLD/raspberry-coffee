@@ -112,7 +112,7 @@ Two 2D Bezier, draggable Ctrl-Points:
 ../gradlew runSample4
 ```
 
-Animated Bezier Curves
+Animated Bezier Curves, `../gradlew runBezierSample -Pnum=02`
 
 |          t = 0.438           |          t = 0.767           |          t = 1.000           |
 |:----------------------------:|:----------------------------:|:----------------------------:|

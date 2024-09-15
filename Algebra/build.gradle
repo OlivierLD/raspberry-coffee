@@ -112,7 +112,7 @@ task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a B
     mainClass = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum  // Default 01, see above
     if (project.hasProperty('num')) { // gradlew runBezierSample -Pnum=XX
         bezierTestNum = project.getProperty('num')
-        if (false && name == "runBezierSample") {
+        if (/*false &&*/ name == "runBezierSample") {
             if (!"01".equals(bezierTestNum) && !"02".equals(bezierTestNum)) {
                 println("-------------------------------")
                 println("Error >>> 01 or 02 only please.")
