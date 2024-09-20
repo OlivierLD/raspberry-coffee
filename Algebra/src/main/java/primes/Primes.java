@@ -36,7 +36,7 @@ public class Primes {
     public static Map<Integer, Integer> primeFactors(int n) {
         Map<Integer, Integer> primeMap = new HashMap<>();
 
-        // Print the number of 2s that divide n
+        // Print the number of 2s that divides n
         while (n % 2 == 0) {
             if (VERBOSE) {
                 System.out.print(2 + " ");
