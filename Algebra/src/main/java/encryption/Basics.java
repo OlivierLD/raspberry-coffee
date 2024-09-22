@@ -1,5 +1,7 @@
 package encryption;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Histoire des codes secrets, pages 232 and after.
  * Brute force.
@@ -119,11 +121,14 @@ public class Basics {
         // --------------------
         originalMessage = "Vois moi à midi, Ducon !";
 
-        // String normalized = StringUtils.stripAccents(originalMessage); // TODO Fix that...
-        encrypted = encrypt(originalMessage, ALICE_KEY);
+        String normalized = StringUtils.stripAccents(originalMessage); // Needs its maven repo
+        normalized = normalized.toLowerCase();
+        encrypted = encrypt(normalized, ALICE_KEY);
 
         System.out.println("-----------------");
         System.out.printf("Accented message: Encrypted with Alice's key [%s]\n", encrypted);
+        decrypted = decrypt(encrypted, ALICE_KEY);
+        System.out.printf("[%s] => Back to 'original' [%s]\n", originalMessage, decrypted);
 
         System.out.println("----- Done! -----");
     }

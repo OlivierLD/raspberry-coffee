@@ -34,6 +34,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     // maven { url "https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin" }
+    maven { url "https://mvnrepository.com/artifact/org.apache.commons/commons-lang3" }
 }
 
 //compileJava.options.encoding = 'ISO-8859-1'
@@ -46,7 +47,10 @@ dependencies {
     testImplementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.25.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     // To normalize strings
-    implementation 'org.apache.commons:commons-text:1.10'
+    // implementation 'org.apache.commons:commons-text:1.10'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
+
 }
 
 // See https://docs.gradle.org/current/userguide/publishing_maven.html
