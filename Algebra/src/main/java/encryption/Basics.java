@@ -34,6 +34,18 @@ public class Basics {
             ' ', ',', ';' , ':', '!', '?', '\'', '.'
     };
 
+    public static String lpad(String s, int len) {
+        return lpad(s, len, " ");
+    }
+
+    public static String lpad(String s, int len, String pad) {
+        String str;
+        for(str = s; str.length() < len; str = pad + str) {
+        }
+
+        return str;
+    }
+
     /**
      * Encrypt a message with a key.
      *
@@ -190,5 +202,24 @@ public class Basics {
         String decrypted02 = decrypt(decrypted01.toUpperCase(), Key.BERNARD_KEY);
 
         System.out.printf("Finally: [%s], wrong as expected.\n", decrypted02);
+
+        // Display characters as binary number
+        byte letterA = (byte)'A';
+        String binaryString = Integer.toBinaryString(letterA);
+        System.out.printf("%s in binary: &#%s\n", letterA, lpad(binaryString, 8, "0"));
+
+        String hello = "HELLO"; // Page 309
+        byte[] helloBytes = hello.getBytes();
+        StringBuilder binaryHello = new StringBuilder();
+        for (byte b : helloBytes) {
+            binaryHello.append(String.format("%s ", lpad(Integer.toBinaryString(b), 8, "0")));
+        }
+        System.out.printf("Binary Hello (lpad) : [%s]\n", binaryHello.toString().trim());
+
+        binaryHello = new StringBuilder();
+        for (byte b : helloBytes) {
+            binaryHello.append(String.format("%s ", Integer.toBinaryString(b)));
+        }
+        System.out.printf("Binary Hello (NO lpad, as used in the book) : [%s]\n", binaryHello.toString().trim());
     }
 }
