@@ -2,7 +2,9 @@ package encryption;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Histoire des codes secrets, pages 232 and after.
@@ -220,6 +222,68 @@ public class Basics {
         for (byte b : helloBytes) {
             binaryHello.append(String.format("%s ", Integer.toBinaryString(b)));
         }
+        // Uppercase lettres are 7 bit long.
         System.out.printf("Binary Hello (NO lpad, as used in the book) : [%s]\n", binaryHello.toString().trim());
+
+        byte[] davidBytes = "DAVID".getBytes();
+        StringBuilder binaryDavid = new StringBuilder();
+        for (byte b : davidBytes) {
+            binaryDavid.append(String.format("%s", Integer.toBinaryString(b)));
+        }
+        String davidKey = binaryDavid.toString().trim();
+
+        binaryHello = new StringBuilder();
+        for (byte b : helloBytes) {
+            binaryHello.append(String.format("%s", Integer.toBinaryString(b)));
+        }
+        String helloBuffer = binaryHello.toString().trim();
+        System.out.println("Before proceeding:");
+        System.out.printf("%s\n%s\n", helloBuffer, davidKey);
+        // Encoding
+        byte[] messageBits = helloBuffer.getBytes();
+        byte[] keyBits     = davidKey.getBytes();
+        List<Byte> encoded = new ArrayList<>();
+        for (int i=0;i<messageBits.length; i++) {
+            if (messageBits[i] == keyBits[i]) { // TODO Is that an XOR ?
+                encoded.add((byte)'0');
+            } else {
+                encoded.add((byte)'1');
+            }
+        }
+        byte[] newArray = new byte[messageBits.length];
+        for (int i=0; i<encoded.size(); i++) {  // TODO Improve this loop
+            newArray[i] = encoded.get(i);
+        }
+        String encodedString = new String(newArray);
+        System.out.printf("Encoded:\n%s\n", encodedString);
+
+        // Now decode, and translate back to ASCII
+
+        // With the original message:
+        for (int i=0; i<helloBuffer.length(); i+=7) {
+            int c = Integer.parseInt(helloBuffer.substring(i, i+7), 2);
+            System.out.printf("Original - %s\n", (char)c);
+        }
+
+        List<Byte> decoded = new ArrayList<>();
+        for (int i=0;i<messageBits.length; i++) {
+            if (newArray[i] == keyBits[i]) { // newArray contains the en coded message
+                decoded.add((byte)'0');
+            } else {
+                decoded.add((byte)'1');
+            }
+        }
+
+        newArray = new byte[messageBits.length];
+        for (int i=0; i<decoded.size(); i++) {  // TODO Improve this loop
+            newArray[i] = decoded.get(i);
+        }
+        String decodedString = new String(newArray);
+        System.out.printf("Decoded:\n%s\n", decodedString);
+        // With the decoded message:
+        for (int i=0; i<helloBuffer.length(); i+=7) {
+            int c = Integer.parseInt(helloBuffer.substring(i, i+7), 2);
+            System.out.printf("Decoded - %s\n", (char)c);
+        }
     }
 }
