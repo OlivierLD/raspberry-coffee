@@ -2,30 +2,52 @@ package encryption;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+
 /**
  * Histoire des codes secrets, pages 232 and after.
  * Brute force.
  */
 public class Basics {
-    // Suitable for lowercase, not accented characters, no punctuation, just blanks.
     private final static String NOT_ENCRYPTED = "abcdefghijklmnopqrstuvwxyz";
-    private final static String ALICE_KEY     = "HFSUGTAKVDEOYJBPNXWCQRIMZL";
-    private final static String BERNARD_KEY   = "CPMGATNOJEFWIQBURYHXSDZKLV";
+
+    public enum Key {
+       ALICE_KEY("HFSUGTAKVDEOYJBPNXWCQRIMZL", "Alice"),
+       BERNARD_KEY("CPMGATNOJEFWIQBURYHXSDZKLV", "Bernard");
+
+       private final String key;
+       private final String name;
+       Key(String key, String name) {
+        this.key = key;
+        this.name = name;
+       }
+       public String getKey() {
+           return this.key;
+       }
+       public String getName() {
+        return this.name;
+       }
+    }
+
+    /* Punctuation characters, unchanged here. */
+    private final static Character[] UNCHANGED = new Character[] {
+            ' ', ',', ';' , ':', '!', '?', '\'', '.'
+    };
 
     /**
      * Encrypt a message with a key.
      *
-     * @param original Original message, in lowercase. No accent, no punctuation. Just blanks allowed.
-     * @param key The encryption key
+     * @param original Original message, in lowercase. No accent, no punctuation. Also see UNCHANGED characters.
+     * @param key The encryption key to use
      * @return The encrypted message.
      */
-    private static String encrypt(String original, String key) {
+    private static String encrypt(String original, Key key) {
         StringBuilder encrypted = new StringBuilder();
         char[] charArray = original.toCharArray();
         for (char c : charArray) {
             boolean found = false;
-            if (c == ' ') {
-                encrypted.append(' ');
+            if (Arrays.stream(UNCHANGED).anyMatch(character -> (character == c))) {
+                encrypted.append(c);
             } else {
                 if (NOT_ENCRYPTED.contains(new StringBuffer(c))) {
                     int idx = 0;
@@ -37,14 +59,14 @@ public class Basics {
                                 idx++;
                             }
                         } catch (StringIndexOutOfBoundsException siobe) {
-                            System.err.println("--- Cough that ---");
+                            System.err.printf("--- Cough that for [%s] ---\n", c);
                             siobe.printStackTrace();
                             System.err.println("------------------");
                             break;
                         }
                     }
                     if (found) {
-                        encrypted.append(key.charAt(idx));
+                        encrypted.append(key.getKey().charAt(idx));
                     }
                 } else {
                     System.out.println("Oops...");
@@ -60,18 +82,18 @@ public class Basics {
      * @param key The key, used for encryption
      * @return The decrypted message
      */
-    private static String decrypt(String encrypted, String key) {
+    private static String decrypt(String encrypted, Key key) {
         StringBuilder decrypted = new StringBuilder();
         char[] charArray = encrypted.toCharArray();
         for (char c : charArray) {
             boolean found = false;
-            if (c == ' ') {
-                decrypted.append(' ');
+            if (Arrays.stream(UNCHANGED).anyMatch(character -> (character == c))) {
+                decrypted.append(c);
             } else {
-                if (key.contains(new StringBuffer(c))) {
+                if (key.getKey().contains(new StringBuffer(c))) {
                     int idx = 0;
                     while (!found) {
-                        if (key.charAt(idx) == c) {
+                        if (key.getKey().charAt(idx) == c) {
                             found = true;
                         } else {
                             idx++;
@@ -90,14 +112,27 @@ public class Basics {
         if (NOT_ENCRYPTED.length() != 26) {
             System.out.printf("Bad length for NOT_ENCRYPTED: %d\n", NOT_ENCRYPTED.length());
         }
-        if (ALICE_KEY.length() != 26) {
-            System.out.printf("Bad length for ALICE_KEY: %d\n", ALICE_KEY.length());
+        if (Key.ALICE_KEY.getKey().length() != 26) {
+            System.out.printf("Bad length for ALICE_KEY: %d\n", Key.ALICE_KEY.getKey().length());
         }
-        if (BERNARD_KEY.length() != 26) {
-            System.out.printf("Bad length for BERNARD_KEY: %d\n", BERNARD_KEY.length());
+        if (Key.BERNARD_KEY.getKey().length() != 26) {
+            System.out.printf("Bad length for BERNARD_KEY: %d\n", Key.BERNARD_KEY.getKey().length());
         }
     }
 
+    /**
+     * One complete cycle, encryption decryption
+     * @param original Original message
+     * @param key The key to use
+     */
+    private static void oneCycle(String original, Key key) {
+        String encrypted = encrypt(original.toLowerCase(), key);
+
+        System.out.printf("Encrypted with %s's key [%s]\n", key.getName(), encrypted);
+
+        String decrypted = decrypt(encrypted, key);
+        System.out.printf("[%s] => Back to original [%s]\n", original, decrypted);
+    }
     public static void main(String... args) {
 
         boolean checkKeys = false;
@@ -111,25 +146,49 @@ public class Basics {
         }
 
         String originalMessage = "vois moi a midi";
-        String encrypted = encrypt(originalMessage, ALICE_KEY);
+        oneCycle(originalMessage, Key.ALICE_KEY);
+        System.out.println("-----------------");
 
-        System.out.printf("Encrypted with Alice's key [%s]\n", encrypted);
-
-        String decrypted = decrypt(encrypted, ALICE_KEY);
-        System.out.printf("[%s] => Back to original [%s]\n", originalMessage, decrypted);
-
-        // --------------------
         originalMessage = "Vois moi à midi, Ducon !";
+        System.out.printf("Managing [%s]...\n", originalMessage);
 
         String normalized = StringUtils.stripAccents(originalMessage); // Needs its maven repo
         normalized = normalized.toLowerCase();
-        encrypted = encrypt(normalized, ALICE_KEY);
-
+        oneCycle(normalized, Key.ALICE_KEY);
         System.out.println("-----------------");
-        System.out.printf("Accented message: Encrypted with Alice's key [%s]\n", encrypted);
-        decrypted = decrypt(encrypted, ALICE_KEY);
-        System.out.printf("[%s] => Back to 'original' [%s]\n", originalMessage, decrypted);
+        originalMessage = "The quick brown fox jumps over the lazy dog.";
+        oneCycle(originalMessage, Key.ALICE_KEY);
+        System.out.println("-----------------");
+        originalMessage = "C'est chez le vieux forgeron que j'ai bu le meilleur whisky.";
+        oneCycle(originalMessage, Key.ALICE_KEY);
+        oneCycle(originalMessage, Key.BERNARD_KEY);
+        System.out.println("-----------------");
 
         System.out.println("----- Done! -----");
+        /*
+         Step 2
+
+        - Alice defines message
+        - Encrypt with Alice's key
+        - Send encrypted message to Bernard
+        - Bernard encrypts the encrypted message (2 layers)
+        - Sends to Alice
+        - Alice decrypts, sends decrypted message to Bernard
+        - Bernard decrypts
+         */
+
+        originalMessage = "akeu coucou";
+        String encrypted01 = encrypt(originalMessage.toLowerCase(), Key.ALICE_KEY);
+        // => Bernard
+        System.out.printf("Sent to Bernard: [%s]\n", encrypted01);
+        String encrypted02 = encrypt(encrypted01.toLowerCase(), Key.BERNARD_KEY);
+        // => Alice
+        System.out.printf("Send back to Alice: [%s]\n", encrypted02);
+        String decrypted01 = decrypt(encrypted02, Key.ALICE_KEY);
+        // => Bernard
+        System.out.printf("Decrypted by Alice: [%s]\n", decrypted01);
+        String decrypted02 = decrypt(decrypted01.toUpperCase(), Key.BERNARD_KEY);
+
+        System.out.printf("Finally: [%s], wrong as expected.\n", decrypted02);
     }
 }
