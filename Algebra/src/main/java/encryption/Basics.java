@@ -239,21 +239,37 @@ public class Basics {
         String helloBuffer = binaryHello.toString().trim();
         System.out.println("Before proceeding:");
         System.out.printf("%s\n%s\n", helloBuffer, davidKey);
+
+        // XOR test
+        System.out.printf("1 xor 0: %b\n", true ^ false);
+        System.out.printf("1 xor 1: %b\n", true ^ true);
+        System.out.printf("0 xor 0: %b\n", false ^ false);
+        System.out.printf("0 xor 1: %b\n", false ^ true);
+
+        System.out.printf("1 xor 0: %d\n", 1 ^ 0);
+        System.out.printf("1 xor 1: %d\n", 1 ^ 1);
+        System.out.printf("0 xor 0: %d\n", 0 ^ 0);
+        System.out.printf("0 xor 1: %d\n", 0 ^ 1);
+
         // Encoding
         byte[] messageBits = helloBuffer.getBytes();
         byte[] keyBits     = davidKey.getBytes();
         List<Byte> encoded = new ArrayList<>();
         for (int i=0;i<messageBits.length; i++) {
-            if (messageBits[i] == keyBits[i]) { // TODO Is that an XOR ?
-                encoded.add((byte)'0');
-            } else {
-                encoded.add((byte)'1');
-            }
+//            if (messageBits[i] == keyBits[i]) { // It's an XOR
+//                encoded.add((byte)'0');
+//            } else {
+//                encoded.add((byte)'1');
+//            }
+            // It's an XOR
+            encoded.add(messageBits[i] == keyBits[i] ? (byte)'0' : (byte)'1');
         }
         byte[] newArray = new byte[messageBits.length];
-        for (int i=0; i<encoded.size(); i++) {  // TODO Improve this loop
+        for (int i=0; i<encoded.size(); i++) {  // TODO ANy way to improve this loop ? Byte[] to byte[] ?
             newArray[i] = encoded.get(i);
         }
+        // Byte[] ba = (Byte[])encoded.stream().map(b -> b.byteValue()).toArray();
+
         String encodedString = new String(newArray);
         System.out.printf("Encoded:\n%s\n", encodedString);
 
@@ -267,15 +283,18 @@ public class Basics {
 
         List<Byte> decoded = new ArrayList<>();
         for (int i=0;i<messageBits.length; i++) {
-            if (newArray[i] == keyBits[i]) { // newArray contains the en coded message
-                decoded.add((byte)'0');
-            } else {
-                decoded.add((byte)'1');
-            }
+            // newArray contains the en coded message
+//            if (newArray[i] == keyBits[i]) {
+//                decoded.add((byte)'0');
+//            } else {
+//                decoded.add((byte)'1');
+//            }
+            decoded.add(newArray[i] == keyBits[i] ? (byte)'0' : (byte)'1');
+
         }
 
         newArray = new byte[messageBits.length];
-        for (int i=0; i<decoded.size(); i++) {  // TODO Improve this loop
+        for (int i=0; i<decoded.size(); i++) {  // Same as above, improve this loop
             newArray[i] = decoded.get(i);
         }
         String decodedString = new String(newArray);
