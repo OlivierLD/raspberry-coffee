@@ -2,13 +2,18 @@ package encryption;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Histoire des codes secrets, pages 232 and after.
- * Brute force.
+ * Based on the book "The Code Book", by Simon Singh, 1999, Fourth Estate Limited.
+ * French edition "Histoire des codes secrets" (Le Livre de Poche), pages 232 and after.
+ *
+ * Brute force. This is a playground, workbench, whatever.
  */
 public class Basics {
     private final static String NOT_ENCRYPTED = "abcdefghijklmnopqrstuvwxyz";
@@ -52,7 +57,7 @@ public class Basics {
      * Encrypt a message with a key.
      *
      * @param original Original message, in lowercase. No accent, no punctuation. Also see UNCHANGED characters.
-     * @param key The encryption key to use
+     * @param key The encryption key to use (character key)
      * @return The encrypted message.
      */
     private static String encrypt(String original, Key key) {
@@ -93,7 +98,7 @@ public class Basics {
     /**
      * Decrypt a message, with the key it has been encrypted with.
      * @param encrypted Encrypted message
-     * @param key The key, used for encryption
+     * @param key The key, used for encryption (character key)
      * @return The decrypted message
      */
     private static String decrypt(String encrypted, Key key) {
@@ -147,6 +152,35 @@ public class Basics {
         String decrypted = decrypt(encrypted, key);
         System.out.printf("[%s] => Back to original [%s]\n", original, decrypted);
     }
+
+    private static ByteArrayOutputStream intEncode(String message, int key) {
+        final byte[] messageBytes = message.getBytes();
+        return intEncode(messageBytes, key);
+    }
+
+    private static ByteArrayOutputStream intEncode(byte[] messageBytes, int key) {
+        byte[] byteKey = ByteBuffer.allocate(4).putInt(key).array();
+        byte[] encoded = new byte[messageBytes.length];
+        for (int i=0; i<messageBytes.length; i++) {
+            encoded[i] = (byte)(messageBytes[i] ^ byteKey[i % byteKey.length]);
+        }
+        ByteArrayOutputStream intEncoded = new ByteArrayOutputStream();
+        intEncoded.writeBytes(encoded);
+
+        return intEncoded;
+    }
+    private static ByteArrayOutputStream intDecode(ByteArrayOutputStream baos, int key) {
+        byte[] byteKey = ByteBuffer.allocate(4).putInt(key).array();
+        byte[] encoded = baos.toByteArray();
+        byte[] decoded = new byte[encoded.length];
+        for (int i=0; i<encoded.length; i++) {
+            decoded[i] = (byte)(encoded[i] ^ byteKey[i % byteKey.length]);
+        }
+        ByteArrayOutputStream intDecoded = new ByteArrayOutputStream();
+        intDecoded.writeBytes(decoded);
+        return intDecoded;
+    }
+
     public static void main(String... args) {
 
         boolean checkKeys = false;
@@ -230,7 +264,7 @@ public class Basics {
         for (byte b : davidBytes) {
             binaryDavid.append(String.format("%s", Integer.toBinaryString(b)));
         }
-        String davidKey = binaryDavid.toString().trim();
+        String davidKey = binaryDavid.toString().trim(); // Binary String
 
         binaryHello = new StringBuilder();
         for (byte b : helloBytes) {
@@ -255,6 +289,7 @@ public class Basics {
         byte[] messageBits = helloBuffer.getBytes();
         byte[] keyBits     = davidKey.getBytes();
         List<Byte> encoded = new ArrayList<>();
+        // bit by bit
         for (int i=0;i<messageBits.length; i++) {
 //            if (messageBits[i] == keyBits[i]) { // It's an XOR
 //                encoded.add((byte)'0');
@@ -265,7 +300,7 @@ public class Basics {
             encoded.add(messageBits[i] == keyBits[i] ? (byte)'0' : (byte)'1');
         }
         byte[] newArray = new byte[messageBits.length];
-        for (int i=0; i<encoded.size(); i++) {  // TODO ANy way to improve this loop ? Byte[] to byte[] ?
+        for (int i=0; i<encoded.size(); i++) {  // TODO Any way to improve this loop ? Byte[] to byte[] ?
             newArray[i] = encoded.get(i);
         }
         // Byte[] ba = (Byte[])encoded.stream().map(b -> b.byteValue()).toArray();
@@ -282,6 +317,7 @@ public class Basics {
         }
 
         List<Byte> decoded = new ArrayList<>();
+        // bit by bit
         for (int i=0;i<messageBits.length; i++) {
             // newArray contains the en coded message
 //            if (newArray[i] == keyBits[i]) {
@@ -290,7 +326,6 @@ public class Basics {
 //                decoded.add((byte)'1');
 //            }
             decoded.add(newArray[i] == keyBits[i] ? (byte)'0' : (byte)'1');
-
         }
 
         newArray = new byte[messageBits.length];
@@ -304,5 +339,106 @@ public class Basics {
             int c = Integer.parseInt(helloBuffer.substring(i, i+7), 2);
             System.out.printf("Decoded - %s\n", (char)c);
         }
+
+        System.out.println("--- Next ---");
+
+        // Try the same, but BYTE by BYTE
+        // davidBytes contains "DAVID", 5 bytes
+        String message02 = "Hello World! We do not depend on the key's length!";
+        final byte[] message02Bytes = message02.getBytes();
+        byte[] encoded02 = new byte[message02Bytes.length];
+        for (int i=0; i<message02Bytes.length; i++) {
+            encoded02[i] = (byte)(message02Bytes[i] ^ davidBytes[i % davidBytes.length]);
+        }
+        String encodedString02 = new String(encoded02);
+        System.out.printf("Encoded, byte by byte: [%s]\n", encodedString02);
+
+        // Try decoding the same way
+        byte[] toDecode = encodedString02.getBytes();
+        byte[] decoded02 = new byte[toDecode.length];
+        for (int i=0; i<toDecode.length; i++) {
+            decoded02[i] = (byte)(toDecode[i] ^ davidBytes[i % davidBytes.length]);
+        }
+        String decodedString02 = new String(decoded02);
+        System.out.printf("Decoded, byte by byte: [%s]\n", decodedString02);
+
+        // Bonus, Byte's MAX_VALUE, MIN_VALUE
+        System.out.printf("Byte MAX_VALUE: %d, &x%s (%d bits)\n", Byte.MAX_VALUE, Integer.toBinaryString(Byte.MAX_VALUE), Integer.toBinaryString(Byte.MAX_VALUE).length());
+        System.out.printf("Byte MIN_VALUE: %d, &x%s (oops)\n", Byte.MIN_VALUE, Integer.toBinaryString(Byte.MIN_VALUE));
+
+        System.out.printf("Integer MAX_VALUE: %d, &#%s (%d bits)\n", Integer.MAX_VALUE, Integer.toBinaryString(Integer.MAX_VALUE), Integer.toBinaryString(Integer.MAX_VALUE).length());
+        System.out.printf("&x11111111 (8 bits) : %d\n", Integer.parseInt("11111111", 2));
+
+        byte max = (byte)255;
+        System.out.printf("Byte '255': %d, &x%s (%d bits)\n", max, Integer.toBinaryString(max), Integer.toBinaryString(max).length());
+
+        // Int to byte[]
+        int myInt = 123456789;
+        byte[] result =  ByteBuffer.allocate(4).putInt(myInt).array();
+        List<Byte> byteList = new ArrayList<>();
+        for (byte b : result) {
+            byteList.add(b);
+        }
+        System.out.printf("%d : [%s]\n", myInt, byteList.stream().map(Integer::toString).collect(Collectors.joining(", ")));
+
+        String myIntBin = lpad(Integer.toBinaryString(myInt),32, "0");
+        System.out.printf("In binary: %s\n", myIntBin);
+        for (int i=0; i<myIntBin.length(); i+=8) {
+            String oneBite = myIntBin.substring(i, i+8);
+            System.out.printf("#%02d : %s, %d, %d\n", i/8, oneBite, byteList.get(i/8), Integer.parseInt(oneBite, 2)); // Integer !! (for negative numbers)
+        }
+        System.out.println("--- Next ---");
+
+        // Now, try with int, a long (as a key), decomposed in bytes.
+        int intKey = 123456789;
+        byte[] byteKey = ByteBuffer.allocate(4).putInt(intKey).array();
+        String message03 = "Now the key is an int. Let's see if it still works...";
+        final byte[] message03Bytes = message03.getBytes();
+        byte[] encoded03 = new byte[message03Bytes.length];
+        for (int i=0; i<message03Bytes.length; i++) {
+            encoded03[i] = (byte)(message03Bytes[i] ^ byteKey[i % byteKey.length]);
+        }
+        ByteArrayOutputStream intEncoded = new ByteArrayOutputStream();
+        intEncoded.writeBytes(encoded03);
+        // TODO Do whatever is needed with this ByteArrayOutputStream
+
+        // The encoded data is a Byte array, NOT a String
+        List<Byte> encodedByteList = new ArrayList<>();
+        for (byte b : encoded03) {
+            encodedByteList.add(b);
+        }
+        System.out.printf("Encoded, byte by byte, with an int key: [%s]\n", encodedByteList.stream().map(Integer::toString).collect(Collectors.joining(", ")));
+
+        // Try decoding the same way
+        byte[] decoded03 = new byte[encoded03.length];
+        for (int i=0; i<encoded03.length; i++) {
+            decoded03[i] = (byte)(encoded03[i] ^ byteKey[i % byteKey.length]);
+        }
+        String decodedString03 = new String(decoded03);
+        System.out.printf("Decoded, byte by byte, with an int key: [%s]\n", decodedString03);
+
+        // With dedicated methods
+        int newKey = 98765432;
+        ByteArrayOutputStream encodedBAOS = intEncode("On essaye avec une méthode dédiée ?", newKey);
+        System.out.println("Encoded done...");
+        String decodedBAOS = new String(intDecode(encodedBAOS, newKey).toByteArray());
+        System.out.printf("Decoded: [%s]\n", decodedBAOS);
+
+        // Try again the alice->bernard etc... See Step 2
+        // Should work this time...
+        System.out.println("\nAlice - Bernard ping-pong, new test...");
+        int aliceIntKey   = 12345678;
+        int bernardIntKey = 98765432;
+
+        String bingBongMessage = "Bing Bong Message !";
+        ByteArrayOutputStream stepOne = intEncode(bingBongMessage, aliceIntKey);
+        ByteArrayOutputStream stepTwo = intEncode(stepOne.toByteArray(), bernardIntKey);
+        ByteArrayOutputStream stepThree = intDecode(stepTwo, aliceIntKey);
+        ByteArrayOutputStream stepFour = intDecode(stepThree, bernardIntKey);
+
+        String decodedBingBong = new String(stepFour.toByteArray());
+        System.out.printf("Finally: [%s]\n", decodedBingBong);
+
+        System.out.println("\nBye");
     }
 }
