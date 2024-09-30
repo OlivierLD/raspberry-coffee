@@ -256,7 +256,7 @@ public class Basics {
         for (byte b : helloBytes) {
             binaryHello.append(String.format("%s ", Integer.toBinaryString(b)));
         }
-        // Uppercase lettres are 7 bit long.
+        // Uppercase letters are 7 bit long.
         System.out.printf("Binary Hello (NO lpad, as used in the book) : [%s]\n", binaryHello.toString().trim());
 
         byte[] davidBytes = "DAVID".getBytes();
