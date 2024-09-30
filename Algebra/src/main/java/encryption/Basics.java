@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
  * French edition "Histoire des codes secrets" (Le Livre de Poche), pages 232 and after.
  *
  * Brute force. This is a playground, workbench, whatever.
+ * Workbench for the Jupyter notebooks of the Encryption folder.
+ *
+ * Character substitutions, XOR operations, bit by bit, byte by byte.
  */
 public class Basics {
     private final static String NOT_ENCRYPTED = "abcdefghijklmnopqrstuvwxyz";
@@ -438,7 +441,6 @@ public class Basics {
 
         String decodedBingBong = new String(stepFour.toByteArray());
         System.out.printf("Finally: [%s]\n", decodedBingBong);
-
 
 
         System.out.println("\nBye");
