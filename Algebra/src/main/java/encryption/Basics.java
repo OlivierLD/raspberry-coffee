@@ -400,7 +400,7 @@ public class Basics {
         }
         ByteArrayOutputStream intEncoded = new ByteArrayOutputStream();
         intEncoded.writeBytes(encoded03);
-        // TODO Do whatever is needed with this ByteArrayOutputStream
+        // TODO Do whatever is needed with this ByteArrayOutputStream...
 
         // The encoded data is a Byte array, NOT a String
         List<Byte> encodedByteList = new ArrayList<>();
@@ -431,10 +431,10 @@ public class Basics {
         int bernardIntKey = 98765432;
 
         String bingBongMessage = "Bing Bong Message !";
-        ByteArrayOutputStream stepOne = intEncode(bingBongMessage, aliceIntKey);
-        ByteArrayOutputStream stepTwo = intEncode(stepOne.toByteArray(), bernardIntKey);
-        ByteArrayOutputStream stepThree = intDecode(stepTwo, aliceIntKey);
-        ByteArrayOutputStream stepFour = intDecode(stepThree, bernardIntKey);
+        ByteArrayOutputStream stepOne = intEncode(bingBongMessage, aliceIntKey);         // Encode with Alice's key
+        ByteArrayOutputStream stepTwo = intEncode(stepOne.toByteArray(), bernardIntKey); // Encode with Bernard's key
+        ByteArrayOutputStream stepThree = intDecode(stepTwo, aliceIntKey);               // Decode with Alice's key
+        ByteArrayOutputStream stepFour = intDecode(stepThree, bernardIntKey);            // Final result: Decode with Bernard's key
 
         String decodedBingBong = new String(stepFour.toByteArray());
         System.out.printf("Finally: [%s]\n", decodedBingBong);
