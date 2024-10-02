@@ -382,7 +382,9 @@ public class Basics {
         for (byte b : result) {
             byteList.add(b);
         }
-        System.out.printf("%d : [%s]\n", myInt, byteList.stream().map(Integer::toString).collect(Collectors.joining(", ")));
+        System.out.printf("%d : [%s]\n", myInt, byteList.stream()
+                                                        .map(Integer::toString)
+                                                        .collect(Collectors.joining(", ")));
 
         String myIntBin = lpad(Integer.toBinaryString(myInt),32, "0");
         System.out.printf("In binary: %s\n", myIntBin);
@@ -410,7 +412,9 @@ public class Basics {
         for (byte b : encoded03) {
             encodedByteList.add(b);
         }
-        System.out.printf("Encoded, byte by byte, with an int key: [%s]\n", encodedByteList.stream().map(Integer::toString).collect(Collectors.joining(", ")));
+        System.out.printf("Encoded, byte by byte, with an int key: [%s]\n", encodedByteList.stream()
+                                                                                           .map(Integer::toString)
+                                                                                           .collect(Collectors.joining(", ")));
 
         // Try decoding the same way
         byte[] decoded03 = new byte[encoded03.length];
