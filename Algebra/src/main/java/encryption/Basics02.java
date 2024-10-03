@@ -11,10 +11,21 @@ import static primes.PGCD.pgcd;
 import static primes.Primes.primeFactors;
 import static primes.Primes.spitMapOut;
 
+/**
+ * Based on the book "The Code Book", by Simon Singh, 1999, Fourth Estate Limited.
+ * French edition "Histoire des codes secrets" (Le Livre de Poche), pages 232 and after.
+ *
+ * ...and more.
+ * Mostly used as a playground for the related Jupyter notebooks
+ *
+ * RSA basics, and beyond.
+ */
 public class Basics02 {
 
     /**
      * This is a "one way function" (fonction a sens unique)
+     * This is a POC. Not to use in the real world.
+     *
      * @param base
      * @param mod
      * @param x
@@ -30,6 +41,8 @@ public class Basics02 {
      *              => (e * D) % phi = 1
      * where D is the private key
      *
+     * phi & D are coprimes
+     *
      * @param p
      * @param q
      * @param e
@@ -40,9 +53,22 @@ public class Basics02 {
         long phi = (p - 1) * (q - 1);
         return ((e * D) % phi) == 1;
     }
+
+    private static boolean checkPhiDCoprime(long p, long q, long e) {
+        long D = findD(p, q, e);
+        long phi = (p - 1) * (q - 1);
+
+        long pgcdPhiD = pgcd((int)D, (int)phi);
+        if (pgcdPhiD != 1) {
+            System.out.printf("PGCD D, \u03D5 (%d, %d) : %d => %s\n", D, phi, pgcdPhiD, (pgcdPhiD == 1) ? "good" :
+                    String.format("not good, \u03D5 => %s, D => %s", spitMapOut((int)phi, primeFactors((int)phi)), spitMapOut((int)D, primeFactors((int)D))));
+        }
+        return (pgcdPhiD == 1);
+    }
+
     /**
      * Calculate the Private Key
-     * TODO Needs tuning...
+     * TODO Might need tuning...
      *
      * See https://www.geeksforgeeks.org/how-to-solve-rsa-algorithm-problems/#
      *
@@ -55,9 +81,10 @@ public class Basics02 {
         long phi = (p - 1) * (q - 1);
         // To solve => (e * d) % ((p - 1) * (q - 1)) = 1
         //          => (e * d) % phi = 1
+        // pgcd(phi, d) = 1
         boolean found = false;
         long D = 1;
-        while (!found) { // TODO there must be a better way...
+        while (!found) { // TODO there must be a better way... This one can loop forever.
             long x = (e * D) % phi;
             if (x == 1) {
                 found = true;
@@ -66,33 +93,57 @@ public class Basics02 {
             }
         }
         long d = D;
-        // long d = (phi + 1) / e;
-        // long d = (e - 1) % phi;
+
         return d;
     }
 
-    public static long findCandidateE(long p, long q) {
-        // (e + phi) must be coprime of p and q
+    /**
+     * Find a candidate private key E
+     * Careful... Might loop forever (findD)...
+     * @param p
+     * @param q
+     * @return
+     */
+    public static List<Long> findCandidateE(long p, long q, long tentativeD) {
+
+        List<Long> suggestions = new ArrayList<>();
+        final int NB_KEYS = 10;
+
+        // phi & d, coprime
         long phi = (p - 1) * (q - 1);
-        long alpha = 1; // Can be any int...
-        long D = 37; // The private key. Can be any int. prime ?
-        long E = ((alpha + 1) * phi) / D;
 
-        long coprime = E + phi;
-        long pgcdEQ = pgcd((int)coprime, (int)q);
-        long pgcdEP = pgcd((int)coprime, (int)p);
-        if (pgcdEQ != 1 || pgcdEP != 1) {
-            System.out.printf("PGCD E, P (%d, %d) : %d => %s\n", E, p, pgcdEP, (pgcdEP == 1) ? "good" :
-                    String.format("not good, E => %s, P => %s", spitMapOut((int)coprime, primeFactors((int)coprime)), spitMapOut((int)p, primeFactors((int)p))));
-            System.out.printf("PGCD E, Q (%d, %d) : %d => %s\n", E, q, pgcdEQ, (pgcdEQ == 1) ? "good" :
-                    String.format("not good, E => %s, Q => %s", spitMapOut((int)coprime, primeFactors((int)coprime)), spitMapOut((int)q, primeFactors((int)q))));
-            return 0;
+        long D = tentativeD; // 7; // The public key. Can be any int. prime ?
+
+        long pgcdPhiD = pgcd((int)D, (int)phi);
+        if (pgcdPhiD != 1) {
+            System.out.printf("==> Bad combination: PGCD D, \u03D5 (%d, %d) : %d => %s\n", D, phi, pgcdPhiD, (pgcdPhiD == 1) ? "good" :
+                    String.format("not good, \u03D5 => %s, D => %s", spitMapOut((int)phi, primeFactors((int)phi)), spitMapOut((int)D, primeFactors((int)D))));
+            return suggestions;
         }
+        // (E × D) mod Ø(n) = 1
+        // Loop on E...
+        long E = 0;
+        boolean ok; // = ((E * D) % phi) == 1;
+        while (suggestions.size() < NB_KEYS) {
+            E += 1;
+            ok = ((E * D) % phi) == 1;
+            if (E == Long.MAX_VALUE) {
+                System.out.printf("E reached value %d, Exiting.", Long.MAX_VALUE);
+                break;
+            }
+            if (ok) {
+                suggestions.add(E);
+                // We need (E × D) mod Ø(n) = 1
+                long modulo = (E * D) % phi;
+                System.out.printf("\tFor E = %d, modulo = %d\n", E, modulo);
 
-        long key = findD(p, q, E);
-        System.out.printf("p=%d, q=%d, E=%d, make a D key: %d\n", p, q, E, key);
+                long key = findD(p, q, E); // Find Private Key D, with Public Key E
+                System.out.printf("\tp=%d, q=%d, E=%d, make a D key: %d\n", p, q, E, key);
+            }
+        }
+        System.out.printf("Exit the loop with E = %d, and size = %d\n", E, suggestions.size());
 
-        return E;
+        return suggestions; // E;
     }
 
     private static void page328() {
@@ -133,15 +184,17 @@ public class Basics02 {
         if (false) {
             int encoded = /* Encrypted: M^e (mod N) */ (int) powXmodY(toEncode, pkN, pkE);
             return encoded;
-        } else {
+        } else {// (Math.pow(base, x) % mod)
             int encoded = (int)BigInteger.valueOf(toEncode).modPow(BigInteger.valueOf(pkE), BigInteger.valueOf(pkN)).longValue();
             return encoded;
         }
     }
-    private static int decodeWithPrivateKey(long pkP, long pkQ, long pkE, int privateKey, int toDecode) {
+    private static int decodeWithPrivateKey(long pkP, long pkQ, int privateKey, int toDecode) {
         // int privateKey = (int)findD(pkP, pkQ, pkE); // Private key
         long N = pkP * pkQ;
-
+        return decodeWithPrivateKey(N, privateKey, toDecode);
+    }
+    private static int decodeWithPrivateKey(long N, int privateKey, int toDecode) {
         // System.out.printf("Found D: %d\n", decryptionKeyD);
         // System.out.printf("%d: %s\n", decryptionKeyD, spitMapOut((int)decryptionKeyD, primeFactors((int)decryptionKeyD)));
 
@@ -184,58 +237,70 @@ public class Basics02 {
             return decryptedCharacter;
         }
     }
+
     private static void page472() { // RSA
 
         System.out.println("--- RSA ---");
-        final List<Long> primes = PrimeNumbers.getPrimes(500);
-        System.out.println("Got the 500 first primes...");
 
         // (p: 17, q: 11, e: 7) => OK
         // (p: 17, q: 11, e: 13) => OK
         // (p: 127, q: 11, e: 13) => OK
         // (p: 17, q: 499, e: 13) => OK
         // (p: 127, q: 499, e: 13) => OK
+        // (p: 127, q: 499, e: 46379) => OK
         long aliceP = 127;
         long aliceQ = 499;
         // (e * d) % ((p - 1) * (q - 1)) = 1
         //              => (e * d) % phi = 1
-        long aliceE = 13; // 7; // Does it have to be a prime ?
+        long aliceE = 23_801; // 46_379; // 7; // 13; // 7; // Does it have to be a prime ?
 
-        System.out.printf("P is prime ? %b\n", primes.stream().filter(p -> p == aliceP).findFirst().isPresent());
-        System.out.printf("Q is prime ? %b\n", primes.stream().filter(p -> p == aliceQ).findFirst().isPresent());
-        System.out.printf("E is prime ? %b\n", primes.stream().filter(p -> p == aliceE).findFirst().isPresent());
+        long aliceD = 29;
 
-        if (!primes.stream().filter(p -> p == aliceP).findFirst().isPresent()) {
-            System.out.printf("%d is not prime. Bye\n", aliceP);
-            return;
+        if (false) {
+            final List<Long> primes = PrimeNumbers.getPrimes(500);
+            System.out.println("Got the 500 first primes...");
+
+            System.out.printf("P is prime ? %b\n", primes.stream().filter(p -> p == aliceP).findFirst().isPresent());
+            System.out.printf("Q is prime ? %b\n", primes.stream().filter(p -> p == aliceQ).findFirst().isPresent());
+            System.out.printf("E is prime ? %b\n", primes.stream().filter(p -> p == aliceE).findFirst().isPresent());
+
+            if (!primes.stream().filter(p -> p == aliceP).findFirst().isPresent()) {
+                System.out.printf("%d is not prime. Bye\n", aliceP);
+                return;
+            }
+            if (!primes.stream().filter(p -> p == aliceQ).findFirst().isPresent()) {
+                System.out.printf("%d is not prime. Bye\n", aliceQ);
+                return;
+            }
+        } else {
+            if (PrimeNumbers.isPrime(aliceP)) {
+                System.out.printf("P (%d) is prime\n", aliceP);
+            } else {
+                System.out.printf("P (%d) is not prime. Aborting.\n", aliceP);
+                return;
+            }
+            if (PrimeNumbers.isPrime(aliceQ)) {
+                System.out.printf("Q (%d) is prime\n", aliceQ);
+            } else {
+                System.out.printf("Q (%d) is not prime. Aborting.\n", aliceQ);
+                return;
+            }
+            System.out.printf("E is%s prime.\n", PrimeNumbers.isPrime(aliceE) ? "" : " not");
         }
-        if (!primes.stream().filter(p -> p == aliceQ).findFirst().isPresent()) {
-            System.out.printf("%d is not prime. Bye\n", aliceQ);
-            return;
-        }
+        // We need D and ((p-1) x (q-1)) to be relative primes (aka coprimes)
         boolean okCombo = checkPQE(aliceP, aliceQ, aliceE);
-        System.out.printf("(e * D) mod phi = 1 ? %b\n", okCombo);
+        System.out.printf("(e * D) mod \u03D5 = 1 ? %b\n", okCombo);
+        okCombo = checkPhiDCoprime(aliceP, aliceQ, aliceE);
+        System.out.printf("\u03D5 & D coprimes ? %b\n", okCombo);
 
         // For the fun:
         long alicePxQ = aliceP * aliceQ; // aka N
         System.out.printf("Alice P x Q = %d: %s\n", alicePxQ, spitMapOut((int)alicePxQ, primeFactors((int)alicePxQ)));
 
-        // We need e + ((p-1) x (q-1)) to be relative primes (aka coprimes)
-        long coprime = aliceE + ((aliceP - 1) * (aliceQ - 1));
-        long pgcdEP = pgcd((int)coprime, (int)aliceP);
-        System.out.printf("PGCD E, P (%d, %d) : %d => %s\n", aliceE, aliceP, pgcdEP, (pgcdEP == 1) ? "good" :
-                String.format("not good, E => %s, P => %s", spitMapOut((int)coprime, primeFactors((int)coprime)), spitMapOut((int)aliceP, primeFactors((int)aliceP))));
-        long pgcdEQ = pgcd((int)coprime, (int)aliceQ);
-        System.out.printf("PGCD E, Q (%d, %d) : %d => %s\n", aliceE, aliceQ, pgcdEQ, (pgcdEQ == 1) ? "good" :
-                String.format("not good, E => %s, Q => %s", spitMapOut((int)coprime, primeFactors((int)coprime)), spitMapOut((int)aliceQ, primeFactors((int)aliceQ))));
-
-        if (pgcdEP != 1 || pgcdEQ != 1) {
-            System.err.printf("Bad value for E (%d)... Bye.\n", aliceE);
-            return;
-        }
         long aliceN = alicePxQ;
         // Alice can diffuse E & N, her public key
         System.out.printf("Alice is diffusing public key E & N (%d, %d)\n", aliceE, aliceN);
+        System.out.printf(" --> (Private Key: %d)\n", findD(aliceP, aliceQ, aliceE));
 
         // Now, let's encrypt...
         int characterToEncrypt = 88; // aka M, Ascii 88: 1011000, 'X'.
@@ -305,7 +370,7 @@ public class Basics02 {
                     characterToEncrypt,
                     NumberFormat.getInstance().format(encryptedWithPublicKey));
             int decryptionKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
-            int decryptedWithPrivateKey = decodeWithPrivateKey(aliceP, aliceQ, aliceE, decryptionKeyD, encryptedWithPublicKey);
+            int decryptedWithPrivateKey = decodeWithPrivateKey(aliceP, aliceQ, decryptionKeyD, encryptedWithPublicKey);
             System.out.printf("Encrypted: %s, decrypted: %s (%c)\n",
                     NumberFormat.getInstance().format(encryptedWithPublicKey),
                     NumberFormat.getInstance().format(decryptedWithPrivateKey),
@@ -328,7 +393,7 @@ public class Basics02 {
         int decryptionKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
         List<Byte> decoded = new ArrayList<>();
         encoded.stream().forEach(enc -> {
-            byte decodedByte = (byte)decodeWithPrivateKey(aliceP, aliceQ, aliceE, decryptionKeyD, enc);
+            byte decodedByte = (byte)decodeWithPrivateKey(aliceP, aliceQ, decryptionKeyD, enc);
             System.out.printf("Decoded: %s => %d (%c)\n",
                     NumberFormat.getInstance().format(enc),
                     decodedByte,
@@ -380,7 +445,7 @@ public class Basics02 {
         }
 
         boolean testFindD = false;
-        boolean findE = false;
+        boolean findE = true;
         if (testFindD) {
 
             long d = findD(17L, 11L, 7L);
@@ -389,10 +454,50 @@ public class Basics02 {
             d = findD(7L, 11L, 13L);
             System.out.printf("For P: %d, Q: %d, E: %d, D: %d\n", 7L, 11L, 13L, d); // expected 37
         } else if (findE) {
-            long testE = findCandidateE(17, 11);
-            System.out.printf("For P: %d, Q: %d, Candidate E: %d\n", 17, 11, testE);
+            // long p = 17, q = 11, d = 23;
+            long p = 127, q = 499, d = 29;
+            List<Long> testE = findCandidateE(p, q, d);
+            System.out.printf("For P: %d, Q: %d, D: %d\n", p, q, d);
+            testE.stream().forEach(e -> {
+                System.out.printf("Candidate E: %d (prime: %b)\n", e, PrimeNumbers.isPrime(e));
+            });
         } else {
             page472();
+        }
+
+        if (false) {
+            String big = BigInteger.valueOf(113).pow((int) 299).toString();
+            System.out.printf("%d ^ %d = %s\n%d characters long.]\n", 113, 299, big, big.length());
+
+            long P = 127;
+            long Q = 499;
+            long E = 46_379;
+
+            long D = 29;
+
+            long PHI = ((P - 1) * (Q - 1));
+            long modulo = BigInteger.valueOf(E).multiply(BigInteger.valueOf(D)).mod(BigInteger.valueOf(PHI)).longValue();
+            System.out.printf("Modulo: %d, %s\n", modulo, (modulo == 1) ? "good!" : "Oops...");
+
+            long enc = 44_021;
+            long N = P * Q;
+            long x = BigInteger.valueOf(enc).modPow(BigInteger.valueOf(D), BigInteger.valueOf(N)).longValue();
+            System.out.printf("Encrypted: %d, Decrypted: %d\n", enc, x);
+
+            // long N = 63_373;
+            System.out.printf("N %d => %s\n", N, spitMapOut((int)N, primeFactors((int)N)));
+
+            final long privateK = findD(P, Q, E);
+            System.out.printf("With P %d, Q %d, E %d, found private key %d\n", P, Q, E, privateK);
+
+            N = 187;
+            System.out.printf("N %d => %s\n", N, spitMapOut((int)N, primeFactors((int)N)));
+            P = 17; Q = 11;
+
+            E = 7;
+            final long otherPrivateK = findD(P, Q, E);
+            System.out.printf("With P %d, Q %d, E %d, found private key %d\n", P, Q, E, otherPrivateK); // That seems to work...
+
         }
     }
 }
