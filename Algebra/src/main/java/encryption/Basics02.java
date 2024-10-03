@@ -72,9 +72,9 @@ public class Basics02 {
      *
      * See https://www.geeksforgeeks.org/how-to-solve-rsa-algorithm-problems/#
      *
-     * @param p
-     * @param q
-     * @param e
+     * @param p P
+     * @param q Q
+     * @param e E, aka public key
      * @return the private key for p, q, e
      */
     public static long findD(long p, long q, long e) {
