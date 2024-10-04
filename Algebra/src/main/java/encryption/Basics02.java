@@ -1,11 +1,13 @@
 package encryption;
 
 import primes.PrimeNumbers;
+import primes.Primes;
 
+import java.io.*;
 import java.math.BigInteger;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static primes.PGCD.pgcd;
 import static primes.Primes.primeFactors;
@@ -68,7 +70,6 @@ public class Basics02 {
 
     /**
      * Calculate the Private Key
-     * TODO Might need tuning...
      *
      * See https://www.geeksforgeeks.org/how-to-solve-rsa-algorithm-problems/#
      *
@@ -84,12 +85,18 @@ public class Basics02 {
         // pgcd(phi, d) = 1
         boolean found = false;
         long D = 1;
-        while (!found) { // TODO there must be a better way... This one can loop forever.
+        // More than one D ? See findDList method.
+        while (!found) { // There must be a better way... This one can loop forever.
             long x = (e * D) % phi;
             if (x == 1) {
                 found = true;
             } else {
                 D++;
+                if (D == Long.MAX_VALUE) {
+                    // Not found... Exit loop.
+                    D = -1;
+                    break;
+                }
             }
         }
         long d = D;
@@ -98,10 +105,41 @@ public class Basics02 {
     }
 
     /**
-     * Find a candidate private key E
+     * Takes time...
+     * @param p
+     * @param q
+     * @param e
+     * @return
+     */
+    public static List<Long> findDList(long p, long q, long e) {
+        List<Long> dList = new ArrayList<>();
+
+        long phi = (p - 1) * (q - 1);
+        // To solve => (e * d) % ((p - 1) * (q - 1)) = 1
+        //          => (e * d) % phi = 1
+        // pgcd(phi, d) = 1
+        long D = 1;
+        while (true) {
+            long x = (e * D) % phi;
+            if (x == 1) {
+                dList.add(D);
+            }
+            D++;
+            // if (D == Long.MAX_VALUE) {
+            if (D == Integer.MAX_VALUE) {
+                // Not found... Exit loop.
+                break;
+            }
+        }
+        return dList;
+    }
+
+    /**
+     * Find a candidate public key E
      * Careful... Might loop forever (findD)...
      * @param p
      * @param q
+     * @param tentativeD
      * @return
      */
     public static List<Long> findCandidateE(long p, long q, long tentativeD) {
@@ -112,13 +150,15 @@ public class Basics02 {
         // phi & d, coprime
         long phi = (p - 1) * (q - 1);
 
-        long D = tentativeD; // 7; // The public key. Can be any int. prime ?
+        long D = tentativeD; // The private key. Can be any int.
 
         long pgcdPhiD = pgcd((int)D, (int)phi);
         if (pgcdPhiD != 1) {
-            System.out.printf("==> Bad combination: PGCD D, \u03D5 (%d, %d) : %d => %s\n", D, phi, pgcdPhiD, (pgcdPhiD == 1) ? "good" :
-                    String.format("not good, \u03D5 => %s, D => %s", spitMapOut((int)phi, primeFactors((int)phi)), spitMapOut((int)D, primeFactors((int)D))));
-            return suggestions;
+            throw new RuntimeException(String.format("Bad combination, GCD = %d, \u03D5 => %s, D => %s", pgcdPhiD,
+                    spitMapOut((int)phi, primeFactors((int)phi)), spitMapOut((int)D, primeFactors((int)D))));
+//            System.out.printf("==> Bad combination: PGCD D, \u03D5 (%d, %d) : %d => %s\n", D, phi, pgcdPhiD, (pgcdPhiD == 1) ? "good" :
+//                    String.format("not good, \u03D5 => %s, D => %s", spitMapOut((int)phi, primeFactors((int)phi)), spitMapOut((int)D, primeFactors((int)D))));
+//            return suggestions;
         }
         // (E × D) mod Ø(n) = 1
         // Loop on E...
@@ -369,8 +409,19 @@ public class Basics02 {
                     NumberFormat.getInstance().format(characterToEncrypt),
                     characterToEncrypt,
                     NumberFormat.getInstance().format(encryptedWithPublicKey));
-            int decryptionKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
-            int decryptedWithPrivateKey = decodeWithPrivateKey(aliceP, aliceQ, decryptionKeyD, encryptedWithPublicKey);
+            int privateKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
+
+            if (true) { // Can take time...
+                final List<Long> dList = findDList(aliceP, aliceQ, aliceE); // Limited to Integer.MAX_VALUE !!
+                System.out.printf("Possible Ds (private keys), %d entries.\n", dList.size());
+                dList.stream()
+                        .limit(100) // A limit !!
+                        .forEach(k -> System.out.printf("\t-> %d\n", k));
+                // Try this: use the second one
+                privateKeyD = (int)dList.get(1).longValue();
+            }
+
+            int decryptedWithPrivateKey = decodeWithPrivateKey(aliceP, aliceQ, privateKeyD, encryptedWithPublicKey);
             System.out.printf("Encrypted: %s, decrypted: %s (%c)\n",
                     NumberFormat.getInstance().format(encryptedWithPublicKey),
                     NumberFormat.getInstance().format(decryptedWithPrivateKey),
@@ -380,6 +431,8 @@ public class Basics02 {
         // Test on a full message
         String message = "Hello RSA World!";
         final byte[] bytes = message.getBytes();
+
+        // Encoding process
         List<Integer> encoded = new ArrayList<>(); // Warning !! Those are ints ! [0..&xFF]
         System.out.println("-- Encoding --");
         for (byte b : bytes) {
@@ -389,11 +442,55 @@ public class Basics02 {
                     NumberFormat.getInstance().format(encodedByte));
             encoded.add(encodedByte);
         }
-        System.out.println("-- Decoding --");
-        int decryptionKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
+        // Write the encoded result into a file ?
+        try {
+            File file = new File("." + File.separator + "encoded.bin");
+            FileWriter fos = new FileWriter(file);
+            // fos.write(encoded. ...getBytes());
+            encoded.stream().forEach(b -> {
+                try {
+                    fos.write(b); // writes an int
+                    // System.out.printf("\tWritten %d\n", b);
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+            });
+            fos.close();
+            System.out.println("Created " + file.getAbsolutePath());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        // Decoding process
+        int privateKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
+        if (false) {
+            final List<Long> dList = findDList(aliceP, aliceQ, aliceE); // Limited to Integer.MAX_VALUE !!
+            System.out.printf("Possible Ds (private keys), %d entries.\n", dList.size());
+//            dList.stream()
+//                    .limit(100) // A limit !!
+//                    .forEach(k -> System.out.printf("\t-> %d\n", k));
+            // Try this: use the second one
+            privateKeyD = (int) dList.get(1).longValue();
+        }
+
+        // Read the encoded from a file ?
+        try {
+            FileReader encodedData = new FileReader(new File("." + File.separator + "encoded.bin"));
+            encoded.clear();
+            int read;
+            while ((read = encodedData.read()) != -1) {
+                encoded.add(read);
+                // System.out.printf("\tRead: %d\n", read);
+            }
+            encodedData.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        System.out.printf("-- Decoding with private key %d --\n", privateKeyD);
         List<Byte> decoded = new ArrayList<>();
+        AtomicInteger atomicKey = new AtomicInteger(privateKeyD);
         encoded.stream().forEach(enc -> {
-            byte decodedByte = (byte)decodeWithPrivateKey(aliceP, aliceQ, decryptionKeyD, enc);
+            byte decodedByte = (byte)decodeWithPrivateKey(aliceP, aliceQ, atomicKey.get(), enc);
             System.out.printf("Decoded: %s => %d (%c)\n",
                     NumberFormat.getInstance().format(enc),
                     decodedByte,
@@ -407,7 +504,7 @@ public class Basics02 {
         System.out.printf("\nFinal message, decoded: [%s]\n", new String(decodedBA));
     }
 
-    public static void main(String[] args) {
+    public static void main_(String[] args) {
 
         if (false) {
             BigInteger b1, b2;
@@ -445,22 +542,26 @@ public class Basics02 {
         }
 
         boolean testFindD = false;
-        boolean findE = true;
+        boolean findE = false;
         if (testFindD) {
-
             long d = findD(17L, 11L, 7L);
             System.out.printf("For P: %d, Q: %d, E: %d, D: %d\n", 17L, 11L, 7L, d); // expected 23
-
+            // Again
             d = findD(7L, 11L, 13L);
             System.out.printf("For P: %d, Q: %d, E: %d, D: %d\n", 7L, 11L, 13L, d); // expected 37
         } else if (findE) {
+            // long p = 17, q = 11, d = 374; // To see the Exception
             // long p = 17, q = 11, d = 23;
             long p = 127, q = 499, d = 29;
-            List<Long> testE = findCandidateE(p, q, d);
-            System.out.printf("For P: %d, Q: %d, D: %d\n", p, q, d);
-            testE.stream().forEach(e -> {
-                System.out.printf("Candidate E: %d (prime: %b)\n", e, PrimeNumbers.isPrime(e));
-            });
+            try {
+                List<Long> testE = findCandidateE(p, q, d);
+                System.out.printf("For P: %d, Q: %d, D: %d\n", p, q, d);
+                testE.stream().forEach(e -> {
+                    System.out.printf("Candidate E: %d (prime: %b)\n", e, PrimeNumbers.isPrime(e));
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } else {
             page472();
         }
@@ -492,12 +593,72 @@ public class Basics02 {
 
             N = 187;
             System.out.printf("N %d => %s\n", N, spitMapOut((int)N, primeFactors((int)N)));
-            P = 17; Q = 11;
-
+            P = 17;
+            Q = 11;
             E = 7;
             final long otherPrivateK = findD(P, Q, E);
             System.out.printf("With P %d, Q %d, E %d, found private key %d\n", P, Q, E, otherPrivateK); // That seems to work...
-
         }
+    }
+
+    public static void main(String... args) {
+
+        // TODO Find real world samples. ssh ? ~/.ssh/id_rsa.pub & ~/.ssh/id_rsa Where is N, where is E, where is D ?
+        // See https://crypto.stackexchange.com/questions/52688/see-the-rsas-n-p-q-e-text-and-d-from-ssh-keygen
+
+        String messageFileName = "." + File.separator + "encoded.bin";
+
+        if (args.length > 0) {
+            messageFileName = args[0];
+        }
+
+        // Hack. Read the data from a file, without having the private key, decode it.
+
+        // Public Key, from Alice's phone book.
+        // long aliceP = 127;
+        // long aliceQ = 499;
+        long aliceN = 63_373; // Should be P*Q, P and Q being prime numbers
+        long aliceE = 23_801;
+
+        final Map<Integer, Integer> primeFactors = primeFactors((int)aliceN);
+        final Set<Integer> keys = primeFactors.keySet();
+        long aliceP = ((Integer)keys.toArray()[0]).longValue();
+        long aliceQ = ((Integer)keys.toArray()[1]).longValue();
+
+        // Read the encoded from a file ?
+        List<Integer> encoded = new ArrayList<>();
+        try {
+            FileReader encodedData = new FileReader(new File(messageFileName));
+            encoded.clear();
+            int read;
+            while ((read = encodedData.read()) != -1) {
+                encoded.add(read);
+                // System.out.printf("\tRead: %d\n", read);
+            }
+            encodedData.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(1);
+        }
+
+        // This is where we HACK the private key.
+        int privateKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
+
+        System.out.printf("-- Decoding with private key %d --\n", privateKeyD);
+        List<Byte> decoded = new ArrayList<>();
+        AtomicInteger atomicKey = new AtomicInteger(privateKeyD);
+        encoded.stream().forEach(enc -> {
+            byte decodedByte = (byte)decodeWithPrivateKey(aliceP, aliceQ, atomicKey.get(), enc);
+            System.out.printf("Decoded: %s => %d (%c)\n",
+                    NumberFormat.getInstance().format(enc),
+                    decodedByte,
+                    decodedByte);
+            decoded.add(decodedByte);
+        });
+        byte[] decodedBA = new byte[decoded.size()];
+        for (int i=0; i<decoded.size(); i++) {
+            decodedBA[i] = decoded.get(i).byteValue();
+        }
+        System.out.printf("\nFinal message, decoded: [%s]\n", new String(decodedBA));
     }
 }
