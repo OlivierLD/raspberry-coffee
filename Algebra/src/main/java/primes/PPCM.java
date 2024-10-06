@@ -2,6 +2,12 @@ package primes;
 
 public class PPCM {
 
+    /**
+     * LCM  - Lowest Common Multiple. PPCM is the same, in French.
+     * @param n1
+     * @param n2
+     * @return
+     */
     public static int ppcm(int n1, int n2) {
         int product = n1 * n2;
         int remainder = n1 % n2;

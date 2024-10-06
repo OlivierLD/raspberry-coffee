@@ -2,6 +2,12 @@ package primes;
 
 public class PGCD {
 
+    /**
+     * GCD - Greatest Common Divider (the P is French)
+     * @param n1
+     * @param n2
+     * @return
+     */
     public static int pgcd(int n1, int n2) {
         while (n1 != n2) {
             if (n1 > n2) {

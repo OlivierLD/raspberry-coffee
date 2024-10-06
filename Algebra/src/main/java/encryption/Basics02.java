@@ -225,7 +225,14 @@ public class Basics02 {
             int encoded = /* Encrypted: M^e (mod N) */ (int) powXmodY(toEncode, pkN, pkE);
             return encoded;
         } else {// (Math.pow(base, x) % mod)
-            int encoded = (int)BigInteger.valueOf(toEncode).modPow(BigInteger.valueOf(pkE), BigInteger.valueOf(pkN)).longValue();
+            BigInteger bigE = BigInteger.valueOf(pkE);
+            BigInteger bigN = BigInteger.valueOf(pkN);
+            if (false) {
+                System.out.printf("E %d, bit count: %d, bit length: %d\n", pkE, bigE.bitCount(), bigE.bitLength());
+                System.out.printf("N %d, bit count: %d, bit length: %d\n", pkN, bigN.bitCount(), bigN.bitLength());
+            }
+            int encoded = (int)BigInteger.valueOf(toEncode).modPow(bigE, bigN).longValue();
+            // int encoded = (int)BigInteger.valueOf(toEncode).modPow(BigInteger.valueOf(pkE), BigInteger.valueOf(pkN)).longValue();
             return encoded;
         }
     }
@@ -288,7 +295,7 @@ public class Basics02 {
         // (p: 17, q: 499, e: 13) => OK
         // (p: 127, q: 499, e: 13) => OK
         // (p: 127, q: 499, e: 46379) => OK
-        long aliceP = 127;
+        long aliceP = 127; // _456_987;
         long aliceQ = 499;
         // (e * d) % ((p - 1) * (q - 1)) = 1
         //              => (e * d) % phi = 1
@@ -504,7 +511,7 @@ public class Basics02 {
         System.out.printf("\nFinal message, decoded: [%s]\n", new String(decodedBA));
     }
 
-    public static void main_(String[] args) {
+    public static void main(String[] args) {
 
         if (false) {
             BigInteger b1, b2;
@@ -601,7 +608,11 @@ public class Basics02 {
         }
     }
 
-    public static void main(String... args) {
+    /**
+     * A Test from a file
+     * @param args args[0] is optional file name
+     */
+    public static void main_(String... args) {
 
         // TODO Find real world samples. ssh ? ~/.ssh/id_rsa.pub & ~/.ssh/id_rsa Where is N, where is E, where is D ?
         // See https://crypto.stackexchange.com/questions/52688/see-the-rsas-n-p-q-e-text-and-d-from-ssh-keygen
