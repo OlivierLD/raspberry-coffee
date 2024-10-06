@@ -197,6 +197,8 @@ public class Basics02 {
 
     private static void page329() {
         // Page 329
+        System.out.println("-- Page 329 - Diffie-Hellman exchange --");
+        // See https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange
         long aliceNumber = 3;
         long bernardNumber = 6;
 
@@ -208,8 +210,8 @@ public class Basics02 {
 
         System.out.printf("Step 2 : Alice %d, Bernard %d\n", alpha, beta);
 
-        // Alice sends alpha to Bernard
-        // Bernard sends beta to Alice
+        // Alice sends alpha to Bernard.
+        // Bernard sends beta to Alice.
 
         // What Alice and Bernard have to agree on is the couple (base, mod), and the way to use it (powXmodY)
 
@@ -541,7 +543,7 @@ public class Basics02 {
             // System.exit(0);
         }
 
-        if (false) {
+        if (true) {
             page328();
             System.out.println("---");
             page329();
