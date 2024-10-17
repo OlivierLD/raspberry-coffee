@@ -418,6 +418,9 @@ public class Basics02 {
                     NumberFormat.getInstance().format(characterToEncrypt),
                     characterToEncrypt,
                     NumberFormat.getInstance().format(encryptedWithPublicKey));
+
+            // TODO A test: decode with public key...
+
             int privateKeyD = (int)findD(aliceP, aliceQ, aliceE); // Private key
 
             if (true) { // Can take time...
