@@ -126,8 +126,8 @@ public class Basics02 {
             }
             D++;
             // if (D == Long.MAX_VALUE) {
-            if (D == Integer.MAX_VALUE) {
-                // Not found... Exit loop.
+            if (D == Integer.MAX_VALUE) { // Could go further...
+                // Top limit... Exit loop.
                 break;
             }
         }
@@ -299,6 +299,8 @@ public class Basics02 {
         // (p: 127, q: 499, e: 46379) => OK
         long aliceP = 127; // _456_987;
         long aliceQ = 499;
+        // p: 9_419, q: 1_933
+
         // (e * d) % ((p - 1) * (q - 1)) = 1
         //              => (e * d) % phi = 1
         long aliceE = 23_801; // 46_379; // 7; // 13; // 7; // Does it have to be a prime ?
@@ -516,7 +518,7 @@ public class Basics02 {
         System.out.printf("\nFinal message, decoded: [%s]\n", new String(decodedBA));
     }
 
-    public static void main(String[] args) {
+    public static void main__(String[] args) {
 
         if (false) {
             BigInteger b1, b2;
@@ -556,6 +558,7 @@ public class Basics02 {
         boolean testFindD = false;
         boolean findE = false;
         if (testFindD) {
+            // long p = 9_419, q = 1_933;  // TODO Try this one.
             long d = findD(17L, 11L, 7L);
             System.out.printf("For P: %d, Q: %d, E: %d, D: %d\n", 17L, 11L, 7L, d); // expected 23
             // Again
@@ -676,5 +679,59 @@ public class Basics02 {
             decodedBA[i] = decoded.get(i).byteValue();
         }
         System.out.printf("\nFinal message, decoded: [%s]\n", new String(decodedBA));
+    }
+
+    /**
+     * Another crack test
+     * @param args
+     */
+    public static void main(String... args) {
+        // Try to crack the key, with "big." - or so - numbers
+        long aliceP = 9_419, aliceQ = 1_933;  // Try this one.
+
+        // Public Key, from Alice's phone book.
+        long aliceN = aliceP * aliceQ; // 63_373; // Should be P*Q, P and Q being prime numbers
+        long aliceE = 23_801;
+
+        System.out.printf("P: %s is prime: %b, Q: %s is prime: %b, E: %s is prime: %b\n",
+                NumberFormat.getInstance().format(aliceP), PrimeNumbers.isPrime(aliceP),
+                NumberFormat.getInstance().format(aliceQ), PrimeNumbers.isPrime(aliceQ),
+                NumberFormat.getInstance().format(aliceE), PrimeNumbers.isPrime(aliceE));
+
+        int characterToEncrypt = 88; // X
+        int encryptedWithPublicKey = encodeWithPublicKey(aliceE, aliceN, characterToEncrypt);
+        System.out.printf("Encryption : %s (%c) => %s\n",
+                NumberFormat.getInstance().format(characterToEncrypt),
+                characterToEncrypt,
+                NumberFormat.getInstance().format(encryptedWithPublicKey));
+
+        int privateKeyD; // = (int)findD(aliceP, aliceQ, aliceE); // Private key
+
+        // THE crack
+        long before = System.currentTimeMillis();
+        final List<Long> dList = findDList(aliceP, aliceQ, aliceE);
+        long after = System.currentTimeMillis();
+
+        System.out.printf("Possible Ds (private keys), %d entries, found in %s ms.\n",
+                dList.size(),
+                NumberFormat.getInstance().format(after - before));
+        if (false) {
+            dList.stream()
+                    .limit(100) // A limit !!
+                    .forEach(k -> System.out.printf("\t-> %d\n", k));
+        }
+        // Try this: use the SECOND one
+        // This is where we HACK the private key.
+        privateKeyD = (int)dList.get(1).longValue();
+        System.out.printf("D: %s is prime: %b\n",
+                NumberFormat.getInstance().format(privateKeyD), PrimeNumbers.isPrime(privateKeyD));
+
+        int decryptedWithPrivateKey = decodeWithPrivateKey(aliceP, aliceQ, privateKeyD, encryptedWithPublicKey);
+        System.out.printf("Encrypted: %s, decrypted: %s (%c)\n",
+                NumberFormat.getInstance().format(encryptedWithPublicKey),
+                NumberFormat.getInstance().format(decryptedWithPrivateKey),
+                decryptedWithPrivateKey);
+
+        System.out.println("Done.");
     }
 }
