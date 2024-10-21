@@ -238,6 +238,30 @@ public class Basics02 {
             return encoded;
         }
     }
+
+    private static List<Integer> encodeMessageWithPrivateKey(String message, long pkE, long pkN) {
+        return encodeMessageWithPrivateKey(message, pkE, pkN, false);
+    }
+    private static List<Integer> encodeMessageWithPrivateKey(String message, long pkE, long pkN, boolean verbose) {
+        final byte[] bytes = message.getBytes();
+
+        // Encoding process
+        List<Integer> encoded = new ArrayList<>(); // Warning !! Those are ints ! [0..&xFF]
+        if (verbose) {
+            System.out.println("-- Encoding --");
+        }
+        for (byte b : bytes) {
+            int encodedByte = encodeWithPublicKey(pkE, pkN, b);
+            if (verbose) {
+                System.out.printf("Encoding (%c) %d -> %s\n",
+                        b, b,
+                        NumberFormat.getInstance().format(encodedByte));
+            }
+            encoded.add(encodedByte);
+        }
+        return encoded;
+    }
+
     private static int decodeWithPrivateKey(long pkP, long pkQ, int privateKey, int toDecode) {
         // int privateKey = (int)findD(pkP, pkQ, pkE); // Private key
         long N = pkP * pkQ;
@@ -285,6 +309,32 @@ public class Basics02 {
             // int decryptedCharacter = (int)BigInteger.valueOf(toDecode).modPow(BigInteger.valueOf(pkE), BigInteger.valueOf(N)).longValue();
             return decryptedCharacter;
         }
+    }
+
+    private static byte[] decodeMessageWithPrivateKey(List<Integer> encoded, int privateKeyD, long N) {
+        return decodeMessageWithPrivateKey(encoded, privateKeyD, N,false);
+    }
+    private static byte[] decodeMessageWithPrivateKey(List<Integer> encoded, int privateKeyD, long N, boolean verbose) {
+        List<Byte> decoded = new ArrayList<>();
+        AtomicInteger atomicKey = new AtomicInteger(privateKeyD);
+        encoded.stream().forEach(enc -> {
+            byte decodedByte = (byte)decodeWithPrivateKey(N, atomicKey.get(), enc);
+            if (verbose) {
+                System.out.printf("Decoded: %s => %d (%c)\n",
+                        NumberFormat.getInstance().format(enc),
+                        decodedByte,
+                        decodedByte);
+            }
+            decoded.add(decodedByte);
+        });
+        byte[] decodedBA = new byte[decoded.size()];
+        for (int i=0; i<decoded.size(); i++) {
+            decodedBA[i] = decoded.get(i).byteValue();
+        }
+        if (verbose) {
+            System.out.printf("\nFinal message, decoded: [%s]\n", new String(decodedBA));
+        }
+        return decodedBA;
     }
 
     private static void page472() { // RSA
@@ -726,11 +776,18 @@ public class Basics02 {
         System.out.printf("D: %s is prime: %b\n",
                 NumberFormat.getInstance().format(privateKeyD), PrimeNumbers.isPrime(privateKeyD));
 
-        int decryptedWithPrivateKey = decodeWithPrivateKey(aliceP, aliceQ, privateKeyD, encryptedWithPublicKey);
+        int decryptedWithPrivateKey = decodeWithPrivateKey(/*aliceP, aliceQ*/ aliceN, privateKeyD, encryptedWithPublicKey);
         System.out.printf("Encrypted: %s, decrypted: %s (%c)\n",
                 NumberFormat.getInstance().format(encryptedWithPublicKey),
                 NumberFormat.getInstance().format(decryptedWithPrivateKey),
                 decryptedWithPrivateKey);
+
+        // Now, on a message
+        String message = "Let's do it again...";
+        final List<Integer> encodedMessage = encodeMessageWithPrivateKey(message, aliceE, aliceN);
+
+        final byte[] decodedMessage = decodeMessageWithPrivateKey(encodedMessage, privateKeyD, aliceN);
+        System.out.printf("Decoded: [%s]\n", new String(decodedMessage));
 
         System.out.println("Done.");
     }
