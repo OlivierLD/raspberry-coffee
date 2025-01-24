@@ -1,7 +1,9 @@
 # SunFlower Versions 2.0 a and b, and more
 ![Work In Progress](./wip.jpg) 
 
-The goal of this project is to _**automatically**_ orient a solar panel, so it faces the sun as long as it is in the sky.
+The goal of this project is to _**automatically**_ orient a solar panel, so it faces the sun as long as it is in the sky.  
+
+There are pictures at the bottom of this page, scroll down!
 
 ---
 > _Preamble_:
