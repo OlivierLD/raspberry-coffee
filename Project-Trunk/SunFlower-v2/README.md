@@ -226,7 +226,7 @@ But the magnetometers can go crazy if they're too close to a magnet, and stepper
 
 Having the magnetometer too close to the stepper motors is **not** a good idea.
 
-This is where we use the `NMEA-multiplexer` project (part of this repo). We have another Raspberry Pi (a Raspberry Pi Zero does the job)
+This is where we use the `NMEA-multiplexer` project (part of [this repo](https://github.com/OlivierLD/ROB/blob/master/raspberry-sailor/NMEA-multiplexer/README.md)). We have another Raspberry Pi (a Raspberry Pi Zero does the job)
 with a magnetometer attached to it, running the `NMEA-multiplexer`.
 The `NMEA-multiplexer` can also serve as a REST server, storing NMEA data in a cache, queryable from a REST client.
 
