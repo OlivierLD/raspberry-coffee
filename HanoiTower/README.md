@@ -1,4 +1,11 @@
 ## Hanoi Tower Resolution
+Interestingly, this is "just" algorithmic.  
+There is _absolutely no AI_ involved in this process. 
+
+It's all in the code, take a look.  
+
+If `N` is the number of disks, the number of moves to anticipate is
+(2<sup><small>N</small></sup> - 1).
 
 #### Several User Interfaces
 - Command Line
@@ -102,8 +109,8 @@ $
 ```
 
 ### Comments
-Interestingly, all the skill - the actual resolution - is in the class `hanoitower.BackendAlgorithm`.
-It is small, and recursive.
+Interestingly, all the skill - the actual resolution - is in the class `hanoitower.BackendAlgorithm`.  
+It is **very** small, and recursive.
 
 All the other classes are here for the graphical rendering.
 
