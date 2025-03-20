@@ -1,6 +1,6 @@
 ## Hanoi Tower Resolution
 Interestingly, this is "just" algorithmic.  
-There is _absolutely no AI_ involved in this process. 
+There is _absolutely no AI_ involved in this process, unlike with Go or Chess...  
 
 It's all in the code, take a look.  
 
@@ -17,7 +17,7 @@ This will be used as a base for a MeArm (or any robotic arm) resolution of the s
 
 Run it like:
 ```
- $ ../gradlew runSample
+$ ../gradlew runSample
 ```
 
 ![Screenshot](./screenshot.png)
@@ -110,7 +110,7 @@ $
 
 ### Comments
 Interestingly, all the skill - the actual resolution - is in the class `hanoitower.BackendAlgorithm`.  
-It is **very** small, and recursive.
+It is _**very**_ small, and recursive.
 
 All the other classes are here for the graphical rendering.
 
