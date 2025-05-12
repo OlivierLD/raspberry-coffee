@@ -20,10 +20,10 @@ For example, `n` = 3, and given the system:
   |   (23.09 * X) + (5.3 * Y)  + (-12.34 * Z) = 9.876
   \
 ```
-<!-- Seems not to work... Replaced {math} with {equation} -->
+<!-- Seems not to work... Replaced {math} with {equation} ...
 $$
 \begin{equation}
-\left\{
+\Bigl\{
 \begin{array}{l}
 (12 * X)    + (13 * Y)   + (14 * Z)     = 234   \\
 (1.345 * X) + (-654 * Y) + (0.001 * Z)  = 98.87 \\
@@ -31,7 +31,7 @@ $$
 \end{array}
 \end{equation}
 $$
-<!-- -->
+-->
 
 The question is: _What are the values of X, Y, and Z?_
 
