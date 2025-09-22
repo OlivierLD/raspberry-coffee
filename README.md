@@ -10,7 +10,7 @@
 > Those two above can interact. For example, navigation software can use sensors.  
 > And again, this project is not limited to those two threads, by far.
 
-## Important update, 2025 (and before that)...
+## Important update, 2020 or so, and after...
 
 When this project was started, it mostly relied on `PI4J`, which itself relies (relied) on `WiringPi`.  
 This project contains many drivers written in Java (and thus relying on `PI4J` and related frameworks), translated from 
@@ -28,13 +28,14 @@ Here is the thing:
 - Java also runs fine on a Raspberry Pi, and supports the protocols mentioned above.
 - The Raspberry Pi can run Linux, that implement the required environment to run several processes in parallel. 
 - As a result, establishing a network communication between Java and Python presents several advantages:
+  - It relies on standards, implemented - and supported - in both languages 
   - It behaves just fine, both ways
-  - The overhead is minimal
+  - The overhead is minimal, when it exists
   - Updates of the Python libraries (provided by the sensors providers) can be implemented in no time
-  - We do _**NOT**_ have to worry about any psychopathic project manager, to say the least... No, I will not give any name.
+  - We do _**NOT**_ have to worry about any psychopathic project manager, to say the least... Okay, I'm not immune either, but still. And no, I will not give any name.
 
-All projects in this repository using frameworks like `PI4J`, `diozero` or so, should thus be considered as **obsolete**.  
-Other samples - using protocols like `UDP`, `TCP`, and friends, between Java and Python will bloom up, to reproduce the previously implemented features.
+> All projects in this repository using frameworks like `PI4J`, `diozero` or so, should thus be considered as **obsolete**.  
+> Other samples - using protocols like `UDP`, `TCP`, and friends, between Java and Python will bloom up, to reproduce the previously implemented features.
 
 Now we resume the doc. But this had to be said.
 
