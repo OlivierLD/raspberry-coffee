@@ -11,36 +11,37 @@
 > And again, this project is not limited to those two threads, by far.
 
 ## Important update, 2025 (and before that)...
+
 When this project was started, it mostly relied on `PI4J`, which itself relies (relied) on `WiringPi`.  
-This project contains many drivers written in Java (thus relying on `PI4J` and related frameworks), translated from 
-the Python drivers usually delivered with the sensors and actuators. This worked fine, until `PI4J` got deprecated,
+This project contains many drivers written in Java (and thus relying on `PI4J` and related frameworks), translated from 
+the Python drivers usually delivered with the sensors and actuators, and maintained by the vendor(s). This worked fine, until `PI4J v1` got deprecated,
 because of the deprecation of `WiringPi`... `PI4J v2` was not exactly the same as `v1`, drivers had to be 
 substantially updated..., just to keep their behavior unchanged.  
 Then came `diozero`, very interesting too (and not relying on any external framework), but that also implied
 a total rewriting of the existing Java drivers.  
 Then, to try to minimize this kind of unpredictable issues (due to unplanned "upgrades"), I tried my own Java framework for the Raspberry Pi, called JOB (Java On Board), and that is
-a lot of work... that can actually be avoided.  
-Here is the thing: 
-- when you buy a sensor or actuator, it usually comes with some Python library(ies) to interact with it.
+a lot of work... that can actually be avoided.    
+Here is the thing:
+- When you buy a sensor or actuator, it usually comes with some Python library(ies) to interact with it.
 - Python runs fine on a Raspberry Pi
-- Python supports many standard protocols, like `TCP`, `UDP`, `REST`, etc.
+- Python supports many standard protocols, like `TCP`, `UDP`, `REST`, etc (see below).
 - Java also runs fine on a Raspberry Pi, and supports the protocols mentioned above.
 - The Raspberry Pi can run Linux, that implement the required environment to run several processes in parallel. 
 - As a result, establishing a network communication between Java and Python presents several advantages:
   - It behaves just fine, both ways
   - The overhead is minimal
   - Updates of the Python libraries (provided by the sensors providers) can be implemented in no time
-  - We do _**NOT**_ have to worry about any psychopathic project manager, to say the least...
+  - We do _**NOT**_ have to worry about any psychopathic project manager, to say the least... No, I will not give any name.
 
-All projects in this repository using frameworks like `PI4J`, `diozero` or so, should be considered as **obsolete**.  
-Other samples - using protocols like `UDP`, `TCP`, and friends will bloom up, to reproduce the previously implemented features.
+All projects in this repository using frameworks like `PI4J`, `diozero` or so, should thus be considered as **obsolete**.  
+Other samples - using protocols like `UDP`, `TCP`, and friends, between Java and Python will bloom up, to reproduce the previously implemented features.
 
 Now we resume the doc. But this had to be said.
 
 ---
 Main keywords:
 - Raspberry Pi
-- Java and JVM-related languages
+- Java and JVM-related languages (like Scala, Kotlin, Clojure, ...)
 - [PI4J](https://pi4j.com/), Sensors, Actuators
 - Navigation, Sailing, [NMEA](https://nmea.org)
 - Gradle
