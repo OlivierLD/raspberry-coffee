@@ -131,7 +131,7 @@ public class Populate {
                 pStmt.setString(2, type);
                 pStmt.setInt(3, w);
                 pStmt.setInt(4, h);
-                pStmt.setBytes(5, data);
+                pStmt.setBytes(5, data); // This is the BLOB
                 pStmt.setDate(6, cr);
 
                 pStmt.execute();

@@ -84,7 +84,7 @@ public class PopulateFromFileSystem {
         Connection conn = null;
         File dbFile = new File(String.format("%s%s%s", dbFolder.get(), File.separator, dbName.get()));
         if (!dbFile.exists()) {
-            System.out.printf("%s not found in %s... exiting%n", dbName.get(), dbFolder.get());
+            System.out.printf("%s (%s) not found in %s... exiting%n", dbName.get(), dbFile.getAbsolutePath(), dbFolder.get());
             System.exit(1);
         }
         String dbFullPath = dbFile.getAbsolutePath();

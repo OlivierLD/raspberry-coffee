@@ -21,7 +21,7 @@ public class MainGUI {
 		Connection conn = null;
 		File dbFile = new File(dbLocation);
 		if (!dbFile.exists()) {
-			System.out.printf("%s not found... exiting%n", dbLocation);
+			System.out.printf("%s (%s) not found... exiting%n", dbLocation, dbFile.getAbsolutePath());
 			System.exit(1);
 		}
 		String dbFullPath = dbFile.getAbsolutePath();
