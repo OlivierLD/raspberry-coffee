@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
  *
  * System properties:
  * - button.verbose, default false
- * - buttonOne, default 38 (Physical pin #)
- * - buttonTwo, default 40 (Physical pin #)
+ * - buttonOne, default 38 (Physical pin #), IO #20
+ * - buttonTwo, default 40 (Physical pin #), IO #21
  * - http.port, default 9999
  *
  * If simulating (no physical devices, screen or buttons), buttons can be simulated too,

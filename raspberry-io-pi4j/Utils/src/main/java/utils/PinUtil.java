@@ -209,6 +209,8 @@ public class PinUtil {
     }
 
     public static void main(String... args) {
+        // GPIO - General Purpose Input/Output, aka "BCM" or "Broadcom".
+        // wPi: Wiring Pi, see https://github.com/wiringpi/wiringpi, originally by https://projects.drogon.net/, now deprecated
         PinUtil.print();
     }
 }
